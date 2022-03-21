@@ -12,10 +12,10 @@ class AccountItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       width: double.infinity,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.cyan[400],
+        borderRadius: const BorderRadius.all(const Radius.circular(20)),
+        color: Theme.of(context).colorScheme.primary,
       ),
       height: 90,
       child: Column(
@@ -30,7 +30,7 @@ class AccountItem extends StatelessWidget {
                 name,
               ),
               Row(
-                children: [
+                children: const [
                   Icon(
                     Icons.arrow_upward,
                     size: 35,
@@ -45,13 +45,23 @@ class AccountItem extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(
-                balance > 0 ? "+ $balance €" : "- ${0 - balance} €",
-                style: const TextStyle(fontSize: 20),
-              ),
+              if (balance > 0) ...[
+                Text(
+                  "+ $balance €",
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: const Color.fromARGB(239, 29, 129, 37),
+                      ),
+                ),
+              ] else ...[
+                Text(
+                  "- ${0 - balance} €",
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: const Color.fromARGB(238, 129, 29, 29),
+                      ),
+                ),
+              ]
             ],
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
           ),
         ],
       ),
@@ -71,7 +81,7 @@ Widget AccountItemTitle(BuildContext context, IconData icon, String name) {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Text(
           name,
-          style: const TextStyle(fontSize: 30),
+          style: Theme.of(context).textTheme.headline6,
         ),
       ),
     ],

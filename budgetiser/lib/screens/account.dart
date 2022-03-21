@@ -8,9 +8,10 @@ class Account extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text("Accounts"),
+        title: Text(
+          "Accounts",
+          style: Theme.of(context).textTheme.caption,
+        ),
       ),
       body: Center(
         child: Column(
@@ -21,9 +22,10 @@ class Account extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: const FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: null,
         tooltip: 'Increment',
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: Icon(Icons.add),
       ),
     );
