@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import '../accountBalanceText.dart';
 
 class AccountItem extends StatelessWidget {
-  String name;
-  IconData icon;
-  int balance;
+  final String name;
+  final IconData icon;
+  final int balance;
 
-  AccountItem(this.name, this.icon, this.balance, {Key? key}) : super(key: key);
+  const AccountItem(this.name, this.icon, this.balance, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class AccountItem extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(const Radius.circular(20)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).colorScheme.secondary,
       ),
       height: 90,

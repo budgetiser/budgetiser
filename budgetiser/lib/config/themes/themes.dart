@@ -8,7 +8,7 @@ class MyThemes {
       secondary: Color.fromARGB(255, 187, 225, 250),
       tertiary: Color.fromARGB(255, 27, 38, 44),
     ),
-    scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+    scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
     textTheme: const TextTheme(
       caption: TextStyle(
           color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
@@ -21,7 +21,7 @@ class MyThemes {
   );
 
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Color.fromARGB(255, 27, 38, 44),
+    scaffoldBackgroundColor: const Color.fromARGB(255, 27, 38, 44),
     colorScheme: const ColorScheme.dark(
       primary: Color.fromARGB(255, 50, 130, 184),
       secondary: Color.fromARGB(255, 15, 76, 117),

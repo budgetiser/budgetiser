@@ -15,7 +15,7 @@ class Account extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          children: [
+          children: const [
             AccountItem("ksk", Icons.wallet_giftcard, 123),
             AccountItem("sparen pc", Icons.abc, -123),
             AccountItem("kreditkarte", Icons.payment, 123),
@@ -26,7 +26,7 @@ class Account extends StatelessWidget {
         onPressed: null,
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
