@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../shared/services/accountItem.dart';
+import '../shared/services/accountItem/accountItem.dart';
 
 class Account extends StatelessWidget {
   const Account({Key? key}) : super(key: key);
