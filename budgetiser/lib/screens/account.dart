@@ -1,3 +1,4 @@
+import 'package:budgetiser/screens/newAccount.dart';
 import 'package:flutter/material.dart';
 import '../shared/services/accountItem.dart';
 
@@ -21,8 +22,11 @@ class Account extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => NewAccount()));
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
