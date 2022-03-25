@@ -1,4 +1,3 @@
-import 'package:budgetiser/main.dart';
 import 'package:flutter/material.dart';
 
 Widget createDrawer(BuildContext context) {
@@ -30,16 +29,19 @@ Widget createDrawer(BuildContext context) {
                 )
               ],
             )),
-        singleDrawerItem(context, Icons.home, 'Home', 'Home'),
-        singleDrawerItem(context, Icons.attach_money, 'Budgets', 'Budgets'),
-        singleDrawerItem(context, Icons.account_balance, 'Account', 'Account'),
-        singleDrawerItem(context, Icons.category, 'Categories', 'Categories'),
-        singleDrawerItem(context, Icons.group_work, 'Groups', 'Groups'),
-        singleDrawerItem(context, Icons.show_chart, 'Stats', 'Stats'),
+        singleDrawerItem(context, Icons.home, 'Home', 'home'),
+        singleDrawerItem(context, Icons.attach_money, 'Budgets', 'budgets'),
+        singleDrawerItem(context, Icons.account_balance, 'Account', 'account'),
+        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
+        singleDrawerItem(context, Icons.group_work, 'Groups', 'groups'),
+        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        singleDrawerItem(context, Icons.show_chart, 'Stats', 'stats'),
         singleDrawerItem(
-            context, Icons.payment, 'Transactions', 'Transactions'),
-        singleDrawerItem(context, Icons.question_mark, 'Help', 'Help'),
-        singleDrawerItem(context, Icons.settings, 'Settings', 'Settings'),
+            context, Icons.payment, 'Transactions', 'transactions'),
+        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        singleDrawerItem(context, Icons.question_mark, 'Help', 'help'),
+        singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
       ],
     ),
   );
@@ -51,12 +53,9 @@ Widget singleDrawerItem(
     title: Text(title),
     leading: Icon(icon),
     onTap: () {
-      Navigator.pop(context);
-      Navigator.push(
+      Navigator.pushReplacementNamed(
           context,
-          MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                  title: destination))); //TODO: need to change destination
+          destination); //TODO: need to change destination
     },
   );
 }

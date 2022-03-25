@@ -1,3 +1,4 @@
+import 'package:budgetiser/routes.dart';
 import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -26,11 +27,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: routes,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  static String routeID = 'home';
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
