@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../shared/services/accountItem/accountItem.dart';
+import '../shared/widgets/drawer.dart';
 
 class Account extends StatelessWidget {
   const Account({Key? key}) : super(key: key);
@@ -10,9 +11,10 @@ class Account extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Accounts",
-          style: Theme.of(context).textTheme.caption,
+          // style: Theme.of(context).textTheme.caption,
         ),
       ),
+      drawer: createDrawer(context),
       body: Center(
         child: Column(
           children: const [
