@@ -3,7 +3,7 @@ import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'config/themes/themes.dart';
-import 'screens/account.dart';
+import 'screens/account/account.dart';
 import 'screens/home.dart';
 
 void main() {

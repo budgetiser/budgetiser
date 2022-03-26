@@ -1,7 +1,7 @@
-import 'package:budgetiser/screens/newAccount.dart';
+import 'package:budgetiser/screens/account/newAccount.dart';
 import 'package:flutter/material.dart';
-import '../shared/services/accountItem/accountItem.dart';
-import '../shared/widgets/drawer.dart';
+import '../../shared/services/accountItem/accountItem.dart';
+import '../../shared/widgets/drawer.dart';
 
 class Account extends StatelessWidget {
   static String routeID = 'account';

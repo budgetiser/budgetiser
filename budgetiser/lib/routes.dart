@@ -6,7 +6,7 @@ import 'package:budgetiser/screens/settings.dart';
 import 'package:budgetiser/screens/stats.dart';
 import 'package:budgetiser/screens/transactions.dart';
 
-import 'screens/account.dart';
+import 'screens/account/account.dart';
 import 'screens/home.dart';
 
 //named lower case and also needs to be defined in beginning of class as: static String routeID = ''
