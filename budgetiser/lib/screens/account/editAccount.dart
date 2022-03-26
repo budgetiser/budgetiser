@@ -3,7 +3,7 @@ import 'package:budgetiser/screens/account/shared/savingAccountForm.dart';
 import 'package:flutter/material.dart';
 
 class EditAccount extends StatelessWidget {
-  EditAccount({
+  const EditAccount({
     Key? key,
     required this.accountName,
     required this.accountBalance,
@@ -29,10 +29,10 @@ class EditAccount extends StatelessWidget {
                   initialName: accountName,
                   initalBalance: accountBalance,
                 ),
-                Divider(
+                const Divider(
                   indent: 8,
                 ),
-                SavingAccountForm(),
+                const SavingAccountForm(),
               ],
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DatePicker extends StatefulWidget {
-  DatePicker({required this.label, Key? key}) : super(key: key);
+  const DatePicker({required this.label, Key? key}) : super(key: key);
   final String label;
 
   @override
@@ -20,36 +20,34 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Center(
-            child: TextField(
-              readOnly: true,
-              controller: dateController,
-              decoration: InputDecoration(
-                hintText: widget.label,
-                border: OutlineInputBorder(),
-                labelText: widget.label,
-              ),
-              onTap: () async {
-                var date = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(2100));
-                if (date != null) {
-                  setState(() {
-                    dateController.text = date.toString().substring(0, 10);
-                    print(
-                        "date set to ${dateController.text}"); // TODO: how to get the date to new account layer?
-                  });
-                }
-              },
+    return Column(
+      children: [
+        Center(
+          child: TextField(
+            readOnly: true,
+            controller: dateController,
+            decoration: InputDecoration(
+              hintText: widget.label,
+              border: const OutlineInputBorder(),
+              labelText: widget.label,
             ),
+            onTap: () async {
+              var date = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100));
+              if (date != null) {
+                setState(() {
+                  dateController.text = date.toString().substring(0, 10);
+                  print(
+                      "date set to ${dateController.text}"); // TODO: how to get the date to new account layer?
+                });
+              }
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
