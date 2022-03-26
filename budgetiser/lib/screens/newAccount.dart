@@ -12,13 +12,14 @@ class NewAccount extends StatelessWidget {
         title: const Text("New Account"),
       ),
       body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            // const Text("Name"),
-            const MyCustomForm(),
-            const SavingAccountPart(),
-          ],
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const MyCustomForm(),
+              const SavingAccountPart(),
+            ],
+          ),
         ),
       ),
     );
@@ -124,43 +125,105 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
             ],
           ),
           // form for the saving account with input field for start and end date
-          if (isSavingAccount)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  // color: const Color.fromARGB(255, 255, 165, 165),
+          if (isSavingAccount) SavingAccountForm(),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(
+              color: Color.fromARGB(255, 255, 255, 255),
+              thickness: 1,
+              indent: 20,
+              endIndent: 20,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.add),
+                Text("Add Account"),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget SavingAccountForm() {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            // color: const Color.fromARGB(255, 255, 165, 165),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: const Text("start date"),
+                  ),
+                  Flexible(
+                    child: DatePicker(),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: const Text("end date"),
+                  ),
+                  Flexible(
+                    child: DatePicker(),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text("saving goal"),
+                  Flexible(
+                    child: TextFormField(
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        hintText: "Enter amount",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 20),
+                width: 300,
+                height: 20,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: LinearProgressIndicator(
+                    value: 0.7,
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xff00ff00)),
+                    backgroundColor: Color(0xffD6D6D6),
+                  ),
                 ),
-                child: Column(
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      children: <Widget>[
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: const Text("start date"),
-                        ),
-                        Flexible(
-                          child: DatePicker(),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: const Text("end date"),
-                        ),
-                        Flexible(
-                          child: DatePicker(),
-                        ),
-                      ],
-                    ),
+                    Icon(Icons.add),
+                    Text("new Saving transaction"),
                   ],
                 ),
               ),
-            ),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }
