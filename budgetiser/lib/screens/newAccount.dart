@@ -104,11 +104,9 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Divider(
-            color: Theme.of(context).dividerColor,
-            thickness: 1,
             indent: 20,
             endIndent: 20,
           ),
@@ -128,8 +126,6 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Divider(
-            color: Theme.of(context).dividerColor,
-            thickness: 1,
             indent: 20,
             endIndent: 20,
           ),
