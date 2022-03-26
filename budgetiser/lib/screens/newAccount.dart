@@ -26,9 +26,6 @@ class NewAccount extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        //full width and centered
-        tooltip: 'Increment',
-        backgroundColor: Theme.of(context).colorScheme.primary,
         label: const Text("Add Account"),
         icon: const Icon(Icons.check),
       ),
@@ -135,7 +132,7 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
         if (isSavingAccount) savingAccountForm(),
         const Padding(
           padding: EdgeInsets.all(8.0),
-          child: const Divider(
+          child: Divider(
             indent: 20,
             endIndent: 20,
           ),
