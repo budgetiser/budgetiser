@@ -1,9 +1,7 @@
 import 'package:budgetiser/routes.dart';
-import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'config/themes/themes.dart';
-import 'screens/account/account.dart';
 import 'screens/home.dart';
 
 void main() {
@@ -17,7 +15,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       themeMode: ThemeMode.system,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,

@@ -54,9 +54,8 @@ class MyThemes {
           fontSize: 40,
           fontWeight: FontWeight.bold,
           color: Color.fromARGB(255, 255, 255, 255)),
-      headline6: TextStyle(fontSize: 30),
-      bodyText2: TextStyle(fontSize: 20),
-      bodyText1: TextStyle(fontSize: 10),
+      headline2: TextStyle(fontSize: 30), // for headline inside a screen
+      bodyText2: TextStyle(fontSize: 20), // normal text
       subtitle1: TextStyle(fontSize: 20), // for the drawer items
     ),
     primaryColor: Colors.black,
@@ -69,10 +68,11 @@ class MyThemes {
       color: DARK_BACKGROUND,
       elevation: 0,
       centerTitle: true,
-    ),
-    buttonTheme: ButtonThemeData(
-      buttonColor: Colors.red,
-      // textTheme: Colors.cyan,
+      titleTextStyle: TextStyle(
+        // title text in appbar
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+      ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: DARK_PRIMARY,

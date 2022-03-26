@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DatePicker extends StatefulWidget {
-  DatePicker({Key? key}) : super(key: key);
+  DatePicker({required this.label, Key? key}) : super(key: key);
+  final String label;
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -26,7 +27,11 @@ class _DatePickerState extends State<DatePicker> {
             child: TextField(
               readOnly: true,
               controller: dateController,
-              decoration: const InputDecoration(hintText: 'Pick your Date'),
+              decoration: InputDecoration(
+                hintText: widget.label,
+                border: OutlineInputBorder(),
+                labelText: widget.label,
+              ),
               onTap: () async {
                 var date = await showDatePicker(
                     context: context,
