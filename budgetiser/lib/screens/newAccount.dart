@@ -15,12 +15,22 @@ class NewAccount extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Column(
-            children: [
+            children: const [
               MyCustomForm(),
               SavingAccountPart(),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        //full width and centered
+        tooltip: 'Increment',
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        label: const Text("Add Account"),
+        icon: const Icon(Icons.check),
       ),
     );
   }
@@ -123,26 +133,11 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
         ),
         // form for the saving account with input field for start and end date
         if (isSavingAccount) savingAccountForm(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Divider(
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: const Divider(
             indent: 20,
             endIndent: 20,
-          ),
-        ),
-        ElevatedButton(
-          onPressed: () {},
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.add),
-              Text("Add Account"),
-            ],
           ),
         ),
       ],

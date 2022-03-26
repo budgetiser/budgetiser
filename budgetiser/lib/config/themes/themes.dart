@@ -36,9 +36,10 @@ class MyThemes {
   static const Color DARK_PRIMARY = Color.fromARGB(255, 50, 130, 184);
   static const Color DARK_SECONDARY = Color.fromARGB(255, 15, 76, 117);
   static const Color DARK_TERTIARY = Color.fromARGB(255, 187, 225, 250);
+  static const Color DARK_BACKGROUND = Color.fromARGB(255, 27, 38, 44);
 
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color.fromARGB(255, 27, 38, 44),
+    scaffoldBackgroundColor: DARK_BACKGROUND,
     colorScheme: const ColorScheme.dark(
       primary: DARK_PRIMARY,
       secondary: DARK_SECONDARY,
@@ -64,5 +65,17 @@ class MyThemes {
       color: Color.fromARGB(50, 255, 255, 255),
     ),
     toggleableActiveColor: DARK_PRIMARY,
+    appBarTheme: const AppBarTheme(
+      color: DARK_BACKGROUND,
+      elevation: 0,
+      centerTitle: true,
+    ),
+    buttonTheme: ButtonThemeData(
+      buttonColor: Colors.red,
+      // textTheme: Colors.cyan,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: DARK_PRIMARY,
+    ),
   );
 }

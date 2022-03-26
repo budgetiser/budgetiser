@@ -20,7 +20,7 @@ class AccountBalanceText extends StatelessWidget {
           Text(
             "- ${0 - balance} €",
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                  color: const Color.fromARGB(238, 129, 29, 29),
+                  color: const Color.fromARGB(255, 174, 74, 99),
                 ),
           ),
         ]

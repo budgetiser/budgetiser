@@ -4,15 +4,15 @@ import '../shared/services/accountItem/accountItem.dart';
 import '../shared/widgets/drawer.dart';
 
 class Account extends StatelessWidget {
+  static String routeID = 'account';
   const Account({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Accounts",
-          // style: Theme.of(context).textTheme.caption,
         ),
       ),
       drawer: createDrawer(context),
