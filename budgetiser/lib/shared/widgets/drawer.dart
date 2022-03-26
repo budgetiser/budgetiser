@@ -55,7 +55,9 @@ Widget singleDrawerItem(
     leading: Icon(icon),
     onTap: () {
       Navigator.pushReplacementNamed(
-          context, destination); //TODO: need to change destination
+        context,
+        destination,
+      );
     },
   );
 }
