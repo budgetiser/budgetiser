@@ -32,14 +32,14 @@ Widget createDrawer(BuildContext context) {
         singleDrawerItem(context, Icons.home, 'Home', 'home'),
         singleDrawerItem(context, Icons.attach_money, 'Budgets', 'budgets'),
         singleDrawerItem(context, Icons.account_balance, 'Account', 'account'),
-        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        Divider(height: 2, thickness: 2, color: Theme.of(context).dividerColor),
         singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
         singleDrawerItem(context, Icons.group_work, 'Groups', 'groups'),
-        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        Divider(height: 2, thickness: 2, color: Theme.of(context).dividerColor),
         singleDrawerItem(context, Icons.show_chart, 'Stats', 'stats'),
         singleDrawerItem(
             context, Icons.payment, 'Transactions', 'transactions'),
-        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        Divider(height: 2, thickness: 2, color: Theme.of(context).dividerColor),
         singleDrawerItem(context, Icons.question_mark, 'Help', 'help'),
         singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
       ],
@@ -54,8 +54,7 @@ Widget singleDrawerItem(
     leading: Icon(icon),
     onTap: () {
       Navigator.pushReplacementNamed(
-          context,
-          destination); //TODO: need to change destination
+          context, destination); //TODO: need to change destination
     },
   );
 }

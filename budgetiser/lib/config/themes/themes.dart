@@ -17,7 +17,8 @@ class MyThemes {
       bodyText2: TextStyle(fontSize: 20),
       bodyText1: TextStyle(fontSize: 10),
     ),
-    primaryColor: Colors.black,
+    primaryColor: const Color.fromRGBO(0, 0, 0, 1),
+    dividerColor: const Color.fromARGB(59, 0, 0, 0),
   );
 
   static final darkTheme = ThemeData(
@@ -38,5 +39,6 @@ class MyThemes {
       bodyText1: TextStyle(fontSize: 10),
     ),
     primaryColor: Colors.black,
+    dividerColor: const Color.fromARGB(62, 255, 255, 255),
   );
 }

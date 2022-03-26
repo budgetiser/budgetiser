@@ -105,10 +105,10 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
     return Container(
       child: Column(
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: Divider(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Theme.of(context).dividerColor,
               thickness: 1,
               indent: 20,
               endIndent: 20,
@@ -126,10 +126,10 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
           ),
           // form for the saving account with input field for start and end date
           if (isSavingAccount) SavingAccountForm(),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: Divider(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: Theme.of(context).dividerColor,
               thickness: 1,
               indent: 20,
               endIndent: 20,
