@@ -51,6 +51,7 @@ class MyThemes {
           fontSize: 25,
           fontWeight: FontWeight.bold),
       headline1: TextStyle(
+          // for the drawer "budgetiser" title
           fontSize: 40,
           fontWeight: FontWeight.bold,
           color: Color.fromARGB(255, 255, 255, 255)),

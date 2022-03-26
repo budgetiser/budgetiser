@@ -16,19 +16,21 @@ class Account extends StatelessWidget {
         ),
       ),
       drawer: createDrawer(context),
-      body: Center(
-        child: Column(
-          children: const [
-            AccountItem("ksk", Icons.wallet_giftcard, 123),
-            AccountItem("sparen pc", Icons.abc, -123),
-            AccountItem("kreditkarte", Icons.payment, 123),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: const [
+              AccountItem("ksk", Icons.wallet_giftcard, 123),
+              AccountItem("sparen pc", Icons.abc, -123),
+              AccountItem("kreditkarte", Icons.payment, 123),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => NewAccount()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const NewAccount()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
