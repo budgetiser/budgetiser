@@ -18,54 +18,62 @@ class AccountItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => EditAccount(
-              accountName: name,
-              accountBalance: balance,
-            ),
-          ),
-        )
-      },
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-        width: double.infinity,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-        height: 90,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AccountItemTitle(
-                  name,
-                  icon,
+    return Column(
+      children: [
+        InkWell(
+          onTap: () => {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditAccount(
+                  accountName: name,
+                  accountBalance: balance,
                 ),
+              ),
+            )
+          },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              // color: Theme.of(context).colorScheme.secondary,
+            ),
+            height: 90,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                 Row(
-                  children: const [
-                    Icon(
-                      Icons.arrow_upward,
-                      size: 35,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AccountItemTitle(
+                      name,
+                      icon,
                     ),
-                    Icon(
-                      Icons.arrow_downward,
-                      size: 35,
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.arrow_upward,
+                          size: 35,
+                        ),
+                        Icon(
+                          Icons.arrow_downward,
+                          size: 35,
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                AccountBalanceText(balance),
               ],
             ),
-            AccountBalanceText(balance),
-          ],
+          ),
         ),
-      ),
+        Divider(
+          thickness: 1,
+          indent: 10,
+          endIndent: 10,
+        ),
+      ],
     );
   }
 }

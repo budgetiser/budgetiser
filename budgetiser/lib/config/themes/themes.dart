@@ -20,9 +20,8 @@ class MyThemes {
         fontSize: 40,
         fontWeight: FontWeight.bold,
       ),
-      headline6: TextStyle(fontSize: 30),
-      bodyText2: TextStyle(fontSize: 20),
-      bodyText1: TextStyle(fontSize: 10),
+      headline2: TextStyle(fontSize: 30), // for headline inside a screen
+      bodyText2: TextStyle(fontSize: 20), // normal text
       subtitle1: TextStyle(fontSize: 20), // for the drawer items
     ),
     primaryColor: const Color.fromRGBO(0, 0, 0, 1),
