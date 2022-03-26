@@ -40,5 +40,6 @@ class MyThemes {
     ),
     primaryColor: Colors.black,
     dividerColor: const Color.fromARGB(62, 255, 255, 255),
+    toggleableActiveColor: const Color.fromARGB(255, 50, 130, 184),
   );
 }

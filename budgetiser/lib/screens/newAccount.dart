@@ -16,8 +16,8 @@ class NewAccount extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const MyCustomForm(),
-              const SavingAccountPart(),
+              MyCustomForm(),
+              SavingAccountPart(),
             ],
           ),
         ),
@@ -35,7 +35,7 @@ class MyCustomForm extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: const BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
           // color: const Color.fromARGB(255, 255, 165, 165),
         ),
         child: Column(
@@ -62,7 +62,7 @@ class MyCustomForm extends StatelessWidget {
                 children: [
                   const Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                    child: const Text("balance"),
+                    child: Text("balance"),
                   ),
                   Flexible(
                     child: TextFormField(
@@ -102,127 +102,133 @@ class _SavingAccountPartState extends State<SavingAccountPart> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Divider(
-              color: Theme.of(context).dividerColor,
-              thickness: 1,
-              indent: 20,
-              endIndent: 20,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Divider(
+            color: Theme.of(context).dividerColor,
+            thickness: 1,
+            indent: 20,
+            endIndent: 20,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("is a saving account"),
+            Checkbox(
+              value: isSavingAccount,
+              onChanged: tick,
+            ),
+          ],
+        ),
+        // form for the saving account with input field for start and end date
+        if (isSavingAccount) savingAccountForm(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Divider(
+            color: Theme.of(context).dividerColor,
+            thickness: 1,
+            indent: 20,
+            endIndent: 20,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.primary,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("is a saving account"),
-              Checkbox(
-                value: isSavingAccount,
-                onChanged: tick,
-              ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.add),
+              Text("Add Account"),
             ],
           ),
-          // form for the saving account with input field for start and end date
-          if (isSavingAccount) SavingAccountForm(),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Divider(
-              color: Theme.of(context).dividerColor,
-              thickness: 1,
-              indent: 20,
-              endIndent: 20,
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.add),
-                Text("Add Account"),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget SavingAccountForm() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            // color: const Color.fromARGB(255, 255, 165, 165),
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: const Text("start date"),
-                  ),
-                  Flexible(
-                    child: DatePicker(),
-                  ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: const Text("end date"),
-                  ),
-                  Flexible(
-                    child: DatePicker(),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text("saving goal"),
-                  Flexible(
-                    child: TextFormField(
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        hintText: "Enter amount",
-                      ),
+  Widget savingAccountForm() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          // color: const Color.fromARGB(255, 255, 165, 165),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("start date"),
+                ),
+                Flexible(
+                  child: DatePicker(),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("end date"),
+                ),
+                Flexible(
+                  child: DatePicker(),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Text("saving goal"),
+                Flexible(
+                  child: TextFormField(
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      hintText: "Enter amount",
                     ),
                   ),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              width: 300,
+              height: 20,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: LinearProgressIndicator(
+                  value: 0.7,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary),
+                  backgroundColor: const Color(0xffD6D6D6),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(Icons.add),
+                  Text("new Saving transaction"),
                 ],
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                width: 300,
-                height: 20,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: LinearProgressIndicator(
-                    value: 0.7,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xff00ff00)),
-                    backgroundColor: Color(0xffD6D6D6),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.add),
-                    Text("new Saving transaction"),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
