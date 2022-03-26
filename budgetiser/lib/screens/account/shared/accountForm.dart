@@ -1,8 +1,40 @@
 import 'package:budgetiser/screens/account/shared/selectIcon.dart';
 import 'package:flutter/material.dart';
 
-class AccountForm extends StatelessWidget {
-  const AccountForm({Key? key}) : super(key: key);
+class AccountForm extends StatefulWidget {
+  AccountForm({
+    Key? key,
+    this.initialName,
+    this.initalBalance,
+  }) : super(key: key);
+  String? initialName;
+  int? initalBalance;
+
+  @override
+  State<AccountForm> createState() => _AccountFormState();
+}
+
+class _AccountFormState extends State<AccountForm> {
+  var nameController = TextEditingController();
+  var balanceController = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.initialName != null) {
+      nameController.text = widget.initialName!;
+    }
+    if (widget.initalBalance != null) {
+      balanceController.text = widget.initalBalance!.toString();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +43,6 @@ class AccountForm extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          // color: const Color.fromARGB(255, 255, 165, 165),
         ),
         child: Column(
           children: [
@@ -23,6 +54,8 @@ class AccountForm extends StatelessWidget {
                 ),
                 Flexible(
                   child: TextFormField(
+                    controller: nameController,
+                    // initialValue: widget.initialName,
                     decoration: const InputDecoration(
                       labelText: "Account Name",
                       border: OutlineInputBorder(),
@@ -34,7 +67,7 @@ class AccountForm extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: TextFormField(
-                initialValue: "0",
+                controller: balanceController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(

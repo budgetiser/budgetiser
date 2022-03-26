@@ -61,7 +61,7 @@ class _SavingAccountFormState extends State<SavingAccountForm> {
               children: <Widget>[
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, right: 8),
+                    padding: const EdgeInsets.only(bottom: 16, right: 8),
                     child: DatePicker(
                       label: "start",
                     ),
@@ -69,7 +69,7 @@ class _SavingAccountFormState extends State<SavingAccountForm> {
                 ),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, left: 8),
+                    padding: const EdgeInsets.only(bottom: 16, left: 8),
                     child: DatePicker(
                       label: "end",
                     ),
