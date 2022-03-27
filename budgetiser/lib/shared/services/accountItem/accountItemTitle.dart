@@ -18,7 +18,9 @@ class AccountItemTitle extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
             title,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.headline1?.merge(
+                  const TextStyle(fontSize: 30),
+                ),
           ),
         ),
       ],

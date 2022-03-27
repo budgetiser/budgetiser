@@ -16,30 +16,28 @@ Widget createDrawer(BuildContext context) {
               color: Colors.blue,
             ),
             child: Stack(
-              children: const <Widget>[
+              children: <Widget>[
                 Positioned(
                   bottom: 12.0,
                   left: 16.0,
-                  child: Text("Budgetiser",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  child: Text(
+                    "Budgetiser",
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
                 )
               ],
             )),
         singleDrawerItem(context, Icons.home, 'Home', 'home'),
         singleDrawerItem(context, Icons.attach_money, 'Budgets', 'budgets'),
         singleDrawerItem(context, Icons.account_balance, 'Account', 'account'),
-        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        const Divider(thickness: 2),
         singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
         singleDrawerItem(context, Icons.group_work, 'Groups', 'groups'),
-        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        const Divider(thickness: 2),
         singleDrawerItem(context, Icons.show_chart, 'Stats', 'stats'),
         singleDrawerItem(
             context, Icons.payment, 'Transactions', 'transactions'),
-        const Divider( height: 2, thickness: 2, color: Colors.black12),
+        const Divider(thickness: 2),
         singleDrawerItem(context, Icons.question_mark, 'Help', 'help'),
         singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
       ],
@@ -50,12 +48,16 @@ Widget createDrawer(BuildContext context) {
 Widget singleDrawerItem(
     BuildContext context, IconData icon, String title, String destination) {
   return ListTile(
-    title: Text(title),
+    title: Text(
+      title,
+      style: Theme.of(context).textTheme.subtitle1,
+    ),
     leading: Icon(icon),
     onTap: () {
       Navigator.pushReplacementNamed(
-          context,
-          destination);
+        context,
+        destination,
+      );
     },
   );
 }
