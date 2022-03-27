@@ -27,7 +27,7 @@ class Help extends StatelessWidget {
               // styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
             );
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
