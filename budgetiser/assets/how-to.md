@@ -2,15 +2,13 @@
 
 ---
 
-This is a simple Markdown test. Provide a text string with Markdown tags
-to the Markdown widget and it will display the formatted output in a
-scrollable widget.
+![Alt text](images/drawer.png)
 
 ## Transaction
 
 ## Account
 
-lorem
+![](images/accounts.png)
 
 ## Category
 

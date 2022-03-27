@@ -20,8 +20,10 @@ class Help extends StatelessWidget {
         future: rootBundle.loadString("assets/how-to.md"),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasData) {
+            String data = snapshot.data!
+                .replaceAll("](images/", "](resource:assets/images/");
             return Markdown(
-              data: snapshot.data!,
+              data: data,
               // styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
             );
           } else {
