@@ -15,7 +15,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - run: cd budgertiser
+      - run: cd budgetiser
       - run: flutter pub get
       - run: flutter test
       - run: flutter build apk
