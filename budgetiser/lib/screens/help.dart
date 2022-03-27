@@ -24,7 +24,6 @@ class Help extends StatelessWidget {
                 .replaceAll("](images/", "](resource:assets/images/");
             return Markdown(
               data: data,
-              // styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
             );
           } else {
             return const Center(
@@ -33,9 +32,6 @@ class Help extends StatelessWidget {
           }
         },
       ),
-      // const Center(
-      //   child: Markdown(data: _markdownData),
-      // ),
     );
   }
 }
