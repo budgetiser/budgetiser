@@ -2,7 +2,7 @@ import 'package:budgetiser/screens/account/editAccount.dart';
 import 'package:budgetiser/shared/services/accountItem/accountItemTitle.dart';
 import 'package:flutter/material.dart';
 
-import '../accountBalanceText.dart';
+import '../balanceText.dart';
 
 class AccountItem extends StatelessWidget {
   final String name;
@@ -63,7 +63,7 @@ class AccountItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                AccountBalanceText(balance),
+                BalanceText(balance),
               ],
             ),
           ),

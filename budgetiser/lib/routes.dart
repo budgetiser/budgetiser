@@ -4,7 +4,7 @@ import 'package:budgetiser/screens/groups.dart';
 import 'package:budgetiser/screens/help.dart';
 import 'package:budgetiser/screens/settings.dart';
 import 'package:budgetiser/screens/stats.dart';
-import 'package:budgetiser/screens/transactions.dart';
+import 'package:budgetiser/screens/transactions/transactions.dart';
 
 import 'screens/account/account.dart';
 import 'screens/home.dart';
