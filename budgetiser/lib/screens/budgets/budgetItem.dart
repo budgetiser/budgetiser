@@ -5,8 +5,9 @@ class BudgetItem extends StatelessWidget {
   final String name;
   final double currentValue;
   final double endValue;
+  final MaterialColor color;
   const BudgetItem({
-    Key? key, required this.name, required this.currentValue, required this.endValue,
+    Key? key, required this.name, required this.currentValue, required this.endValue, required this.color,
   }) : super(key: key);
 
   @override
@@ -38,7 +39,7 @@ class BudgetItem extends StatelessWidget {
                         lineHeight: 15.0,
                         percent: (currentValue/endValue),
                         backgroundColor: Colors.white,
-                        linearGradient: LinearGradient(colors: createGradient(Colors.green)),
+                        linearGradient: LinearGradient(colors: createGradient(color)),
                         clipLinearGradient: true,
                       ),
                     ),
