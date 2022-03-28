@@ -1,5 +1,4 @@
-import 'package:budgetiser/screens/account/shared/accountForm.dart';
-import 'package:budgetiser/screens/account/shared/savingAccountForm.dart';
+import 'package:budgetiser/screens/budgets/shared/budgetForm.dart';
 import 'package:flutter/material.dart';
 
 class NewBudget extends StatelessWidget {
@@ -18,6 +17,7 @@ class NewBudget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
+                BudgetForm(),
               ],
             ),
           ),
