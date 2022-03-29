@@ -9,9 +9,9 @@ import '../../account/shared/selectIcon.dart';
 class TransactionForm extends StatefulWidget {
   TransactionForm({
     Key? key,
-    this.transactionData,
+    this.initialTransactionData,
   }) : super(key: key);
-  Transaction? transactionData;
+  Transaction? initialTransactionData;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
@@ -23,17 +23,22 @@ class _TransactionFormState extends State<TransactionForm> {
   var titleController = TextEditingController();
   var valueController = TextEditingController();
   var descriptionController = TextEditingController();
+  var intervalController = TextEditingController();
 
   @override
   void initState() {
-    if (widget.transactionData != null) {
-      isRecurring = widget.transactionData! is RecurringTransaction;
-      titleController.text = widget.transactionData!.title;
-      valueController.text = widget.transactionData!.value.toString();
-      descriptionController.text = widget.transactionData!.description;
-      if (widget.transactionData is RecurringTransaction) {
-        intervalType =
-            (widget.transactionData as RecurringTransaction).intervalType;
+    if (widget.initialTransactionData != null) {
+      isRecurring = widget.initialTransactionData! is RecurringTransaction;
+      titleController.text = widget.initialTransactionData!.title;
+      valueController.text = widget.initialTransactionData!.value.toString();
+      descriptionController.text = widget.initialTransactionData!.description;
+      if (widget.initialTransactionData is RecurringTransaction) {
+        intervalController.text =
+            (widget.initialTransactionData as RecurringTransaction)
+                .intervalAmount
+                .toString();
+        intervalType = (widget.initialTransactionData as RecurringTransaction)
+            .intervalType;
       }
     }
 
@@ -142,21 +147,25 @@ class _TransactionFormState extends State<TransactionForm> {
             Column(
               children: [
                 Row(
-                  children: const <Widget>[
+                  children: <Widget>[
                     Flexible(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16, right: 8),
                         child: DatePicker(
                           label: "start",
+                          initialDate: (widget.initialTransactionData
+                                  is RecurringTransaction)
+                              ? (widget.initialTransactionData
+                                      as RecurringTransaction)
+                                  .startDate
+                              : DateTime.now(),
                         ),
                       ),
                     ),
-                    Flexible(
+                    const Flexible(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16, left: 8),
-                        child: DatePicker(
-                          label: "end",
-                        ),
+                        child: Text("Ends: "),
                       ),
                     ),
                   ],
@@ -171,6 +180,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
+                          controller: intervalController,
                           decoration: const InputDecoration(
                             labelText: "interval",
                             border: OutlineInputBorder(),

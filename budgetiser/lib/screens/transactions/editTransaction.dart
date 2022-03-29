@@ -24,7 +24,7 @@ class EditTransaction extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: TransactionForm(
-              transactionData: transactionData,
+              initialTransactionData: transactionData,
             ),
           ),
         ),

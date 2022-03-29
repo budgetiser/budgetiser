@@ -1,8 +1,15 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class DatePicker extends StatefulWidget {
-  const DatePicker({required this.label, Key? key}) : super(key: key);
+  DatePicker({
+    required this.label,
+    this.initialDate,
+    Key? key,
+  }) : super(key: key);
   final String label;
+  DateTime? initialDate;
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -10,6 +17,17 @@ class DatePicker extends StatefulWidget {
 
 class _DatePickerState extends State<DatePicker> {
   final dateController = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.initialDate != null) {
+      dateController.text = widget.initialDate.toString().substring(0, 10);
+    } else {
+      // dateController.text = DateTime.now().toString().substring(0, 10);
+    }
+
+    super.initState();
+  }
 
   @override
   void dispose() {
