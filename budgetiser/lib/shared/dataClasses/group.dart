@@ -1,19 +1,20 @@
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
-class Account {
+class Group {
   int id;
   String name;
   Icon icon;
   Color color;
-  double balance;
   String description;
+  List<TransactionCategory> transactionCategories;
 
-  Account({
+  Group({
     required this.id,
     required this.name,
     required this.icon,
     required this.color,
-    required this.balance,
     required this.description,
+    required this.transactionCategories,
   });
 }

@@ -4,10 +4,10 @@ import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 class _Transaction {
   int id;
   String title;
-  int value;
+  double value;
   TransactionCategory category;
   Account account;
-  Account account2;
+  Account? account2;
   String description;
 
   _Transaction({
@@ -16,7 +16,7 @@ class _Transaction {
     required this.value,
     required this.category,
     required this.account,
-    required this.account2,
+    this.account2,
     required this.description,
   });
 }
@@ -27,10 +27,10 @@ class SingleTransaction extends _Transaction {
   SingleTransaction({
     required int id,
     required String title,
-    required int value,
+    required double value,
     required TransactionCategory category,
     required Account account,
-    required Account account2,
+    Account? account2,
     required String description,
     required this.date,
   }) : super(
@@ -61,10 +61,10 @@ class RecurringTransaction extends _Transaction {
   RecurringTransaction({
     required int id,
     required String title,
-    required int value,
+    required double value,
     required TransactionCategory category,
     required Account account,
-    required Account account2,
+    Account? account2,
     required String description,
     required this.startDate,
     required this.endDate,

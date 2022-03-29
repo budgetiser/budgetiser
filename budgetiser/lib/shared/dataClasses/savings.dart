@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 
-class Account {
+class Savings {
   int id;
   String name;
   Icon icon;
   Color color;
   double balance;
+  DateTime startDate;
+  DateTime endDate;
+  double goal;
   String description;
 
-  Account({
+  Savings({
     required this.id,
     required this.name,
     required this.icon,
     required this.color,
     required this.balance,
+    required this.startDate,
+    required this.endDate,
+    required this.goal,
     required this.description,
   });
 }
