@@ -6,14 +6,14 @@ import 'package:budgetiser/screens/settings.dart';
 import 'package:budgetiser/screens/stats.dart';
 import 'package:budgetiser/screens/transactions/transactions.dart';
 
-import 'screens/account/account.dart';
+import 'screens/account/accountScreen.dart';
 import 'screens/home.dart';
 
 //named lower case and also needs to be defined in beginning of class as: static String routeID = ''
 var routes = {
   'home': (context) => Home(),
   'budgets': (context) => Budgets(),
-  'account': (context) => AccountsScreen(),
+  'account': (context) => AccountScreen(),
   'categories': (context) => Categories(),
   'groups': (context) => Groups(),
   'stats': (context) => Stats(),
