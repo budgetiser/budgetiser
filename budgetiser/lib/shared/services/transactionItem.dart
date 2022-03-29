@@ -39,8 +39,40 @@ class TransactionItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Account: ${transactionData.account.name}"),
-                    Text("Category: ${transactionData.category.name}"),
+                    Text("${transactionData.title}"),
+                    if (transactionData.account2 == null)
+                      Row(
+                        children: [
+                          Icon(
+                            transactionData.category.icon,
+                            color: transactionData.category.color,
+                          ),
+                          const Text(" in "),
+                          Icon(
+                            transactionData.account.icon,
+                            color: transactionData.account.color,
+                          ),
+                        ],
+                      ),
+                    if (transactionData.account2 != null)
+                      Row(
+                        children: [
+                          Icon(
+                            transactionData.category.icon,
+                            color: transactionData.category.color,
+                          ),
+                          const Text(" from "),
+                          Icon(
+                            transactionData.account.icon,
+                            color: transactionData.account.color,
+                          ),
+                          const Text(" to "),
+                          Icon(
+                            transactionData.account2!.icon,
+                            color: transactionData.account2!.color,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
                 Row(

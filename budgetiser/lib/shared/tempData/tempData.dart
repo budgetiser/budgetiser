@@ -194,7 +194,7 @@ List<Transaction> TMP_DATA_transactionList = [
     intervalType: 'Months',
     intervalAmount: 1,
     intervalUnit: 'Years',
-    description: 'at the bank',
+    description: '',
   ),
   RecurringTransaction(
     id: 6,
@@ -202,6 +202,7 @@ List<Transaction> TMP_DATA_transactionList = [
     value: 59,
     category: TMP_DATA_categoryList[4],
     account: TMP_DATA_accountList[3],
+    account2: TMP_DATA_accountList[0],
     startDate: DateTime(2021, 2, 4),
     endDate: DateTime(2022, 2, 4),
     intervalType: 'Months',
