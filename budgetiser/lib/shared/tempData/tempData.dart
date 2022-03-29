@@ -138,7 +138,7 @@ List<Transaction> TMP_DATA_transactionList = [
     value: -15.0,
     category: TMP_DATA_categoryList[2],
     account: TMP_DATA_accountList[0],
-    date: DateTime.now(),
+    date: DateTime(2020, 1, 1),
     description: 'for max mustermann',
   ),
   SingleTransaction(
@@ -147,7 +147,7 @@ List<Transaction> TMP_DATA_transactionList = [
     value: -13.89,
     category: TMP_DATA_categoryList[1],
     account: TMP_DATA_accountList[3],
-    date: DateTime.now(),
+    date: DateTime(2021, 10, 9),
     description: 'with friends',
   ),
   RecurringTransaction(
@@ -225,7 +225,7 @@ List<Transaction> TMP_DATA_transactionList = [
     value: -10.0,
     category: TMP_DATA_categoryList[6],
     account: TMP_DATA_accountList[2],
-    date: DateTime.now(),
+    date: DateTime(2021, 1, 1),
     description: 'at work',
   ),
   SingleTransaction(

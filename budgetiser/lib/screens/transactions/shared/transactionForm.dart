@@ -86,7 +86,12 @@ class _TransactionFormState extends State<TransactionForm> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const SelectAccount(),
+                  (widget.initialTransactionData != null)
+                      ? SelectAccount(
+                          initialValue:
+                              widget.initialTransactionData!.account.name,
+                        )
+                      : SelectAccount(),
                   Row(
                     children: const [
                       Text("Category:"),

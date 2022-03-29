@@ -1,14 +1,29 @@
+import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 
 class SelectAccount extends StatefulWidget {
-  const SelectAccount({Key? key}) : super(key: key);
+  SelectAccount({
+    Key? key,
+    this.initialValue,
+  }) : super(key: key);
+  String? initialValue;
 
   @override
   _SelectAccountState createState() => _SelectAccountState();
 }
 
 class _SelectAccountState extends State<SelectAccount> {
-  String dropdownValue = 'One';
+  final List<String> _accounts =
+      TMP_DATA_accountList.map((e) => e.name).toList();
+  String dropdownValue = TMP_DATA_accountList[0].name;
+
+  @override
+  void initState() {
+    if (widget.initialValue != null) {
+      dropdownValue = widget.initialValue!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +35,12 @@ class _SelectAccountState extends State<SelectAccount> {
           value: dropdownValue,
           icon: const Icon(Icons.arrow_downward),
           elevation: 16,
-          // underline: Container(
-          //   height: 2,
-          // ),
           onChanged: (String? newValue) {
             setState(() {
               dropdownValue = newValue!;
             });
           },
-          items: <String>['One', 'Two', 'Free', 'Four']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: _accounts.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),

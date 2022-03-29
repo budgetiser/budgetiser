@@ -30,7 +30,6 @@ class TransactionItem extends StatelessWidget {
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              // color: Theme.of(context).colorScheme.secondary,
             ),
             height: 90,
             child: Column(
@@ -39,7 +38,7 @@ class TransactionItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${transactionData.title}"),
+                    Text(transactionData.title),
                     if (transactionData.account2 == null)
                       Row(
                         children: [
