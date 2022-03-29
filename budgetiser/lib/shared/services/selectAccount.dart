@@ -33,7 +33,6 @@ class _SelectAccountState extends State<SelectAccount> {
         const SizedBox(width: 8),
         DropdownButton<String>(
           value: dropdownValue,
-          icon: const Icon(Icons.arrow_downward),
           elevation: 16,
           onChanged: (String? newValue) {
             setState(() {

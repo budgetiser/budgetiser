@@ -93,10 +93,15 @@ class _TransactionFormState extends State<TransactionForm> {
                         )
                       : SelectAccount(),
                   Row(
-                    children: const [
-                      Text("Category:"),
-                      SizedBox(width: 8),
-                      SelectCategory(),
+                    children: [
+                      const Text("Category:"),
+                      const SizedBox(width: 8),
+                      (widget.initialTransactionData != null)
+                          ? SelectCategory(
+                              initialCategory:
+                                  widget.initialTransactionData!.category.name,
+                            )
+                          : SelectCategory(),
                     ],
                   ),
                   Padding(
@@ -155,7 +160,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   children: <Widget>[
                     Flexible(
                       child: Padding(
-                        padding: EdgeInsets.only(bottom: 16, right: 8),
+                        padding: const EdgeInsets.only(bottom: 16, right: 8),
                         child: DatePicker(
                           label: "start",
                           initialDate: (widget.initialTransactionData
