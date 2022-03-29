@@ -4,7 +4,6 @@ import 'package:budgetiser/shared/services/selectCategory.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/services/datePicker.dart';
-import '../../account/shared/selectIcon.dart';
 
 class TransactionForm extends StatefulWidget {
   TransactionForm({

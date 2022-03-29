@@ -2,8 +2,6 @@ import 'package:budgetiser/screens/transactions/shared/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/drawer.dart';
-
 class EditTransaction extends StatelessWidget {
   EditTransaction({
     Key? key,
@@ -22,7 +20,7 @@ class EditTransaction extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: TransactionForm(
               initialTransactionData: transactionData,
             ),

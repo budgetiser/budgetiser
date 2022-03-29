@@ -34,8 +34,8 @@ class AccountItem extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
             width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               // color: Theme.of(context).colorScheme.secondary,
             ),
             height: 90,
@@ -68,7 +68,7 @@ class AccountItem extends StatelessWidget {
             ),
           ),
         ),
-        Divider(
+        const Divider(
           thickness: 1,
           indent: 10,
           endIndent: 10,
