@@ -97,23 +97,22 @@ class TransactionItem extends StatelessWidget {
                           ),
                       ],
                     ),
-                    if (transactionData.description != null)
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              transactionData.description,
-                              overflow: TextOverflow.ellipsis,
-                              textWidthBasis: TextWidthBasis.parent,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  ?.merge(const TextStyle(fontSize: 18)),
-                            ),
-                            width: MediaQuery.of(context).size.width * 0.25,
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            transactionData.description,
+                            overflow: TextOverflow.ellipsis,
+                            textWidthBasis: TextWidthBasis.parent,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.merge(const TextStyle(fontSize: 18)),
                           ),
-                        ],
-                      ),
+                          width: MediaQuery.of(context).size.width * 0.25,
+                        ),
+                      ],
+                    ),
                     BalanceText(transactionData.value),
                   ],
                 ),
