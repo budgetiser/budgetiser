@@ -16,7 +16,7 @@ class NewTransaction extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: TransactionForm(),
           ),
         ),

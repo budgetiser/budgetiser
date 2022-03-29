@@ -79,7 +79,7 @@ class Transactions extends StatelessWidget {
       ),
       startDate: DateTime.now(),
       endDate: DateTime.now(),
-      intervalType: 'Daily',
+      intervalType: 'Days',
       intervalAmount: 1,
       intervalUnit: 'Days',
       description: 'Test description',

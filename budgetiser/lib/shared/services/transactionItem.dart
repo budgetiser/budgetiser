@@ -16,19 +16,15 @@ class TransactionItem extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          // onTap: () => {
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (context) => EditTransaction(
-          //         initialIntervalMode: "Days",
-          //         initialIsRecurring: isRecurring,
-          //         initialNotes: notes,
-          //         initialTitle: "title",
-          //         initialValue: value,
-          //       ),
-          //     ),
-          //   )
-          // },
+          onTap: () => {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditTransaction(
+                  transactionData: transactionData,
+                ),
+              ),
+            )
+          },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
             width: double.infinity,

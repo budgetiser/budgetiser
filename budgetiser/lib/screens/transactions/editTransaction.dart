@@ -1,4 +1,5 @@
 import 'package:budgetiser/screens/transactions/shared/transactionForm.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/widgets/drawer.dart';
@@ -6,18 +7,10 @@ import '../../shared/widgets/drawer.dart';
 class EditTransaction extends StatelessWidget {
   EditTransaction({
     Key? key,
-    required this.initialNotes,
-    required this.initialTitle,
-    required this.initialValue,
-    required this.initialIntervalMode,
-    required this.initialIsRecurring,
+    required this.transactionData,
   }) : super(key: key);
 
-  bool? initialIsRecurring;
-  String? initialIntervalMode;
-  String? initialTitle;
-  int? initialValue;
-  String? initialNotes;
+  Transaction transactionData;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +24,7 @@ class EditTransaction extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: TransactionForm(
-              initialIntervalMode: initialIntervalMode,
-              initialIsRecurring: initialIsRecurring,
-              initialNotes: initialNotes,
-              initialTitle: initialTitle,
-              initialValue: initialValue,
+              transactionData: transactionData,
             ),
           ),
         ),

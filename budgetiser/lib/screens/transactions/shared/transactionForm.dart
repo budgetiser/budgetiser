@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/services/selectAccount.dart';
 import 'package:budgetiser/shared/services/selectCategory.dart';
 import 'package:flutter/material.dart';
@@ -8,17 +9,9 @@ import '../../account/shared/selectIcon.dart';
 class TransactionForm extends StatefulWidget {
   TransactionForm({
     Key? key,
-    this.initialNotes,
-    this.initialTitle,
-    this.initialValue,
-    this.initialIntervalMode,
-    this.initialIsRecurring,
+    this.transactionData,
   }) : super(key: key);
-  bool? initialIsRecurring;
-  String? initialIntervalMode;
-  String? initialTitle;
-  int? initialValue;
-  String? initialNotes;
+  Transaction? transactionData;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
@@ -26,27 +19,22 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   bool isRecurring = false;
-  String intervalMode = "Days";
+  String intervalType = "Days";
   var titleController = TextEditingController();
   var valueController = TextEditingController();
-  var notesController = TextEditingController();
+  var descriptionController = TextEditingController();
 
   @override
   void initState() {
-    if (widget.initialIsRecurring != null) {
-      isRecurring = widget.initialIsRecurring!;
-    }
-    if (widget.initialIntervalMode != null) {
-      intervalMode = widget.initialIntervalMode!;
-    }
-    if (widget.initialTitle != null) {
-      titleController.text = widget.initialTitle!;
-    }
-    if (widget.initialValue != null) {
-      valueController.text = widget.initialValue!.toString();
-    }
-    if (widget.initialNotes != null) {
-      notesController.text = widget.initialNotes!;
+    if (widget.transactionData != null) {
+      isRecurring = widget.transactionData! is RecurringTransaction;
+      titleController.text = widget.transactionData!.title;
+      valueController.text = widget.transactionData!.value.toString();
+      descriptionController.text = widget.transactionData!.description;
+      if (widget.transactionData is RecurringTransaction) {
+        intervalType =
+            (widget.transactionData as RecurringTransaction).intervalType;
+      }
     }
 
     super.initState();
@@ -60,7 +48,7 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void setIntervalMode(String? mode) {
     setState(() {
-      intervalMode = mode!;
+      intervalType = mode!;
     });
   }
 
@@ -116,7 +104,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: TextFormField(
-                      controller: notesController,
+                      controller: descriptionController,
                       decoration: const InputDecoration(
                         labelText: "Notes",
                         border: OutlineInputBorder(),
@@ -210,7 +198,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           onChanged: (e) {
                             setIntervalMode(e);
                           },
-                          value: intervalMode,
+                          value: intervalType,
                         ),
                       ),
                     ),
