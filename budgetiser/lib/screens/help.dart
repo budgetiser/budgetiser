@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../shared/widgets/drawer.dart';
 
 class Help extends StatelessWidget {
@@ -11,12 +13,24 @@ class Help extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Help",
-          // style: Theme.of(context).textTheme.caption,
         ),
       ),
       drawer: createDrawer(context),
-      body: const Center(
-        child: Text("Help"),
+      body: FutureBuilder(
+        future: rootBundle.loadString("assets/how-to.md"),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasData) {
+            String data = snapshot.data!
+                .replaceAll("](images/", "](resource:assets/images/");
+            return Markdown(
+              data: data,
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
