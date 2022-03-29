@@ -1,3 +1,4 @@
+import 'package:budgetiser/screens/transactions/editTransaction.dart';
 import 'package:budgetiser/shared/services/balanceText.dart';
 import 'package:flutter/material.dart';
 
@@ -25,14 +26,17 @@ class TransactionItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => {
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => EditAccount(
-            //       accountName: name,
-            //       accountBalance: balance,
-            //     ),
-            //   ),
-            // )
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditTransaction(
+                  initialIntervalMode: "Days",
+                  initialIsRecurring: isRecurring,
+                  initialNotes: notes,
+                  initialTitle: "title",
+                  initialValue: value,
+                ),
+              ),
+            )
           },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),

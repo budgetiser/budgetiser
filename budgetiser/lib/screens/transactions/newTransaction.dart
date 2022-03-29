@@ -8,34 +8,56 @@ class NewTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: "single"),
-              Tab(text: "recurring"),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("New Transaction"),
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: TransactionForm(),
           ),
-          title: const Text('New Transaction'),
-        ),
-        body: const TabBarView(
-          children: [
-            SingleChildScrollView(
-              child: TransactionForm(),
-            ),
-            Icon(Icons.directions_transit),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          label: const Text("Save"),
-          icon: const Icon(Icons.save),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        label: const Text("Save"),
+        icon: const Icon(Icons.save),
+      ),
     );
+    // DefaultTabController(
+    //   length: 2,
+    //   child: Scaffold(
+    //     appBar: AppBar(
+    //       bottom: const TabBar(
+    //         tabs: [
+    //           Tab(text: "single"),
+    //           Tab(text: "recurring"),
+    //         ],
+    //       ),
+    //       title: const Text('New Transaction'),
+    //     ),
+    //     body: const TabBarView(
+    //       children: [
+    //         SingleChildScrollView(
+    //           child:
+    //            TransactionForm(),
+    //         ),
+    //         Icon(Icons.directions_transit),
+    //       ],
+    //     ),
+    //     floatingActionButton: FloatingActionButton.extended(
+    //       onPressed: () {
+    //         Navigator.of(context).pop();
+    //       },
+    //       label: const Text("Save"),
+    //       icon: const Icon(Icons.save),
+    //     ),
+    //   ),
+    // );
   }
 }

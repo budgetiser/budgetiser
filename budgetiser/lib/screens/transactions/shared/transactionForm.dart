@@ -1,11 +1,24 @@
 import 'package:budgetiser/shared/services/selectAccount.dart';
+import 'package:budgetiser/shared/services/selectCategory.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/services/datePicker.dart';
 import '../../account/shared/selectIcon.dart';
 
 class TransactionForm extends StatefulWidget {
-  const TransactionForm({Key? key}) : super(key: key);
+  TransactionForm({
+    Key? key,
+    this.initialNotes,
+    this.initialTitle,
+    this.initialValue,
+    this.initialIntervalMode,
+    this.initialIsRecurring,
+  }) : super(key: key);
+  bool? initialIsRecurring;
+  String? initialIntervalMode;
+  String? initialTitle;
+  int? initialValue;
+  String? initialNotes;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
@@ -13,13 +26,41 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   bool isRecurring = false;
+  String intervalMode = "Days";
   var titleController = TextEditingController();
   var valueController = TextEditingController();
   var notesController = TextEditingController();
 
+  @override
+  void initState() {
+    if (widget.initialIsRecurring != null) {
+      isRecurring = widget.initialIsRecurring!;
+    }
+    if (widget.initialIntervalMode != null) {
+      intervalMode = widget.initialIntervalMode!;
+    }
+    if (widget.initialTitle != null) {
+      titleController.text = widget.initialTitle!;
+    }
+    if (widget.initialValue != null) {
+      valueController.text = widget.initialValue!.toString();
+    }
+    if (widget.initialNotes != null) {
+      notesController.text = widget.initialNotes!;
+    }
+
+    super.initState();
+  }
+
   void tick(bool? v) {
     setState(() {
       isRecurring = v!;
+    });
+  }
+
+  void setIntervalMode(String? mode) {
+    setState(() {
+      intervalMode = mode!;
     });
   }
 
@@ -51,9 +92,17 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                     ],
                   ),
-                  SelectAccount(),
+                  const SizedBox(height: 8),
+                  const SelectAccount(),
+                  Row(
+                    children: const [
+                      Text("Category:"),
+                      SizedBox(width: 8),
+                      SelectCategory(),
+                    ],
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 16),
                     child: TextFormField(
                       controller: valueController,
                       keyboardType:
@@ -80,7 +129,7 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
 
           // recurring:
-          Divider(),
+          const Divider(),
           InkWell(
               enableFeedback: false,
               child: Row(
@@ -119,6 +168,49 @@ class _TransactionFormState extends State<TransactionForm> {
                         padding: EdgeInsets.only(bottom: 16, left: 8),
                         child: DatePicker(
                           label: "end",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  // number input for the interval and dropdown with day month year input
+                  children: <Widget>[
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16, right: 8),
+                        child: TextFormField(
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: "interval",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16, left: 8),
+                        child: DropdownButton<String>(
+                          items: <String>[
+                            "Days",
+                            "Weeks",
+                            "Months",
+                            "Years",
+                          ]
+                              .map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      e,
+                                    ),
+                                  ))
+                              .toList(),
+                          onChanged: (e) {
+                            setIntervalMode(e);
+                          },
+                          value: intervalMode,
                         ),
                       ),
                     ),
