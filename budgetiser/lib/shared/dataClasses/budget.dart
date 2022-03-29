@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Budget {
   int id;
   String name;
-  Icon icon;
+  IconData icon;
   Color color;
   String description;
   double balance;

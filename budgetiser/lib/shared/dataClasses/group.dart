@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Group {
   int id;
   String name;
-  Icon icon;
+  IconData icon;
   Color color;
   String description;
   List<TransactionCategory> transactionCategories;
