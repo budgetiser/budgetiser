@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Account {
   int id;
   String name;
-  Icon icon;
+  IconData icon;
   Color color;
   double balance;
   String description;

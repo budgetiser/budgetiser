@@ -1,12 +1,90 @@
 import 'package:budgetiser/screens/transactions/newTransaction.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/services/transactionItem.dart';
 import 'package:flutter/material.dart';
+import '../../shared/dataClasses/account.dart';
 import '../../shared/widgets/drawer.dart';
-import '../account/newAccount.dart';
 
 class Transactions extends StatelessWidget {
   static String routeID = 'transactions';
-  const Transactions({Key? key}) : super(key: key);
+  Transactions({Key? key}) : super(key: key);
+
+  List<Transaction> transactionList = [
+    SingleTransaction(
+      id: 1,
+      title: 'Test',
+      value: 10.0,
+      category: TransactionCategory(
+        id: 123,
+        name: 'Test',
+        icon: Icons.abc,
+        color: Colors.red,
+        description: "Test description",
+        isHidden: false,
+      ),
+      account: Account(
+        id: 123,
+        name: 'ksk',
+        icon: Icons.account_balance_wallet,
+        color: Colors.red,
+        balance: 10.0,
+        description: "Test description",
+      ),
+      date: DateTime.now(),
+      description: 'Test description',
+    ),
+    SingleTransaction(
+      id: 2,
+      title: 'second transaction',
+      value: 10.0,
+      category: TransactionCategory(
+        id: 123,
+        name: 'Test',
+        icon: Icons.abc,
+        color: Colors.red,
+        description: "Test description",
+        isHidden: false,
+      ),
+      account: Account(
+        id: 1232,
+        name: 'pocket',
+        icon: Icons.account_balance_wallet,
+        color: Colors.red,
+        balance: 10.0,
+        description: "Test description",
+      ),
+      date: DateTime.now(),
+      description: 'Test description',
+    ),
+    RecurringTransaction(
+      id: 3,
+      title: 'Recurring transaction',
+      value: 10.0,
+      category: TransactionCategory(
+        id: 123,
+        name: 'Test',
+        icon: Icons.abc,
+        color: Colors.red,
+        description: "Test description",
+        isHidden: false,
+      ),
+      account: Account(
+        id: 123,
+        name: 'ksk',
+        icon: Icons.account_balance_wallet,
+        color: Colors.red,
+        balance: 10.0,
+        description: "Test description",
+      ),
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      intervalType: 'Daily',
+      intervalAmount: 1,
+      intervalUnit: 'Days',
+      description: 'Test description',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -21,38 +99,10 @@ class Transactions extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              TransactionItem(
-                account: "account",
-                category: "category",
-                date: DateTime(2020, 3, 01),
-                value: 321,
-                isRecurring: false,
-                notes: "notes lang alksdjfö lasdhf lökajhl sdkfh ",
-              ),
-              TransactionItem(
-                account: "account",
-                category: "category",
-                date: DateTime(2020, 3, 01),
-                value: -20,
-                isRecurring: false,
-                notes: "notesasdfadsfasd fd",
-              ),
-              TransactionItem(
-                account: "account",
-                category: "cat123",
-                date: DateTime(2020, 3, 01),
-                value: 4000,
-                isRecurring: true,
-                notes: "note sas d asdasdasd ad s",
-              ),
-              TransactionItem(
-                account: "account",
-                category: "asdfasd",
-                date: DateTime(2020, 3, 01),
-                value: 4000,
-                isRecurring: true,
-                notes: null,
-              ),
+              for (var transaction in transactionList)
+                TransactionItem(
+                  transactionData: transaction,
+                ),
             ],
           ),
         ),

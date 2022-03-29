@@ -1,7 +1,7 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 
-class _Transaction {
+abstract class Transaction {
   int id;
   String title;
   double value;
@@ -10,7 +10,7 @@ class _Transaction {
   Account? account2;
   String description;
 
-  _Transaction({
+  Transaction({
     required this.id,
     required this.title,
     required this.value,
@@ -21,7 +21,7 @@ class _Transaction {
   });
 }
 
-class SingleTransaction extends _Transaction {
+class SingleTransaction extends Transaction {
   DateTime date;
 
   SingleTransaction({
@@ -51,7 +51,7 @@ class SingleTransaction extends _Transaction {
 //   Yearly,
 // }
 
-class RecurringTransaction extends _Transaction {
+class RecurringTransaction extends Transaction {
   DateTime startDate;
   DateTime endDate;
   String intervalType;

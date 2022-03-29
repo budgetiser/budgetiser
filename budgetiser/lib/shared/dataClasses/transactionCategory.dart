@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TransactionCategory {
   int id;
   String name;
-  Icon icon;
+  IconData icon;
   Color color;
   String description;
   bool isHidden;

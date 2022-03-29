@@ -63,7 +63,7 @@ class AccountItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                BalanceText(balance),
+                BalanceText(balance.toDouble()),
               ],
             ),
           ),

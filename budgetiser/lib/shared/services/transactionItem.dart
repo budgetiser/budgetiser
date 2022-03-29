@@ -1,43 +1,34 @@
 import 'package:budgetiser/screens/transactions/editTransaction.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/services/balanceText.dart';
 import 'package:flutter/material.dart';
 
 class TransactionItem extends StatelessWidget {
   TransactionItem({
     Key? key,
-    required this.account,
-    required this.category,
-    required this.date,
-    required this.value,
-    required this.isRecurring,
-    this.notes,
+    required this.transactionData,
   }) : super(key: key);
 
-  int value;
-  String account;
-  String category;
-  String? notes = "";
-  bool isRecurring;
-  DateTime date;
+  Transaction transactionData;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
-          onTap: () => {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EditTransaction(
-                  initialIntervalMode: "Days",
-                  initialIsRecurring: isRecurring,
-                  initialNotes: notes,
-                  initialTitle: "title",
-                  initialValue: value,
-                ),
-              ),
-            )
-          },
+          // onTap: () => {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => EditTransaction(
+          //         initialIntervalMode: "Days",
+          //         initialIsRecurring: isRecurring,
+          //         initialNotes: notes,
+          //         initialTitle: "title",
+          //         initialValue: value,
+          //       ),
+          //     ),
+          //   )
+          // },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
             width: double.infinity,
@@ -52,8 +43,8 @@ class TransactionItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Account $account"),
-                    Text("Category $category"),
+                    Text("Account: ${transactionData.account.name}"),
+                    Text("Category: ${transactionData.category.name}"),
                   ],
                 ),
                 Row(
@@ -61,24 +52,30 @@ class TransactionItem extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          "${date.day}/${date.month}/${date.year}",
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
+                        if (transactionData is SingleTransaction)
+                          Text(
+                            "${(transactionData as SingleTransaction).date.day}/${(transactionData as SingleTransaction).date.month}/${(transactionData as SingleTransaction).date.year}",
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                        if (transactionData is RecurringTransaction)
+                          Text(
+                            "${(transactionData as RecurringTransaction).startDate.day}/${(transactionData as RecurringTransaction).startDate.month}/${(transactionData as RecurringTransaction).startDate.year}",
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
                         const SizedBox(width: 10),
-                        if (isRecurring)
+                        if (transactionData is RecurringTransaction)
                           Icon(
                             Icons.repeat,
                             color: Theme.of(context).colorScheme.primary,
                           ),
                       ],
                     ),
-                    if (notes != null)
+                    if (transactionData.description != null)
                       Row(
                         children: [
                           Container(
                             child: Text(
-                              notes!,
+                              transactionData.description,
                               overflow: TextOverflow.ellipsis,
                               textWidthBasis: TextWidthBasis.parent,
                               style: Theme.of(context)
@@ -90,7 +87,7 @@ class TransactionItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                    BalanceText(value),
+                    BalanceText(transactionData.value),
                   ],
                 ),
               ],
