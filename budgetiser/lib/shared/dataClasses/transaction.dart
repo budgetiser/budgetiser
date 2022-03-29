@@ -43,3 +43,41 @@ class SingleTransaction extends _Transaction {
           description: description,
         );
 }
+
+// enum IntervalType {  TODO: discuss enum
+//   Daily,
+//   Weekly,
+//   Monthly,
+//   Yearly,
+// }
+
+class RecurringTransaction extends _Transaction {
+  DateTime startDate;
+  DateTime endDate;
+  String intervalType;
+  int intervalAmount;
+  String intervalUnit;
+
+  RecurringTransaction({
+    required int id,
+    required String title,
+    required int value,
+    required TransactionCategory category,
+    required Account account,
+    required Account account2,
+    required String description,
+    required this.startDate,
+    required this.endDate,
+    required this.intervalType,
+    required this.intervalAmount,
+    required this.intervalUnit,
+  }) : super(
+          id: id,
+          title: title,
+          value: value,
+          category: category,
+          account: account,
+          account2: account2,
+          description: description,
+        );
+}
