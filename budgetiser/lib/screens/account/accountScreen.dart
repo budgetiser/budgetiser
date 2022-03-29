@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../shared/services/accountItem/accountItem.dart';
 import '../../shared/widgets/drawer.dart';
 
-class Account extends StatelessWidget {
+class AccountsScreen extends StatelessWidget {
   static String routeID = 'account';
-  const Account({Key? key}) : super(key: key);
+  const AccountsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

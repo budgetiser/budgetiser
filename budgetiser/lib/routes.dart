@@ -13,7 +13,7 @@ import 'screens/home.dart';
 var routes = {
   'home': (context) => Home(),
   'budgets': (context) => Budgets(),
-  'account': (context) => Account(),
+  'account': (context) => AccountsScreen(),
   'categories': (context) => Categories(),
   'groups': (context) => Groups(),
   'stats': (context) => Stats(),
