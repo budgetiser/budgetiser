@@ -14,7 +14,6 @@ class CategoryForm extends StatefulWidget {
 
 class _CategoryFormState extends State<CategoryForm> {
   var nameController = TextEditingController();
-  var balanceController = TextEditingController();
 
   @override
   void initState() {
