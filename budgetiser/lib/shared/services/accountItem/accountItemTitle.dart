@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AccountItemTitle extends StatelessWidget {
-  const AccountItemTitle(this.title, this.icon, {Key? key}) : super(key: key);
+  const AccountItemTitle({
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.color,
+  }) : super(key: key);
 
   final String title;
   final IconData icon;
+  final Color color;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -13,6 +20,7 @@ class AccountItemTitle extends StatelessWidget {
         Icon(
           icon,
           size: 30,
+          color: color,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),

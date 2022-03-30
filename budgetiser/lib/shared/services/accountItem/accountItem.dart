@@ -42,8 +42,9 @@ class AccountItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AccountItemTitle(
-                      accountData.name,
-                      accountData.icon,
+                      title: accountData.name,
+                      icon: accountData.icon,
+                      color: accountData.color,
                     ),
                     Row(
                       children: const [
@@ -59,7 +60,16 @@ class AccountItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                BalanceText(accountData.balance),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      accountData.description,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    BalanceText(accountData.balance),
+                  ],
+                ),
               ],
             ),
           ),
