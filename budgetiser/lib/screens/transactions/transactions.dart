@@ -1,28 +1,30 @@
-import 'package:budgetiser/screens/account/newAccount.dart';
+import 'package:budgetiser/screens/transactions/newTransaction.dart';
+import 'package:budgetiser/shared/services/transactionItem.dart';
 import 'package:flutter/material.dart';
-import '../../shared/services/accountItem/accountItem.dart';
+import '../../shared/tempData/tempData.dart';
 import '../../shared/widgets/drawer.dart';
 
-class Account extends StatelessWidget {
-  static String routeID = 'account';
-  const Account({Key? key}) : super(key: key);
+class Transactions extends StatelessWidget {
+  static String routeID = 'transactions';
+  Transactions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Accounts",
+          "Transactions",
         ),
       ),
       drawer: createDrawer(context),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
-            children: const [
-              AccountItem("ksk", Icons.wallet_giftcard, 123),
-              AccountItem("sparen pc", Icons.abc, -123),
-              AccountItem("kreditkarte", Icons.payment, 123),
+            children: [
+              for (var transaction in TMP_DATA_transactionList)
+                TransactionItem(
+                  transactionData: transaction,
+                ),
             ],
           ),
         ),
@@ -30,9 +32,8 @@ class Account extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const NewAccount()));
+              MaterialPageRoute(builder: (context) => const NewTransaction()));
         },
-        tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),

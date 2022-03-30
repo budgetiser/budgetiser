@@ -45,19 +45,20 @@ class MyThemes {
       tertiary: DARK_TERTIARY,
     ),
     textTheme: const TextTheme(
-      caption: TextStyle(
-          color: Color.fromARGB(255, 255, 255, 255),
-          fontSize: 25,
-          fontWeight: FontWeight.bold),
-      headline1: TextStyle(
-          // for the drawer "budgetiser" title
-          fontSize: 40,
-          fontWeight: FontWeight.bold,
-          color: Color.fromARGB(255, 255, 255, 255)),
-      headline2: TextStyle(fontSize: 30), // for headline inside a screen
-      bodyText2: TextStyle(fontSize: 20), // normal text
-      subtitle1: TextStyle(fontSize: 20), // for the drawer items
-    ),
+        caption: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontSize: 25,
+            fontWeight: FontWeight.bold),
+        headline1: TextStyle(
+            // for the drawer "budgetiser" title
+            fontSize: 40,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 255, 255, 255)),
+        headline2: TextStyle(fontSize: 30), // for headline inside a screen
+        bodyText2: TextStyle(fontSize: 20), // normal text
+        subtitle1: TextStyle(fontSize: 20), // for the drawer items
+        bodyText1: TextStyle(fontSize: 20, color: Colors.grey) // ??
+        ),
     primaryColor: Colors.black,
     dividerTheme: const DividerThemeData(
       thickness: 1.5,
