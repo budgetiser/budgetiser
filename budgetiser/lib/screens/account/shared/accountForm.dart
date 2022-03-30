@@ -1,5 +1,6 @@
 import 'package:budgetiser/screens/account/shared/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
 
 class AccountForm extends StatefulWidget {
@@ -45,9 +46,16 @@ class _AccountFormState extends State<AccountForm> {
           children: [
             Row(
               children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SelectIcon(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SelectIcon(
+                    initialIcon: widget.initialAccount != null
+                        ? widget.initialAccount!.icon
+                        : null,
+                    color: widget.initialAccount != null
+                        ? widget.initialAccount!.color
+                        : null,
+                  ),
                 ),
                 Flexible(
                   child: TextFormField(
@@ -61,6 +69,8 @@ class _AccountFormState extends State<AccountForm> {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+            const Colorpicker(),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: TextFormField(

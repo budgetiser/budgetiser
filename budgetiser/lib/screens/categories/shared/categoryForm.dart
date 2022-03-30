@@ -42,7 +42,7 @@ class _CategoryFormState extends State<CategoryForm> {
           children: [
             Row(
               children: <Widget>[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(8.0),
                   child: SelectIcon(),
                 ),
