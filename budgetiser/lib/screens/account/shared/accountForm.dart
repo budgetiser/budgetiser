@@ -1,14 +1,13 @@
 import 'package:budgetiser/screens/account/shared/selectIcon.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:flutter/material.dart';
 
 class AccountForm extends StatefulWidget {
   AccountForm({
     Key? key,
-    this.initialName,
-    this.initalBalance,
+    this.initialAccount,
   }) : super(key: key);
-  String? initialName;
-  int? initalBalance;
+  Account? initialAccount;
 
   @override
   State<AccountForm> createState() => _AccountFormState();
@@ -20,11 +19,9 @@ class _AccountFormState extends State<AccountForm> {
 
   @override
   void initState() {
-    if (widget.initialName != null) {
-      nameController.text = widget.initialName!;
-    }
-    if (widget.initalBalance != null) {
-      balanceController.text = widget.initalBalance!.toString();
+    if (widget.initialAccount != null) {
+      nameController.text = widget.initialAccount!.name;
+      balanceController.text = widget.initialAccount!.balance.toString();
     }
     super.initState();
   }

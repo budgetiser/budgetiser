@@ -1,4 +1,5 @@
 import 'package:budgetiser/screens/account/newAccount.dart';
+import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 import '../../shared/services/accountItem/accountItem.dart';
 import '../../shared/widgets/drawer.dart';
@@ -19,10 +20,11 @@ class AccountScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Center(
           child: Column(
-            children: const [
-              AccountItem("ksk", Icons.wallet_giftcard, 123),
-              AccountItem("sparen pc", Icons.abc, -123),
-              AccountItem("kreditkarte", Icons.payment, 123),
+            children: [
+              for (var account in TMP_DATA_accountList)
+                AccountItem(
+                  accountData: account,
+                ),
             ],
           ),
         ),

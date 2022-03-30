@@ -1,19 +1,16 @@
 import 'package:budgetiser/screens/account/editAccount.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/services/accountItem/accountItemTitle.dart';
 import 'package:flutter/material.dart';
 
 import '../balanceText.dart';
 
 class AccountItem extends StatelessWidget {
-  final String name;
-  final IconData icon;
-  final int balance;
+  final Account accountData;
 
-  const AccountItem(
-    this.name,
-    this.icon,
-    this.balance, {
+  const AccountItem({
     Key? key,
+    required this.accountData,
   }) : super(key: key);
 
   @override
@@ -25,8 +22,7 @@ class AccountItem extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EditAccount(
-                  accountName: name,
-                  accountBalance: balance,
+                  accountData: accountData,
                 ),
               ),
             )
@@ -46,8 +42,8 @@ class AccountItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AccountItemTitle(
-                      name,
-                      icon,
+                      accountData.name,
+                      accountData.icon,
                     ),
                     Row(
                       children: const [
@@ -63,7 +59,7 @@ class AccountItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                BalanceText(balance.toDouble()),
+                BalanceText(accountData.balance),
               ],
             ),
           ),

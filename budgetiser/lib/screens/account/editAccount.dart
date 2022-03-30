@@ -1,16 +1,15 @@
 import 'package:budgetiser/screens/account/shared/accountForm.dart';
 import 'package:budgetiser/screens/account/shared/savingAccountForm.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:flutter/material.dart';
 
 class EditAccount extends StatelessWidget {
+  final Account accountData;
+
   const EditAccount({
     Key? key,
-    required this.accountName,
-    required this.accountBalance,
+    required this.accountData,
   }) : super(key: key);
-
-  final String accountName;
-  final int accountBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +25,8 @@ class EditAccount extends StatelessWidget {
             child: Column(
               children: [
                 AccountForm(
-                  initialName: accountName,
-                  initalBalance: accountBalance,
+                  initialAccount: accountData,
                 ),
-                const Divider(
-                  indent: 8,
-                ),
-                const SavingAccountForm(),
               ],
             ),
           ),
