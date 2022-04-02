@@ -1,4 +1,5 @@
 import 'package:budgetiser/screens/account/editAccount.dart';
+import 'package:budgetiser/screens/transactions/newTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/services/accountItem/accountItemTitle.dart';
 import 'package:flutter/material.dart';
@@ -47,14 +48,32 @@ class AccountItem extends StatelessWidget {
                       color: accountData.color,
                     ),
                     Row(
-                      children: const [
-                        Icon(
-                          Icons.arrow_upward,
-                          size: 35,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const NewTransaction()),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.arrow_upward,
+                            size: 35,
+                            color: Colors.green,
+                          ),
                         ),
-                        Icon(
-                          Icons.arrow_downward,
-                          size: 35,
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const NewTransaction()),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            size: 35,
+                            color: Colors.red,
+                          ),
                         ),
                       ],
                     ),
