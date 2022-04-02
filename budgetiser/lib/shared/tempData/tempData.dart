@@ -25,7 +25,7 @@ List<Account> TMP_DATA_accountList = [
   ),
   Account(
     id: 3,
-    name: "Bank Account",
+    name: "Bank Account long name",
     icon: Icons.account_balance_wallet,
     balance: 1230,
     color: Colors.orange,
