@@ -5,16 +5,18 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../services/notification/colorPicker.dart';
 
 class Colorpicker extends StatefulWidget {
-  const Colorpicker({
+  Colorpicker({
     Key? key,
+    this.selectedColor = Colors.blueAccent,
   }) : super(key: key);
+
+  Color selectedColor;
 
   @override
   State<Colorpicker> createState() => _ColorpickerState();
 }
 
 class _ColorpickerState extends State<Colorpicker> {
-  Color selectedColor = Colors.blueAccent;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -26,11 +28,11 @@ class _ColorpickerState extends State<Colorpicker> {
                 title: const Text('Pick a color!'),
                 content: SingleChildScrollView(
                   child: MaterialPicker(
-                    pickerColor: selectedColor, //default color
+                    pickerColor: widget.selectedColor, //default color
                     onColorChanged: (Color color) {
                       sendToParent(color);
                       setState(() {
-                        selectedColor = color;
+                        widget.selectedColor = color;
                       });
                       Navigator.of(context).pop();
                     },
@@ -53,7 +55,7 @@ class _ColorpickerState extends State<Colorpicker> {
         margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: selectedColor,
+          color: widget.selectedColor,
         ),
       ),
     );

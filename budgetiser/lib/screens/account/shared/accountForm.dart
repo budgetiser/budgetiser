@@ -72,16 +72,18 @@ class _AccountFormState extends State<AccountForm> {
               ],
             ),
             const SizedBox(height: 8),
-            NotificationListener<ColorPicked>(
-              child: const Colorpicker(),
-              onNotification: (n) {
-                print(n);
-                setState(() {
-                  widget.initialAccount!.color = n.col;
-                });
-                return true;
-              },
-            ),
+            widget.initialAccount != null
+                ? NotificationListener<ColorPicked>(
+                    child: Colorpicker(
+                        selectedColor: widget.initialAccount!.color),
+                    onNotification: (n) {
+                      setState(() {
+                        widget.initialAccount!.color = n.col;
+                      });
+                      return true;
+                    },
+                  )
+                : Colorpicker(),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: TextFormField(
