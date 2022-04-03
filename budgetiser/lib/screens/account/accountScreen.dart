@@ -18,6 +18,8 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  String currentSort = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +39,15 @@ class _AccountScreenState extends State<AccountScreen> {
                         onPressed: () {
                           Navigator.of(context).pop();
                           setState(() {
-                            widget.accountList
-                                .sort((a, b) => a.name.compareTo(b.name));
+                            if (currentSort == 'name') {
+                              currentSort = '';
+                              widget.accountList
+                                  .sort((b, a) => a.name.compareTo(b.name));
+                            } else {
+                              currentSort = 'name';
+                              widget.accountList
+                                  .sort((a, b) => a.name.compareTo(b.name));
+                            }
                           });
                         },
                         child: const Text('Name'),
@@ -47,8 +56,15 @@ class _AccountScreenState extends State<AccountScreen> {
                         onPressed: () {
                           Navigator.of(context).pop();
                           setState(() {
-                            widget.accountList
-                                .sort((a, b) => a.balance.compareTo(b.balance));
+                            if (currentSort == "balance") {
+                              widget.accountList.sort(
+                                  (a, b) => a.balance.compareTo(b.balance));
+                              currentSort = "";
+                            } else {
+                              widget.accountList.sort(
+                                  (a, b) => b.balance.compareTo(a.balance));
+                              currentSort = "balance";
+                            }
                           });
                         },
                         child: const Text('Balance'),
