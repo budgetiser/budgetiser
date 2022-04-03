@@ -3,6 +3,8 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../shared/services/notification/colorPicker.dart';
+
 class AccountForm extends StatefulWidget {
   AccountForm({
     Key? key,
@@ -70,7 +72,16 @@ class _AccountFormState extends State<AccountForm> {
               ],
             ),
             const SizedBox(height: 8),
-            const Colorpicker(),
+            NotificationListener<ColorPicked>(
+              child: const Colorpicker(),
+              onNotification: (n) {
+                print(n);
+                setState(() {
+                  widget.initialAccount!.color = n.col;
+                });
+                return true;
+              },
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: TextFormField(
@@ -83,6 +94,16 @@ class _AccountFormState extends State<AccountForm> {
                 ),
               ),
             ),
+            InkWell(
+              onTap: () => {
+                setState(
+                  () => widget.initialAccount!.color = Colors.red,
+                )
+              },
+              child: Text(
+                "change color",
+              ),
+            )
           ],
         ),
       ),
