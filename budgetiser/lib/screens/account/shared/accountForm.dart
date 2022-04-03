@@ -94,16 +94,6 @@ class _AccountFormState extends State<AccountForm> {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () => {
-                setState(
-                  () => widget.initialAccount!.color = Colors.red,
-                )
-              },
-              child: Text(
-                "change color",
-              ),
-            )
           ],
         ),
       ),
