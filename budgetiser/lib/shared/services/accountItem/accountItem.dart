@@ -82,9 +82,12 @@ class AccountItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      accountData.description,
-                      style: Theme.of(context).textTheme.bodyText1,
+                    Flexible(
+                      child: Text(
+                        accountData.description,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     BalanceText(accountData.balance),
                   ],
