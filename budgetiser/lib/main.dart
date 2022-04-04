@@ -1,10 +1,13 @@
 import 'package:budgetiser/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 import 'config/themes/themes.dart';
 import 'screens/home.dart';
 
-void main() {
+Future<void> main() async {
+  await Settings.init(cacheProvider: SharePreferenceCache());
+
   runApp(const MyApp());
 }
 

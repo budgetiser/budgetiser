@@ -19,5 +19,5 @@ var routes = {
   'stats': (context) => Stats(),
   'transactions': (context) => Transactions(),
   'help': (context) => Help(),
-  'settings': (context) => Settings(),
+  'settings': (context) => SettingsPage(),
 };
