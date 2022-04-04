@@ -1,15 +1,13 @@
+import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class BudgetItem extends StatelessWidget {
-  final String name;
-  final double currentValue;
-  final double endValue;
-  final MaterialColor color;
-  final bool isRecurring;
-  const BudgetItem({
-    Key? key, required this.name, required this.currentValue, required this.endValue, required this.color, required this.isRecurring,
+  BudgetItem({
+    Key? key,
+    required this.budgetData,
   }) : super(key: key);
+  Budget budgetData;
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +28,25 @@ class BudgetItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(name), Row(children: [Text("14 days left"), if(isRecurring) Icon(Icons.repeat)],)]
-                ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(budgetData.name),
+                      Row(
+                        children: [
+                          Text("days left: " + (budgetData.endDate).difference(DateTime.now()).inDays.toString()),
+                          if (budgetData.isRecurring) Icon(Icons.repeat)
+                        ],
+                      )
+                    ]),
                 Row(
                   children: [
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: (currentValue/endValue),
+                        percent: (budgetData.balance / budgetData.limit),
                         backgroundColor: Colors.white,
-                        linearGradient: LinearGradient(colors: createGradient(color)),
+                        linearGradient:
+                            LinearGradient(colors: createGradient(budgetData.color)),
                         clipLinearGradient: true,
                       ),
                     ),
@@ -49,8 +55,8 @@ class BudgetItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(currentValue.toString()),
-                    Text(endValue.toString()),
+                    Text(budgetData.balance.toString()),
+                    Text(budgetData.limit.toString()),
                   ],
                 ),
               ],
@@ -66,7 +72,7 @@ class BudgetItem extends StatelessWidget {
     );
   }
 
-  List<Color> createGradient(MaterialColor baseColor){
+  List<Color> createGradient(MaterialColor baseColor) {
     List<Color> gradient = [];
     gradient.add(baseColor.shade300);
     gradient.add(baseColor.shade400);

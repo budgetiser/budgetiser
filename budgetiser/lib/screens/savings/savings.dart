@@ -11,15 +11,7 @@ class Savings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Savings",
-          // style: Theme.of(context).textTheme.caption,
-        ),
-      ),
-      drawer: createDrawer(context),
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
           child: Column(
             children:  [
               for (var saving in TMP_DATA_savingsList)
@@ -28,16 +20,6 @@ class Savings extends StatelessWidget {
                 ),
             ],
           ),
-        ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: "New Budget",
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const NewSaving())
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+        );
   }
 }

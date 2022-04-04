@@ -28,7 +28,7 @@ Widget createDrawer(BuildContext context) {
               ],
             )),
         singleDrawerItem(context, Icons.home, 'Home', 'home'),
-        singleDrawerItem(context, Icons.attach_money, 'Budgets', 'savings'),
+        singleDrawerItem(context, Icons.attach_money, 'Plans', 'plans'),
         singleDrawerItem(context, Icons.account_balance, 'Account', 'account'),
         const Divider(thickness: 2),
         singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
