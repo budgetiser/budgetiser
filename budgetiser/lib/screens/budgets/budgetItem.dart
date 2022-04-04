@@ -6,8 +6,9 @@ class BudgetItem extends StatelessWidget {
   final double currentValue;
   final double endValue;
   final MaterialColor color;
+  final bool isRecurring;
   const BudgetItem({
-    Key? key, required this.name, required this.currentValue, required this.endValue, required this.color,
+    Key? key, required this.name, required this.currentValue, required this.endValue, required this.color, required this.isRecurring,
   }) : super(key: key);
 
   @override
@@ -30,7 +31,7 @@ class BudgetItem extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(name), Text("Noch 14 Tage")],
+                  children: [Text(name), Row(children: [Text("14 days left"), if(isRecurring) Icon(Icons.repeat)],)]
                 ),
                 Row(
                   children: [
@@ -67,9 +68,6 @@ class BudgetItem extends StatelessWidget {
 
   List<Color> createGradient(MaterialColor baseColor){
     List<Color> gradient = [];
-    //gradient.add(baseColor.shade50);
-    //gradient.add(baseColor.shade100);
-    //gradient.add(baseColor.shade200);
     gradient.add(baseColor.shade300);
     gradient.add(baseColor.shade400);
     gradient.add(baseColor.shade500);
