@@ -15,11 +15,7 @@ class NewBudget extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                BudgetForm(),
-              ],
-            ),
+            child: BudgetForm(),
           ),
         ),
       ),

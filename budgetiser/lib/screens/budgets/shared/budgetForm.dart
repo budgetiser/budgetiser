@@ -1,5 +1,5 @@
-import 'package:budgetiser/screens/account/shared/selectIcon.dart';
 import 'package:budgetiser/shared/services/datePicker.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
@@ -40,76 +40,64 @@ class _BudgetFormState extends State<BudgetForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: TextFormField(
-                    controller: nameController,
-                    // initialValue: widget.initialName,
-                    decoration: const InputDecoration(
-                      labelText: "Budget Name",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 13),
+          child: TextFormField(
+            controller: nameController,
+            // initialValue: widget.initialName,
+            decoration: const InputDecoration(
+              labelText: "Name",
+              border: OutlineInputBorder(),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 13),
-              child: TextFormField(
-                controller: balanceController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: "Initial Value",
-                  border: OutlineInputBorder(),
-                ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 13),
+          child: Row(
+            children: [
+              Flexible(child: Icon(Icons.add)),
+              //ColorPicker();
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 13),
+          child: TextFormField(
+            controller: balanceController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(
+              labelText: "Limit",
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 0, right: 8, top: 13),
+          child: Row(children: [
+            Flexible(
+              child: DatePicker(
+                label: "start",
               ),
             ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 0, right: 8, top: 13),
-                    child: DatePicker(
-                      label: "start",
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 0, left: 8, top: 13),
-                    child: DatePicker(
-                      label: "end",
-                    ),
-                  ),
-                ),
-              ],
+            Checkbox(
+              value: isRecurring,
+              onChanged: (bool? newValue) {
+                setState(() {
+                  isRecurring = newValue!;
+                });
+              },
             ),
-            Row(
-              children: [
-                Checkbox(
-                  value: isRecurring,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      isRecurring = newValue!;
-                    });
-                  },
-                ),
-                const Text("recurring"),
-              ],
-            ),
-          ],
+            const Text("recurring"),
+          ]),
         ),
-      ),
+        Row(
+          children: [
+            RecurringForm(isHidden: !isRecurring),
+          ],
+        )
+      ],
     );
   }
 }
