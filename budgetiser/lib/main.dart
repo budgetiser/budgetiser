@@ -6,7 +6,9 @@ import 'config/themes/themes.dart';
 import 'screens/home.dart';
 
 Future<void> main() async {
-  await Settings.init(cacheProvider: SharePreferenceCache());
+  SharePreferenceCache spCache = SharePreferenceCache();
+  await spCache.init();
+  await Settings.init(cacheProvider: spCache);
 
   runApp(const MyApp());
 }
@@ -18,11 +20,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: ThemeMode.system,
+      themeMode: _getThemeMode(),
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
       home: const Home(),
       routes: routes,
     );
+  }
+
+  ThemeMode _getThemeMode() {
+    switch (Settings.getValue("key-themeMode", "system")) {
+      case "system":
+        return ThemeMode.system;
+      case "light":
+        return ThemeMode.light;
+      case "dark":
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
   }
 }
