@@ -1,3 +1,4 @@
+import 'package:budgetiser/screens/savings/newSaving.dart';
 import 'package:budgetiser/screens/savings/shared/savingItem.dart';
 import 'package:flutter/material.dart';
 import '../../shared/tempData/tempData.dart';
@@ -31,9 +32,9 @@ class Savings extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         tooltip: "New Budget",
         onPressed: () {
-          //Navigator.of(context).push(
-             // MaterialPageRoute(builder: (context) => const NewSaving())
-          //);
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const NewSaving())
+          );
         },
         child: const Icon(Icons.add),
       ),

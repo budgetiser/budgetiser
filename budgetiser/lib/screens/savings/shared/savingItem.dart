@@ -1,3 +1,4 @@
+import 'package:budgetiser/screens/savings/editSaving.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ class SavingItem extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: () => {},
+          onTap: () => {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditSaving(savingData: savingData,))),
+        },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
