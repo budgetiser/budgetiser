@@ -1,19 +1,17 @@
 import 'package:budgetiser/screens/account/editAccount.dart';
+import 'package:budgetiser/screens/transactions/newTransaction.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/services/accountItem/accountItemTitle.dart';
 import 'package:flutter/material.dart';
 
 import '../balanceText.dart';
 
 class AccountItem extends StatelessWidget {
-  final String name;
-  final IconData icon;
-  final int balance;
+  final Account accountData;
 
-  const AccountItem(
-    this.name,
-    this.icon,
-    this.balance, {
+  const AccountItem({
     Key? key,
+    required this.accountData,
   }) : super(key: key);
 
   @override
@@ -25,8 +23,7 @@ class AccountItem extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EditAccount(
-                  accountName: name,
-                  accountBalance: balance,
+                  accountData: accountData,
                 ),
               ),
             )
@@ -46,24 +43,55 @@ class AccountItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AccountItemTitle(
-                      name,
-                      icon,
+                      title: accountData.name,
+                      icon: accountData.icon,
+                      color: accountData.color,
                     ),
                     Row(
-                      children: const [
-                        Icon(
-                          Icons.arrow_upward,
-                          size: 35,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const NewTransaction()),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.arrow_upward,
+                            size: 35,
+                            color: Colors.green,
+                          ),
                         ),
-                        Icon(
-                          Icons.arrow_downward,
-                          size: 35,
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const NewTransaction()),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            size: 35,
+                            color: Colors.red,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                BalanceText(balance.toDouble()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        accountData.description,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    BalanceText(accountData.balance),
+                  ],
+                ),
               ],
             ),
           ),

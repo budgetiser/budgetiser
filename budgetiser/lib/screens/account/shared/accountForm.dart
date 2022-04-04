@@ -1,14 +1,16 @@
 import 'package:budgetiser/screens/account/shared/selectIcon.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
+
+import '../../../shared/services/notification/colorPicker.dart';
 
 class AccountForm extends StatefulWidget {
   AccountForm({
     Key? key,
-    this.initialName,
-    this.initalBalance,
+    this.initialAccount,
   }) : super(key: key);
-  String? initialName;
-  int? initalBalance;
+  Account? initialAccount;
 
   @override
   State<AccountForm> createState() => _AccountFormState();
@@ -20,11 +22,9 @@ class _AccountFormState extends State<AccountForm> {
 
   @override
   void initState() {
-    if (widget.initialName != null) {
-      nameController.text = widget.initialName!;
-    }
-    if (widget.initalBalance != null) {
-      balanceController.text = widget.initalBalance!.toString();
+    if (widget.initialAccount != null) {
+      nameController.text = widget.initialAccount!.name;
+      balanceController.text = widget.initialAccount!.balance.toString();
     }
     super.initState();
   }
@@ -48,9 +48,16 @@ class _AccountFormState extends State<AccountForm> {
           children: [
             Row(
               children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SelectIcon(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SelectIcon(
+                    initialIcon: widget.initialAccount != null
+                        ? widget.initialAccount!.icon
+                        : null,
+                    color: widget.initialAccount != null
+                        ? widget.initialAccount!.color
+                        : null,
+                  ),
                 ),
                 Flexible(
                   child: TextFormField(
@@ -64,6 +71,19 @@ class _AccountFormState extends State<AccountForm> {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+            widget.initialAccount != null
+                ? NotificationListener<ColorPicked>(
+                    child: Colorpicker(
+                        selectedColor: widget.initialAccount!.color),
+                    onNotification: (n) {
+                      setState(() {
+                        widget.initialAccount!.color = n.col;
+                      });
+                      return true;
+                    },
+                  )
+                : Colorpicker(),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: TextFormField(
