@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/services/notification/themeChangedNotification.dart';
 import 'package:flutter/material.dart';
 import '../shared/widgets/drawer.dart';
 
@@ -27,19 +28,19 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Center(
         child: Column(
           children: [
-            Text("import export"),
-            Text("reset", style: TextStyle(color: Colors.red)),
-            DropdownButtonFormField(items: [
+            const Text("import export"),
+            const Text("reset", style: const TextStyle(color: Colors.red)),
+            DropdownButtonFormField(items: const [
               DropdownMenuItem(child: Text("t"), value: "t"),
               DropdownMenuItem(child: Text("a"), value: "a"),
             ], onChanged: null),
-            Text("data"),
+            const Text("data"),
             Center(
               child: Column(
                 children: <Widget>[
                   _wifi(context),
                   _buildPreferenceSwitch(context),
-                  SizedBox(
+                  const SizedBox(
                     height: 50.0,
                   ),
                 ],
@@ -53,23 +54,25 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Cache cleared for selected cache.',
                 );
               },
-              child: Text('Clear selected Cache'),
+              child: const Text('Clear selected Cache'),
             ),
             Settings.getValue<bool>('wifi_key', false)
-                ? Text("Wifi is ON")
-                : Text("Wifi is OFF"),
+                ? const Text("Wifi is ON")
+                : const Text("Wifi is OFF"),
             _buildThemeSwitch(context),
             // =========
             DropDownSettingsTile<String>(
               title: 'E-Mail View',
               settingKey: 'key-themeMode',
-              values: <String, String>{
+              values: const <String, String>{
                 'system': 'system',
                 'light': 'light',
                 'dark': 'dark',
               },
               selected: "system",
               onChange: (value) {
+                ThemeChangedNotification(value).dispatch(context);
+                sendToParent(value);
                 debugPrint('key-themeMode: $value');
               },
             ),
@@ -79,16 +82,20 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  void sendToParent(String value) {
+    ThemeChangedNotification(value).dispatch(context);
+  }
+
   Widget _buildPreferenceSwitch(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Text('Shared Pref'),
+        const Text('Shared Pref'),
         Switch(
             activeColor: Theme.of(context).accentColor,
             value: false,
             onChanged: (newVal) {}),
-        Text('Hive Storage'),
+        const Text('Hive Storage'),
       ],
     );
   }
@@ -121,7 +128,7 @@ class _SettingsPageState extends State<SettingsPage> {
           title: 'Wi-Fi',
           enabledLabel: 'Enabled',
           disabledLabel: 'Disabled',
-          leading: Icon(Icons.wifi),
+          leading: const Icon(Icons.wifi),
           onChange: (value) {
             debugPrint('keywifi: $value');
             setState(() {});
@@ -135,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Text('Light Theme'),
+        const Text('Light Theme'),
         Switch(
             activeColor: Theme.of(context).accentColor,
             value: Settings.getValue<bool>("_isDarkTheme", true),
@@ -143,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
               await Settings.setValue<bool>("_isDarkTheme", newVal);
               setState(() {});
             }),
-        Text('Dark Theme'),
+        const Text('Dark Theme'),
       ],
     );
   }
@@ -154,7 +161,7 @@ void showSnackBar(BuildContext context, String message) {
     SnackBar(
       content: Text(
         message,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
         ),
       ),
