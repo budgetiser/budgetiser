@@ -1,32 +1,28 @@
-import 'package:budgetiser/screens/account/shared/accountForm.dart';
-import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/screens/transactions/shared/transactionForm.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:flutter/material.dart';
 
-class EditAccount extends StatelessWidget {
-  final Account accountData;
-
-  const EditAccount({
+class EditTransaction extends StatelessWidget {
+  EditTransaction({
     Key? key,
-    required this.accountData,
+    required this.transactionData,
   }) : super(key: key);
+
+  Transaction transactionData;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Account"),
+        title: const Text("Edit Transaction"),
       ),
       body: Container(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                AccountForm(
-                  initialAccount: accountData,
-                ),
-              ],
+            child: TransactionForm(
+              initialTransactionData: transactionData,
             ),
           ),
         ),

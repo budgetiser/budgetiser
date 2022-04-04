@@ -1,20 +1,23 @@
-import 'package:budgetiser/screens/account/shared/accountForm.dart';
-import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/screens/categories/shared/categoryForm.dart';
+import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class EditAccount extends StatelessWidget {
-  final Account accountData;
-
-  const EditAccount({
+class NewCategory extends StatefulWidget {
+  NewCategory({
     Key? key,
-    required this.accountData,
   }) : super(key: key);
 
+  @override
+  State<NewCategory> createState() => _NewCategoryState();
+}
+
+class _NewCategoryState extends State<NewCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Account"),
+        title: const Text("New Category"),
       ),
       body: Container(
         alignment: Alignment.topCenter,
@@ -23,9 +26,8 @@ class EditAccount extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
-                AccountForm(
-                  initialAccount: accountData,
-                ),
+                CategoryForm(),
+                Colorpicker(),
               ],
             ),
           ),
@@ -35,8 +37,8 @@ class EditAccount extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        label: const Text("Save"),
-        icon: const Icon(Icons.save),
+        label: const Text("Add Category"),
+        icon: const Icon(Icons.check),
       ),
     );
   }

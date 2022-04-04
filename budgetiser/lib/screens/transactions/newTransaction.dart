@@ -1,21 +1,21 @@
-import 'package:budgetiser/screens/account/shared/accountForm.dart';
+import 'package:budgetiser/screens/transactions/shared/transactionForm.dart';
 import 'package:flutter/material.dart';
 
-class NewAccount extends StatelessWidget {
-  const NewAccount({Key? key}) : super(key: key);
+class NewTransaction extends StatelessWidget {
+  const NewTransaction({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Account"),
+        title: const Text("New Transaction"),
       ),
       body: Container(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: AccountForm(),
+            child: TransactionForm(),
           ),
         ),
       ),
@@ -23,8 +23,8 @@ class NewAccount extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        label: const Text("Add Account"),
-        icon: const Icon(Icons.check),
+        label: const Text("Save"),
+        icon: const Icon(Icons.save),
       ),
     );
   }
