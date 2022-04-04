@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../shared/widgets/drawer.dart';
+import '../../shared/widgets/drawer.dart';
 
 class Groups extends StatelessWidget {
   static String routeID = 'groups';

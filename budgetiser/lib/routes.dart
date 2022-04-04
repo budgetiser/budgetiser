@@ -1,6 +1,6 @@
 import 'package:budgetiser/screens/budgets.dart';
 import 'package:budgetiser/screens/categories/categories.dart';
-import 'package:budgetiser/screens/groups.dart';
+import 'package:budgetiser/screens/groups/groups.dart';
 import 'package:budgetiser/screens/help.dart';
 import 'package:budgetiser/screens/settings.dart';
 import 'package:budgetiser/screens/stats.dart';
