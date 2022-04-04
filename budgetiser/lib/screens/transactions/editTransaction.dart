@@ -14,7 +14,7 @@ class EditTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Transaction"),
+        title: const Text("Edit Transaction"),
       ),
       body: Container(
         alignment: Alignment.topCenter,

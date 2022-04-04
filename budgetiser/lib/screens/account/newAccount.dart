@@ -1,5 +1,4 @@
 import 'package:budgetiser/screens/account/shared/accountForm.dart';
-import 'package:budgetiser/screens/account/shared/savingAccountForm.dart';
 import 'package:flutter/material.dart';
 
 class NewAccount extends StatelessWidget {
@@ -16,15 +15,7 @@ class NewAccount extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                AccountForm(),
-                Divider(
-                  indent: 8,
-                ),
-                SavingAccountForm(),
-              ],
-            ),
+            child: AccountForm(),
           ),
         ),
       ),
