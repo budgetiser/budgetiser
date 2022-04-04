@@ -4,7 +4,7 @@ class Savings {
   int id;
   String name;
   IconData icon;
-  Color color;
+  MaterialColor color;
   double balance;
   DateTime startDate;
   DateTime endDate;
