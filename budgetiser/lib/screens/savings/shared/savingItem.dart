@@ -1,20 +1,20 @@
-import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/screens/savings/editSaving.dart';
+import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class BudgetItem extends StatelessWidget {
-  BudgetItem({
-    Key? key,
-    required this.budgetData,
-  }) : super(key: key);
-  Budget budgetData;
+class SavingItem extends StatelessWidget {
+  SavingItem({Key? key, required this.savingData}) : super(key: key);
+  Savings savingData;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
-          onTap: () => {},
+          onTap: () => {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditSaving(savingData: savingData,))),
+        },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -29,24 +29,16 @@ class BudgetItem extends StatelessWidget {
               children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(budgetData.name),
-                      Row(
-                        children: [
-                          Text("days left: " + (budgetData.endDate).difference(DateTime.now()).inDays.toString()),
-                          if (budgetData.isRecurring) Icon(Icons.repeat)
-                        ],
-                      )
-                    ]),
+                    children: [Text(savingData.name), Text("days left: " + (savingData.endDate).difference(DateTime.now()).inDays.toString())]
+                ),
                 Row(
                   children: [
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: (budgetData.balance / budgetData.limit),
+                        percent: (savingData.balance/savingData.goal),
                         backgroundColor: Colors.white,
-                        linearGradient:
-                            LinearGradient(colors: createGradient(budgetData.color)),
+                        linearGradient: LinearGradient(colors: createGradient(savingData.color)),
                         clipLinearGradient: true,
                       ),
                     ),
@@ -55,8 +47,8 @@ class BudgetItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(budgetData.balance.toString()),
-                    Text(budgetData.limit.toString()),
+                    Text(savingData.balance.toString()),
+                    Text(savingData.goal.toString()),
                   ],
                 ),
               ],
@@ -72,7 +64,7 @@ class BudgetItem extends StatelessWidget {
     );
   }
 
-  List<Color> createGradient(MaterialColor baseColor) {
+  List<Color> createGradient(MaterialColor baseColor){
     List<Color> gradient = [];
     gradient.add(baseColor.shade300);
     gradient.add(baseColor.shade400);
@@ -83,4 +75,4 @@ class BudgetItem extends StatelessWidget {
     gradient.add(baseColor.shade900);
     return gradient;
   }
-}
+  }
