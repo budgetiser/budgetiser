@@ -34,35 +34,8 @@ class _SettingsPageState extends State<SettingsPage> {
               DropdownMenuItem(child: Text("t"), value: "t"),
               DropdownMenuItem(child: Text("a"), value: "a"),
             ], onChanged: null),
-            const Text("data"),
-            Center(
-              child: Column(
-                children: <Widget>[
-                  _wifi(context),
-                  _buildPreferenceSwitch(context),
-                  const SizedBox(
-                    height: 50.0,
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Settings.clearCache();
-                showSnackBar(
-                  context,
-                  'Cache cleared for selected cache.',
-                );
-              },
-              child: const Text('Clear selected Cache'),
-            ),
-            Settings.getValue<bool>('wifi_key', false)
-                ? const Text("Wifi is ON")
-                : const Text("Wifi is OFF"),
-            _buildThemeSwitch(context),
-            // =========
             DropDownSettingsTile<String>(
-              title: 'E-Mail View',
+              title: 'Theme',
               settingKey: 'key-themeMode',
               values: const <String, String>{
                 'system': 'system',
