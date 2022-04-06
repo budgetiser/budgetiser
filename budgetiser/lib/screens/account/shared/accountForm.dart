@@ -54,7 +54,7 @@ class _AccountFormState extends State<AccountForm> {
                     initialIcon: widget.initialAccount != null
                         ? widget.initialAccount!.icon
                         : null,
-                    color: widget.initialAccount != null
+                    initialColor: widget.initialAccount != null
                         ? widget.initialAccount!.color
                         : null,
                   ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
-  IconPicker({Key? key, this.initialIcon, this.color}) : super(key: key);
+  const IconPicker({Key? key, this.initialIcon, this.initialColor}) : super(key: key);
 
-  IconData? initialIcon;
-  Color? color;
+  final IconData? initialIcon;
+  final Color? initialColor;
 
   @override
   State<IconPicker> createState() => _IconPickerState();
@@ -22,31 +22,17 @@ class _IconPickerState extends State<IconPicker> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Choose an Icon"),
-                  content: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: getIcons(),
-                  ),
+                  title: const Text("Choose an Icon"),
+                  content: getIcons(),
                 );
               });
         },
         child: Icon(
           selectedIcon,
-          color: (widget.color != null) ? widget.color : Colors.blue,
+          color: (widget.initialColor != null) ? widget.initialColor : Colors.blue,
         ),
       ),
     );
-    //if (widget.initialIcon != null) {
-    //  return Icon(
-    //  widget.initialIcon,
-    // size: 30,
-    // color: widget.color ?? Colors.black,
-    // );
-    //}
-    //return const Icon(
-    // Icons.account_tree,
-    //size: 30,
-    //);
   }
 
   Widget getIcons() {
@@ -107,10 +93,11 @@ class _IconPickerState extends State<IconPicker> {
       Icons.public,
       Icons.restaurant,
       Icons.router,
-      Icons.speaker
+      Icons.speaker,
     ];
     Material;
     return GridView.count(
+      physics: const ScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 5,
       children: List.generate(_icons.length, (index) {
@@ -121,7 +108,7 @@ class _IconPickerState extends State<IconPicker> {
               Navigator.pop(context);
             });
           },
-          child: Icon(_icons[index]),
+          child: Icon(_icons[index], color: (widget.initialColor != null) ? widget.initialColor : Colors.blue),
         );
       }),
     );
