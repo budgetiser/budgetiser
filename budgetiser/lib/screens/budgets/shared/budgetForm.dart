@@ -1,4 +1,6 @@
+import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
+import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +9,11 @@ class BudgetForm extends StatefulWidget {
     Key? key,
     this.initialName,
     this.initalBalance,
+    this.initialBudgetData
   }) : super(key: key);
   String? initialName;
   int? initalBalance;
+  Budget? initialBudgetData;
 
   @override
   State<BudgetForm> createState() => _BudgetFormState();
@@ -57,7 +61,17 @@ class _BudgetFormState extends State<BudgetForm> {
           padding: EdgeInsets.only(top: 13),
           child: Row(
             children: [
-              Flexible(child: Icon(Icons.add)),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconPicker(
+                  initialIcon: widget.initialBudgetData != null
+                      ? widget.initialBudgetData!.icon
+                      : null,
+                  initialColor: widget.initialBudgetData != null
+                      ? widget.initialBudgetData!.color
+                      : null,
+                ),
+              ),
               //ColorPicker();
             ],
           ),

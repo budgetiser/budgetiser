@@ -1,4 +1,4 @@
-import 'package:budgetiser/screens/account/shared/selectIcon.dart';
+import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
@@ -50,11 +50,11 @@ class _AccountFormState extends State<AccountForm> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SelectIcon(
+                  child: IconPicker(
                     initialIcon: widget.initialAccount != null
                         ? widget.initialAccount!.icon
                         : null,
-                    color: widget.initialAccount != null
+                    initialColor: widget.initialAccount != null
                         ? widget.initialAccount!.color
                         : null,
                   ),
