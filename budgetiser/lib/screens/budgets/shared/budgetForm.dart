@@ -1,15 +1,12 @@
+import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
-  BudgetForm({
-    Key? key,
-    this.initialName,
-    this.initalBalance,
-  }) : super(key: key);
-  String? initialName;
-  int? initalBalance;
+  BudgetForm({Key? key, this.initialBudget}) : super(key: key);
+  Budget? initialBudget;
 
   @override
   State<BudgetForm> createState() => _BudgetFormState();
@@ -17,16 +14,16 @@ class BudgetForm extends StatefulWidget {
 
 class _BudgetFormState extends State<BudgetForm> {
   var nameController = TextEditingController();
-  var balanceController = TextEditingController();
+  var limitController = TextEditingController();
   bool isRecurring = false;
 
   @override
   void initState() {
-    if (widget.initialName != null) {
-      nameController.text = widget.initialName!;
-    }
-    if (widget.initalBalance != null) {
-      balanceController.text = widget.initalBalance!.toString();
+    if (widget.initialBudget != null) {
+      nameController.text = widget.initialBudget!.name;
+      limitController.text = widget.initialBudget!.limit.toString();
+      isRecurring = widget.initialBudget!.isRecurring;
+      if (widget.initialBudget!.isRecurring == true) {}
     }
     super.initState();
   }
@@ -46,26 +43,25 @@ class _BudgetFormState extends State<BudgetForm> {
           padding: EdgeInsets.only(top: 13),
           child: TextFormField(
             controller: nameController,
-            // initialValue: widget.initialName,
             decoration: const InputDecoration(
               labelText: "Name",
               border: OutlineInputBorder(),
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 13),
-          child: Row(
-            children: [
-              Flexible(child: Icon(Icons.add)),
-              //ColorPicker();
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(Icons.add),
+            Expanded(
+              child: Colorpicker(selectedColor: (widget.initialBudget != null) ? widget.initialBudget!.color : Theme.of(context).colorScheme.primary),
+            )
+          ],
         ),
         Padding(
           padding: const EdgeInsets.only(top: 13),
           child: TextFormField(
-            controller: balanceController,
+            controller: limitController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: const InputDecoration(
               labelText: "Limit",
@@ -93,9 +89,7 @@ class _BudgetFormState extends State<BudgetForm> {
           ]),
         ),
         Row(
-          children: [
-            RecurringForm(isHidden: !isRecurring),
-          ],
+          children: [RecurringForm(isHidden: !isRecurring)],
         )
       ],
     );

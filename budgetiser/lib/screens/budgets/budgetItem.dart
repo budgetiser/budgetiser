@@ -1,3 +1,4 @@
+import 'package:budgetiser/screens/budgets/editBudget.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -14,7 +15,15 @@ class BudgetItem extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: () => {},
+          onTap: () => {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EditBudget(
+                  initialBudget: budgetData,
+                ),
+              ),
+            )
+          },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),

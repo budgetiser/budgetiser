@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 
 class RecurringForm extends StatefulWidget {
   bool isHidden;
-
-  RecurringForm({Key? key, required bool this.isHidden}) : super(key: key);
+  String? initialTurnusMode;
+  String? initialIntervalMode;
+  int? selectedMode;
+  int? repetitions;
+  RecurringForm({Key? key, required this.isHidden, this.initialTurnusMode, this.initialIntervalMode, this.repetitions, this.selectedMode}) : super(key: key);
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();
@@ -40,7 +43,7 @@ class _RecurringFormState extends State<RecurringForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isHidden) {
+    if (widget.isHidden) {     
       return Container();
     } else {
       return Column(
