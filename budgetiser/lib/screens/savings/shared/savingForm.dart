@@ -1,6 +1,7 @@
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
+import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:flutter/material.dart';
 
 class SavingForm extends StatefulWidget {
@@ -33,9 +34,16 @@ class _SavingFormState extends State<SavingForm> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              Icons.star,
-              size: 40,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconPicker(
+                initialIcon: widget.initialSavingData != null
+                    ? widget.initialSavingData!.icon
+                    : null,
+                initialColor: widget.initialSavingData != null
+                    ? widget.initialSavingData!.color
+                    : null,
+              ),
             ),
             Flexible(
                 child: TextFormField(
