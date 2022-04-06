@@ -12,6 +12,8 @@ class IconPicker extends StatefulWidget {
 
 class _IconPickerState extends State<IconPicker> {
   IconData selectedIcon = Icons.blur_on;
+ 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class _IconPickerState extends State<IconPicker> {
               });
         },
         child: Icon(
-          selectedIcon,
+          (widget.initialIcon != null) ? widget.initialIcon : selectedIcon,
           color: (widget.initialColor != null) ? widget.initialColor : Colors.blue,
         ),
       ),
