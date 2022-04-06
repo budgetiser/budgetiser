@@ -1,5 +1,4 @@
 import 'package:budgetiser/screens/savings/shared/savingForm.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/dataClasses/savings.dart';
@@ -21,7 +20,9 @@ class EditSaving extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
-                SavingForm(initialSavingData: savingData,),
+                SavingForm(
+                  initialSavingData: savingData,
+                ),
               ],
             ),
           ),

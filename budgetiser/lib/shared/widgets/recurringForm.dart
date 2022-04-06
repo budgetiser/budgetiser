@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecurringForm extends StatefulWidget {
@@ -43,93 +42,91 @@ class _RecurringFormState extends State<RecurringForm> {
     if (widget.isHidden) {
       return Container();
     } else {
-      return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: <Widget>[
+          Radio(
+            onChanged: (Selections? value) {
+              setState(() {
+                _selected = value;
+              });
+            },
+            groupValue: _selected,
+            value: Selections.fixedTurnus,
+          ),
+          const Text("always on: "),
+          SizedBox(
+            width: 40,
+            height: 30,
+            child: TextFormField(
+              controller: turnusController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+          ),
+          SizedBox(
+            child: DropdownButton(
+              value: fixedTurnusMode,
+              items: dropdownItemsTurnus,
+              onChanged: (String? value) {
+                setState(() {
+                  fixedTurnusMode = value!;
+                });
+              },
+            ),
+          )
+        ]),
+        Row(children: <Widget>[
+          Radio(
+            onChanged: (Selections? value) {
+              setState(() {
+                _selected = value;
+              });
+            },
+            groupValue: _selected,
+            value: Selections.everyInterval,
+          ),
+          const Text("every: "),
+          SizedBox(
+            width: 40,
+            height: 30,
+            child: TextFormField(
+              controller: intervalController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: false),
+            ),
+          ),
+          SizedBox(
+            child: DropdownButton(
+              value: intervalMode,
+              items: dropdownItemsInterval,
+              onChanged: (String? value) {
+                setState(() {
+                  intervalMode = value!;
+                });
+              },
+            ),
+          )
+        ]),
+        Row(
           children: [
-            Row(children: <Widget>[
-              Radio(
-                onChanged: (Selections? value) {
-                  setState(() {
-                    _selected = value;
-                  });
-                },
-                groupValue: _selected,
-                value: Selections.fixedTurnus,
+            Text("Repetitions: "),
+            SizedBox(
+              width: 40,
+              height: 30,
+              child: TextFormField(
+                controller: repetitionsController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: false),
               ),
-              const Text("always on: "),
-              SizedBox(
-                width: 40,
-                height: 30,
-                child: TextFormField(
-                  controller: turnusController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                ),
-              ),
-              SizedBox(
-                child: DropdownButton(
-                  value: fixedTurnusMode,
-                  items: dropdownItemsTurnus,
-                  onChanged: (String? value) {
-                    setState(() {
-                      fixedTurnusMode = value!;
-                    });
-                  },
-                ),
-              )
-            ]),
-            Row(children: <Widget>[
-              Radio(
-                onChanged: (Selections? value) {
-                  setState(() {
-                    _selected = value;
-                  });
-                },
-                groupValue: _selected,
-                value: Selections.everyInterval,
-              ),
-              const Text("every: "),
-              SizedBox(
-                width: 40,
-                height: 30,
-                child: TextFormField(
-                  controller: intervalController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: false),
-                ),
-              ),
-              SizedBox(
-                child: DropdownButton(
-                  value: intervalMode,
-                  items: dropdownItemsInterval,
-                  onChanged: (String? value) {
-                    setState(() {
-                      intervalMode = value!;
-                    });
-                  },
-                ),
-              )
-            ]),
-            Row(
-              children: [
-                Text("Repetitions: "),
-                SizedBox(
-                  width: 40,
-                  height: 30,
-                  child: TextFormField(
-                    controller: repetitionsController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: false),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Text("Ends on:"),
-              ],
-            ),
-          ]);
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Text("Ends on:"),
+          ],
+        ),
+      ]);
     }
   }
 }
