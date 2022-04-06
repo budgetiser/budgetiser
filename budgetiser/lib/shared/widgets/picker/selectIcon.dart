@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
-  const IconPicker({Key? key, this.initialIcon, this.initialColor}) : super(key: key);
+  IconPicker({
+    Key? key,
+    this.initialIcon,
+    this.initialColor,
+  }) : super(key: key);
 
-  final IconData? initialIcon;
+  IconData? initialIcon;
   final Color? initialColor;
 
   @override
@@ -11,10 +15,6 @@ class IconPicker extends StatefulWidget {
 }
 
 class _IconPickerState extends State<IconPicker> {
-  IconData selectedIcon = Icons.blur_on;
- 
-  
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -23,15 +23,16 @@ class _IconPickerState extends State<IconPicker> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text("Choose an Icon"),
-                  content: getIcons(),
+                return Dialog(
+                  // title: const Text("Choose an Icon"),
+                  child: getIcons(),
                 );
               });
         },
         child: Icon(
-          (widget.initialIcon != null) ? widget.initialIcon : selectedIcon,
-          color: (widget.initialColor != null) ? widget.initialColor : Colors.blue,
+          (widget.initialIcon != null) ? widget.initialIcon : Icons.blur_on,
+          color:
+              (widget.initialColor != null) ? widget.initialColor : Colors.blue,
         ),
       ),
     );
@@ -106,11 +107,14 @@ class _IconPickerState extends State<IconPicker> {
         return InkWell(
           onTap: () {
             setState(() {
-              selectedIcon = _icons[index];
+              widget.initialIcon = _icons[index];
               Navigator.pop(context);
             });
           },
-          child: Icon(_icons[index], color: (widget.initialColor != null) ? widget.initialColor : Colors.blue),
+          child: Icon(_icons[index],
+              color: (widget.initialColor != null)
+                  ? widget.initialColor
+                  : Colors.blue),
         );
       }),
     );
