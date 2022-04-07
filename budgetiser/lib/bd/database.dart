@@ -30,11 +30,13 @@ CREATE TABLE IF NOT EXISTS transaction(
   value REAL,
   description STRING,
   category_id INTEGER,
-  PRIMARY KEY(id));
+  PRIMARY KEY(id),
+  FOREIGN KEY(category_id) REFERENCES category ON DELETE SET NULL);
 CREATE TABLE IF NOT EXISTS singleTransaction(
   transaction_id INTEGER,
   date STRING,
-  PRIMARY KEY(id));
+  PRIMARY KEY(id),
+  FOREIGN KEY(transaction_id) REFERENCES transaction ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS recurringTransaction(
   transaction_id INTEGER,
   intervalType STRING,
@@ -44,7 +46,8 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
   end_date STRING,
   PRIMARY KEY(id),
   CHECK(intervalType IN ('fixedPoINTEGEROfTime', 'fixedInterval')),
-  CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')));
+  CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')),
+  FOREIGN KEY(transaction_id) REFERENCES transaction ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS category(
   id INTEGER,
   name STRING,
@@ -93,16 +96,23 @@ CREATE TABLE IF NOT EXISTS budget(
 CREATE TABLE IF NOT EXISTS categoryToBudget(
   category_id INTEGER,
   budget_id INTEGER,
-  PRIMARY KEY(category_id, budget_id));
+  PRIMARY KEY(category_id, budget_id),
+  FOREIGN KEY(budget_id) REFERENCES budget,
+  FOREIGN KEY(category_id) REFERENCES category);
 CREATE TABLE IF NOT EXISTS categoryToGroup(
   category_id INTEGER,
   group_id INTEGER,
-  PRIMARY KEY(category_id, group_id));
+  PRIMARY KEY(category_id, group_id),
+  FOREIGN KEY(category_id) REFERENCES category,
+  FOREIGN KEY(group_id) REFERENCES group);
 CREATE TABLE IF NOT EXISTS transactionToAccount(
   transaction_id INTEGER,
   toAccount_id INTEGER,
   fromAccount_id INTEGER,
-  PRIMARY KEY(transaction_id, toAccount_id, fromAccount_id));
+  PRIMARY KEY(transaction_id, toAccount_id, fromAccount_id),
+  FOREIGN KEY(toAccount_id) REFERENCES account
+  FOREIGN KEY(fromAccount_id) REFERENCES account,
+  FOREIGN KEY(transaction_id) REFERENCES transaction);
 ''');
   }
 
