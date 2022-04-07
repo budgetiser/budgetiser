@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'database.db';
+  static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     var databasesPath = await getDatabasesPath();
     return await openDatabase(
       join(databasesPath, databaseName),
-      version: 2,
+      version: 1,
       onCreate: _onCreate,
       onUpgrade: (db, oldVersion, newVersion) async {
         _dropTables(db);
