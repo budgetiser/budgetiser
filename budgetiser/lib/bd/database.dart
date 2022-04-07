@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
   start_date STRING,
   end_date STRING,
   PRIMARY KEY(id),
-  CHECK(intervalType IN ('fixedPoINTEGEROfTime', 'fixedInterval')),
+  CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
   CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')),
   FOREIGN KEY(transaction_id) REFERENCES transaction ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS category(
