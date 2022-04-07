@@ -119,7 +119,16 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   _dropTables(Database db) async {
     await db.execute('''
           DROP TABLE IF EXISTS account; 
-          DROP TABLE IF EXISTS transaction
+          DROP TABLE IF EXISTS transaction;
+          DROP TABLE IF EXISTS singleTransaction;
+          DROP TABLE IF EXISTS recurringTransaction;
+          DROP TABLE IF EXISTS category;
+          DROP TABLE IF EXISTS group;
+          DROP TABLE IF EXISTS saving;
+          DROP TABLE IF EXISTS budget;
+          DROP TABLE IF EXISTS categoryToBudget;
+          DROP TABLE IF EXISTS categoryToGroup;
+          DROP TABLE IF EXISTS transactionToAccount;
       ''');
   }
 
@@ -127,7 +136,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     var databasesPath = await getDatabasesPath();
     return await openDatabase(
       join(databasesPath, databaseName),
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
       onUpgrade: (db, oldVersion, newVersion) async {
         _dropTables(db);
