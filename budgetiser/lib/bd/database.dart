@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'database1314.db';
+  static const databaseName = 'database.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -14,21 +14,95 @@ class DatabaseHelper {
       _database ??= await initializeDatabase();
 
   _onCreate(Database db, int version) async {
+    print("creating database");
     await db.execute('''
-CREATE TABLE account( 
-  accountID INTEGER PRIMARY KEY AUTOINCREMENT, 
-  name STRING,  
-  icon STRING, 
-  color INTEGER, 
+CREATE TABLE IF NOT EXISTS account(
+  id INTEGER,
+  name STRING,
+  icon INTEGER,
+  color INTEGER,
   balance REAL,
-  description STRING
-); 
-CREATE TABLE transaction(  
-  transactionID INTEGER PRIMARY KEY AUTOINCREMENT, 
-  title STRING, 
-  value REAL, 
   description STRING,
-);
+  PRIMARY KEY(id));
+CREATE TABLE IF NOT EXISTS transaction(
+  id INTEGER,
+  title STRING,
+  value REAL,
+  description STRING,
+  category_id INTEGER,
+  PRIMARY KEY(id));
+CREATE TABLE IF NOT EXISTS singleTransaction(
+  transaction_id INTEGER,
+  date STRING,
+  PRIMARY KEY(id));
+CREATE TABLE IF NOT EXISTS recurringTransaction(
+  transaction_id INTEGER,
+  intervalType STRING,
+  intervalAmount INTEGER,
+  intervalUnit STRING,
+  start_date STRING,
+  end_date STRING,
+  PRIMARY KEY(id),
+  CHECK(intervalType IN ('fixedPoINTEGEROfTime', 'fixedInterval')),
+  CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')));
+CREATE TABLE IF NOT EXISTS category(
+  id INTEGER,
+  name STRING,
+  icon INTEGER,
+  color INTEGER,
+  description STRING,
+  is_hidden INTEGER,
+  PRIMARY KEY(id),
+  CHECK(is_hidden IN (0, 1)));
+CREATE TABLE IF NOT EXISTS group(
+  id INTEGER,
+  name STRING,
+  icon INTEGER,
+  color INTEGER,
+  description STRING,
+  PRIMARY KEY(id));
+CREATE TABLE IF NOT EXISTS saving(
+  id INTEGER,
+  name STRING,
+  icon INTEGER,
+  color INTEGER,
+  balance REAL,
+  start_date STRING,
+  end_date STRING,
+  goal REAL,
+  description STRING,
+  PRIMARY KEY(id));
+CREATE TABLE IF NOT EXISTS budget(
+  id INTEGER,
+  name STRING,
+  icon INTEGER,
+  color INTEGER,
+  balance REAL,
+  limit REAL,
+  is_recurring INTEGER,
+  intervalType STRING,
+  intervalAmount INTEGER,
+  intervalUnit STRING,
+  start_date STRING,
+  end_date STRING,
+  description STRING,
+  PRIMARY KEY(id),
+  CHECK(is_recurring IN (0, 1)),
+  CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
+  CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')));
+CREATE TABLE IF NOT EXISTS categoryToBudget(
+  category_id INTEGER,
+  budget_id INTEGER,
+  PRIMARY KEY(category_id, budget_id));
+CREATE TABLE IF NOT EXISTS categoryToGroup(
+  category_id INTEGER,
+  group_id INTEGER,
+  PRIMARY KEY(category_id, group_id));
+CREATE TABLE IF NOT EXISTS transactionToAccount(
+  transaction_id INTEGER,
+  toAccount_id INTEGER,
+  fromAccount_id INTEGER,
+  PRIMARY KEY(transaction_id, toAccount_id, fromAccount_id));
 ''');
   }
 
@@ -91,7 +165,7 @@ CREATE TABLE transaction(
 
     return List.generate(maps.length, (i) {
       return Account(
-        id: maps[i]['accountID'],
+        id: maps[i]['id'],
         name: maps[i]['name'],
         icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(maps[i]['color']),
@@ -106,7 +180,7 @@ CREATE TABLE transaction(
 
     await db.delete(
       'account',
-      where: 'accountID = ?',
+      where: 'id = ?',
       whereArgs: [accountID],
     );
   }
