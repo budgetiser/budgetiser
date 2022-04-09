@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser9.db';
+  static const databaseName = 'budgetiser14.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -221,6 +221,25 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     });
   }
 
+  Future<Account> getOneAccount(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('account', where: 'id = ?', whereArgs: [id]);
+
+    if (maps.length > 1) {
+      throw Exception(' TODO: check : More than one account with id $id');
+    }
+
+    return Account(
+      id: maps[0]['id'],
+      name: maps[0]['name'],
+      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
+      color: Color(maps[0]['color']),
+      balance: maps[0]['balance'],
+      description: maps[0]['description'],
+    );
+  }
+
   Future<void> deleteAccount(int accountID) async {
     final db = await database;
 
@@ -257,7 +276,41 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       rowSingleTransaction,
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
+
+    await db.update(
+        'account', {'balance': transaction.account.balance + transaction.value},
+        where: 'id = ?', whereArgs: [transaction.account.id]);
+
+    await db.insert('transactionToAccount', {
+      'transaction_id': transactionId,
+      'toAccount_id': transaction.account.id,
+      'fromAccount_id': null,
+    });
+
     return id;
+  }
+
+  Future<List<SingleTransaction>> getAllSingleTransactions() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'Select * from singleTransaction, XXtransaction, transactionToAccount where singleTransaction.transaction_id = XXtransaction.id and transactionToAccount.transaction_id = XXtransaction.id');
+
+    List<SingleTransaction> list = [];
+    for (int i = 0; i < maps.length; i++) {
+      TransactionCategory cat = await getCategorie(maps[i]['category_id']);
+      Account account = await getOneAccount(maps[i]['toAccount_id']);
+      list.add(SingleTransaction(
+        id: maps[i]['id'],
+        title: maps[i]['title'],
+        value: maps[i]['value'],
+        description: maps[i]['description'],
+        category: cat,
+        account: account,
+        account2: null,
+        date: DateTime.parse(maps[i]['date'].toString()),
+      ));
+    }
+    return list;
   }
 
   Future<int> createCategory(TransactionCategory category) async {
@@ -277,5 +330,20 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     );
 
     return id;
+  }
+
+  Future<TransactionCategory> getCategorie(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('category', where: 'id = ?', whereArgs: [id]);
+
+    return TransactionCategory(
+      id: maps[0]['id'],
+      name: maps[0]['name'],
+      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
+      color: Color(maps[0]['color']),
+      description: maps[0]['description'],
+      isHidden: maps[0]['is_hidden'] == 1,
+    );
   }
 }

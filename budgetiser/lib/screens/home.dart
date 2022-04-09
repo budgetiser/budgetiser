@@ -56,6 +56,14 @@ class _HomeState extends State<Home> {
                   })),
               child: Text("new category"),
             ),
+            FloatingActionButton(
+              onPressed: ((() => {
+                    DatabaseHelper.instance
+                        .getAllSingleTransactions()
+                        .then((value) => print(value)),
+                  })),
+              child: Text("print"),
+            ),
           ],
         ),
       ),

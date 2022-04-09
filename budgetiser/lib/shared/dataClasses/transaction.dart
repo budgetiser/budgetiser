@@ -42,6 +42,12 @@ class SingleTransaction extends Transaction {
           account2: account2,
           description: description,
         );
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "singleTransaction ${this.id} ${this.title} ${this.value} ${this.category} ${this.account} ${this.account2} ${this.description} ${this.date}";
+  }
 }
 
 // enum IntervalType {  TODO: discuss enum
