@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser5.db';
+  static const databaseName = 'budgetiser9.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -139,6 +139,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   FOREIGN KEY(fromAccount_id) REFERENCES account,
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction);
 ''');
+    print("done");
   }
 
   _dropTables(Database db) async {
@@ -159,6 +160,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   initializeDatabase() async {
     var databasesPath = await getDatabasesPath();
+    print(databasesPath);
     return await openDatabase(
       join(databasesPath, databaseName),
       version: 1,
@@ -240,18 +242,18 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     };
 
     int transactionId = await db.insert(
-      'transaction',
+      'XXtransaction',
       rowTransaction,
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
     Map<String, dynamic> rowSingleTransaction = {
       'transaction_id': transactionId,
-      'date': transaction.date,
+      'date': transaction.date.hashCode,
     };
 
     int id = await db.insert(
-      'transaction',
+      'singleTransaction',
       rowSingleTransaction,
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
@@ -261,7 +263,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<int> createCategory(TransactionCategory category) async {
     final db = await database;
     Map<String, dynamic> row = {
-      'id': category.id,
       'name': category.name,
       'icon': category.icon.codePoint,
       'color': category.color.value,
@@ -270,7 +271,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     };
 
     int id = await db.insert(
-      'transaction',
+      'category',
       row,
       conflictAlgorithm: ConflictAlgorithm.fail,
     );

@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
                     DatabaseHelper.instance
                         .createCategory(TMP_DATA_categoryList[0]),
                   })),
-              child: Text("new account"),
+              child: Text("new category"),
             ),
           ],
         ),
