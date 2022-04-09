@@ -81,14 +81,14 @@ List<Group> TMP_DATA_groupList = [
 
 List<TransactionCategory> TMP_DATA_categoryList = [
   TransactionCategory(
-      id: 1,
+      id: 2,
       name: "Food",
       icon: Icons.fastfood,
       color: Colors.red,
       description: "category food description",
       isHidden: false),
   TransactionCategory(
-      id: 2,
+      id: 1,
       name: "Entertainment",
       icon: Icons.local_movies,
       color: Colors.blue,

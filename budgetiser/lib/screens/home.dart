@@ -1,5 +1,6 @@
 import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +41,21 @@ class _HomeState extends State<Home> {
               style: Theme.of(context).textTheme.headline4,
             ),
             _getAccounts(),
+            FloatingActionButton(
+                onPressed: ((() => {
+                      DatabaseHelper.instance.createSingleTransaction(
+                          TMP_DATA_transactionList[0] as SingleTransaction),
+                    })),
+                child: Icon(
+                  Icons.add,
+                )),
+            FloatingActionButton(
+              onPressed: ((() => {
+                    DatabaseHelper.instance
+                        .createCategory(TMP_DATA_categoryList[0]),
+                  })),
+              child: Text("new account"),
+            ),
           ],
         ),
       ),

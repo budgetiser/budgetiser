@@ -5,6 +5,10 @@ import 'config/themes/themes.dart';
 import 'screens/home.dart';
 
 void main() {
+  // bool b = false;
+  // int i = ((b) ? 1 : 0);
+  // print(i);
+
   runApp(const MyApp());
 }
 
