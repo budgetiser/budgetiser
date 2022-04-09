@@ -42,19 +42,22 @@ class _HomeState extends State<Home> {
             ),
             _getAccounts(),
             FloatingActionButton(
-                onPressed: ((() => {
-                      DatabaseHelper.instance.createSingleTransaction(
-                          TMP_DATA_transactionList[0] as SingleTransaction),
-                    })),
-                child: Icon(
-                  Icons.add,
-                )),
+              onPressed: ((() => {
+                    DatabaseHelper.instance.createSingleTransaction(
+                        TMP_DATA_transactionList[0] as SingleTransaction),
+                  })),
+              child: Icon(
+                Icons.add,
+              ),
+              heroTag: "btn3",
+            ),
             FloatingActionButton(
               onPressed: ((() => {
                     DatabaseHelper.instance
                         .createCategory(TMP_DATA_categoryList[0]),
                   })),
               child: Text("new category"),
+              heroTag: "btn2",
             ),
             FloatingActionButton(
               onPressed: ((() => {
@@ -63,6 +66,7 @@ class _HomeState extends State<Home> {
                         .then((value) => print(value)),
                   })),
               child: Text("print"),
+              heroTag: "btn1",
             ),
           ],
         ),
@@ -91,7 +95,7 @@ class _HomeState extends State<Home> {
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(snapshot.data![index].name.toString()),
+                  title: Text(snapshot.data![index].name),
                   subtitle: Text(snapshot.data![index].balance.toString()),
                   trailing: IconButton(
                       alignment: Alignment.center,
