@@ -13,8 +13,7 @@ class CategoryPicker extends StatefulWidget {
 class _CategoryPickerState extends State<CategoryPicker> {
   List<TransactionCategory> _selected = [];
   List<bool> _isChecked = [];
-  List<TransactionCategory> _available =
-      TMP_DATA_categoryList;
+  List<TransactionCategory> _available = TMP_DATA_categoryList;
 
   var scrollController = new ScrollController();
 
@@ -33,8 +32,9 @@ class _CategoryPickerState extends State<CategoryPicker> {
           child: Scrollbar(
             controller: scrollController,
             isAlwaysShown: true,
-            radius: Radius.elliptical(10, 20),
+            radius: const Radius.elliptical(10, 20),
             child: ListView.builder(
+              controller: scrollController,
               itemBuilder: (context, i) {
                 if (i == 0) {
                   return InkWell(
@@ -44,60 +44,72 @@ class _CategoryPickerState extends State<CategoryPicker> {
                           context: context,
                           builder: (BuildContext context) {
                             for (var i = 0; i < _available.length; i++) {
-                              if(_selected.contains(_available[i])){
+                              if (_selected.contains(_available[i])) {
                                 _isChecked[i] = true;
-                              }else {
+                              } else {
                                 _isChecked[i] = false;
                               }
                             }
                             return AlertDialog(
-                              title: Text('Select categories'),
-                              content: ListView.builder(
-                                itemBuilder: (context, j) {
-                                  return StatefulBuilder(builder: (context, _setState) => CheckboxListTile(
-                                    title: Row(
-                                      children: [
-                                        Icon(
-                                          _available[j].icon,
-                                          color: _available[j].color,
-                                        ),
-                                        SizedBox(width: 8,),
-                                        Flexible(
-                                          child: Text(
-                                            _available[j].name,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              color: _available[j].color,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    value: _isChecked[j],
-                                    onChanged: (bool? value) {
-                                      _setState(() {
-                                        if (value == true) {
-                                          _isChecked[j] = true;
-                                          _selected.add(_available[j]);
-                                        } else {
-                                          _isChecked[j] = false;
-                                          _selected.removeWhere((element) =>
-                                          element.id == _available[j].id);
-                                        }
-                                      });
-                                    },
-                                  ));
-
-                                },
-                                itemCount: _available.length,
+                              title: const Text('Select categories'),
+                              content: SizedBox(
+                                width: double.maxFinite,
+                                child: ListView.builder(
+                                  itemBuilder: (context, j) {
+                                    return StatefulBuilder(
+                                        builder: (context, _setState) =>
+                                            CheckboxListTile(
+                                              title: Row(
+                                                children: [
+                                                  Icon(
+                                                    _available[j].icon,
+                                                    color: _available[j].color,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Flexible(
+                                                    child: Text(
+                                                      _available[j].name,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        color:
+                                                            _available[j].color,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              value: _isChecked[j],
+                                              onChanged: (bool? value) {
+                                                _setState(() {
+                                                  if (value == true) {
+                                                    _isChecked[j] = true;
+                                                    _selected
+                                                        .add(_available[j]);
+                                                  } else {
+                                                    _isChecked[j] = false;
+                                                    _selected.removeWhere(
+                                                        (element) =>
+                                                            element.id ==
+                                                            _available[j].id);
+                                                  }
+                                                });
+                                              },
+                                            ));
+                                  },
+                                  itemCount: _available.length,
+                                ),
                               ),
                               actions: <Widget>[
                                 ElevatedButton(
                                   child: const Text('Close'),
                                   onPressed: () {
                                     setState(() {
-                                      _selected.sort((a, b) => a.name.compareTo(b.name));
+                                      _selected.sort(
+                                          (a, b) => a.name.compareTo(b.name));
                                     });
                                     Navigator.of(context)
                                         .pop(); //dismiss the color picker
@@ -107,7 +119,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                             );
                           });
                     },
-                    child: ListTile(
+                    child: const ListTile(
                       leading: Icon(Icons.add),
                       iconColor: Colors.white,
                       title: Text("Add Category"),
@@ -126,7 +138,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                           _selected.removeAt(i - 1);
                         });
                       },
-                      child: Icon(Icons.remove_circle_outline),
+                      child: const Icon(Icons.remove_circle_outline),
                     ),
                   );
                 } else {
