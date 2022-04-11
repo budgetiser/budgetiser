@@ -1,3 +1,4 @@
+import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/screens/account/newAccount.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
@@ -85,13 +86,31 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Center(
           child: Column(
             children: [
-              for (var account in widget.accountList)
-                AccountItem(
-                  accountData: account,
-                ),
-              const SizedBox(
-                height: 80,
+              FutureBuilder<List<Account>>(
+                future: DatabaseHelper.instance.getAccounts(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Text(
+                          snapshot.data![index].name,
+                        );
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("Oops!");
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
               ),
+              // for (var account in widget.accountList)
+              //   AccountItem(
+              //     accountData: account,
+              //   ),
+              // const SizedBox(
+              //   height: 80,
+              // ),
             ],
           ),
         ),
