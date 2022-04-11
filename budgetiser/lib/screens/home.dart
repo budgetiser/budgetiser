@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
   Widget _getAccounts() {
     return Expanded(
       child: FutureBuilder<List<Account>>(
-        future: DatabaseHelper.instance.getAccounts(),
+        future: DatabaseHelper.instance.getAllAccounts(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

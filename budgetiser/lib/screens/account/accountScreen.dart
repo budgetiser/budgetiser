@@ -87,14 +87,16 @@ class _AccountScreenState extends State<AccountScreen> {
           child: Column(
             children: [
               FutureBuilder<List<Account>>(
-                future: DatabaseHelper.instance.getAccounts(),
+                future: DatabaseHelper.instance.getAllAccounts(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Text(
-                          snapshot.data![index].name,
+                        return AccountItem(
+                          accountData: snapshot.data![index],
                         );
                       },
                     );
@@ -104,13 +106,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   return Center(child: CircularProgressIndicator());
                 },
               ),
-              // for (var account in widget.accountList)
-              //   AccountItem(
-              //     accountData: account,
-              //   ),
-              // const SizedBox(
-              //   height: 80,
-              // ),
             ],
           ),
         ),

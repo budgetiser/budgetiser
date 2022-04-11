@@ -26,3 +26,5 @@ doc/api/
 budgetiser/windows/flutter/generated_plugins.cmake
 budgetiser/windows/flutter/generated_plugin_registrant.h
 budgetiser/windows/flutter/generated_plugin_registrant.cc
+/.idea
+/.idea2

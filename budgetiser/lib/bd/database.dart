@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser14.db';
+  static const databaseName = 'budgetiser6.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS account(
   balance REAL,
   description STRING,
   PRIMARY KEY(id));
-  ''');
+    ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS XXtransaction(
   id INTEGER,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS XXtransaction(
   PRIMARY KEY(id),
   FOREIGN KEY(category_id) REFERENCES category ON DELETE SET NULL
   );
-  ''');
+    ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS singleTransaction(
   transaction_id INTEGER,
@@ -160,7 +160,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   initializeDatabase() async {
     var databasesPath = await getDatabasesPath();
-    print(databasesPath);
     return await openDatabase(
       join(databasesPath, databaseName),
       version: 1,
@@ -177,35 +176,16 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   }
 
   Future<int> createAccount(Account account) async {
-    Map<String, dynamic> row = {
-      'name': account.name,
-      'icon': account.icon.codePoint,
-      'color': account.color.value,
-      'balance': account.balance,
-      'description': account.description,
-    };
-
     final db = await database;
     int id = await db.insert(
       'account',
-      row,
+      account.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
     return id;
   }
 
-  // Future<void> updateCategory(Category category) async {
-  //   final db = await database;
-
-  //   await db.update(
-  //     'category',
-  //     category.toMap(),
-  //     where: 'category_id = ?',
-  //     whereArgs: [category.category_id],
-  //   );
-  // }
-
-  Future<List<Account>> getAccounts() async {
+  Future<List<Account>> getAllAccounts() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('account');
 
@@ -247,6 +227,17 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       'account',
       where: 'id = ?',
       whereArgs: [accountID],
+    );
+  }
+
+  Future<void> updateAccount(Account account) async {
+    final db = await database;
+
+    await db.update(
+      'account',
+      account.toMap(),
+      where: 'id = ?',
+      whereArgs: [account.id],
     );
   }
 
