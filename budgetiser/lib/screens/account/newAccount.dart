@@ -1,4 +1,7 @@
+import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/screens/account/shared/accountForm.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 
 class NewAccount extends StatelessWidget {
@@ -21,6 +24,8 @@ class NewAccount extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          Account a = TMP_DATA_accountList[0];
+          DatabaseHelper.instance.createAccount(a);
           Navigator.of(context).pop();
         },
         label: const Text("Add Account"),

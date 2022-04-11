@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser6.db';
+  static const databaseName = 'budgetiser7.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -20,19 +20,19 @@ class DatabaseHelper {
     await db.execute('''
 CREATE TABLE IF NOT EXISTS account(
   id INTEGER,
-  name STRING,
+  name TEXT,
   icon INTEGER,
   color INTEGER,
   balance REAL,
-  description STRING,
+  description TEXT,
   PRIMARY KEY(id));
     ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS XXtransaction(
   id INTEGER,
-  title STRING,
+  title TEXT,
   value REAL,
-  description STRING,
+  description TEXT,
   category_id INTEGER,
   PRIMARY KEY(id),
   FOREIGN KEY(category_id) REFERENCES category ON DELETE SET NULL
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS XXtransaction(
     await db.execute('''
 CREATE TABLE IF NOT EXISTS singleTransaction(
   transaction_id INTEGER,
-  date STRING,
+  date TEXT,
   id INTEGER,
   PRIMARY KEY(id),
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction ON DELETE CASCADE);
@@ -49,11 +49,11 @@ CREATE TABLE IF NOT EXISTS singleTransaction(
     await db.execute('''
 CREATE TABLE IF NOT EXISTS recurringTransaction(
   transaction_id INTEGER,
-  intervalType STRING,
+  intervalType TEXT,
   intervalAmount INTEGER,
-  intervalUnit STRING,
-  start_date STRING,
-  end_date STRING,
+  intervalUnit TEXT,
+  start_date TEXT,
+  end_date TEXT,
   id INTEGER,
   PRIMARY KEY(id),
   CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
@@ -63,10 +63,10 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
     await db.execute('''
 CREATE TABLE IF NOT EXISTS category(
   id INTEGER,
-  name STRING,
+  name TEXT,
   icon INTEGER,
   color INTEGER,
-  description STRING,
+  description TEXT,
   is_hidden INTEGER,
   PRIMARY KEY(id),
   CHECK(is_hidden IN (0, 1)));
@@ -74,40 +74,40 @@ CREATE TABLE IF NOT EXISTS category(
     await db.execute('''
 CREATE TABLE IF NOT EXISTS XXGroup(
   id INTEGER,
-  name STRING,
+  name TEXT,
   icon INTEGER,
   color INTEGER,
-  description STRING,
+  description TEXT,
   PRIMARY KEY(id));
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS saving(
   id INTEGER,
-  name STRING,
+  name TEXT,
   icon INTEGER,
   color INTEGER,
   balance REAL,
-  start_date STRING,
-  end_date STRING,
+  start_date TEXT,
+  end_date TEXT,
   goal REAL,
-  description STRING,
+  description TEXT,
   PRIMARY KEY(id));
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS budget(
   id INTEGER,
-  name STRING,
+  name TEXT,
   icon INTEGER,
   color INTEGER,
   balance REAL,
   limitXX REAL,
   is_recurring INTEGER,
-  intervalType STRING,
+  intervalType TEXT,
   intervalAmount INTEGER,
-  intervalUnit STRING,
-  start_date STRING,
-  end_date STRING,
-  description STRING,
+  intervalUnit TEXT,
+  start_date TEXT,
+  end_date TEXT,
+  description TEXT,
   PRIMARY KEY(id),
   CHECK(is_recurring IN (0, 1)),
   CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
