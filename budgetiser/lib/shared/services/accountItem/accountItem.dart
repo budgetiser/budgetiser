@@ -1,4 +1,4 @@
-import 'package:budgetiser/screens/account/editAccount.dart';
+import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/screens/transactions/newTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/services/accountItem/accountItemTitle.dart';
@@ -22,8 +22,8 @@ class AccountItem extends StatelessWidget {
           onTap: () => {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => EditAccount(
-                  accountData: accountData,
+                builder: (context) => AccountForm(
+                  initialAccount: accountData,
                 ),
               ),
             )
