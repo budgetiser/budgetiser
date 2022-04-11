@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser9.db';
+  static const databaseName = 'budgetiser12.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -185,13 +185,11 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
-  Stream<List<Account>> getAllAccounts() async* {
-    while (true){
-      await Future.delayed(Duration(seconds: 1));
+  Future<List<Account>> getAllAccounts() async {
       final db = await database;
       final List<Map<String, dynamic>> maps = await db.query('account');
 
-      yield List.generate(maps.length, (i) {
+      return List.generate(maps.length, (i) {
         return Account(
           id: maps[i]['id'],
           name: maps[i]['name'],
@@ -201,7 +199,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           description: maps[i]['description'],
         );
       });
-    }
   }
 
   Future<Account> getOneAccount(int id) async {

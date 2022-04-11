@@ -22,7 +22,15 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   String currentSort = '';
+  var _testController = StreamController<List<Account>>.broadcast();
+  Sink<List<Account>> get addAccount => _testController.sink;
+  Stream<List<Account>> get getAccounts => _testController.stream;
 
+  @override
+  void initState() {
+    _getAccounts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +98,7 @@ class _AccountScreenState extends State<AccountScreen> {
           child: Column(
             children: [
               StreamBuilder<List<Account>>(
-                stream: DatabaseHelper.instance.getAllAccounts(),
+                stream: getAccounts,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
@@ -115,12 +123,16 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () { Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AccountForm()));
+            MaterialPageRoute(builder: (context) => AccountForm())).then((value) => _getAccounts());
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  _getAccounts() async{
+    addAccount.add(await DatabaseHelper.instance.getAllAccounts());
   }
 }
