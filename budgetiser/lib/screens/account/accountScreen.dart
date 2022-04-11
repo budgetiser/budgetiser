@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
@@ -20,8 +22,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   String currentSort = '';
-  // Future<List<Account>> _accountList = DatabaseHelper.instance.getAllAccounts();
-  Future<List<Account>> _future = DatabaseHelper.instance.getAllAccounts();
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +89,8 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Center(
           child: Column(
             children: [
-              FutureBuilder<List<Account>>(
-                future: _future,
+              StreamBuilder<List<Account>>(
+                stream: DatabaseHelper.instance.getAllAccounts(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
@@ -113,15 +114,8 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AccountForm()),
-          );
-          // widget.accountList =
-          //     (await DatabaseHelper.instance.getAllAccounts()).toList();
-          setState(() {
-            // _accountList = DatabaseHelper.instance.getAllAccounts();
-          });
+        onPressed: () { Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AccountForm()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,

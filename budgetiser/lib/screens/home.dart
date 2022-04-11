@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
               "${counter}",
               style: Theme.of(context).textTheme.headline4,
             ),
-            _getAccounts(),
+            //_getAccounts(),
             FloatingActionButton(
               onPressed: ((() => {
                     DatabaseHelper.instance.createSingleTransaction(
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _getAccounts() {
+  /*Widget _getAccounts() {
     return Expanded(
       child: FutureBuilder<List<Account>>(
         future: DatabaseHelper.instance.getAllAccounts(),
@@ -115,5 +115,5 @@ class _HomeState extends State<Home> {
         },
       ),
     );
-  }
+  }*/
 }
