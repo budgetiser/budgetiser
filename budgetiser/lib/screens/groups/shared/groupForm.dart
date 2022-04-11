@@ -1,5 +1,6 @@
 import 'package:budgetiser/screens/account/shared/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
+import 'package:budgetiser/shared/widgets/categoryPicker.dart';
 import 'package:budgetiser/shared/widgets/colorpicker.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +38,9 @@ class _GroupFormState extends State<GroupForm> {
               ),
             ),
             Colorpicker(),
+            Divider(),
+            CategoryPicker(),
+            Divider(),
           ],
         ),
       ),
