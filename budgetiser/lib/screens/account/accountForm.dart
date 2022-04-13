@@ -113,6 +113,23 @@ class _AccountFormState extends State<AccountForm> {
                               ),
                             ),
                           ),
+                          if (widget.initialAccount != null)
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                FloatingActionButton.extended(
+                                  onPressed: (() {
+                                    DatabaseHelper.instance.deleteAccount(
+                                        widget.initialAccount!.id);
+                                    Navigator.of(context).pop();
+                                  }),
+                                  label: const Text("Delete"),
+                                  heroTag: "delete",
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
@@ -138,6 +155,7 @@ class _AccountFormState extends State<AccountForm> {
         },
         label: const Text("Save"),
         icon: const Icon(Icons.save),
+        heroTag: "save",
       ),
     );
   }
