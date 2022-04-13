@@ -1,4 +1,5 @@
 import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/shared/services/notification/iconPicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
@@ -22,6 +23,7 @@ class _AccountFormState extends State<AccountForm> {
   var balanceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Color _color = Colors.blue;
+  IconData _icon = Icons.blur_on;
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _AccountFormState extends State<AccountForm> {
       nameController.text = widget.initialAccount!.name;
       balanceController.text = widget.initialAccount!.balance.toString();
       _color = widget.initialAccount!.color;
+      _icon = widget.initialAccount!.icon;
     }
     super.initState();
   }
@@ -69,14 +72,18 @@ class _AccountFormState extends State<AccountForm> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: IconPicker(
-                                  initialIcon: widget.initialAccount != null
-                                      ? widget.initialAccount!.icon
-                                      : null,
-                                  initialColor: widget.initialAccount != null
-                                      ? widget.initialAccount!.color
-                                      : null,
-                                ),
+                                child: NotificationListener<IconPicked>(
+                                  onNotification: (n) {
+                                    setState(() {
+                                      _icon = n.icon;
+                                    });
+                                    return true;
+                                  },
+                                  child: IconPicker(
+                                    initialIcon: _icon,
+                                    initialColor: _color,
+                                  ),
+                                )
                               ),
                               Flexible(
                                 child: TextFormField(
@@ -145,12 +152,17 @@ class _AccountFormState extends State<AccountForm> {
           _formKey.currentState?.validate();
           Account a = Account(
               name: nameController.text,
-              icon: Icons.abc,
+              icon: _icon,
               color: _color,
               balance: double.parse(balanceController.text),
               description: "d",
               id: 0);
-          DatabaseHelper.instance.createAccount(a);
+          if(widget.initialAccount != null){
+            a.id = widget.initialAccount!.id;
+            DatabaseHelper.instance.updateAccount(a);
+          }else {
+            DatabaseHelper.instance.createAccount(a);
+          }
           Navigator.of(context).pop();
         },
         label: const Text("Save"),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
@@ -8,7 +10,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser12.db';
+  static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -182,14 +184,19 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       account.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
+    pushGetAllAccountsStream();
     return id;
   }
 
-  Future<List<Account>> getAllAccounts() async {
+  StreamController<List<Account>> _AllAccountsStreamController = StreamController<List<Account>>.broadcast();
+  Sink<List<Account>> get allAccountsSink => _AllAccountsStreamController.sink;
+  Stream<List<Account>> get allAccountsStream => _AllAccountsStreamController.stream;
+
+  void pushGetAllAccountsStream() async {
       final db = await database;
       final List<Map<String, dynamic>> maps = await db.query('account');
 
-      return List.generate(maps.length, (i) {
+      allAccountsSink.add(List.generate(maps.length, (i) {
         return Account(
           id: maps[i]['id'],
           name: maps[i]['name'],
@@ -198,7 +205,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           balance: maps[i]['balance'],
           description: maps[i]['description'],
         );
-      });
+      }));
   }
 
   Future<Account> getOneAccount(int id) async {
@@ -228,6 +235,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       where: 'id = ?',
       whereArgs: [accountID],
     );
+    pushGetAllAccountsStream();
   }
 
   Future<void> updateAccount(Account account) async {
@@ -239,6 +247,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       where: 'id = ?',
       whereArgs: [account.id],
     );
+    pushGetAllAccountsStream();
   }
 
   Future<int> createSingleTransaction(SingleTransaction transaction) async {
