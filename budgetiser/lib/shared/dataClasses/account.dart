@@ -16,4 +16,12 @@ class Account {
     required this.balance,
     required this.description,
   });
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'icon': icon.codePoint,
+        'color': color.value,
+        'balance': balance,
+        'description': description,
+      };
 }

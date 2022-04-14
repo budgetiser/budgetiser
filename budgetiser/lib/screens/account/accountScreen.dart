@@ -1,4 +1,7 @@
-import 'package:budgetiser/screens/account/newAccount.dart';
+import 'dart:async';
+
+import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 import '../../shared/dataClasses/account.dart';
@@ -19,6 +22,12 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   String currentSort = '';
+
+  @override
+  void initState() {
+    DatabaseHelper.instance.pushGetAllAccountsStream();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,24 +91,37 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
       drawer: createDrawer(context),
       body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Center(
           child: Column(
             children: [
-              for (var account in widget.accountList)
-                AccountItem(
-                  accountData: account,
-                ),
-              const SizedBox(
-                height: 80,
+              StreamBuilder<List<Account>>(
+                stream: DatabaseHelper.instance.allAccountsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return AccountItem(
+                          accountData: snapshot.data![index],
+                        );
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("Oops!");
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
               ),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const NewAccount()));
+        onPressed: () { Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AccountForm()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
