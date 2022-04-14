@@ -319,6 +319,30 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
+  Future<void> deleteTransaction(int transactionID) async {
+    final db = await database;
+
+    // if (transaction is SingleTransaction) {
+    await db.delete(
+      'XXtransaction',
+      where: 'id = ?',
+      whereArgs: [transactionID],
+    );
+    await db.delete(
+      'singleTransaction',
+      where: 'transaction_id = ?',
+      whereArgs: [transactionID],
+    );
+    await db.delete(
+      'recurringTransaction',
+      where: 'transaction_id = ?',
+      whereArgs: [transactionID],
+    );
+    // }
+
+    pushGetAllTransactionsStream();
+  }
+
   Future<List<SingleTransaction>> getAllSingleTransactions() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(

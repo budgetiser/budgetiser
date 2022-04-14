@@ -247,6 +247,23 @@ class _TransactionFormState extends State<TransactionForm> {
                         ),
                       ],
                     ),
+                  if (widget.initialTransactionData != null)
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        FloatingActionButton.extended(
+                          onPressed: (() {
+                            DatabaseHelper.instance.deleteTransaction(
+                                widget.initialTransactionData!.id);
+                            Navigator.of(context).pop();
+                          }),
+                          label: const Text("Delete"),
+                          heroTag: "delete",
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),
