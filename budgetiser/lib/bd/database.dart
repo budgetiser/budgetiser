@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -188,7 +189,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
-  StreamController<List<Account>> _AllAccountsStreamController = StreamController<List<Account>>.broadcast();
+  final StreamController<List<Account>> _AllAccountsStreamController = StreamController<List<Account>>.broadcast();
   Sink<List<Account>> get allAccountsSink => _AllAccountsStreamController.sink;
   Stream<List<Account>> get allAccountsStream => _AllAccountsStreamController.stream;
 
@@ -249,6 +250,29 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     );
     pushGetAllAccountsStream();
   }
+
+  final StreamController<List<AbstractTransaction>> _AllTransactionStreamController = StreamController<List<AbstractTransaction>>.broadcast();
+  Sink<List<AbstractTransaction>> get allTransactionSink => _AllTransactionStreamController.sink;
+  Stream<List<AbstractTransaction>> get allTransactionStream => _AllTransactionStreamController.stream;
+
+  void pushGetAllTransactionsStream() async {
+      final db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('XXtransaction');
+
+      allTransactionSink.add(List.generate(maps.length, (i) {
+        return SingleTransaction(
+          id: maps[i]['id'],
+          account: TMP_DATA_accountList[0],
+          category: TMP_DATA_categoryList[0],
+          description: maps[i]['description'],
+          title: maps[i]['title'],
+          value: maps[i]['value'],
+          account2: null,
+          date: maps[i]['date']
+        );
+      }));
+  }
+
 
   Future<int> createSingleTransaction(SingleTransaction transaction) async {
     final db = await database;

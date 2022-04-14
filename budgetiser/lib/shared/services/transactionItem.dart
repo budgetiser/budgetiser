@@ -9,7 +9,7 @@ class TransactionItem extends StatelessWidget {
     required this.transactionData,
   }) : super(key: key);
 
-  Transaction transactionData;
+  AbstractTransaction transactionData;
 
   @override
   Widget build(BuildContext context) {

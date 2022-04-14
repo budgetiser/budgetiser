@@ -131,7 +131,7 @@ List<TransactionCategory> TMP_DATA_categoryList = [
       isHidden: false),
 ];
 
-List<Transaction> TMP_DATA_transactionList = [
+List<AbstractTransaction> TMP_DATA_transactionList = [
   SingleTransaction(
     id: 1,
     title: 'birthday present',

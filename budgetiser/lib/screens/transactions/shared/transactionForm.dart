@@ -10,7 +10,7 @@ class TransactionForm extends StatefulWidget {
     Key? key,
     this.initialTransactionData,
   }) : super(key: key);
-  Transaction? initialTransactionData;
+  AbstractTransaction? initialTransactionData;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
