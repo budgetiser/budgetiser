@@ -189,24 +189,26 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
-  final StreamController<List<Account>> _AllAccountsStreamController = StreamController<List<Account>>.broadcast();
+  final StreamController<List<Account>> _AllAccountsStreamController =
+      StreamController<List<Account>>.broadcast();
   Sink<List<Account>> get allAccountsSink => _AllAccountsStreamController.sink;
-  Stream<List<Account>> get allAccountsStream => _AllAccountsStreamController.stream;
+  Stream<List<Account>> get allAccountsStream =>
+      _AllAccountsStreamController.stream;
 
   void pushGetAllAccountsStream() async {
-      final db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('account');
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('account');
 
-      allAccountsSink.add(List.generate(maps.length, (i) {
-        return Account(
-          id: maps[i]['id'],
-          name: maps[i]['name'],
-          icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-          color: Color(maps[i]['color']),
-          balance: maps[i]['balance'],
-          description: maps[i]['description'],
-        );
-      }));
+    allAccountsSink.add(List.generate(maps.length, (i) {
+      return Account(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        balance: maps[i]['balance'],
+        description: maps[i]['description'],
+      );
+    }));
   }
 
   Future<Account> getOneAccount(int id) async {
@@ -251,16 +253,20 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     pushGetAllAccountsStream();
   }
 
-  final StreamController<List<AbstractTransaction>> _AllTransactionStreamController = StreamController<List<AbstractTransaction>>.broadcast();
-  Sink<List<AbstractTransaction>> get allTransactionSink => _AllTransactionStreamController.sink;
-  Stream<List<AbstractTransaction>> get allTransactionStream => _AllTransactionStreamController.stream;
+  final StreamController<List<AbstractTransaction>>
+      _AllTransactionStreamController =
+      StreamController<List<AbstractTransaction>>.broadcast();
+  Sink<List<AbstractTransaction>> get allTransactionSink =>
+      _AllTransactionStreamController.sink;
+  Stream<List<AbstractTransaction>> get allTransactionStream =>
+      _AllTransactionStreamController.stream;
 
   void pushGetAllTransactionsStream() async {
-      final db = await database;
-      final List<Map<String, dynamic>> maps = await db.query('XXtransaction');
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('XXtransaction');
 
-      allTransactionSink.add(List.generate(maps.length, (i) {
-        return SingleTransaction(
+    allTransactionSink.add(List.generate(maps.length, (i) {
+      return SingleTransaction(
           id: maps[i]['id'],
           account: TMP_DATA_accountList[0],
           category: TMP_DATA_categoryList[0],
@@ -268,11 +274,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           title: maps[i]['title'],
           value: maps[i]['value'],
           account2: null,
-          date: maps[i]['date']
-        );
-      }));
+          date: DateTime.now());
+    }));
   }
-
 
   Future<int> createSingleTransaction(SingleTransaction transaction) async {
     final db = await database;
@@ -310,6 +314,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       'toAccount_id': transaction.account.id,
       'fromAccount_id': null,
     });
+    pushGetAllTransactionsStream();
 
     return id;
   }

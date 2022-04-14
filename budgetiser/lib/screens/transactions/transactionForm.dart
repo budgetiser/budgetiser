@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
+import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:budgetiser/shared/widgets/picker/selectAccount.dart';
 import 'package:budgetiser/shared/widgets/picker/selectCategory.dart';
 import 'package:flutter/material.dart';
@@ -251,6 +255,22 @@ class _TransactionFormState extends State<TransactionForm> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          // _formKey.currentState?.validate();
+          SingleTransaction transaction = SingleTransaction(
+              account: TMP_DATA_accountList[0],
+              category: TMP_DATA_categoryList[0],
+              date: DateTime.now(),
+              title: titleController.text,
+              value: double.parse(valueController.text),
+              account2: null,
+              description: descriptionController.text,
+              id: 0);
+          if (widget.initialTransactionData != null) {
+            transaction.id = widget.initialTransactionData!.id;
+            // DatabaseHelper.instance.updateAccount(a);
+          } else {
+            DatabaseHelper.instance.createSingleTransaction(transaction);
+          }
           Navigator.of(context).pop();
         },
         label: const Text("Save"),
