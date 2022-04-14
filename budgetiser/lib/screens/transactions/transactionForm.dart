@@ -277,8 +277,8 @@ class _TransactionFormState extends State<TransactionForm> {
           if (widget.initialTransactionData != null) {
             // DatabaseHelper.instance.updateAccount(a);
           } else {
-            DatabaseHelper.instance.createSingleTransaction(
-                _currentTransaction() as SingleTransaction);
+            DatabaseHelper.instance
+                .createTransaction(_currentTransaction() as SingleTransaction);
           }
           Navigator.of(context).pop();
         },
@@ -289,17 +289,34 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   AbstractTransaction _currentTransaction() {
-    AbstractTransaction transaction = SingleTransaction(
-      id: 0,
-      title: titleController.text,
-      value: double.parse(valueController.text),
-      category: TMP_DATA_categoryList[0],
-      account: TMP_DATA_accountList[0],
-      account2: null,
-      description: "description",
-      date: DateTime.now(),
-    );
-
+    AbstractTransaction transaction;
+    if (!isRecurring) {
+      transaction = SingleTransaction(
+        id: 0,
+        title: titleController.text,
+        value: double.parse(valueController.text),
+        category: TMP_DATA_categoryList[0],
+        account: TMP_DATA_accountList[0],
+        account2: null,
+        description: descriptionController.text,
+        date: DateTime.now(),
+      );
+    } else {
+      transaction = RecurringTransaction(
+        id: 0,
+        title: titleController.text,
+        value: double.parse(valueController.text),
+        category: TMP_DATA_categoryList[0],
+        account: TMP_DATA_accountList[0],
+        account2: null,
+        description: descriptionController.text,
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        intervalAmount: 1,
+        intervalType: "isByMonth",
+        intervalUnit: "Month",
+      );
+    }
     if (widget.initialTransactionData != null) {
       transaction.id = widget.initialTransactionData!.id;
     }

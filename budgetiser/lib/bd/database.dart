@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     }));
   }
 
-  Future<Account> getOneAccount(int id) async {
+  Future<Account> _getOneAccount(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('account', where: 'id = ?', whereArgs: [id]);
@@ -278,7 +278,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     }));
   }
 
-  Future<int> createSingleTransaction(SingleTransaction transaction) async {
+  Future<int> createTransaction(AbstractTransaction transaction) async {
     final db = await database;
 
     Map<String, dynamic> rowTransaction = {
@@ -294,17 +294,36 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    Map<String, dynamic> rowSingleTransaction = {
-      'transaction_id': transactionId,
-      'date': transaction.date.hashCode,
-    };
+    if (transaction is SingleTransaction) {
+      Map<String, dynamic> rowSingleTransaction = {
+        'transaction_id': transactionId,
+        'date': transaction.date.hashCode,
+      };
 
-    int id = await db.insert(
-      'singleTransaction',
-      rowSingleTransaction,
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
+      int id = await db.insert(
+        'singleTransaction',
+        rowSingleTransaction,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    } else if (transaction is RecurringTransaction) {
+      Map<String, dynamic> rowRecurringTransaction = {
+        'transaction_id': transactionId,
+        'intervalType': transaction.intervalType,
+        'intervalAmount': transaction.intervalAmount,
+        'intervalUnit': transaction.intervalUnit,
+        'start_date': transaction.startDate.hashCode,
+        'end_date': transaction.endDate.hashCode,
+      };
 
+      int id = await db.insert(
+        'recurringTransaction',
+        rowRecurringTransaction,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    } else {
+      print(
+          "for testing: should not come here (in createTransaction in db-file)");
+    }
     await db.update(
         'account', {'balance': transaction.account.balance + transaction.value},
         where: 'id = ?', whereArgs: [transaction.account.id]);
@@ -316,7 +335,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     });
     pushGetAllTransactionsStream();
 
-    return id;
+    return transactionId;
   }
 
   Future<void> deleteTransaction(AbstractTransaction transaction) async {
@@ -356,8 +375,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
     List<SingleTransaction> list = [];
     for (int i = 0; i < maps.length; i++) {
-      TransactionCategory cat = await getCategorie(maps[i]['category_id']);
-      Account account = await getOneAccount(maps[i]['toAccount_id']);
+      TransactionCategory cat = await _getCategorie(maps[i]['category_id']);
+      Account account = await _getOneAccount(maps[i]['toAccount_id']);
       list.add(SingleTransaction(
         id: maps[i]['id'],
         title: maps[i]['title'],
@@ -391,7 +410,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
-  Future<TransactionCategory> getCategorie(int id) async {
+  Future<TransactionCategory> _getCategorie(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('category', where: 'id = ?', whereArgs: [id]);

@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
             //_getAccounts(),
             FloatingActionButton(
               onPressed: ((() => {
-                    DatabaseHelper.instance.createSingleTransaction(
+                    DatabaseHelper.instance.createTransaction(
                         TMP_DATA_transactionList[0] as SingleTransaction),
                   })),
               child: Icon(
