@@ -7,7 +7,7 @@ import 'package:budgetiser/screens/stats.dart';
 import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 
 import 'screens/account/accountScreen.dart';
-import 'screens/home.dart';
+import 'screens/homeScreen.dart';
 
 //named lower case and also needs to be defined in beginning of class as: static String routeID = ''
 var routes = {
