@@ -319,27 +319,33 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
-  Future<void> deleteTransaction(int transactionID) async {
+  Future<void> deleteTransaction(AbstractTransaction transaction) async {
     final db = await database;
 
-    // if (transaction is SingleTransaction) {
+    await db.update(
+        'account', {'balance': transaction.account.balance - transaction.value},
+        where: 'id = ?', whereArgs: [transaction.account.id]);
+
     await db.delete(
       'XXtransaction',
       where: 'id = ?',
-      whereArgs: [transactionID],
+      whereArgs: [transaction.id],
     );
     await db.delete(
       'singleTransaction',
       where: 'transaction_id = ?',
-      whereArgs: [transactionID],
+      whereArgs: [transaction.id],
     );
     await db.delete(
       'recurringTransaction',
       where: 'transaction_id = ?',
-      whereArgs: [transactionID],
+      whereArgs: [transaction.id],
     );
-    // }
-
+    await db.delete(
+      'transactionToAccount',
+      where: 'transaction_id = ?',
+      whereArgs: [transaction.id],
+    );
     pushGetAllTransactionsStream();
   }
 

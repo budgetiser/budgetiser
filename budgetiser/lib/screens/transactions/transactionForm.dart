@@ -255,8 +255,8 @@ class _TransactionFormState extends State<TransactionForm> {
                         ),
                         FloatingActionButton.extended(
                           onPressed: (() {
-                            DatabaseHelper.instance.deleteTransaction(
-                                widget.initialTransactionData!.id);
+                            DatabaseHelper.instance
+                                .deleteTransaction(_currentTransaction());
                             Navigator.of(context).pop();
                           }),
                           label: const Text("Delete"),
@@ -273,20 +273,12 @@ class _TransactionFormState extends State<TransactionForm> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // _formKey.currentState?.validate();
-          SingleTransaction transaction = SingleTransaction(
-              account: TMP_DATA_accountList[0],
-              category: TMP_DATA_categoryList[0],
-              date: DateTime.now(),
-              title: titleController.text,
-              value: double.parse(valueController.text),
-              account2: null,
-              description: descriptionController.text,
-              id: 0);
+
           if (widget.initialTransactionData != null) {
-            transaction.id = widget.initialTransactionData!.id;
             // DatabaseHelper.instance.updateAccount(a);
           } else {
-            DatabaseHelper.instance.createSingleTransaction(transaction);
+            DatabaseHelper.instance.createSingleTransaction(
+                _currentTransaction() as SingleTransaction);
           }
           Navigator.of(context).pop();
         },
@@ -294,5 +286,24 @@ class _TransactionFormState extends State<TransactionForm> {
         icon: const Icon(Icons.save),
       ),
     );
+  }
+
+  AbstractTransaction _currentTransaction() {
+    AbstractTransaction transaction = SingleTransaction(
+      id: 0,
+      title: titleController.text,
+      value: double.parse(valueController.text),
+      category: TMP_DATA_categoryList[0],
+      account: TMP_DATA_accountList[0],
+      account2: null,
+      description: "description",
+      date: DateTime.now(),
+    );
+
+    if (widget.initialTransactionData != null) {
+      transaction.id = widget.initialTransactionData!.id;
+    }
+
+    return transaction;
   }
 }
