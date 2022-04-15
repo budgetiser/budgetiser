@@ -4,7 +4,6 @@ import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/services/notification/recurringNotification.dart';
-import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:budgetiser/shared/widgets/picker/selectAccount.dart';
 import 'package:budgetiser/shared/widgets/picker/selectCategory.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
@@ -38,7 +37,12 @@ class _TransactionFormState extends State<TransactionForm> {
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       setState(() {
-        selectedAccount ??= event.first;
+        selectedAccount = event.first;
+      });
+    });
+    DatabaseHelper.instance.allCategoryStream.listen((event) {
+      setState(() {
+        selectedCategory = event.first;
       });
     });
 
@@ -180,7 +184,7 @@ class _TransactionFormState extends State<TransactionForm> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // _formKey.currentState?.validate();
+          // TODO: _formKey.currentState?.validate();
 
           if (widget.initialTransactionData != null) {
             // DatabaseHelper.instance.updateAccount(a);
