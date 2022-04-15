@@ -56,6 +56,7 @@ class _TransactionFormState extends State<TransactionForm> {
       selectedAccount = widget.initialTransactionData!.account;
       selectedAccount2 = widget.initialTransactionData!.account2;
       selectedCategory = widget.initialTransactionData!.category;
+      hasAccount2 = widget.initialTransactionData!.account2 != null;
     }
 
     super.initState();
