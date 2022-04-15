@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -146,25 +147,72 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   _dropTables(Database db) async {
     await db.execute('''
-          DROP TABLE IF EXISTS account; 
-          DROP TABLE IF EXISTS XXtransaction;
           DROP TABLE IF EXISTS singleTransaction;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS recurringTransaction;
-          DROP TABLE IF EXISTS category;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS XXGroup;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS saving;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS budget;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS categoryToBudget;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS categoryToGroup;
+          ''');
+    await db.execute('''
           DROP TABLE IF EXISTS transactionToAccount;
-      ''');
+          ''');
+    await db.execute('''
+          DROP TABLE IF EXISTS account; 
+          ''');
+    await db.execute('''
+          DROP TABLE IF EXISTS category;
+          ''');
+    await db.execute('''
+          DROP TABLE IF EXISTS XXtransaction;
+          ''');
+  }
+
+  resetDB() async {
+    final Database db = await database;
+    await _dropTables(db);
+    await _onCreate(db, 1);
+  }
+
+  fillDBwithTMPdata() async {
+    TMP_DATA_accountList.forEach((account) async {
+      await createAccount(account);
+    });
+    // TMP_DATA_budgetList.forEach((budget) async {
+    //   await createBudget(budget);
+    // });
+    TMP_DATA_categoryList.forEach((category) async {
+      await createCategory(category);
+    });
+    TMP_DATA_transactionList.forEach((transaction) async {
+      await createTransaction(transaction);
+    });
+    // TMP_DATA_groupList.forEach((group) async {
+    //   await createGroup(group);
+    // });
+    // TMP_DATA_savingsList.forEach((saving) async {
+    //   await createSaving(saving);
+    // });
   }
 
   initializeDatabase() async {
     var databasesPath = await getDatabasesPath();
     return await openDatabase(
       join(databasesPath, databaseName),
-      version: 2,
+      version: 1,
       onCreate: _onCreate,
       onUpgrade: (db, oldVersion, newVersion) async {
         _dropTables(db);
