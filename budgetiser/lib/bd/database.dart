@@ -276,7 +276,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         description: maps[i]['description'].toString(),
         category: cat,
         account: account,
-        account2: null,
+        account2: maps[i]['fromAccount_id'] == null
+            ? null
+            : await _getOneAccount(maps[i]['fromAccount_id']),
         // date: DateTime.parse(maps[i]['date'].toString()),
         date: DateTime.now(),
       ));
@@ -337,7 +339,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     await db.insert('transactionToAccount', {
       'transaction_id': transactionId,
       'toAccount_id': transaction.account.id,
-      'fromAccount_id': null,
+      'fromAccount_id':
+          transaction.account2 != null ? transaction.account2!.id : null,
     });
     pushGetAllTransactionsStream();
 

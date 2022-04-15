@@ -26,12 +26,13 @@ class _TransactionFormState extends State<TransactionForm> {
     startDate: DateTime.now(),
   );
   Account? selectedAccount;
+  Account? selectedAccount2;
   TransactionCategory? selectedCategory;
+  bool hasAccount2 = false;
 
   var titleController = TextEditingController();
   var valueController = TextEditingController();
   var descriptionController = TextEditingController();
-  var intervalController = TextEditingController();
 
   @override
   void initState() {
@@ -53,14 +54,8 @@ class _TransactionFormState extends State<TransactionForm> {
       valueController.text = widget.initialTransactionData!.value.toString();
       descriptionController.text = widget.initialTransactionData!.description;
       selectedAccount = widget.initialTransactionData!.account;
+      selectedAccount2 = widget.initialTransactionData!.account2;
       selectedCategory = widget.initialTransactionData!.category;
-      if (widget.initialTransactionData is RecurringTransaction) {
-        intervalController.text =
-            (widget.initialTransactionData as RecurringTransaction)
-                .intervalAmount
-                .toString();
-        // recurringData.intervalType = (widget.initialTransactionData as RecurringTransaction)
-      }
     }
 
     super.initState();
@@ -111,6 +106,44 @@ class _TransactionFormState extends State<TransactionForm> {
                       SelectAccount(
                           initialAccount: selectedAccount,
                           callback: setAccount),
+                      // checkbox for account2
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: hasAccount2,
+                            onChanged: (bool? newValue) {
+                              setState(() {
+                                hasAccount2 = newValue!;
+                                if (hasAccount2) {
+                                  DatabaseHelper.instance.allAccountsStream
+                                      .listen((event) {
+                                    setState(() {
+                                      selectedAccount2 = event.first;
+                                    });
+                                  });
+                                } else {
+                                  selectedAccount2 = null;
+                                }
+                              });
+                            },
+                          ),
+                          const Text("transfer to another account"),
+                        ],
+                      ),
+                      if (hasAccount2)
+                        Row(
+                          children: [
+                            Text("to "),
+                            SelectAccount(
+                                initialAccount: selectedAccount2,
+                                callback: (Account a) {
+                                  setState(() {
+                                    selectedAccount2 = a;
+                                  });
+                                }),
+                          ],
+                        ),
                       Row(
                         children: [
                           const Text("Category:"),
@@ -209,7 +242,7 @@ class _TransactionFormState extends State<TransactionForm> {
         value: double.parse(valueController.text),
         category: selectedCategory!,
         account: selectedAccount!,
-        account2: null,
+        account2: selectedAccount2,
         description: descriptionController.text,
         date: DateTime.now(),
       );
@@ -220,7 +253,7 @@ class _TransactionFormState extends State<TransactionForm> {
         value: double.parse(valueController.text),
         category: selectedCategory!,
         account: selectedAccount!,
-        account2: null,
+        account2: selectedAccount2,
         description: descriptionController.text,
         startDate: DateTime.now(),
         endDate: DateTime.now(),
