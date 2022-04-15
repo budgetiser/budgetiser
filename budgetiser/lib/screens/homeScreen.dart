@@ -34,6 +34,9 @@ class _HomeState extends State<Home> {
               ),
               heroTag: "newTransaction",
             ),
+            const SizedBox(
+              height: 10,
+            ),
             FloatingActionButton.extended(
               onPressed: () {
                 DatabaseHelper.instance.resetDB();
@@ -43,6 +46,9 @@ class _HomeState extends State<Home> {
                 Icons.add,
               ),
               heroTag: "resetDB",
+            ),
+            const SizedBox(
+              height: 10,
             ),
             FloatingActionButton.extended(
               onPressed: () async {

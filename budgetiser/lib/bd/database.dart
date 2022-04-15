@@ -310,25 +310,48 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   void pushGetAllTransactionsStream() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'Select * from XXtransaction, transactionToAccount where transactionToAccount.transaction_id = XXtransaction.id');
+    final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
+        'Select distinct * from XXtransaction, transactionToAccount, singleTransaction where XXtransaction.id = transactionToAccount.transaction_id and XXtransaction.id = singleTransaction.transaction_id');
+    final List<Map<String, dynamic>> mapRecurring = await db.rawQuery(
+        'Select distinct * from XXtransaction, transactionToAccount, recurringTransaction where XXtransaction.id = transactionToAccount.transaction_id and XXtransaction.id = recurringTransaction.transaction_id');
 
-    List<SingleTransaction> list = [];
-    for (int i = 0; i < maps.length; i++) {
-      TransactionCategory cat = await _getCategory(maps[i]['category_id']);
-      Account account = await _getOneAccount(maps[i]['toAccount_id']);
+    List<AbstractTransaction> list = [];
+    for (int i = 0; i < mapSingle.length; i++) {
+      TransactionCategory cat = await _getCategory(mapSingle[i]['category_id']);
+      Account account = await _getOneAccount(mapSingle[i]['toAccount_id']);
       list.add(SingleTransaction(
-        id: maps[i]['id'],
-        title: maps[i]['title'].toString(),
-        value: maps[i]['value'],
-        description: maps[i]['description'].toString(),
+        id: mapSingle[i]['id'],
+        title: mapSingle[i]['title'].toString(),
+        value: mapSingle[i]['value'],
+        description: mapSingle[i]['description'].toString(),
         category: cat,
         account: account,
-        account2: maps[i]['fromAccount_id'] == null
+        account2: mapSingle[i]['fromAccount_id'] == null
             ? null
-            : await _getOneAccount(maps[i]['fromAccount_id']),
+            : await _getOneAccount(mapSingle[i]['fromAccount_id']),
         // date: DateTime.parse(maps[i]['date'].toString()),
         date: DateTime.now(),
+      ));
+    }
+    for (int i = 0; i < mapRecurring.length; i++) {
+      TransactionCategory cat = await _getCategory(mapSingle[i]['category_id']);
+      Account account = await _getOneAccount(mapSingle[i]['toAccount_id']);
+      list.add(RecurringTransaction(
+        id: mapSingle[i]['id'],
+        title: mapSingle[i]['title'].toString(),
+        value: mapSingle[i]['value'],
+        description: mapSingle[i]['description'].toString(),
+        category: cat,
+        account: account,
+        account2: mapSingle[i]['fromAccount_id'] == null
+            ? null
+            : await _getOneAccount(mapSingle[i]['fromAccount_id']),
+        // date: DateTime.parse(maps[i]['date'].toString()),
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        intervalAmount: mapRecurring[i]['intervalAmount'],
+        intervalUnit: mapRecurring[i]['intervalUnit'],
+        intervalType: mapRecurring[i]['intervalType'],
       ));
     }
     allTransactionSink.add(list);
