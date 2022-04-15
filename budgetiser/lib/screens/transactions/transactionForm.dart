@@ -1,11 +1,14 @@
 import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/services/notification/recurringNotification.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
-import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectAccount.dart';
 import 'package:budgetiser/shared/widgets/picker/selectCategory.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
-
 
 class TransactionForm extends StatefulWidget {
   TransactionForm({
@@ -19,8 +22,12 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  bool isRecurring = false;
-  String intervalType = "Days";
+  RecurringData recurringData = RecurringData(
+    isRecurring: false,
+    startDate: DateTime.now(),
+  );
+  Account? selectedAccount;
+  TransactionCategory? selectedCategory;
   var titleController = TextEditingController();
   var valueController = TextEditingController();
   var descriptionController = TextEditingController();
@@ -29,33 +36,23 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   void initState() {
     if (widget.initialTransactionData != null) {
-      isRecurring = widget.initialTransactionData! is RecurringTransaction;
+      recurringData.isRecurring =
+          widget.initialTransactionData! is RecurringTransaction;
       titleController.text = widget.initialTransactionData!.title;
       valueController.text = widget.initialTransactionData!.value.toString();
       descriptionController.text = widget.initialTransactionData!.description;
+      selectedAccount = widget.initialTransactionData!.account;
+      selectedCategory = widget.initialTransactionData!.category;
       if (widget.initialTransactionData is RecurringTransaction) {
         intervalController.text =
             (widget.initialTransactionData as RecurringTransaction)
                 .intervalAmount
                 .toString();
-        intervalType = (widget.initialTransactionData as RecurringTransaction)
-            .intervalType;
+        // recurringData.intervalType = (widget.initialTransactionData as RecurringTransaction)
       }
     }
 
     super.initState();
-  }
-
-  void tick(bool? v) {
-    setState(() {
-      isRecurring = v!;
-    });
-  }
-
-  void setIntervalMode(String? mode) {
-    setState(() {
-      intervalType = mode!;
-    });
   }
 
   @override
@@ -94,33 +91,20 @@ class _TransactionFormState extends State<TransactionForm> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      (widget.initialTransactionData != null)
-                          ? SelectAccount(
-                              initialValue: widget
-                                  .initialTransactionData!.account.name,
-                            )
-                          : SelectAccount(),
+                      SelectAccount(initialAccount: selectedAccount),
                       Row(
                         children: [
                           const Text("Category:"),
                           const SizedBox(width: 8),
-                          (widget.initialTransactionData != null)
-                              ? SelectCategory(
-                                  initialCategory: widget
-                                      .initialTransactionData!
-                                      .category
-                                      .name,
-                                )
-                              : SelectCategory(),
+                          SelectCategory(initialCategory: selectedCategory),
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: TextFormField(
                           controller: valueController,
-                          keyboardType:
-                              const TextInputType.numberWithOptions(
-                                  decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           decoration: const InputDecoration(
                             labelText: "Value",
                             border: OutlineInputBorder(),
@@ -128,7 +112,7 @@ class _TransactionFormState extends State<TransactionForm> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(top: 20, bottom: 10),
                         child: TextFormField(
                           controller: descriptionController,
                           decoration: const InputDecoration(
@@ -137,110 +121,121 @@ class _TransactionFormState extends State<TransactionForm> {
                           ),
                         ),
                       ),
+                      const Divider(),
+                      NotificationListener<RecurringNotification>(
+                        onNotification: (notification) {
+                          setState(() {
+                            recurringData = notification.recurringData;
+                            print("new recurring data");
+                          });
+                          return true;
+                        },
+                        child: RecurringForm(),
+                      )
                     ],
                   ),
                 ),
               ),
 
               // recurring:
-              const Divider(),
-              InkWell(
-                  enableFeedback: false,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                        value: isRecurring,
-                        onChanged: tick,
-                      ),
-                      Text(
-                        "is recurring",
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    tick(!isRecurring);
-                  }),
+              // const Divider(),
+              // InkWell(
+              //     enableFeedback: false,
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Checkbox(
+              //           value: isRecurring,
+              //           onChanged: tick,
+              //         ),
+              //         Text(
+              //           "is recurring",
+              //           style: Theme.of(context).textTheme.headline2,
+              //         ),
+              //       ],
+              //     ),
+              //     onTap: () {
+              //       tick(!isRecurring);
+              //     }),
 
               // form for the saving account with input field for start and end date
-              if (isRecurring)
-                Column(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 16, right: 8),
-                            child: DatePicker(
-                              label: "start",
-                              initialDate: (widget.initialTransactionData
-                                      is RecurringTransaction)
-                                  ? (widget.initialTransactionData
-                                          as RecurringTransaction)
-                                      .startDate
-                                  : DateTime.now(),
-                            ),
-                          ),
-                        ),
-                        const Flexible(
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 16, left: 8),
-                            child: Text("Ends: "),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      // number input for the interval and dropdown with day month year input
-                      children: <Widget>[
-                        Flexible(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 16, right: 8),
-                            child: TextFormField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
-                              controller: intervalController,
-                              decoration: const InputDecoration(
-                                labelText: "interval",
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 16, left: 8),
-                            child: DropdownButton<String>(
-                              items: <String>[
-                                "Days",
-                                "Weeks",
-                                "Months",
-                                "Years",
-                              ]
-                                  .map((e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                        ),
-                                      ))
-                                  .toList(),
-                              onChanged: (e) {
-                                setIntervalMode(e);
-                              },
-                              value: intervalType,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+
+              // Column(
+              //   children: [
+              //     Row(
+              //       children: <Widget>[
+              //         Flexible(
+              //           child: Padding(
+              //             padding:
+              //                 const EdgeInsets.only(bottom: 16, right: 8),
+              //             child: DatePicker(
+              //               label: "start",
+              //               initialDate: (widget.initialTransactionData
+              //                       is RecurringTransaction)
+              //                   ? (widget.initialTransactionData
+              //                           as RecurringTransaction)
+              //                       .startDate
+              //                   : DateTime.now(),
+              //             ),
+              //           ),
+              //         ),
+              //         const Flexible(
+              //           child: Padding(
+              //             padding: EdgeInsets.only(bottom: 16, left: 8),
+              //             child: Text("Ends: "),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     Row(
+              //       // number input for the interval and dropdown with day month year input
+              //       children: <Widget>[
+              //         Flexible(
+              //           child: Padding(
+              //             padding:
+              //                 const EdgeInsets.only(bottom: 16, right: 8),
+              //             child: TextFormField(
+              //               keyboardType:
+              //                   const TextInputType.numberWithOptions(
+              //                 decimal: true,
+              //               ),
+              //               controller: intervalController,
+              //               decoration: const InputDecoration(
+              //                 labelText: "interval",
+              //                 border: OutlineInputBorder(),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         Flexible(
+              //           child: Padding(
+              //             padding:
+              //                 const EdgeInsets.only(bottom: 16, left: 8),
+              //             child: DropdownButton<String>(
+              //               items: <String>[
+              //                 "Days",
+              //                 "Weeks",
+              //                 "Months",
+              //                 "Years",
+              //               ]
+              //                   .map((e) => DropdownMenuItem(
+              //                         value: e,
+              //                         child: Text(
+              //                           e,
+              //                         ),
+              //                       ))
+              //                   .toList(),
+              //               onChanged: (e) {
+              //                 setIntervalMode(e);
+              //               },
+              //               value: intervalType,
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
               if (widget.initialTransactionData != null)
                 Column(
                   children: [
@@ -282,7 +277,7 @@ class _TransactionFormState extends State<TransactionForm> {
 
   AbstractTransaction _currentTransaction() {
     AbstractTransaction transaction;
-    if (!isRecurring) {
+    if (!recurringData.isRecurring) {
       transaction = SingleTransaction(
         id: 0,
         title: titleController.text,

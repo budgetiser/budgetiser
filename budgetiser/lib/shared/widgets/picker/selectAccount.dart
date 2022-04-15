@@ -1,12 +1,13 @@
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 
 class SelectAccount extends StatefulWidget {
   SelectAccount({
     Key? key,
-    this.initialValue,
+    this.initialAccount,
   }) : super(key: key);
-  String? initialValue;
+  Account? initialAccount;
 
   @override
   _SelectAccountState createState() => _SelectAccountState();
@@ -19,8 +20,8 @@ class _SelectAccountState extends State<SelectAccount> {
 
   @override
   void initState() {
-    if (widget.initialValue != null) {
-      dropdownValue = widget.initialValue!;
+    if (widget.initialAccount != null) {
+      dropdownValue = widget.initialAccount!.name;
     }
     super.initState();
   }

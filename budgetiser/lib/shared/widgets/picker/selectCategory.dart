@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ class SelectCategory extends StatefulWidget {
     this.initialCategory,
   }) : super(key: key);
 
-  var initialCategory;
+  TransactionCategory? initialCategory;
 
   @override
   State<SelectCategory> createState() => _SelectCategoryState();
@@ -20,20 +21,14 @@ class _SelectCategoryState extends State<SelectCategory> {
   */
   final List<String> _categories =
       TMP_DATA_categoryList.map((e) => e.name).toList();
-  String selectedCategory = TMP_DATA_categoryList[0].name;
+  String selectedCategoryName = TMP_DATA_categoryList[0].name;
 
   @override
   void initState() {
     if (widget.initialCategory != null) {
-      selectedCategory = widget.initialCategory;
+      selectedCategoryName = widget.initialCategory!.name;
     }
     super.initState();
-  }
-
-  void setCategory(String? category) {
-    setState(() {
-      selectedCategory = category!;
-    });
   }
 
   @override
@@ -47,10 +42,12 @@ class _SelectCategoryState extends State<SelectCategory> {
                 ),
               ))
           .toList(),
-      onChanged: (e) {
-        setCategory(e);
+      onChanged: (category) {
+        setState(() {
+          selectedCategoryName = category!;
+        });
       },
-      value: selectedCategory,
+      value: selectedCategoryName,
     );
   }
 }
