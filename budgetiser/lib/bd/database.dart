@@ -430,4 +430,28 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       isHidden: maps[0]['is_hidden'] == 1,
     );
   }
+
+  final StreamController<List<TransactionCategory>>
+      _AllCategoryStreamController =
+      StreamController<List<TransactionCategory>>.broadcast();
+  Sink<List<TransactionCategory>> get allCategorySink =>
+      _AllCategoryStreamController.sink;
+  Stream<List<TransactionCategory>> get allCategoryStream =>
+      _AllCategoryStreamController.stream;
+
+  void pushGetAllCategoriesStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('category');
+
+    allCategorySink.add(List.generate(maps.length, (i) {
+      return TransactionCategory(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        description: maps[i]['description'].toString(),
+        isHidden: maps[i]['is_hidden'] == 1,
+      );
+    }));
+  }
 }

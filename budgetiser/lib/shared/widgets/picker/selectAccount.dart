@@ -1,6 +1,5 @@
 import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 
 class SelectAccount extends StatefulWidget {

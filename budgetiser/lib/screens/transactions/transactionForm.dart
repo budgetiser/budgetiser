@@ -27,8 +27,8 @@ class _TransactionFormState extends State<TransactionForm> {
     startDate: DateTime.now(),
   );
   Account? selectedAccount;
-
   TransactionCategory? selectedCategory;
+
   var titleController = TextEditingController();
   var valueController = TextEditingController();
   var descriptionController = TextEditingController();
@@ -107,13 +107,19 @@ class _TransactionFormState extends State<TransactionForm> {
                       SelectAccount(
                           initialAccount: selectedAccount,
                           callback: setAccount),
-                      // Row(
-                      //   children: [
-                      //     const Text("Category:"),
-                      //     const SizedBox(width: 8),
-                      //     SelectCategory(initialCategory: selectedCategory),
-                      //   ],
-                      // ),
+                      Row(
+                        children: [
+                          const Text("Category:"),
+                          const SizedBox(width: 8),
+                          SelectCategory(
+                              initialCategory: selectedCategory,
+                              callback: (TransactionCategory c) {
+                                setState(() {
+                                  selectedCategory = c;
+                                });
+                              }),
+                        ],
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: TextFormField(
@@ -197,7 +203,7 @@ class _TransactionFormState extends State<TransactionForm> {
         id: 0,
         title: titleController.text,
         value: double.parse(valueController.text),
-        category: TMP_DATA_categoryList[0],
+        category: selectedCategory!,
         account: selectedAccount!,
         account2: null,
         description: descriptionController.text,
@@ -208,7 +214,7 @@ class _TransactionFormState extends State<TransactionForm> {
         id: 0,
         title: titleController.text,
         value: double.parse(valueController.text),
-        category: TMP_DATA_categoryList[0],
+        category: selectedCategory!,
         account: selectedAccount!,
         account2: null,
         description: descriptionController.text,
