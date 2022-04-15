@@ -2,9 +2,8 @@ import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/services/transactionItem.dart';
+import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import '../../shared/tempData/tempData.dart';
-import '../../shared/widgets/drawer.dart';
 
 class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
@@ -30,37 +29,25 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
       ),
       drawer: createDrawer(context),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              StreamBuilder<List<AbstractTransaction>>(
-                stream: DatabaseHelper.instance.allTransactionStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return TransactionItem(
-                          transactionData: snapshot.data![index],
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return const Text("Oops!");
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
-              ),
-              // for (var transaction in TMP_DATA_transactionList)
-              //   TransactionItem(
-              //     transactionData: transaction,
-              //   ),
-            ],
-          ),
-        ),
+      body: StreamBuilder<List<AbstractTransaction>>(
+        stream: DatabaseHelper.instance.allTransactionStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TransactionItem(
+                  transactionData: snapshot.data![index],
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Oops!");
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

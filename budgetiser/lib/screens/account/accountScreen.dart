@@ -90,38 +90,30 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       drawer: createDrawer(context),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            children: [
-              StreamBuilder<List<Account>>(
-                stream: DatabaseHelper.instance.allAccountsStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return AccountItem(
-                          accountData: snapshot.data![index],
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("Oops!");
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ),
-            ],
-          ),
-        ),
+      body: StreamBuilder<List<Account>>(
+        stream: DatabaseHelper.instance.allAccountsStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return AccountItem(
+                  accountData: snapshot.data![index],
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Oops!");
+          }
+          return const Center(child: const CircularProgressIndicator());
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AccountForm()));
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AccountForm()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,

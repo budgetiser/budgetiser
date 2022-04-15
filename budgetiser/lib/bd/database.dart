@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     allAccountsSink.add(List.generate(maps.length, (i) {
       return Account(
         id: maps[i]['id'],
-        name: maps[i]['name'],
+        name: maps[i]['name'].toString(),
         icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(maps[i]['color']),
         balance: maps[i]['balance'],
@@ -270,8 +270,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           id: maps[i]['id'],
           account: TMP_DATA_accountList[0],
           category: TMP_DATA_categoryList[0],
-          description: maps[i]['description'],
-          title: maps[i]['title'],
+          description: maps[i]['description'].toString(),
+          title: maps[i]['title'].toString(),
           value: maps[i]['value'],
           account2: null,
           date: DateTime.now());
