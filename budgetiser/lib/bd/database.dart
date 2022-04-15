@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -165,7 +164,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     var databasesPath = await getDatabasesPath();
     return await openDatabase(
       join(databasesPath, databaseName),
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
       onUpgrade: (db, oldVersion, newVersion) async {
         _dropTables(db);
@@ -263,19 +262,26 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   void pushGetAllTransactionsStream() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('XXtransaction');
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'Select * from XXtransaction, transactionToAccount where transactionToAccount.transaction_id = XXtransaction.id');
 
-    allTransactionSink.add(List.generate(maps.length, (i) {
-      return SingleTransaction(
-          id: maps[i]['id'],
-          account: TMP_DATA_accountList[0],
-          category: TMP_DATA_categoryList[0],
-          description: maps[i]['description'].toString(),
-          title: maps[i]['title'].toString(),
-          value: maps[i]['value'],
-          account2: null,
-          date: DateTime.now());
-    }));
+    List<SingleTransaction> list = [];
+    for (int i = 0; i < maps.length; i++) {
+      TransactionCategory cat = await _getCategory(maps[i]['category_id']);
+      Account account = await _getOneAccount(maps[i]['toAccount_id']);
+      list.add(SingleTransaction(
+        id: maps[i]['id'],
+        title: maps[i]['title'].toString(),
+        value: maps[i]['value'],
+        description: maps[i]['description'].toString(),
+        category: cat,
+        account: account,
+        account2: null,
+        // date: DateTime.parse(maps[i]['date'].toString()),
+        date: DateTime.now(),
+      ));
+    }
+    allTransactionSink.add(list);
   }
 
   Future<int> createTransaction(AbstractTransaction transaction) async {
@@ -375,7 +381,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
     List<SingleTransaction> list = [];
     for (int i = 0; i < maps.length; i++) {
-      TransactionCategory cat = await _getCategorie(maps[i]['category_id']);
+      TransactionCategory cat = await _getCategory(maps[i]['category_id']);
       Account account = await _getOneAccount(maps[i]['toAccount_id']);
       list.add(SingleTransaction(
         id: maps[i]['id'],
@@ -410,7 +416,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
-  Future<TransactionCategory> _getCategorie(int id) async {
+  Future<TransactionCategory> _getCategory(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('category', where: 'id = ?', whereArgs: [id]);

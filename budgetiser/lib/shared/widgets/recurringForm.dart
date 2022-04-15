@@ -61,8 +61,8 @@ class _RecurringFormState extends State<RecurringForm> {
               onChanged: (bool? newValue) {
                 setState(() {
                   isRecurring = newValue!;
+                  _sendRecurringNotification();
                 });
-                _sendRecurringNotification();
               },
             ),
             const Text("recurring"),
@@ -76,8 +76,8 @@ class _RecurringFormState extends State<RecurringForm> {
                   onChanged: (IntervalType? value) {
                     setState(() {
                       _selectedType = value!;
+                      _sendRecurringNotification();
                     });
-                    _sendRecurringNotification();
                   },
                   groupValue: _selectedType,
                   value: IntervalType.fixedTurnus,
@@ -99,8 +99,8 @@ class _RecurringFormState extends State<RecurringForm> {
                     onChanged: (String? value) {
                       setState(() {
                         fixedTurnusMode = value!;
+                        _sendRecurringNotification();
                       });
-                      _sendRecurringNotification();
                     },
                   ),
                 )
@@ -110,8 +110,8 @@ class _RecurringFormState extends State<RecurringForm> {
                   onChanged: (IntervalType? value) {
                     setState(() {
                       _selectedType = value!;
+                      _sendRecurringNotification();
                     });
-                    _sendRecurringNotification();
                   },
                   groupValue: _selectedType,
                   value: IntervalType.everyInterval,
@@ -133,8 +133,8 @@ class _RecurringFormState extends State<RecurringForm> {
                     onChanged: (String? value) {
                       setState(() {
                         intervalMode = value!;
+                        _sendRecurringNotification();
                       });
-                      _sendRecurringNotification();
                     },
                   ),
                 )
