@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS XXtransaction(
 CREATE TABLE IF NOT EXISTS singleTransaction(
   transaction_id INTEGER,
   date TEXT,
-  id INTEGER,
-  PRIMARY KEY(id),
+  st_id INTEGER,
+  PRIMARY KEY(st_id),
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction ON DELETE CASCADE);
   ''');
     await db.execute('''
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
   intervalUnit TEXT,
   start_date TEXT,
   end_date TEXT,
-  id INTEGER,
-  PRIMARY KEY(id),
+  rt_id INTEGER,
+  PRIMARY KEY(rt_id),
   CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
   CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')),
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction ON DELETE CASCADE);
@@ -398,10 +398,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         rowRecurringTransaction,
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
-    } else {
-      print(
-          "for testing: should not come here (in createTransaction in db-file)");
     }
+
     await db.update(
         'account', {'balance': transaction.account.balance + transaction.value},
         where: 'id = ?', whereArgs: [transaction.account.id]);
@@ -419,6 +417,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   Future<void> deleteTransaction(AbstractTransaction transaction) async {
     final db = await database;
+
+    print("deletein gtransaction ${transaction.id} ${transaction.title}");
 
     await db.update(
         'account', {'balance': transaction.account.balance - transaction.value},

@@ -212,8 +212,8 @@ class _TransactionFormState extends State<TransactionForm> {
                       height: 16,
                     ),
                     FloatingActionButton.extended(
-                      onPressed: (() {
-                        DatabaseHelper.instance
+                      onPressed: (() async {
+                        await DatabaseHelper.instance
                             .deleteTransaction(_currentTransaction());
                         Navigator.of(context).pop();
                       }),
@@ -274,6 +274,7 @@ class _TransactionFormState extends State<TransactionForm> {
       );
     }
     if (widget.initialTransactionData != null) {
+      print("id is ${widget.initialTransactionData!.id}");
       transaction.id = widget.initialTransactionData!.id;
     }
 
