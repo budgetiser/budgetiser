@@ -4,7 +4,12 @@ import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 
 class RecurringForm extends StatefulWidget {
-  RecurringForm({Key? key}) : super(key: key);
+  RecurringForm({
+    Key? key,
+    required this.initialRecurringData,
+  }) : super(key: key);
+
+  RecurringData initialRecurringData;
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();
@@ -41,6 +46,21 @@ class _RecurringFormState extends State<RecurringForm> {
       const DropdownMenuItem(child: Text("month"), value: "month"),
     ];
     return menuItems;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialRecurringData != null) {
+      isRecurring = widget.initialRecurringData.isRecurring;
+      startDate = widget.initialRecurringData.startDate;
+      if (isRecurring) {
+        _selectedType = widget.initialRecurringData.intervalType!;
+        intervalMode = widget.initialRecurringData.intervalUnit!;
+        turnusController.text =
+            widget.initialRecurringData.intervalAmount!.toString();
+      }
+    }
   }
 
   @override
@@ -172,9 +192,9 @@ class _RecurringFormState extends State<RecurringForm> {
         intervalType: _selectedType,
         intervalUnit: intervalMode,
         intervalAmount:
-            repetitionsController.text.isEmpty || intervalController.text == ""
+            turnusController.text.isEmpty || turnusController.text == ""
                 ? null
-                : int.parse(intervalController.text),
+                : int.parse(turnusController.text),
         endDate: DateTime.now(),
       ),
     ).dispatch(context);

@@ -19,6 +19,13 @@ abstract class AbstractTransaction {
     this.account2,
     required this.description,
   });
+
+  Map<String, dynamic> toMapAbstract() => {
+        'title': title,
+        'value': value,
+        'description': description,
+        'category_id': category.id,
+      };
 }
 
 class SingleTransaction extends AbstractTransaction {

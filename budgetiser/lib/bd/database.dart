@@ -329,26 +329,25 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         account2: mapSingle[i]['fromAccount_id'] == null
             ? null
             : await _getOneAccount(mapSingle[i]['fromAccount_id']),
-        // date: DateTime.parse(maps[i]['date'].toString()),
-        date: DateTime.now(),
+        date: DateTime.parse(mapSingle[i]['date'].toString()),
       ));
     }
     for (int i = 0; i < mapRecurring.length; i++) {
-      TransactionCategory cat = await _getCategory(mapSingle[i]['category_id']);
-      Account account = await _getOneAccount(mapSingle[i]['toAccount_id']);
+      TransactionCategory cat =
+          await _getCategory(mapRecurring[i]['category_id']);
+      Account account = await _getOneAccount(mapRecurring[i]['toAccount_id']);
       list.add(RecurringTransaction(
-        id: mapSingle[i]['id'],
-        title: mapSingle[i]['title'].toString(),
-        value: mapSingle[i]['value'],
-        description: mapSingle[i]['description'].toString(),
+        id: mapRecurring[i]['id'],
+        title: mapRecurring[i]['title'].toString(),
+        value: mapRecurring[i]['value'],
+        description: mapRecurring[i]['description'].toString(),
         category: cat,
         account: account,
-        account2: mapSingle[i]['fromAccount_id'] == null
+        account2: mapRecurring[i]['fromAccount_id'] == null
             ? null
-            : await _getOneAccount(mapSingle[i]['fromAccount_id']),
-        // date: DateTime.parse(maps[i]['date'].toString()),
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
+            : await _getOneAccount(mapRecurring[i]['fromAccount_id']),
+        startDate: DateTime.parse(mapRecurring[i]['start_date'].toString()),
+        endDate: DateTime.parse(mapRecurring[i]['end_date'].toString()),
         intervalAmount: mapRecurring[i]['intervalAmount'],
         intervalUnit: mapRecurring[i]['intervalUnit'],
         intervalType: mapRecurring[i]['intervalType'],
@@ -376,7 +375,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     if (transaction is SingleTransaction) {
       Map<String, dynamic> rowSingleTransaction = {
         'transaction_id': transactionId,
-        'date': transaction.date.hashCode,
+        'date': transaction.date.toString().substring(0, 10),
       };
 
       int id = await db.insert(
@@ -390,8 +389,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         'intervalType': transaction.intervalType,
         'intervalAmount': transaction.intervalAmount,
         'intervalUnit': transaction.intervalUnit,
-        'start_date': transaction.startDate.hashCode,
-        'end_date': transaction.endDate.hashCode,
+        'start_date': transaction.startDate.toString().substring(0, 10),
+        'end_date': transaction.endDate.toString().substring(0, 10),
       };
 
       int id = await db.insert(
@@ -445,6 +444,29 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
     );
+    pushGetAllTransactionsStream();
+  }
+
+  Future<void> updateTransaction(AbstractTransaction transaction) async {
+    final db = await database;
+
+    await db.update(
+      'XXtransaction',
+      transaction.toMapAbstract(),
+      where: 'id = ?',
+      whereArgs: [transaction.id],
+    );
+
+    // TODO: everything else with getting initial transaction and then changing
+
+    // disabled in edit transaction
+    // await db.update(
+    //   'account',
+    //   {'balance': transaction.account.balance + transaction.value},
+    //   where: 'id = ?',
+    //   whereArgs: [transaction.account.id],
+    // );
+
     pushGetAllTransactionsStream();
   }
 

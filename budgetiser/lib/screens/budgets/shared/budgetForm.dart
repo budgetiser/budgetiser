@@ -1,4 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
@@ -83,7 +84,13 @@ class _BudgetFormState extends State<BudgetForm> {
             ),
           ),
         ),
-        RecurringForm(),
+        RecurringForm(
+          initialRecurringData: RecurringData(
+            isRecurring: false,
+            startDate: DateTime.now(),
+          ),
+          // TODO: notification listener
+        ),
       ],
     );
   }

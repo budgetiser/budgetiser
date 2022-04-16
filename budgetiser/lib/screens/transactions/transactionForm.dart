@@ -48,15 +48,20 @@ class _TransactionFormState extends State<TransactionForm> {
     });
 
     if (widget.initialTransactionData != null) {
-      recurringData.isRecurring =
-          widget.initialTransactionData! is RecurringTransaction;
+      if (widget.initialTransactionData is RecurringTransaction) {
+        // widget.initialTransactionData = widget.initialTransactionData as RecurringTransaction;
+        // recurringData = RecurringData(startDate: widget.initialTransactionData!.startDate, isRecurring: isRecurring)
+      } else {
+        recurringData.isRecurring =
+            widget.initialTransactionData! is RecurringTransaction;
+      }
       titleController.text = widget.initialTransactionData!.title;
       valueController.text = widget.initialTransactionData!.value.toString();
-      descriptionController.text = widget.initialTransactionData!.description;
       selectedAccount = widget.initialTransactionData!.account;
-      selectedAccount2 = widget.initialTransactionData!.account2;
       selectedCategory = widget.initialTransactionData!.category;
       hasAccount2 = widget.initialTransactionData!.account2 != null;
+      selectedAccount2 = widget.initialTransactionData!.account2;
+      descriptionController.text = widget.initialTransactionData!.description;
     }
 
     super.initState();
@@ -168,6 +173,9 @@ class _TransactionFormState extends State<TransactionForm> {
                             labelText: "Value",
                             border: OutlineInputBorder(),
                           ),
+                          enabled: (widget.initialTransactionData != null)
+                              ? false
+                              : true,
                         ),
                       ),
                       Padding(
@@ -182,6 +190,9 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                       const Divider(),
                       NotificationListener<RecurringNotification>(
+                        child: RecurringForm(
+                          initialRecurringData: recurringData,
+                        ),
                         onNotification: (notification) {
                           print("new recurring data");
                           setState(() {
@@ -189,7 +200,6 @@ class _TransactionFormState extends State<TransactionForm> {
                           });
                           return true;
                         },
-                        child: RecurringForm(),
                       )
                     ],
                   ),
@@ -221,7 +231,7 @@ class _TransactionFormState extends State<TransactionForm> {
           // TODO: _formKey.currentState?.validate();
 
           if (widget.initialTransactionData != null) {
-            // DatabaseHelper.instance.updateAccount(a);
+            DatabaseHelper.instance.updateTransaction(_currentTransaction());
           } else {
             DatabaseHelper.instance
                 .createTransaction(_currentTransaction() as SingleTransaction);
