@@ -37,23 +37,27 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) {
-      setState(() {
-        selectedAccount = event.first;
-      });
+      selectedAccount = event.first;
     });
     DatabaseHelper.instance.allCategoryStream.listen((event) {
-      setState(() {
-        selectedCategory = event.first;
-      });
+      selectedCategory = event.first;
     });
 
     if (widget.initialTransactionData != null) {
       if (widget.initialTransactionData is RecurringTransaction) {
+        recurringData = RecurringData(
+          isRecurring: true,
+          startDate:
+              (widget.initialTransactionData as RecurringTransaction).startDate,
+          // intervalType: (widget.initialTransactionData as RecurringTransaction).intervalType,
+          // intervalUnit: (widget.initialTransactionData as RecurringTransaction).intervalUnit,
+          // intervalAmount: (widget.initialTransactionData as RecurringTransaction).intervalAmount,
+          // endDate: (widget.initialTransactionData as RecurringTransaction).endDate,
+        );
         // widget.initialTransactionData = widget.initialTransactionData as RecurringTransaction;
         // recurringData = RecurringData(startDate: widget.initialTransactionData!.startDate, isRecurring: isRecurring)
       } else {
-        recurringData.isRecurring =
-            widget.initialTransactionData! is RecurringTransaction;
+        recurringData.isRecurring = false;
       }
       titleController.text = widget.initialTransactionData!.title;
       valueController.text = widget.initialTransactionData!.value.toString();
@@ -70,6 +74,12 @@ class _TransactionFormState extends State<TransactionForm> {
   setAccount(Account a) {
     setState(() {
       selectedAccount = a;
+    });
+  }
+
+  setAccount2(Account a) {
+    setState(() {
+      selectedAccount2 = a;
     });
   }
 
@@ -112,7 +122,6 @@ class _TransactionFormState extends State<TransactionForm> {
                       SelectAccount(
                           initialAccount: selectedAccount,
                           callback: setAccount),
-                      // checkbox for account2
                       const SizedBox(height: 8),
                       Row(
                         children: [
@@ -121,17 +130,17 @@ class _TransactionFormState extends State<TransactionForm> {
                             onChanged: (bool? newValue) {
                               setState(() {
                                 hasAccount2 = newValue!;
-                                if (hasAccount2) {
-                                  DatabaseHelper.instance.allAccountsStream
-                                      .listen((event) {
-                                    setState(() {
-                                      selectedAccount2 = event.first;
-                                    });
-                                  });
-                                } else {
-                                  selectedAccount2 = null;
-                                }
                               });
+                              if (hasAccount2) {
+                                DatabaseHelper.instance.allAccountsStream
+                                    .listen((event) {
+                                  setState(() {
+                                    selectedAccount2 = event.first;
+                                  });
+                                });
+                              } else {
+                                selectedAccount2 = null;
+                              }
                             },
                           ),
                           const Text("transfer to another account"),
@@ -140,14 +149,11 @@ class _TransactionFormState extends State<TransactionForm> {
                       if (hasAccount2)
                         Row(
                           children: [
-                            Text("to "),
+                            const Text("to "),
                             SelectAccount(
-                                initialAccount: selectedAccount2,
-                                callback: (Account a) {
-                                  setState(() {
-                                    selectedAccount2 = a;
-                                  });
-                                }),
+                              initialAccount: selectedAccount2,
+                              callback: setAccount2,
+                            ),
                           ],
                         ),
                       Row(
@@ -247,6 +253,8 @@ class _TransactionFormState extends State<TransactionForm> {
   AbstractTransaction _currentTransaction() {
     AbstractTransaction transaction;
     if (!recurringData.isRecurring) {
+      print(
+          "selected account: ${selectedAccount}\n selected account2: ${selectedAccount2}");
       transaction = SingleTransaction(
         id: 0,
         title: titleController.text,

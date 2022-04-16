@@ -378,7 +378,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         'date': transaction.date.toString().substring(0, 10),
       };
 
-      int id = await db.insert(
+      await db.insert(
         'singleTransaction',
         rowSingleTransaction,
         conflictAlgorithm: ConflictAlgorithm.fail,
@@ -393,16 +393,25 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         'end_date': transaction.endDate.toString().substring(0, 10),
       };
 
-      int id = await db.insert(
+      await db.insert(
         'recurringTransaction',
         rowRecurringTransaction,
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
 
-    await db.update(
-        'account', {'balance': transaction.account.balance + transaction.value},
-        where: 'id = ?', whereArgs: [transaction.account.id]);
+    if (transaction.account2 == null) {
+      await db.update('account',
+          {'balance': transaction.account.balance + transaction.value},
+          where: 'id = ?', whereArgs: [transaction.account.id]);
+    } else {
+      await db.update('account',
+          {'balance': transaction.account.balance - transaction.value},
+          where: 'id = ?', whereArgs: [transaction.account.id]);
+      await db.update('account',
+          {'balance': transaction.account2!.balance + transaction.value},
+          where: 'id = ?', whereArgs: [transaction.account2!.id]);
+    }
 
     await db.insert('transactionToAccount', {
       'transaction_id': transactionId,
@@ -411,6 +420,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           transaction.account2 != null ? transaction.account2!.id : null,
     });
     pushGetAllTransactionsStream();
+    pushGetAllAccountsStream();
 
     return transactionId;
   }
@@ -418,11 +428,18 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<void> deleteTransaction(AbstractTransaction transaction) async {
     final db = await database;
 
-    print("deletein gtransaction ${transaction.id} ${transaction.title}");
-
-    await db.update(
-        'account', {'balance': transaction.account.balance - transaction.value},
-        where: 'id = ?', whereArgs: [transaction.account.id]);
+    if (transaction.account2 == null) {
+      await db.update('account',
+          {'balance': transaction.account.balance - transaction.value},
+          where: 'id = ?', whereArgs: [transaction.account.id]);
+    } else {
+      await db.update('account',
+          {'balance': transaction.account.balance + transaction.value},
+          where: 'id = ?', whereArgs: [transaction.account.id]);
+      await db.update('account',
+          {'balance': transaction.account2!.balance - transaction.value},
+          where: 'id = ?', whereArgs: [transaction.account2!.id]);
+    }
 
     await db.delete(
       'XXtransaction',
