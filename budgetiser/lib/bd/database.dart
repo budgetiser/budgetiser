@@ -4,6 +4,7 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -59,7 +60,7 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
   end_date TEXT,
   rt_id INTEGER,
   PRIMARY KEY(rt_id),
-  CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
+  CHECK(intervalType IN ('IntervalType.fixedPointOfTime', 'IntervalType.fixedInterval')),
   CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')),
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction ON DELETE CASCADE);
   ''');
@@ -350,7 +351,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         endDate: DateTime.parse(mapRecurring[i]['end_date'].toString()),
         intervalAmount: mapRecurring[i]['intervalAmount'],
         intervalUnit: mapRecurring[i]['intervalUnit'],
-        intervalType: mapRecurring[i]['intervalType'],
+        intervalType: IntervalType.values
+            .firstWhere((e) => e.toString() == mapRecurring[i]['intervalType']),
       ));
     }
     allTransactionSink.add(list);
@@ -386,7 +388,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     } else if (transaction is RecurringTransaction) {
       Map<String, dynamic> rowRecurringTransaction = {
         'transaction_id': transactionId,
-        'intervalType': transaction.intervalType,
+        'intervalType': transaction.intervalType.toString(),
         'intervalAmount': transaction.intervalAmount,
         'intervalUnit': transaction.intervalUnit,
         'start_date': transaction.startDate.toString().substring(0, 10),

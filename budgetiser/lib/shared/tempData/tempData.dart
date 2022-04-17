@@ -4,6 +4,7 @@ import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 List<Account> TMP_DATA_accountList = [
@@ -158,7 +159,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[1],
     startDate: DateTime(2043, 1, 2),
     endDate: DateTime(1999, 9, 1),
-    intervalType: 'fixedPointOfTime',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
     intervalUnit: 'day',
     description: 'at the supermarket',
@@ -171,9 +172,9 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[1],
     startDate: DateTime(2020, 1, 1),
     endDate: DateTime(2099, 9, 9),
-    intervalType: 'fixedInterval',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'year',
+    intervalUnit: 'month',
     description: 'Test description',
   ),
   RecurringTransaction(
@@ -184,7 +185,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[2],
     startDate: DateTime(2020, 1, 1),
     endDate: DateTime(2030, 1, 1),
-    intervalType: 'fixedInterval',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
     intervalUnit: 'month',
     description: '',
@@ -198,7 +199,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     account2: TMP_DATA_accountList[0],
     startDate: DateTime(2021, 2, 4),
     endDate: DateTime(2022, 2, 4),
-    intervalType: 'fixedPointOfTime',
+    intervalType: IntervalType.fixedPointOfTime,
     intervalAmount: 1,
     intervalUnit: 'week',
     description: 'at the bank',

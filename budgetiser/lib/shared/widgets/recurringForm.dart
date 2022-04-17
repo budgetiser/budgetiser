@@ -16,14 +16,14 @@ class RecurringForm extends StatefulWidget {
 }
 
 enum IntervalType {
-  fixedTurnus,
-  everyInterval,
+  fixedPointOfTime,
+  fixedInterval,
 }
 
 class _RecurringFormState extends State<RecurringForm> {
   bool isRecurring = false;
   DateTime startDate = DateTime.now();
-  IntervalType _selectedType = IntervalType.fixedTurnus;
+  IntervalType _selectedType = IntervalType.fixedInterval;
   var turnusController = TextEditingController();
   var intervalController = TextEditingController();
   var repetitionsController = TextEditingController();
@@ -74,6 +74,12 @@ class _RecurringFormState extends State<RecurringForm> {
               child: DatePicker(
                 label: "start",
                 initialDate: startDate,
+                onDateChangedCallback: (date) {
+                  setState(() {
+                    startDate = date;
+                  });
+                  _sendRecurringNotification();
+                },
               ),
             ),
             Checkbox(
@@ -100,7 +106,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     });
                   },
                   groupValue: _selectedType,
-                  value: IntervalType.fixedTurnus,
+                  value: IntervalType.fixedInterval,
                 ),
                 const Text("always on the: "),
                 SizedBox(
@@ -134,7 +140,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     });
                   },
                   groupValue: _selectedType,
-                  value: IntervalType.everyInterval,
+                  value: IntervalType.fixedPointOfTime,
                 ),
                 const Text("every: "),
                 SizedBox(

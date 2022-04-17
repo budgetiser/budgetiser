@@ -49,10 +49,15 @@ class _TransactionFormState extends State<TransactionForm> {
           isRecurring: true,
           startDate:
               (widget.initialTransactionData as RecurringTransaction).startDate,
-          // intervalType: (widget.initialTransactionData as RecurringTransaction).intervalType,
-          // intervalUnit: (widget.initialTransactionData as RecurringTransaction).intervalUnit,
-          // intervalAmount: (widget.initialTransactionData as RecurringTransaction).intervalAmount,
-          // endDate: (widget.initialTransactionData as RecurringTransaction).endDate,
+          intervalType: (widget.initialTransactionData as RecurringTransaction)
+              .intervalType,
+          intervalUnit: (widget.initialTransactionData as RecurringTransaction)
+              .intervalUnit,
+          intervalAmount:
+              (widget.initialTransactionData as RecurringTransaction)
+                  .intervalAmount,
+          endDate:
+              (widget.initialTransactionData as RecurringTransaction).endDate,
         );
         // widget.initialTransactionData = widget.initialTransactionData as RecurringTransaction;
         // recurringData = RecurringData(startDate: widget.initialTransactionData!.startDate, isRecurring: isRecurring)
@@ -274,11 +279,11 @@ class _TransactionFormState extends State<TransactionForm> {
         account: selectedAccount!,
         account2: selectedAccount2,
         description: descriptionController.text,
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        intervalAmount: 1,
-        intervalType: "isByMonth",
-        intervalUnit: "Month",
+        startDate: recurringData.startDate,
+        endDate: recurringData.endDate!,
+        intervalAmount: recurringData.intervalAmount!,
+        intervalType: recurringData.intervalType!,
+        intervalUnit: recurringData.intervalUnit!,
       );
     }
     if (widget.initialTransactionData != null) {

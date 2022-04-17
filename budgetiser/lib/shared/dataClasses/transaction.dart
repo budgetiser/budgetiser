@@ -1,5 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 
 abstract class AbstractTransaction {
   int id;
@@ -67,7 +68,7 @@ class SingleTransaction extends AbstractTransaction {
 class RecurringTransaction extends AbstractTransaction {
   DateTime startDate;
   DateTime endDate;
-  String intervalType;
+  IntervalType intervalType;
   int intervalAmount;
   String intervalUnit;
 
