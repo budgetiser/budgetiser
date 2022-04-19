@@ -104,7 +104,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       int.parse(fixedPointOfTimeAmountController.text));
           enddate = startDate.add(untilFirstPointOfTime);
           enddate = Jiffy(enddate)
-              .add(months: int.parse(repetitionsController.text))
+              .add(months: int.parse(repetitionsController.text) - 1)
               .dateTime;
           break;
         case "year":
@@ -118,6 +118,10 @@ class _RecurringFormState extends State<RecurringForm> {
                     Jiffy(startDate).dayOfYear +
                     int.parse(fixedPointOfTimeAmountController.text),
           );
+          enddate = startDate.add(untilFirstPointOfTime);
+          enddate = Jiffy(enddate)
+              .add(years: int.parse(repetitionsController.text) - 1)
+              .dateTime;
           break;
         default:
           print("Error in _calculateEndDate: unknown intervalMode");
@@ -203,8 +207,16 @@ class _RecurringFormState extends State<RecurringForm> {
                   height: 30,
                   child: TextFormField(
                     controller: fixedPointOfTimeAmountController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                      signed: false,
+                    ),
+                    onChanged: (string) {
+                      setState(() {
+                        _calculateEndDate();
+                        _sendRecurringNotification();
+                      });
+                    },
                   ),
                 ),
                 SizedBox(
@@ -239,8 +251,16 @@ class _RecurringFormState extends State<RecurringForm> {
                   height: 30,
                   child: TextFormField(
                     controller: fixedIntervalAmountController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: false),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: false,
+                      signed: false,
+                    ),
+                    onChanged: (string) {
+                      setState(() {
+                        _calculateEndDate();
+                        _sendRecurringNotification();
+                      });
+                    },
                   ),
                 ),
                 SizedBox(
@@ -265,8 +285,16 @@ class _RecurringFormState extends State<RecurringForm> {
                     height: 30,
                     child: TextFormField(
                       controller: repetitionsController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: false),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: false,
+                        signed: false,
+                      ),
+                      onChanged: (string) {
+                        setState(() {
+                          _calculateEndDate();
+                          _sendRecurringNotification();
+                        });
+                      },
                     ),
                   )
                 ],

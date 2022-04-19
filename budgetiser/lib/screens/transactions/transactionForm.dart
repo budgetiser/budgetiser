@@ -9,12 +9,20 @@ import 'package:budgetiser/shared/widgets/picker/selectCategory.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
+/// a screen that allows the user to add a transaction
+/// or edit an existing one
+///
+/// attributes:
+/// * [initialTransactionData] - the data of the transaction to edit
+/// * [initialNegative] - if true, the transaction has a "-"" prefilled
 class TransactionForm extends StatefulWidget {
   TransactionForm({
     Key? key,
     this.initialTransactionData,
+    this.initialNegative,
   }) : super(key: key);
   AbstractTransaction? initialTransactionData;
+  bool? initialNegative;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
