@@ -1,20 +1,10 @@
 import 'package:budgetiser/routes.dart';
-import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 import 'config/themes/themes.dart';
 import 'screens/homeScreen.dart';
 
 void main() {
-  // DateTime d = DateTime.now();
-  // print(d);
-  // print("date as string ${d.toString()}");
-  // int s = d.toUtc().microsecondsSinceEpoch;
-  // print("string is $s");
-
-  // print(DateTime.fromMicrosecondsSinceEpoch(s));
-  // print("from substring ${DateTime.parse(d.toString().substring(0, 10))}");
-
   runApp(const MyApp());
 }
 

@@ -37,6 +37,7 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) {
+      // TODO: BUG: gets executed after hasAccount2 is set to true by the user
       selectedAccount = event.first;
     });
     DatabaseHelper.instance.allCategoryStream.listen((event) {
@@ -59,8 +60,6 @@ class _TransactionFormState extends State<TransactionForm> {
           endDate:
               (widget.initialTransactionData as RecurringTransaction).endDate,
         );
-        // widget.initialTransactionData = widget.initialTransactionData as RecurringTransaction;
-        // recurringData = RecurringData(startDate: widget.initialTransactionData!.startDate, isRecurring: isRecurring)
       } else {
         recurringData.isRecurring = false;
       }
