@@ -290,10 +290,14 @@ class _RecurringFormState extends State<RecurringForm> {
         isRecurring: isRecurring,
         intervalType: _selectedIntervalType,
         intervalUnit: fixedIntervalUnit,
-        intervalAmount: fixedPointOfTimeAmountController.text.isEmpty ||
-                fixedPointOfTimeAmountController.text == ""
+        intervalAmount: fixedPointOfTimeAmountController.text.isEmpty &&
+                    _selectedIntervalType == IntervalType.fixedPointOfTime ||
+                fixedIntervalAmountController.text.isEmpty &&
+                    _selectedIntervalType == IntervalType.fixedInterval
             ? null
-            : int.parse(fixedPointOfTimeAmountController.text),
+            : _selectedIntervalType == IntervalType.fixedPointOfTime
+                ? int.parse(fixedPointOfTimeAmountController.text)
+                : int.parse(fixedIntervalAmountController.text),
         endDate: enddate,
       ),
     ).dispatch(context);

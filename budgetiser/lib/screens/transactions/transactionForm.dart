@@ -243,8 +243,7 @@ class _TransactionFormState extends State<TransactionForm> {
           if (widget.initialTransactionData != null) {
             DatabaseHelper.instance.updateTransaction(_currentTransaction());
           } else {
-            DatabaseHelper.instance
-                .createTransaction(_currentTransaction() as SingleTransaction);
+            DatabaseHelper.instance.createTransaction(_currentTransaction());
           }
           Navigator.of(context).pop();
         },

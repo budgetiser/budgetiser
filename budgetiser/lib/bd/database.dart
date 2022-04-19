@@ -486,6 +486,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     //   whereArgs: [transaction.account.id],
     // );
 
+    // TODO: update recurring
+    // TODO: update transaction to account table
+
     pushGetAllTransactionsStream();
   }
 
