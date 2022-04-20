@@ -107,7 +107,9 @@ class _AccountScreenState extends State<AccountScreen> {
           } else if (snapshot.hasError) {
             return const Text("Oops!");
           }
-          return const Center(child: const CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(

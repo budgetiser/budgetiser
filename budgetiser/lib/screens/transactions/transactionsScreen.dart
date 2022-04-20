@@ -1,5 +1,6 @@
 import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/services/transactionItem.dart';
 import 'package:budgetiser/shared/widgets/drawer.dart';
@@ -17,13 +18,57 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   void initState() {
     DatabaseHelper.instance.pushGetAllTransactionsStream();
+    DatabaseHelper.instance.allAccountsStream.listen((event) {
+      _accountList = event;
+    });
+    DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
   }
+
+  var _currentFilterAccountName = "";
+  var _accountList = <Account>[];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_alt_sharp),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: const Text('Filter by Account'),
+                    alignment: Alignment.topRight,
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          setState(() {
+                            _currentFilterAccountName = '';
+                          });
+                        },
+                        child: const Text('All'),
+                      ),
+                      for (var account in _accountList)
+                        SimpleDialogOption(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              _currentFilterAccountName = account.name;
+                            });
+                          },
+                          child: Text(account.name),
+                        ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
         title: const Text(
           "Transactions",
         ),
@@ -33,13 +78,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         stream: DatabaseHelper.instance.allTransactionStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            var filteredList = snapshot.data!.where((element) {
+              if (_currentFilterAccountName == "") {
+                return true;
+              } else {
+                return element.account.name == _currentFilterAccountName;
+              }
+            }).toList();
             return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: snapshot.data!.length,
+              itemCount: filteredList.length,
               itemBuilder: (BuildContext context, int index) {
                 return TransactionItem(
-                  transactionData: snapshot.data![index],
+                  transactionData: filteredList[index],
                 );
               },
             );
