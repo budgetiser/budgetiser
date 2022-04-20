@@ -355,6 +355,19 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
             .firstWhere((e) => e.toString() == mapRecurring[i]['intervalType']),
       ));
     }
+    list.sort((a, b) {
+      if (b is SingleTransaction && a is SingleTransaction) {
+        return b.date.compareTo(a.date);
+      } else if (b is RecurringTransaction && a is RecurringTransaction) {
+        return b.startDate.compareTo(a.startDate);
+      } else if (b is SingleTransaction && a is RecurringTransaction) {
+        return b.date.compareTo(a.startDate);
+      } else if (b is RecurringTransaction && a is SingleTransaction) {
+        return b.startDate.compareTo(a.date);
+      } else {
+        throw Exception('Error in AbstractTransaction sorting');
+      }
+    });
     allTransactionSink.add(list);
   }
 
