@@ -168,8 +168,8 @@ class _RecurringFormState extends State<RecurringForm> {
                   setState(() {
                     startDate = date;
                     _calculateEndDate();
+                    _sendRecurringNotification();
                   });
-                  _sendRecurringNotification();
                 },
               ),
             ),

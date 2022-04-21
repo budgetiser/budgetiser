@@ -42,6 +42,8 @@ class _TransactionFormState extends State<TransactionForm> {
   var valueController = TextEditingController();
   var descriptionController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) {
@@ -113,115 +115,135 @@ class _TransactionFormState extends State<TransactionForm> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: <Widget>[
-                          Flexible(
-                            child: TextFormField(
-                              controller: titleController,
-                              // initialValue: widget.initialName,
-                              decoration: const InputDecoration(
-                                labelText: "Title",
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      SelectAccount(
-                          initialAccount: selectedAccount,
-                          callback: setAccount),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: hasAccount2,
-                            onChanged: (bool? newValue) {
-                              setState(() {
-                                hasAccount2 = newValue!;
-                              });
-                              if (hasAccount2) {
-                                DatabaseHelper.instance.allAccountsStream
-                                    .listen((event) {
-                                  setState(() {
-                                    selectedAccount2 = event.first;
-                                  });
-                                });
-                              } else {
-                                selectedAccount2 = null;
-                              }
-                            },
-                          ),
-                          const Text("transfer to another account"),
-                        ],
-                      ),
-                      if (hasAccount2)
+                child: Form(
+                  key: _formKey,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: Column(
+                      children: [
                         Row(
-                          children: [
-                            const Text("to "),
-                            SelectAccount(
-                              initialAccount: selectedAccount2,
-                              callback: setAccount2,
+                          children: <Widget>[
+                            Flexible(
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a title';
+                                  }
+                                  return null;
+                                },
+                                controller: titleController,
+                                // initialValue: widget.initialName,
+                                decoration: const InputDecoration(
+                                  labelText: "Title",
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      Row(
-                        children: [
-                          const Text("Category:"),
-                          const SizedBox(width: 8),
-                          SelectCategory(
-                              initialCategory: selectedCategory,
-                              callback: (TransactionCategory c) {
+                        const SizedBox(height: 8),
+                        SelectAccount(
+                            initialAccount: selectedAccount,
+                            callback: setAccount),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: hasAccount2,
+                              onChanged: (bool? newValue) {
                                 setState(() {
-                                  selectedCategory = c;
+                                  hasAccount2 = newValue!;
                                 });
-                              }),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: TextFormField(
-                          controller: valueController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: "Value",
-                            border: OutlineInputBorder(),
+                                if (hasAccount2) {
+                                  DatabaseHelper.instance.allAccountsStream
+                                      .listen((event) {
+                                    setState(() {
+                                      selectedAccount2 = event.first;
+                                    });
+                                  });
+                                } else {
+                                  selectedAccount2 = null;
+                                }
+                              },
+                            ),
+                            const Text("transfer to another account"),
+                          ],
+                        ),
+                        if (hasAccount2)
+                          Row(
+                            children: [
+                              const Text("to "),
+                              SelectAccount(
+                                initialAccount: selectedAccount2,
+                                callback: setAccount2,
+                              ),
+                            ],
                           ),
-                          enabled: (widget.initialTransactionData != null)
-                              ? false
-                              : true,
+                        Row(
+                          children: [
+                            const Text("Category:"),
+                            const SizedBox(width: 8),
+                            SelectCategory(
+                                initialCategory: selectedCategory,
+                                callback: (TransactionCategory c) {
+                                  setState(() {
+                                    selectedCategory = c;
+                                  });
+                                }),
+                          ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 10),
-                        child: TextFormField(
-                          controller: descriptionController,
-                          decoration: const InputDecoration(
-                            labelText: "Notes",
-                            border: OutlineInputBorder(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: TextFormField(
+                            controller: valueController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            decoration: const InputDecoration(
+                              labelText: "Value",
+                              border: OutlineInputBorder(),
+                            ),
+                            enabled: (widget.initialTransactionData != null)
+                                ? false
+                                : true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a value';
+                              }
+                              try {
+                                double.parse(value);
+                              } catch (e) {
+                                return 'Please enter a valid number';
+                              }
+                              return null;
+                            },
                           ),
                         ),
-                      ),
-                      const Divider(),
-                      NotificationListener<RecurringNotification>(
-                        child: RecurringForm(
-                          initialRecurringData: recurringData,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, bottom: 10),
+                          child: TextFormField(
+                            controller: descriptionController,
+                            decoration: const InputDecoration(
+                              labelText: "Notes",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
                         ),
-                        onNotification: (notification) {
-                          setState(() {
-                            recurringData = notification.recurringData;
-                          });
-                          return true;
-                        },
-                      )
-                    ],
+                        const Divider(),
+                        NotificationListener<RecurringNotification>(
+                          child: RecurringForm(
+                            initialRecurringData: recurringData,
+                          ),
+                          onNotification: (notification) {
+                            setState(() {
+                              recurringData = notification.recurringData;
+                            });
+                            return true;
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -249,13 +271,14 @@ class _TransactionFormState extends State<TransactionForm> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // TODO: _formKey.currentState?.validate();
-
-          if (widget.initialTransactionData != null) {
-            DatabaseHelper.instance.updateTransaction(_currentTransaction());
-          } else {
-            DatabaseHelper.instance.createTransaction(_currentTransaction());
+          if (_formKey.currentState!.validate()) {
+            if (widget.initialTransactionData != null) {
+              DatabaseHelper.instance.updateTransaction(_currentTransaction());
+            } else {
+              DatabaseHelper.instance.createTransaction(_currentTransaction());
+            }
+            Navigator.of(context).pop();
           }
-          Navigator.of(context).pop();
         },
         label: const Text("Save"),
         icon: const Icon(Icons.save),
