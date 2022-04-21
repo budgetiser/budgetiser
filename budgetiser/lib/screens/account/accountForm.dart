@@ -1,11 +1,10 @@
 import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/shared/services/notification/colorPicker.dart';
 import 'package:budgetiser/shared/services/notification/iconPicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
-
-import '../../shared/services/notification/colorPicker.dart';
 
 class AccountForm extends StatefulWidget {
   AccountForm({
@@ -71,20 +70,19 @@ class _AccountFormState extends State<AccountForm> {
                           Row(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: NotificationListener<IconPicked>(
-                                  onNotification: (n) {
-                                    setState(() {
-                                      _icon = n.icon;
-                                    });
-                                    return true;
-                                  },
-                                  child: IconPicker(
-                                    initialIcon: _icon,
-                                    initialColor: _color,
-                                  ),
-                                )
-                              ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: NotificationListener<IconPicked>(
+                                    onNotification: (n) {
+                                      setState(() {
+                                        _icon = n.icon;
+                                      });
+                                      return true;
+                                    },
+                                    child: IconPicker(
+                                      initialIcon: _icon,
+                                      initialColor: _color,
+                                    ),
+                                  )),
                               Flexible(
                                 child: TextFormField(
                                   controller: nameController,
@@ -157,10 +155,10 @@ class _AccountFormState extends State<AccountForm> {
               balance: double.parse(balanceController.text),
               description: "d",
               id: 0);
-          if(widget.initialAccount != null){
+          if (widget.initialAccount != null) {
             a.id = widget.initialAccount!.id;
             DatabaseHelper.instance.updateAccount(a);
-          }else {
+          } else {
             DatabaseHelper.instance.createAccount(a);
           }
           Navigator.of(context).pop();

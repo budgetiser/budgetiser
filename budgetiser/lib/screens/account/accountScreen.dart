@@ -1,10 +1,10 @@
 import 'package:budgetiser/bd/database.dart';
 import 'package:budgetiser/screens/account/accountForm.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/services/accountItem/accountItem.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
+import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import '../../shared/dataClasses/account.dart';
-import '../../shared/services/accountItem/accountItem.dart';
-import '../../shared/widgets/drawer.dart';
 
 class AccountScreen extends StatefulWidget {
   static String routeID = 'account';
