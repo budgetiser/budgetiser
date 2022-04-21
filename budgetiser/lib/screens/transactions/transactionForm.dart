@@ -270,7 +270,6 @@ class _TransactionFormState extends State<TransactionForm> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // TODO: _formKey.currentState?.validate();
           if (_formKey.currentState!.validate()) {
             if (widget.initialTransactionData != null) {
               DatabaseHelper.instance.updateTransaction(_currentTransaction());

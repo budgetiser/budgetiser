@@ -32,6 +32,8 @@ class _RecurringFormState extends State<RecurringForm> {
   String fixedIntervalUnit = "day";
   DateTime? enddate;
 
+  final _formKey = GlobalKey<FormState>();
+
   List<DropdownMenuItem<String>> get dropdownItemsFixedPointOfTimeUnit {
     List<DropdownMenuItem<String>> menuItems = [
       const DropdownMenuItem(child: Text("of a week"), value: "week"),
@@ -155,136 +157,112 @@ class _RecurringFormState extends State<RecurringForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 0, right: 8, top: 13),
-          child: Row(children: [
-            Flexible(
-              child: DatePicker(
-                label: "start",
-                initialDate: startDate,
-                onDateChangedCallback: (date) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 0, right: 8, top: 13),
+            child: Row(children: [
+              Flexible(
+                child: DatePicker(
+                  label: "start",
+                  initialDate: startDate,
+                  onDateChangedCallback: (date) {
+                    setState(() {
+                      startDate = date;
+                      _calculateEndDate();
+                      _sendRecurringNotification();
+                    });
+                  },
+                ),
+              ),
+              Checkbox(
+                value: isRecurring,
+                onChanged: (bool? newValue) {
                   setState(() {
-                    startDate = date;
+                    isRecurring = newValue!;
                     _calculateEndDate();
                     _sendRecurringNotification();
                   });
                 },
               ),
-            ),
-            Checkbox(
-              value: isRecurring,
-              onChanged: (bool? newValue) {
-                setState(() {
-                  isRecurring = newValue!;
-                  _calculateEndDate();
-                  _sendRecurringNotification();
-                });
-              },
-            ),
-            const Text("recurring"),
-          ]),
-        ),
-        if (isRecurring)
-          Column(
-            children: [
-              Row(children: <Widget>[
-                Radio(
-                  onChanged: (IntervalType? value) {
-                    setState(() {
-                      _selectedIntervalType = value!;
-                      _calculateEndDate();
-                      _sendRecurringNotification();
-                    });
-                  },
-                  groupValue: _selectedIntervalType,
-                  value: IntervalType.fixedPointOfTime,
-                ),
-                const Text("always on the: "),
-                SizedBox(
-                  width: 40,
-                  height: 30,
-                  child: TextFormField(
-                    controller: fixedPointOfTimeAmountController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: false,
-                    ),
-                    onChanged: (string) {
+              const Text("recurring"),
+            ]),
+          ),
+          if (isRecurring)
+            Column(
+              children: [
+                Row(children: <Widget>[
+                  Radio(
+                    onChanged: (IntervalType? value) {
                       setState(() {
+                        _selectedIntervalType = value!;
                         _calculateEndDate();
                         _sendRecurringNotification();
                       });
                     },
+                    groupValue: _selectedIntervalType,
+                    value: IntervalType.fixedPointOfTime,
                   ),
-                ),
-                SizedBox(
-                  child: DropdownButton(
-                    value: fixedPointOfTimeUnit,
-                    items: dropdownItemsFixedPointOfTimeUnit,
-                    onChanged: (String? value) {
-                      setState(() {
-                        fixedPointOfTimeUnit = value!;
-                        _calculateEndDate();
-                        _sendRecurringNotification();
-                      });
-                    },
-                  ),
-                )
-              ]),
-              Row(children: <Widget>[
-                Radio(
-                  onChanged: (IntervalType? value) {
-                    setState(() {
-                      _selectedIntervalType = value!;
-                      _calculateEndDate();
-                      _sendRecurringNotification();
-                    });
-                  },
-                  groupValue: _selectedIntervalType,
-                  value: IntervalType.fixedInterval,
-                ),
-                const Text("every: "),
-                SizedBox(
-                  width: 40,
-                  height: 30,
-                  child: TextFormField(
-                    controller: fixedIntervalAmountController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: false,
-                      signed: false,
-                    ),
-                    onChanged: (string) {
-                      setState(() {
-                        _calculateEndDate();
-                        _sendRecurringNotification();
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  child: DropdownButton(
-                    value: fixedIntervalUnit,
-                    items: dropdownItemsFixedIntervalUnit,
-                    onChanged: (String? value) {
-                      setState(() {
-                        fixedIntervalUnit = value!;
-                        _calculateEndDate();
-                        _sendRecurringNotification();
-                      });
-                    },
-                  ),
-                )
-              ]),
-              Row(
-                children: [
-                  const Text("Repetitions: "),
+                  const Text("always on the: "),
                   SizedBox(
                     width: 40,
                     height: 30,
                     child: TextFormField(
-                      controller: repetitionsController,
+                      controller: fixedPointOfTimeAmountController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: false,
+                      ),
+                      onChanged: (string) {
+                        setState(() {
+                          _calculateEndDate();
+                          _sendRecurringNotification();
+                        });
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty &&
+                            _selectedIntervalType ==
+                                IntervalType.fixedPointOfTime) {
+                          return "Please enter a number";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    child: DropdownButton(
+                      value: fixedPointOfTimeUnit,
+                      items: dropdownItemsFixedPointOfTimeUnit,
+                      onChanged: (String? value) {
+                        setState(() {
+                          fixedPointOfTimeUnit = value!;
+                          _calculateEndDate();
+                          _sendRecurringNotification();
+                        });
+                      },
+                    ),
+                  )
+                ]),
+                Row(children: <Widget>[
+                  Radio(
+                    onChanged: (IntervalType? value) {
+                      setState(() {
+                        _selectedIntervalType = value!;
+                        _calculateEndDate();
+                        _sendRecurringNotification();
+                      });
+                    },
+                    groupValue: _selectedIntervalType,
+                    value: IntervalType.fixedInterval,
+                  ),
+                  const Text("every: "),
+                  SizedBox(
+                    width: 40,
+                    height: 30,
+                    child: TextFormField(
+                      controller: fixedIntervalAmountController,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: false,
                         signed: false,
@@ -295,23 +273,75 @@ class _RecurringFormState extends State<RecurringForm> {
                           _sendRecurringNotification();
                         });
                       },
+                      validator: (value) {
+                        if (value!.isEmpty &&
+                            _selectedIntervalType ==
+                                IntervalType.fixedInterval) {
+                          return "Please enter a number";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    child: DropdownButton(
+                      value: fixedIntervalUnit,
+                      items: dropdownItemsFixedIntervalUnit,
+                      onChanged: (String? value) {
+                        setState(() {
+                          fixedIntervalUnit = value!;
+                          _calculateEndDate();
+                          _sendRecurringNotification();
+                        });
+                      },
                     ),
                   )
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                      "Ends on: ${enddate != null ? enddate.toString().substring(0, 10) : ""}"),
-                ],
-              ),
-            ],
-          ),
-      ],
+                ]),
+                Row(
+                  children: [
+                    const Text("Repetitions: "),
+                    SizedBox(
+                      width: 40,
+                      height: 30,
+                      child: TextFormField(
+                        controller: repetitionsController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: false,
+                          signed: false,
+                        ),
+                        onChanged: (string) {
+                          setState(() {
+                            _calculateEndDate();
+                            _sendRecurringNotification();
+                          });
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please enter a number";
+                          }
+                          return null;
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                        "Ends on: ${enddate != null ? enddate.toString().substring(0, 10) : ""}"),
+                  ],
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 
   void _sendRecurringNotification() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     RecurringNotification(
       RecurringData(
         startDate: startDate,
