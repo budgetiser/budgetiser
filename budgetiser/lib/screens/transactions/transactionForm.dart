@@ -215,7 +215,6 @@ class _TransactionFormState extends State<TransactionForm> {
                           initialRecurringData: recurringData,
                         ),
                         onNotification: (notification) {
-                          print("new recurring data");
                           setState(() {
                             recurringData = notification.recurringData;
                           });
@@ -296,7 +295,6 @@ class _TransactionFormState extends State<TransactionForm> {
       );
     }
     if (widget.initialTransactionData != null) {
-      print("id is ${widget.initialTransactionData!.id}");
       transaction.id = widget.initialTransactionData!.id;
     }
 

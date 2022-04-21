@@ -59,8 +59,6 @@ class _DatePickerState extends State<DatePicker> {
                 setState(() {
                   dateController.text = date.toString().substring(0, 10);
                   widget.onDateChangedCallback(date);
-                  print(
-                      "date set to ${dateController.text}"); // TODO: how to get the date to new account layer?
                 });
               }
             },
