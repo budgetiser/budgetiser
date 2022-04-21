@@ -52,6 +52,9 @@ class _TransactionFormState extends State<TransactionForm> {
       selectedCategory = event.first;
     });
 
+    if (widget.initialNegative == true) {
+      valueController.text = "-";
+    }
     if (widget.initialTransactionData != null) {
       if (widget.initialTransactionData is RecurringTransaction) {
         recurringData = RecurringData(

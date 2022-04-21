@@ -66,7 +66,10 @@ class AccountItem extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => TransactionForm()),
+                                builder: (context) => TransactionForm(
+                                  initialNegative: true,
+                                ),
+                              ),
                             );
                           },
                           child: const Icon(

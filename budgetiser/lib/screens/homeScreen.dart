@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
               },
               label: const Text("reset DB"),
               icon: const Icon(
-                Icons.add,
+                Icons.delete,
               ),
               heroTag: "resetDB",
             ),
@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
               },
               label: const Text("reset and fill DB"),
               icon: const Icon(
-                Icons.add,
+                Icons.refresh,
               ),
               heroTag: "fillDB",
             ),
