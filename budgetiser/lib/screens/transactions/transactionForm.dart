@@ -254,11 +254,28 @@ class _TransactionFormState extends State<TransactionForm> {
                       height: 16,
                     ),
                     FloatingActionButton.extended(
-                      onPressed: (() async {
-                        await DatabaseHelper.instance
-                            .deleteTransaction(_currentTransaction());
-                        Navigator.of(context).pop();
-                      }),
+                      onPressed: () => showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Delete Transaction?'),
+                          content: const Text('This action cannot be undone.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await DatabaseHelper.instance
+                                    .deleteTransaction(_currentTransaction());
+                                Navigator.pop(context, 'OK');
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      ),
                       label: const Text("Delete"),
                       heroTag: "delete",
                     ),
