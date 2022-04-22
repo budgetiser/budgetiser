@@ -8,7 +8,12 @@ import 'package:flutter/material.dart';
 
 class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
-  TransactionsScreen({Key? key}) : super(key: key);
+  TransactionsScreen({
+    Key? key,
+    this.initalAccountFilterName,
+  }) : super(key: key);
+
+  String? initalAccountFilterName;
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -22,10 +27,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       _accountList = event;
     });
     DatabaseHelper.instance.pushGetAllAccountsStream();
+
+    if (widget.initalAccountFilterName != null) {
+      _currentFilterAccountName = widget.initalAccountFilterName!;
+    }
     super.initState();
   }
 
   var _currentFilterAccountName = "";
+
   var _accountList = <Account>[];
 
   @override

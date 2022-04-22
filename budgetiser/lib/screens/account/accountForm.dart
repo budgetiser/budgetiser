@@ -1,9 +1,12 @@
 import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/screens/account/accountScreen.dart';
+import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 import 'package:budgetiser/shared/services/notification/colorPicker.dart';
 import 'package:budgetiser/shared/services/notification/iconPicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -157,6 +160,23 @@ class _AccountFormState extends State<AccountForm> {
                                   }),
                                   label: const Text("Delete"),
                                   heroTag: "delete",
+                                  icon: const Icon(Icons.delete),
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                FloatingActionButton.extended(
+                                  onPressed: (() {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => TransactionsScreen(
+                                        initalAccountFilterName:
+                                            nameController.text,
+                                      ),
+                                    ));
+                                  }),
+                                  label: const Text("View all transactions"),
+                                  heroTag: "viewTransactions",
                                 ),
                               ],
                             ),
