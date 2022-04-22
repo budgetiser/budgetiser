@@ -415,6 +415,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       );
     }
 
+    // TODO: adjust account balance in recurring transactions
     if (transaction.account2 == null) {
       await db.update('account',
           {'balance': transaction.account.balance + transaction.value},

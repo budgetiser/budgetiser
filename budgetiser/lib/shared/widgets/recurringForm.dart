@@ -55,17 +55,53 @@ class _RecurringFormState extends State<RecurringForm> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialRecurringData != null) {
-      isRecurring = widget.initialRecurringData.isRecurring;
-      startDate = widget.initialRecurringData.startDate;
-      if (isRecurring) {
-        _selectedIntervalType = widget.initialRecurringData.intervalType!;
-        fixedIntervalUnit = widget.initialRecurringData.intervalUnit!;
+    isRecurring = widget.initialRecurringData.isRecurring;
+    startDate = widget.initialRecurringData.startDate;
+    if (isRecurring) {
+      _selectedIntervalType = widget.initialRecurringData.intervalType!;
+      if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
         fixedPointOfTimeAmountController.text =
             widget.initialRecurringData.intervalAmount!.toString();
+        fixedPointOfTimeUnit =
+            widget.initialRecurringData.intervalUnit!.toString();
+      } else {
+        fixedIntervalAmountController.text =
+            widget.initialRecurringData.intervalAmount.toString();
+        fixedIntervalUnit = widget.initialRecurringData.intervalUnit.toString();
       }
+      enddate = widget.initialRecurringData.endDate;
+      repetitionsController.text = _calculateNeededRepetitions().toString();
     }
     _calculateEndDate();
+  }
+
+  int _calculateNeededRepetitions() {
+    // TODO: not finished and buggy
+    if (isRecurring) {
+      if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
+        switch (fixedPointOfTimeUnit) {
+          case "week":
+            return enddate!.difference(startDate).inDays ~/ 7;
+          // case "month":
+          // return startDate.difference(enddate!).inDays ~/ 30;
+          default:
+            return 0;
+        }
+      } else {
+        switch (fixedIntervalUnit) {
+          case "day":
+            return enddate!.difference(startDate).inDays;
+          case "week":
+            return enddate!.difference(startDate).inDays ~/ 7;
+          // case "month":
+          // return startDate.difference(enddate!).inDays ~/ 30;
+          default:
+            return 0;
+        }
+      }
+    } else {
+      return 0;
+    }
   }
 
   void _calculateEndDate() {
@@ -347,7 +383,9 @@ class _RecurringFormState extends State<RecurringForm> {
         startDate: startDate,
         isRecurring: isRecurring,
         intervalType: _selectedIntervalType,
-        intervalUnit: fixedIntervalUnit,
+        intervalUnit: _selectedIntervalType == IntervalType.fixedInterval
+            ? fixedIntervalUnit
+            : fixedPointOfTimeUnit,
         intervalAmount: fixedPointOfTimeAmountController.text.isEmpty &&
                     _selectedIntervalType == IntervalType.fixedPointOfTime ||
                 fixedIntervalAmountController.text.isEmpty &&

@@ -315,7 +315,7 @@ class _TransactionFormState extends State<TransactionForm> {
         account: selectedAccount!,
         account2: selectedAccount2,
         description: descriptionController.text,
-        date: DateTime.now(),
+        date: recurringData.startDate,
       );
     } else {
       transaction = RecurringTransaction(
