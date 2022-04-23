@@ -68,7 +68,6 @@ class _TransactionFormState extends State<TransactionForm> {
       } else {
         recurringData.isRecurring = false;
       }
-      print("here");
       titleController.text = widget.initialTransactionData!.title;
       valueController.text = widget.initialTransactionData!.value.toString();
       selectedAccount = widget.initialTransactionData!.account;
