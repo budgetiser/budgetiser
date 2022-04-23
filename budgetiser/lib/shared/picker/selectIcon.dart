@@ -1,4 +1,3 @@
-import 'package:budgetiser/shared/services/notification/iconPickerNotification.dart';
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
@@ -6,10 +5,12 @@ class IconPicker extends StatefulWidget {
     Key? key,
     this.initialIcon,
     this.initialColor,
+    required this.onIconChangedCallback,
   }) : super(key: key);
 
   IconData? initialIcon;
   final Color? initialColor;
+  Function(IconData) onIconChangedCallback;
 
   @override
   State<IconPicker> createState() => _IconPickerState();
@@ -109,7 +110,7 @@ class _IconPickerState extends State<IconPicker> {
           onTap: () {
             setState(() {
               widget.initialIcon = _icons[index];
-              IconPickedNotification(_icons[index]).dispatch(context);
+              widget.onIconChangedCallback(_icons[index]);
               Navigator.pop(context);
             });
           },

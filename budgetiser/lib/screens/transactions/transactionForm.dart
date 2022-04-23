@@ -3,7 +3,6 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/services/notification/recurringNotification.dart';
 import 'package:budgetiser/shared/picker/selectAccount.dart';
 import 'package:budgetiser/shared/picker/selectCategory.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
@@ -223,16 +222,13 @@ class _TransactionFormState extends State<TransactionForm> {
                           ),
                         ),
                         const Divider(),
-                        NotificationListener<RecurringNotification>(
-                          child: RecurringForm(
-                            initialRecurringData: recurringData,
-                          ),
-                          onNotification: (notification) {
+                        RecurringForm(
+                          onRecurringDataChangedCallback: (data) {
                             setState(() {
-                              recurringData = notification.recurringData;
+                              recurringData = data;
                             });
-                            return true;
                           },
+                          initialRecurringData: recurringData,
                         )
                       ],
                     ),

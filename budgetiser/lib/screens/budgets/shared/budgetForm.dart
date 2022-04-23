@@ -60,6 +60,7 @@ class _BudgetFormState extends State<BudgetForm> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconPicker(
+                  onIconChangedCallback: (p0) {},
                   initialIcon: widget.initialBudgetData != null
                       ? widget.initialBudgetData!.icon
                       : null,
@@ -84,11 +85,13 @@ class _BudgetFormState extends State<BudgetForm> {
           ),
         ),
         RecurringForm(
+          onRecurringDataChangedCallback: (p0) {
+            // TODO: callback
+          },
           initialRecurringData: RecurringData(
             isRecurring: false,
             startDate: DateTime.now(),
           ),
-          // TODO: notification listener
         ),
       ],
     );

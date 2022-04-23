@@ -37,6 +37,7 @@ class _SavingFormState extends State<SavingForm> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconPicker(
+                onIconChangedCallback: (p0) {},
                 initialIcon: widget.initialSavingData != null
                     ? widget.initialSavingData!.icon
                     : null,
@@ -55,7 +56,9 @@ class _SavingFormState extends State<SavingForm> {
             ))
           ],
         ),
-        Colorpicker(),
+        Colorpicker(
+          onColorChangedCallback: (color) {},
+        ),
         const SizedBox(height: 8),
         Row(
           children: [

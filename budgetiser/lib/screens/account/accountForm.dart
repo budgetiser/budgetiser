@@ -1,7 +1,5 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
-import 'package:budgetiser/shared/services/notification/colorPickerNotification.dart';
-import 'package:budgetiser/shared/services/notification/iconPickerNotification.dart';
 import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/colorpicker.dart';
@@ -74,18 +72,14 @@ class _AccountFormState extends State<AccountForm> {
                             children: <Widget>[
                               Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: NotificationListener<
-                                      IconPickedNotification>(
-                                    onNotification: (n) {
+                                  child: IconPicker(
+                                    onIconChangedCallback: (icondata) {
                                       setState(() {
-                                        _icon = n.icon;
+                                        _icon = icondata;
                                       });
-                                      return true;
                                     },
-                                    child: IconPicker(
-                                      initialIcon: _icon,
-                                      initialColor: _color,
-                                    ),
+                                    initialIcon: _icon,
+                                    initialColor: _color,
                                   )),
                               Flexible(
                                 child: TextFormField(
@@ -100,13 +94,12 @@ class _AccountFormState extends State<AccountForm> {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          NotificationListener<ColorPickedNotification>(
-                            child: Colorpicker(selectedColor: _color),
-                            onNotification: (n) {
+                          Colorpicker(
+                            initialSelectedColor: _color,
+                            onColorChangedCallback: (color) {
                               setState(() {
-                                _color = n.col;
+                                _color = color;
                               });
-                              return true;
                             },
                           ),
                           Padding(

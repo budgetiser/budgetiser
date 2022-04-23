@@ -32,7 +32,9 @@ class _GroupFormState extends State<GroupForm> {
                 border: OutlineInputBorder(),
               ),
             ),
-            Colorpicker(),
+            Colorpicker(
+              onColorChangedCallback: (color) {},
+            ),
             const Divider(),
             const CategoryPicker(),
             const Divider(),

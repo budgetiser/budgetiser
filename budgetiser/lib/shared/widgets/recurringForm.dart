@@ -1,6 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
-import 'package:budgetiser/shared/services/notification/recurringNotification.dart';
 import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -9,9 +8,11 @@ class RecurringForm extends StatefulWidget {
   RecurringForm({
     Key? key,
     required this.initialRecurringData,
+    required this.onRecurringDataChangedCallback,
   }) : super(key: key);
 
   RecurringData initialRecurringData;
+  Function(RecurringData) onRecurringDataChangedCallback;
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();
@@ -206,7 +207,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     setState(() {
                       startDate = date;
                       _calculateEndDate();
-                      _sendRecurringNotification();
+                      _callCallback();
                     });
                   },
                 ),
@@ -217,7 +218,7 @@ class _RecurringFormState extends State<RecurringForm> {
                   setState(() {
                     isRecurring = newValue!;
                     _calculateEndDate();
-                    _sendRecurringNotification();
+                    _callCallback();
                   });
                 },
               ),
@@ -233,7 +234,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       setState(() {
                         _selectedIntervalType = value!;
                         _calculateEndDate();
-                        _sendRecurringNotification();
+                        _callCallback();
                       });
                     },
                     groupValue: _selectedIntervalType,
@@ -252,7 +253,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (string) {
                         setState(() {
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                       validator: (value) {
@@ -273,7 +274,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         setState(() {
                           fixedPointOfTimeUnit = value!;
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                     ),
@@ -285,7 +286,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       setState(() {
                         _selectedIntervalType = value!;
                         _calculateEndDate();
-                        _sendRecurringNotification();
+                        _callCallback();
                       });
                     },
                     groupValue: _selectedIntervalType,
@@ -304,7 +305,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (string) {
                         setState(() {
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                       validator: (value) {
@@ -325,7 +326,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         setState(() {
                           fixedIntervalUnit = value!;
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                     ),
@@ -346,7 +347,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         onChanged: (string) {
                           setState(() {
                             _calculateEndDate();
-                            _sendRecurringNotification();
+                            _callCallback();
                           });
                         },
                         validator: (value) {
@@ -372,11 +373,11 @@ class _RecurringFormState extends State<RecurringForm> {
     );
   }
 
-  void _sendRecurringNotification() {
+  void _callCallback() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    RecurringNotification(
+    widget.onRecurringDataChangedCallback(
       RecurringData(
         startDate: startDate,
         isRecurring: isRecurring,
@@ -394,6 +395,6 @@ class _RecurringFormState extends State<RecurringForm> {
                 : int.parse(fixedIntervalAmountController.text),
         endDate: enddate,
       ),
-    ).dispatch(context);
+    );
   }
 }
