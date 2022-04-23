@@ -1,4 +1,4 @@
-import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/account/accountScreen.dart';
 import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 import 'package:budgetiser/shared/services/notification/colorPicker.dart';

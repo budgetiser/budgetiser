@@ -1,4 +1,4 @@
-import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/services/accountItem/accountItem.dart';

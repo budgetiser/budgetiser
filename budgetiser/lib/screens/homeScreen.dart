@@ -1,4 +1,4 @@
-import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
