@@ -1,12 +1,10 @@
-import 'dart:async';
-
-import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/account/accountForm.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/services/accountItem/accountItem.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
+import 'package:budgetiser/shared/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import '../../shared/dataClasses/account.dart';
-import '../../shared/services/accountItem/accountItem.dart';
-import '../../shared/widgets/drawer.dart';
 
 class AccountScreen extends StatefulWidget {
   static String routeID = 'account';
@@ -90,38 +88,32 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       drawer: createDrawer(context),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            children: [
-              StreamBuilder<List<Account>>(
-                stream: DatabaseHelper.instance.allAccountsStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return AccountItem(
-                          accountData: snapshot.data![index],
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("Oops!");
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ),
-            ],
-          ),
-        ),
+      body: StreamBuilder<List<Account>>(
+        stream: DatabaseHelper.instance.allAccountsStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return AccountItem(
+                  accountData: snapshot.data![index],
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Oops!");
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AccountForm()));
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AccountForm()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,

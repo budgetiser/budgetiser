@@ -1,7 +1,6 @@
 import 'package:budgetiser/screens/savings/shared/savingForm.dart';
+import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:flutter/material.dart';
-
-import '../../shared/dataClasses/savings.dart';
 
 class EditSaving extends StatelessWidget {
   EditSaving({Key? key, required this.savingData}) : super(key: key);

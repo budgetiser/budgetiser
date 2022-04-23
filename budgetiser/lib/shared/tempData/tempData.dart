@@ -4,6 +4,7 @@ import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 List<Account> TMP_DATA_accountList = [
@@ -11,7 +12,7 @@ List<Account> TMP_DATA_accountList = [
     id: 1,
     name: "Cash",
     icon: Icons.attach_money,
-    balance: 10,
+    balance: 0,
     color: Colors.green,
     description: "account cash description",
   ),
@@ -19,7 +20,7 @@ List<Account> TMP_DATA_accountList = [
     id: 2,
     name: "Credit Card",
     icon: Icons.credit_card,
-    balance: -500,
+    balance: 0,
     color: Colors.blue,
     description: "account credit card description",
   ),
@@ -27,7 +28,7 @@ List<Account> TMP_DATA_accountList = [
     id: 3,
     name: "Bank Account long name",
     icon: Icons.account_balance_wallet,
-    balance: 1230,
+    balance: 0,
     color: Colors.orange,
     description: "account bank description",
   ),
@@ -35,7 +36,7 @@ List<Account> TMP_DATA_accountList = [
     id: 4,
     name: "Savings",
     icon: Icons.account_balance_wallet,
-    balance: 681.82,
+    balance: 0,
     color: Colors.purple,
     description: "account savings description",
   ),
@@ -131,7 +132,7 @@ List<TransactionCategory> TMP_DATA_categoryList = [
       isHidden: false),
 ];
 
-List<Transaction> TMP_DATA_transactionList = [
+List<AbstractTransaction> TMP_DATA_transactionList = [
   SingleTransaction(
     id: 1,
     title: 'birthday present',
@@ -158,9 +159,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[1],
     startDate: DateTime(2043, 1, 2),
     endDate: DateTime(1999, 9, 1),
-    intervalType: 'Days',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'Days',
+    intervalUnit: 'day',
     description: 'at the supermarket',
   ),
   RecurringTransaction(
@@ -171,9 +172,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[1],
     startDate: DateTime(2020, 1, 1),
     endDate: DateTime(2099, 9, 9),
-    intervalType: 'Months',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'Months',
+    intervalUnit: 'month',
     description: 'Test description',
   ),
   RecurringTransaction(
@@ -184,9 +185,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[2],
     startDate: DateTime(2020, 1, 1),
     endDate: DateTime(2030, 1, 1),
-    intervalType: 'Months',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'Years',
+    intervalUnit: 'month',
     description: '',
   ),
   RecurringTransaction(
@@ -198,9 +199,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account2: TMP_DATA_accountList[0],
     startDate: DateTime(2021, 2, 4),
     endDate: DateTime(2022, 2, 4),
-    intervalType: 'Months',
+    intervalType: IntervalType.fixedPointOfTime,
     intervalAmount: 1,
-    intervalUnit: 'Months',
+    intervalUnit: 'week',
     description: 'at the bank',
   ),
   SingleTransaction(

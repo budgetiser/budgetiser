@@ -1,11 +1,14 @@
-import 'package:budgetiser/bd/database.dart';
+import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/account/accountScreen.dart';
+import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
+import 'package:budgetiser/shared/services/notification/colorPicker.dart';
 import 'package:budgetiser/shared/services/notification/iconPicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../shared/services/notification/colorPicker.dart';
+import 'package:flutter/widgets.dart';
 
 class AccountForm extends StatefulWidget {
   AccountForm({
@@ -21,6 +24,7 @@ class AccountForm extends StatefulWidget {
 class _AccountFormState extends State<AccountForm> {
   var nameController = TextEditingController();
   var balanceController = TextEditingController();
+  var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Color _color = Colors.blue;
   IconData _icon = Icons.blur_on;
@@ -30,6 +34,7 @@ class _AccountFormState extends State<AccountForm> {
     if (widget.initialAccount != null) {
       nameController.text = widget.initialAccount!.name;
       balanceController.text = widget.initialAccount!.balance.toString();
+      descriptionController.text = widget.initialAccount!.description;
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
     }
@@ -71,20 +76,19 @@ class _AccountFormState extends State<AccountForm> {
                           Row(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: NotificationListener<IconPicked>(
-                                  onNotification: (n) {
-                                    setState(() {
-                                      _icon = n.icon;
-                                    });
-                                    return true;
-                                  },
-                                  child: IconPicker(
-                                    initialIcon: _icon,
-                                    initialColor: _color,
-                                  ),
-                                )
-                              ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: NotificationListener<IconPicked>(
+                                    onNotification: (n) {
+                                      setState(() {
+                                        _icon = n.icon;
+                                      });
+                                      return true;
+                                    },
+                                    child: IconPicker(
+                                      initialIcon: _icon,
+                                      initialColor: _color,
+                                    ),
+                                  )),
                               Flexible(
                                 child: TextFormField(
                                   controller: nameController,
@@ -118,6 +122,28 @@ class _AccountFormState extends State<AccountForm> {
                                 labelText: "Balance",
                                 border: OutlineInputBorder(),
                               ),
+                              validator: (data) {
+                                if (data!.isEmpty) {
+                                  return "Please enter a balance";
+                                }
+                                try {
+                                  double.parse(data);
+                                } catch (e) {
+                                  return "Please enter a valid number";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: TextFormField(
+                              controller: descriptionController,
+                              keyboardType: TextInputType.multiline,
+                              decoration: const InputDecoration(
+                                labelText: "Description",
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           ),
                           if (widget.initialAccount != null)
@@ -134,6 +160,23 @@ class _AccountFormState extends State<AccountForm> {
                                   }),
                                   label: const Text("Delete"),
                                   heroTag: "delete",
+                                  icon: const Icon(Icons.delete),
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                FloatingActionButton.extended(
+                                  onPressed: (() {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => TransactionsScreen(
+                                        initalAccountFilterName:
+                                            nameController.text,
+                                      ),
+                                    ));
+                                  }),
+                                  label: const Text("View all transactions"),
+                                  heroTag: "viewTransactions",
                                 ),
                               ],
                             ),
@@ -149,21 +192,22 @@ class _AccountFormState extends State<AccountForm> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _formKey.currentState?.validate();
-          Account a = Account(
-              name: nameController.text,
-              icon: _icon,
-              color: _color,
-              balance: double.parse(balanceController.text),
-              description: "d",
-              id: 0);
-          if(widget.initialAccount != null){
-            a.id = widget.initialAccount!.id;
-            DatabaseHelper.instance.updateAccount(a);
-          }else {
-            DatabaseHelper.instance.createAccount(a);
+          if (_formKey.currentState!.validate()) {
+            Account a = Account(
+                name: nameController.text,
+                icon: _icon,
+                color: _color,
+                balance: double.parse(balanceController.text),
+                description: descriptionController.text,
+                id: 0);
+            if (widget.initialAccount != null) {
+              a.id = widget.initialAccount!.id;
+              DatabaseHelper.instance.updateAccount(a);
+            } else {
+              DatabaseHelper.instance.createAccount(a);
+            }
+            Navigator.of(context).pop();
           }
-          Navigator.of(context).pop();
         },
         label: const Text("Save"),
         icon: const Icon(Icons.save),

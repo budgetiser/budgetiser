@@ -1,54 +1,60 @@
-import 'package:budgetiser/shared/tempData/tempData.dart';
+import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
 class SelectCategory extends StatefulWidget {
   SelectCategory({
     Key? key,
     this.initialCategory,
+    required this.callback,
   }) : super(key: key);
 
-  var initialCategory;
+  TransactionCategory? initialCategory;
+  final Function(TransactionCategory) callback;
 
   @override
   State<SelectCategory> createState() => _SelectCategoryState();
 }
 
 class _SelectCategoryState extends State<SelectCategory> {
-  /*
-    popup to select category
-    todo: implementation -> how to pass selected item back to caller?
-  */
-  final List<String> _categories =
-      TMP_DATA_categoryList.map((e) => e.name).toList();
-  String selectedCategory = TMP_DATA_categoryList[0].name;
+  List<TransactionCategory>? _categories;
+  TransactionCategory? selectedCategory;
 
   @override
   void initState() {
-    if (widget.initialCategory != null) {
-      selectedCategory = widget.initialCategory;
-    }
-    super.initState();
-  }
-
-  void setCategory(String? category) {
-    setState(() {
-      selectedCategory = category!;
+    DatabaseHelper.instance.allCategoryStream.listen((event) {
+      setState(() {
+        _categories?.clear();
+        _categories = (event.map((e) => e).toList());
+        if (widget.initialCategory != null) {
+          selectedCategory = _categories?.firstWhere(
+              (element) => element.id == widget.initialCategory!.id);
+        } else {
+          selectedCategory = _categories?.first;
+        }
+      });
+      widget.callback(selectedCategory!);
     });
+    DatabaseHelper.instance.pushGetAllCategoriesStream();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
+    return DropdownButton<TransactionCategory>(
       items: _categories
-          .map((categoryName) => DropdownMenuItem(
-                value: categoryName,
+          ?.map((category) => DropdownMenuItem(
+                value: category,
                 child: Text(
-                  categoryName,
+                  category.name,
                 ),
               ))
           .toList(),
-      onChanged: (e) {
-        setCategory(e);
+      onChanged: (TransactionCategory? category) {
+        setState(() {
+          widget.callback(category!);
+          selectedCategory = category;
+        });
       },
       value: selectedCategory,
     );

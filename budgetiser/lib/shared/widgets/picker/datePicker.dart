@@ -4,10 +4,12 @@ class DatePicker extends StatefulWidget {
   DatePicker({
     required this.label,
     this.initialDate,
+    required this.onDateChangedCallback,
     Key? key,
   }) : super(key: key);
   final String label;
   DateTime? initialDate;
+  void Function(DateTime) onDateChangedCallback;
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -56,8 +58,7 @@ class _DatePickerState extends State<DatePicker> {
               if (date != null) {
                 setState(() {
                   dateController.text = date.toString().substring(0, 10);
-                  print(
-                      "date set to ${dateController.text}"); // TODO: how to get the date to new account layer?
+                  widget.onDateChangedCallback(date);
                 });
               }
             },

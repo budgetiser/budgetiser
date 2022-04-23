@@ -1,16 +1,14 @@
 import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
 import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
-  BudgetForm({
-    Key? key,
-    this.initialName,
-    this.initalBalance,
-    this.initialBudgetData
-  }) : super(key: key);
+  BudgetForm(
+      {Key? key, this.initialName, this.initalBalance, this.initialBudgetData})
+      : super(key: key);
   String? initialName;
   int? initalBalance;
   Budget? initialBudgetData;
@@ -22,7 +20,6 @@ class BudgetForm extends StatefulWidget {
 class _BudgetFormState extends State<BudgetForm> {
   var nameController = TextEditingController();
   var balanceController = TextEditingController();
-  bool isRecurring = false;
 
   @override
   void initState() {
@@ -87,30 +84,13 @@ class _BudgetFormState extends State<BudgetForm> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 0, right: 8, top: 13),
-          child: Row(children: [
-            Flexible(
-              child: DatePicker(
-                label: "start",
-              ),
-            ),
-            Checkbox(
-              value: isRecurring,
-              onChanged: (bool? newValue) {
-                setState(() {
-                  isRecurring = newValue!;
-                });
-              },
-            ),
-            const Text("recurring"),
-          ]),
+        RecurringForm(
+          initialRecurringData: RecurringData(
+            isRecurring: false,
+            startDate: DateTime.now(),
+          ),
+          // TODO: notification listener
         ),
-        Row(
-          children: [
-            RecurringForm(isHidden: !isRecurring),
-          ],
-        )
       ],
     );
   }

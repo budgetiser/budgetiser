@@ -90,6 +90,7 @@ class _SavingFormState extends State<SavingForm> {
               initialDate: (widget.initialSavingData != null)
                   ? widget.initialSavingData!.startDate
                   : DateTime.now(),
+              onDateChangedCallback: (date) {},
             )),
             Flexible(
                 child: DatePicker(
@@ -97,6 +98,7 @@ class _SavingFormState extends State<SavingForm> {
               initialDate: (widget.initialSavingData != null)
                   ? widget.initialSavingData!.endDate
                   : DateTime.now().add(Duration(days: 30)),
+              onDateChangedCallback: (date) {},
             ))
           ],
         ),

@@ -1,7 +1,6 @@
+import 'package:budgetiser/shared/services/notification/colorPicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
-import '../../services/notification/colorPicker.dart';
 
 class Colorpicker extends StatefulWidget {
   Colorpicker({
