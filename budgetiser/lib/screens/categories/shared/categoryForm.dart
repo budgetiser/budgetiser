@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
+import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:flutter/material.dart';
 
 class CategoryForm extends StatefulWidget {

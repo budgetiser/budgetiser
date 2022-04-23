@@ -1,5 +1,5 @@
 import 'package:budgetiser/screens/categories/shared/categoryForm.dart';
-import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
+import 'package:budgetiser/shared/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 

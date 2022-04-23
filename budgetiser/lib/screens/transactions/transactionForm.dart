@@ -4,8 +4,8 @@ import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/services/notification/recurringNotification.dart';
-import 'package:budgetiser/shared/widgets/picker/selectAccount.dart';
-import 'package:budgetiser/shared/widgets/picker/selectCategory.dart';
+import 'package:budgetiser/shared/picker/selectAccount.dart';
+import 'package:budgetiser/shared/picker/selectCategory.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 

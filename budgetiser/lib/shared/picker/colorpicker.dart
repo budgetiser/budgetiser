@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/services/notification/colorPicker.dart';
+import 'package:budgetiser/shared/services/notification/colorPickerNotification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -60,6 +60,6 @@ class _ColorpickerState extends State<Colorpicker> {
   }
 
   void sendToParent(Color col) {
-    ColorPicked(col).dispatch(context);
+    ColorPickedNotification(col).dispatch(context);
   }
 }

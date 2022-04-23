@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/widgets/drawer.dart';
+import 'package:budgetiser/drawer.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatelessWidget {

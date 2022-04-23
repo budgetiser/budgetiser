@@ -1,14 +1,11 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/account/accountScreen.dart';
 import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
-import 'package:budgetiser/shared/services/notification/colorPicker.dart';
-import 'package:budgetiser/shared/services/notification/iconPicker.dart';
-import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
+import 'package:budgetiser/shared/services/notification/colorPickerNotification.dart';
+import 'package:budgetiser/shared/services/notification/iconPickerNotification.dart';
+import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:budgetiser/shared/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AccountForm extends StatefulWidget {
   AccountForm({
@@ -77,7 +74,8 @@ class _AccountFormState extends State<AccountForm> {
                             children: <Widget>[
                               Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: NotificationListener<IconPicked>(
+                                  child: NotificationListener<
+                                      IconPickedNotification>(
                                     onNotification: (n) {
                                       setState(() {
                                         _icon = n.icon;
@@ -102,7 +100,7 @@ class _AccountFormState extends State<AccountForm> {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          NotificationListener<ColorPicked>(
+                          NotificationListener<ColorPickedNotification>(
                             child: Colorpicker(selectedColor: _color),
                             onNotification: (n) {
                               setState(() {

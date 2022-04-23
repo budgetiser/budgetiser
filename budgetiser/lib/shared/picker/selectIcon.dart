@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/services/notification/iconPicker.dart';
+import 'package:budgetiser/shared/services/notification/iconPickerNotification.dart';
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
@@ -109,7 +109,7 @@ class _IconPickerState extends State<IconPicker> {
           onTap: () {
             setState(() {
               widget.initialIcon = _icons[index];
-              IconPicked(_icons[index]).dispatch(context);
+              IconPickedNotification(_icons[index]).dispatch(context);
               Navigator.pop(context);
             });
           },

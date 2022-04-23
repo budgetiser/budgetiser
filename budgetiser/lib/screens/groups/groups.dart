@@ -1,7 +1,7 @@
 import 'package:budgetiser/screens/groups/newGroup.dart';
 import 'package:budgetiser/screens/groups/shared/groupItem.dart';
 import 'package:flutter/material.dart';
-import '../../shared/widgets/drawer.dart';
+import '../../drawer.dart';
 
 class Groups extends StatelessWidget {
   static String routeID = 'groups';

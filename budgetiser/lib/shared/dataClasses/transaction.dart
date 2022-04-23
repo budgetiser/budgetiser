@@ -1,6 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/recurringForm.dart';
 
 abstract class AbstractTransaction {
   int id;
@@ -50,12 +49,6 @@ class SingleTransaction extends AbstractTransaction {
           account2: account2,
           description: description,
         );
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return "singleTransaction ${this.id} ${this.title} ${this.value} ${this.category} ${this.account} ${this.account2} ${this.description} ${this.date}";
-  }
 }
 
 enum IntervalUnit {
