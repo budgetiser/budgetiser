@@ -43,7 +43,7 @@ class _CategoryFormState extends State<CategoryForm> {
             Row(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: IconPicker(),
                 ),
                 Flexible(

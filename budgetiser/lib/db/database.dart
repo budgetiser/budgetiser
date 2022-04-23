@@ -5,6 +5,7 @@ import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,7 +21,9 @@ class DatabaseHelper {
       _database ??= await initializeDatabase();
 
   _onCreate(Database db, int version) async {
-    print("creating database");
+    if (kDebugMode) {
+      print("creating database");
+    }
     await db.execute('''
 CREATE TABLE IF NOT EXISTS account(
   id INTEGER,
@@ -143,7 +146,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   FOREIGN KEY(fromAccount_id) REFERENCES account,
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction);
 ''');
-    print("done");
+    if (kDebugMode) {
+      print("done");
+    }
   }
 
   _dropTables(Database db) async {

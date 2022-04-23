@@ -19,8 +19,8 @@ class BudgetItem extends StatelessWidget {
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               //color: Theme.of(context).colorScheme.primary,
             ),
             height: 90,
@@ -33,8 +33,12 @@ class BudgetItem extends StatelessWidget {
                       Text(budgetData.name),
                       Row(
                         children: [
-                          Text("days left: " + (budgetData.endDate).difference(DateTime.now()).inDays.toString()),
-                          if (budgetData.isRecurring) Icon(Icons.repeat)
+                          Text("days left: " +
+                              (budgetData.endDate)
+                                  .difference(DateTime.now())
+                                  .inDays
+                                  .toString()),
+                          if (budgetData.isRecurring) const Icon(Icons.repeat)
                         ],
                       )
                     ]),
@@ -45,8 +49,8 @@ class BudgetItem extends StatelessWidget {
                         lineHeight: 15.0,
                         percent: (budgetData.balance / budgetData.limit),
                         backgroundColor: Colors.white,
-                        linearGradient:
-                            LinearGradient(colors: createGradient(budgetData.color)),
+                        linearGradient: LinearGradient(
+                            colors: createGradient(budgetData.color)),
                         clipLinearGradient: true,
                       ),
                     ),
@@ -63,7 +67,7 @@ class BudgetItem extends StatelessWidget {
             ),
           ),
         ),
-        Divider(
+        const Divider(
           thickness: 1,
           indent: 10,
           endIndent: 10,

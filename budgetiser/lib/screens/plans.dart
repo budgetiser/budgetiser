@@ -33,16 +33,18 @@ class _PlansState extends State<Plans> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title),),
+      appBar: AppBar(
+        title: Text(title),
+      ),
       drawer: createDrawer(context),
       body: PageView(
         onPageChanged: (int page) {
           setState(() {
-            if(page == pages.budgets.index){
+            if (page == pages.budgets.index) {
               title = "Budgets";
               buttonTooltip = "Create Budget";
               _currentPage = pages.budgets.index;
-            }else if(page == pages.savings.index){
+            } else if (page == pages.savings.index) {
               title = "Savings";
               buttonTooltip = "Create Saving";
               _currentPage = pages.savings.index;
@@ -50,27 +52,27 @@ class _PlansState extends State<Plans> {
           });
         },
         children: [
-          Budgets(),
+          const Budgets(),
           Savings(),
         ],
       ),
-      floatingActionButton: _currentPage == pages.budgets.index ?
-      FloatingActionButton(
-        tooltip: buttonTooltip,
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const NewBudget()));
-        },
-        child: const Icon(Icons.add),
-      ):
-      FloatingActionButton(
-        tooltip: buttonTooltip,
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const NewSaving()));
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _currentPage == pages.budgets.index
+          ? FloatingActionButton(
+              tooltip: buttonTooltip,
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const NewBudget()));
+              },
+              child: const Icon(Icons.add),
+            )
+          : FloatingActionButton(
+              tooltip: buttonTooltip,
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const NewSaving()));
+              },
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }

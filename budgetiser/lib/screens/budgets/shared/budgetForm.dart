@@ -44,7 +44,7 @@ class _BudgetFormState extends State<BudgetForm> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 13),
+          padding: const EdgeInsets.only(top: 13),
           child: TextFormField(
             controller: nameController,
             // initialValue: widget.initialName,
@@ -55,7 +55,7 @@ class _BudgetFormState extends State<BudgetForm> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 13),
+          padding: const EdgeInsets.only(top: 13),
           child: Row(
             children: [
               Padding(

@@ -97,7 +97,7 @@ class _SavingFormState extends State<SavingForm> {
               label: 'End',
               initialDate: (widget.initialSavingData != null)
                   ? widget.initialSavingData!.endDate
-                  : DateTime.now().add(Duration(days: 30)),
+                  : DateTime.now().add(const Duration(days: 30)),
               onDateChangedCallback: (date) {},
             ))
           ],

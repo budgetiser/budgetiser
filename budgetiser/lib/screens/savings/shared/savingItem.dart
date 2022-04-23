@@ -13,14 +13,17 @@ class SavingItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditSaving(savingData: savingData,))),
-        },
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditSaving(
+                      savingData: savingData,
+                    ))),
+          },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               //color: Theme.of(context).colorScheme.primary,
             ),
             height: 90,
@@ -29,16 +32,23 @@ class SavingItem extends StatelessWidget {
               children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text(savingData.name), Text("days left: " + (savingData.endDate).difference(DateTime.now()).inDays.toString())]
-                ),
+                    children: [
+                      Text(savingData.name),
+                      Text("days left: " +
+                          (savingData.endDate)
+                              .difference(DateTime.now())
+                              .inDays
+                              .toString())
+                    ]),
                 Row(
                   children: [
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: (savingData.balance/savingData.goal),
+                        percent: (savingData.balance / savingData.goal),
                         backgroundColor: Colors.white,
-                        linearGradient: LinearGradient(colors: createGradient(savingData.color)),
+                        linearGradient: LinearGradient(
+                            colors: createGradient(savingData.color)),
                         clipLinearGradient: true,
                       ),
                     ),
@@ -55,7 +65,7 @@ class SavingItem extends StatelessWidget {
             ),
           ),
         ),
-        Divider(
+        const Divider(
           thickness: 1,
           indent: 10,
           endIndent: 10,
@@ -64,7 +74,7 @@ class SavingItem extends StatelessWidget {
     );
   }
 
-  List<Color> createGradient(MaterialColor baseColor){
+  List<Color> createGradient(MaterialColor baseColor) {
     List<Color> gradient = [];
     gradient.add(baseColor.shade300);
     gradient.add(baseColor.shade400);
@@ -75,4 +85,4 @@ class SavingItem extends StatelessWidget {
     gradient.add(baseColor.shade900);
     return gradient;
   }
-  }
+}
