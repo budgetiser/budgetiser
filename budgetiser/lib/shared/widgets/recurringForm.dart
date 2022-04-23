@@ -1,6 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/services/notification/recurringNotification.dart';
-import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
@@ -8,17 +8,14 @@ class RecurringForm extends StatefulWidget {
   RecurringForm({
     Key? key,
     required this.initialRecurringData,
+    required this.onRecurringDataChangedCallback,
   }) : super(key: key);
 
   RecurringData initialRecurringData;
+  Function(RecurringData) onRecurringDataChangedCallback;
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();
-}
-
-enum IntervalType {
-  fixedPointOfTime,
-  fixedInterval,
 }
 
 class _RecurringFormState extends State<RecurringForm> {
@@ -28,26 +25,29 @@ class _RecurringFormState extends State<RecurringForm> {
   var fixedPointOfTimeAmountController = TextEditingController();
   var fixedIntervalAmountController = TextEditingController();
   var repetitionsController = TextEditingController();
-  String fixedPointOfTimeUnit = "week";
-  String fixedIntervalUnit = "day";
+  IntervalUnit fixedPointOfTimeUnit = IntervalUnit.week;
+  IntervalUnit fixedIntervalUnit = IntervalUnit.day;
   DateTime? enddate;
 
   final _formKey = GlobalKey<FormState>();
 
-  List<DropdownMenuItem<String>> get dropdownItemsFixedPointOfTimeUnit {
-    List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(child: Text("of a week"), value: "week"),
-      const DropdownMenuItem(child: Text("of a month"), value: "month"),
-      const DropdownMenuItem(child: Text("of a year"), value: "year"),
+  List<DropdownMenuItem<IntervalUnit>> get dropdownItemsFixedPointOfTimeUnit {
+    List<DropdownMenuItem<IntervalUnit>> menuItems = [
+      const DropdownMenuItem(
+          child: Text("of a week"), value: IntervalUnit.week),
+      const DropdownMenuItem(
+          child: Text("of a month"), value: IntervalUnit.month),
+      const DropdownMenuItem(
+          child: Text("of a year"), value: IntervalUnit.year),
     ];
     return menuItems;
   }
 
-  List<DropdownMenuItem<String>> get dropdownItemsFixedIntervalUnit {
-    List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(child: Text("day"), value: "day"),
-      const DropdownMenuItem(child: Text("week"), value: "week"),
-      const DropdownMenuItem(child: Text("month"), value: "month"),
+  List<DropdownMenuItem<IntervalUnit>> get dropdownItemsFixedIntervalUnit {
+    List<DropdownMenuItem<IntervalUnit>> menuItems = [
+      const DropdownMenuItem(child: Text("day"), value: IntervalUnit.day),
+      const DropdownMenuItem(child: Text("week"), value: IntervalUnit.week),
+      const DropdownMenuItem(child: Text("month"), value: IntervalUnit.month),
     ];
     return menuItems;
   }
@@ -62,12 +62,11 @@ class _RecurringFormState extends State<RecurringForm> {
       if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
         fixedPointOfTimeAmountController.text =
             widget.initialRecurringData.intervalAmount!.toString();
-        fixedPointOfTimeUnit =
-            widget.initialRecurringData.intervalUnit!.toString();
+        fixedPointOfTimeUnit = widget.initialRecurringData.intervalUnit!;
       } else {
         fixedIntervalAmountController.text =
             widget.initialRecurringData.intervalAmount.toString();
-        fixedIntervalUnit = widget.initialRecurringData.intervalUnit.toString();
+        fixedIntervalUnit = widget.initialRecurringData.intervalUnit!;
       }
       enddate = widget.initialRecurringData.endDate;
       repetitionsController.text = _calculateNeededRepetitions().toString();
@@ -80,7 +79,7 @@ class _RecurringFormState extends State<RecurringForm> {
     if (isRecurring) {
       if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
         switch (fixedPointOfTimeUnit) {
-          case "week":
+          case IntervalUnit.week:
             return enddate!.difference(startDate).inDays ~/ 7;
           // case "month":
           // return startDate.difference(enddate!).inDays ~/ 30;
@@ -89,9 +88,9 @@ class _RecurringFormState extends State<RecurringForm> {
         }
       } else {
         switch (fixedIntervalUnit) {
-          case "day":
+          case IntervalUnit.day:
             return enddate!.difference(startDate).inDays;
-          case "week":
+          case IntervalUnit.week:
             return enddate!.difference(startDate).inDays ~/ 7;
           // case "month":
           // return startDate.difference(enddate!).inDays ~/ 30;
@@ -116,7 +115,7 @@ class _RecurringFormState extends State<RecurringForm> {
 
     if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
       switch (fixedPointOfTimeUnit) {
-        case "week":
+        case IntervalUnit.week:
           Duration untilFirstPointOfTime = Duration(
               days: (int.parse(fixedPointOfTimeAmountController.text) -
                           startDate.weekday) >=
@@ -130,7 +129,7 @@ class _RecurringFormState extends State<RecurringForm> {
               Duration(days: 7 * (int.parse(repetitionsController.text) - 1));
           enddate = startDate.add(untilFirstPointOfTime + fromRepetitions);
           break;
-        case "month":
+        case IntervalUnit.month:
           Duration untilFirstPointOfTime = Duration(
               days: int.parse(fixedPointOfTimeAmountController.text) -
                           startDate.day >=
@@ -145,7 +144,7 @@ class _RecurringFormState extends State<RecurringForm> {
               .add(months: int.parse(repetitionsController.text) - 1)
               .dateTime;
           break;
-        case "year":
+        case IntervalUnit.year:
           Duration untilFirstPointOfTime = Duration(
             days: (int.parse(fixedPointOfTimeAmountController.text) -
                         Jiffy(startDate).dayOfYear >=
@@ -166,18 +165,18 @@ class _RecurringFormState extends State<RecurringForm> {
       }
     } else {
       switch (fixedIntervalUnit) {
-        case "day":
+        case IntervalUnit.day:
           enddate = startDate.add(
               Duration(days: int.parse(fixedIntervalAmountController.text)) *
                   int.parse(repetitionsController.text));
           break;
-        case "week":
+        case IntervalUnit.week:
           enddate = startDate.add(Duration(
               days: int.parse(fixedIntervalAmountController.text) *
                   int.parse(repetitionsController.text) *
                   7));
           break;
-        case "month":
+        case IntervalUnit.month:
           enddate = Jiffy(startDate)
               .add(
                   months: int.parse(fixedIntervalAmountController.text) *
@@ -208,7 +207,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     setState(() {
                       startDate = date;
                       _calculateEndDate();
-                      _sendRecurringNotification();
+                      _callCallback();
                     });
                   },
                 ),
@@ -219,7 +218,7 @@ class _RecurringFormState extends State<RecurringForm> {
                   setState(() {
                     isRecurring = newValue!;
                     _calculateEndDate();
-                    _sendRecurringNotification();
+                    _callCallback();
                   });
                 },
               ),
@@ -235,7 +234,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       setState(() {
                         _selectedIntervalType = value!;
                         _calculateEndDate();
-                        _sendRecurringNotification();
+                        _callCallback();
                       });
                     },
                     groupValue: _selectedIntervalType,
@@ -254,7 +253,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (string) {
                         setState(() {
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                       validator: (value) {
@@ -271,11 +270,11 @@ class _RecurringFormState extends State<RecurringForm> {
                     child: DropdownButton(
                       value: fixedPointOfTimeUnit,
                       items: dropdownItemsFixedPointOfTimeUnit,
-                      onChanged: (String? value) {
+                      onChanged: (IntervalUnit? value) {
                         setState(() {
                           fixedPointOfTimeUnit = value!;
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                     ),
@@ -287,7 +286,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       setState(() {
                         _selectedIntervalType = value!;
                         _calculateEndDate();
-                        _sendRecurringNotification();
+                        _callCallback();
                       });
                     },
                     groupValue: _selectedIntervalType,
@@ -306,7 +305,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (string) {
                         setState(() {
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                       validator: (value) {
@@ -323,11 +322,11 @@ class _RecurringFormState extends State<RecurringForm> {
                     child: DropdownButton(
                       value: fixedIntervalUnit,
                       items: dropdownItemsFixedIntervalUnit,
-                      onChanged: (String? value) {
+                      onChanged: (IntervalUnit? value) {
                         setState(() {
                           fixedIntervalUnit = value!;
                           _calculateEndDate();
-                          _sendRecurringNotification();
+                          _callCallback();
                         });
                       },
                     ),
@@ -348,7 +347,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         onChanged: (string) {
                           setState(() {
                             _calculateEndDate();
-                            _sendRecurringNotification();
+                            _callCallback();
                           });
                         },
                         validator: (value) {
@@ -374,11 +373,11 @@ class _RecurringFormState extends State<RecurringForm> {
     );
   }
 
-  void _sendRecurringNotification() {
+  void _callCallback() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    RecurringNotification(
+    widget.onRecurringDataChangedCallback(
       RecurringData(
         startDate: startDate,
         isRecurring: isRecurring,
@@ -396,6 +395,6 @@ class _RecurringFormState extends State<RecurringForm> {
                 : int.parse(fixedIntervalAmountController.text),
         endDate: enddate,
       ),
-    ).dispatch(context);
+    );
   }
 }

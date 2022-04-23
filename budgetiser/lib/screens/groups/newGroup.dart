@@ -10,6 +10,7 @@ class NewGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // ignore: prefer_const_constructors
         title: Text("New Group"),
       ),
       body: Container(
@@ -18,9 +19,7 @@ class NewGroup extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
-              children: [
-                GroupForm()
-              ],
+              children: [GroupForm()],
             ),
           ),
         ),

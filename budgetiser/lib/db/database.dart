@@ -4,7 +4,7 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
-import 'package:budgetiser/shared/widgets/recurringForm.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,7 +20,9 @@ class DatabaseHelper {
       _database ??= await initializeDatabase();
 
   _onCreate(Database db, int version) async {
-    print("creating database");
+    if (kDebugMode) {
+      print("creating database");
+    }
     await db.execute('''
 CREATE TABLE IF NOT EXISTS account(
   id INTEGER,
@@ -61,7 +63,7 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
   rt_id INTEGER,
   PRIMARY KEY(rt_id),
   CHECK(intervalType IN ('IntervalType.fixedPointOfTime', 'IntervalType.fixedInterval')),
-  CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')),
+  CHECK(intervalUnit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year')),
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction ON DELETE CASCADE);
   ''');
     await db.execute('''
@@ -114,8 +116,8 @@ CREATE TABLE IF NOT EXISTS budget(
   description TEXT,
   PRIMARY KEY(id),
   CHECK(is_recurring IN (0, 1)),
-  CHECK(intervalType IN ('fixedPointOfTime', 'fixedInterval')),
-  CHECK(intervalUnit IN ('day', 'week', 'month', 'quarter', 'year')));
+  CHECK(intervalType IN ('IntervalType.fixedInterval', 'IntervalType.fixedPointOfTime')),
+  CHECK(intervalUnit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year')));
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS categoryToBudget(
@@ -143,7 +145,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   FOREIGN KEY(fromAccount_id) REFERENCES account,
   FOREIGN KEY(transaction_id) REFERENCES XXtransaction);
 ''');
-    print("done");
+    if (kDebugMode) {
+      print("done");
+    }
   }
 
   _dropTables(Database db) async {
@@ -350,7 +354,8 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         startDate: DateTime.parse(mapRecurring[i]['start_date'].toString()),
         endDate: DateTime.parse(mapRecurring[i]['end_date'].toString()),
         intervalAmount: mapRecurring[i]['intervalAmount'],
-        intervalUnit: mapRecurring[i]['intervalUnit'],
+        intervalUnit: IntervalUnit.values
+            .firstWhere((e) => e.toString() == mapRecurring[i]['intervalUnit']),
         intervalType: IntervalType.values
             .firstWhere((e) => e.toString() == mapRecurring[i]['intervalType']),
       ));
@@ -403,7 +408,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         'transaction_id': transactionId,
         'intervalType': transaction.intervalType.toString(),
         'intervalAmount': transaction.intervalAmount,
-        'intervalUnit': transaction.intervalUnit,
+        'intervalUnit': transaction.intervalUnit.toString(),
         'start_date': transaction.startDate.toString().substring(0, 10),
         'end_date': transaction.endDate.toString().substring(0, 10),
       };
@@ -455,8 +460,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     if (transaction is SingleTransaction) {
       // TODO: current only balance change with single transaction
       if (transaction.account2 == null) {
-        print(
-            "before delete: ${transaction.account.balance} name: ${transaction.account.name} | transaction title: ${transaction.title} | transaction value: ${transaction.value}");
         await db.update('account',
             {'balance': transaction.account.balance - transaction.value},
             where: 'id = ?', whereArgs: [transaction.account.id]);
@@ -517,29 +520,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     // TODO: update transaction to account table
 
     pushGetAllTransactionsStream();
-  }
-
-  Future<List<SingleTransaction>> getAllSingleTransactions() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'Select * from singleTransaction, XXtransaction, transactionToAccount where singleTransaction.transaction_id = XXtransaction.id and transactionToAccount.transaction_id = XXtransaction.id');
-
-    List<SingleTransaction> list = [];
-    for (int i = 0; i < maps.length; i++) {
-      TransactionCategory cat = await _getCategory(maps[i]['category_id']);
-      Account account = await _getOneAccount(maps[i]['toAccount_id']);
-      list.add(SingleTransaction(
-        id: maps[i]['id'],
-        title: maps[i]['title'],
-        value: maps[i]['value'],
-        description: maps[i]['description'],
-        category: cat,
-        account: account,
-        account2: null,
-        date: DateTime.parse(maps[i]['date'].toString()),
-      ));
-    }
-    return list;
   }
 
   Future<int> createCategory(TransactionCategory category) async {

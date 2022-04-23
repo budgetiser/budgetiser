@@ -41,7 +41,11 @@ class CategoryItem extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditCategory(categoryTitle: name, selectedColor: color,)));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditCategory(
+                              categoryTitle: name,
+                              selectedColor: color,
+                            )));
                   },
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: SingleChildScrollView(
@@ -62,7 +66,8 @@ class CategoryItem extends StatelessWidget {
                                     color: color,
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                     child: Text(
                                       name,
                                       style: Theme.of(context)

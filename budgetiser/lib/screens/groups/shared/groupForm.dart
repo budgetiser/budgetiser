@@ -1,6 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/group.dart';
-import 'package:budgetiser/shared/widgets/categoryPicker.dart';
-import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
+import 'package:budgetiser/shared/picker/categoryPicker.dart';
+import 'package:budgetiser/shared/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {
@@ -32,7 +32,9 @@ class _GroupFormState extends State<GroupForm> {
                 border: OutlineInputBorder(),
               ),
             ),
-            Colorpicker(),
+            Colorpicker(
+              onColorChangedCallback: (color) {},
+            ),
             const Divider(),
             const CategoryPicker(),
             const Divider(),

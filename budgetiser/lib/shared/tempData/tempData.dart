@@ -161,7 +161,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     endDate: DateTime(1999, 9, 1),
     intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'day',
+    intervalUnit: IntervalUnit.day,
     description: 'at the supermarket',
   ),
   RecurringTransaction(
@@ -174,7 +174,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     endDate: DateTime(2099, 9, 9),
     intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'month',
+    intervalUnit: IntervalUnit.month,
     description: 'Test description',
   ),
   RecurringTransaction(
@@ -187,7 +187,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     endDate: DateTime(2030, 1, 1),
     intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'month',
+    intervalUnit: IntervalUnit.month,
     description: '',
   ),
   RecurringTransaction(
@@ -201,7 +201,7 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     endDate: DateTime(2022, 2, 4),
     intervalType: IntervalType.fixedPointOfTime,
     intervalAmount: 1,
-    intervalUnit: 'week',
+    intervalUnit: IntervalUnit.week,
     description: 'at the bank',
   ),
   SingleTransaction(

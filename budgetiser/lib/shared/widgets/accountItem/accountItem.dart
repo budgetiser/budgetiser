@@ -1,8 +1,8 @@
 import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/services/accountItem/accountItemTitle.dart';
-import 'package:budgetiser/shared/services/balanceText.dart';
+import 'package:budgetiser/shared/widgets/accountItem/accountItemTitle.dart';
+import 'package:budgetiser/shared/widgets/balanceText.dart';
 import 'package:flutter/material.dart';
 
 class AccountItem extends StatelessWidget {

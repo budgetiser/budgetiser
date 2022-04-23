@@ -11,13 +11,13 @@ import 'screens/homeScreen.dart';
 
 //named lower case and also needs to be defined in beginning of class as: static String routeID = ''
 var routes = {
-  'home': (context) => Home(),
-  'plans': (context) => Plans(),
+  'home': (context) => const Home(),
+  'plans': (context) => const Plans(),
   'account': (context) => AccountScreen(),
-  'categories': (context) => Categories(),
-  'groups': (context) => Groups(),
-  'stats': (context) => Stats(),
+  'categories': (context) => const Categories(),
+  'groups': (context) => const Groups(),
+  'stats': (context) => const Stats(),
   'transactions': (context) => TransactionsScreen(),
-  'help': (context) => Help(),
-  'settings': (context) => Settings(),
+  'help': (context) => const Help(),
+  'settings': (context) => const Settings(),
 };

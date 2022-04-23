@@ -1,7 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/widgets/picker/datePicker.dart';
-import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
+import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +43,7 @@ class _BudgetFormState extends State<BudgetForm> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 13),
+          padding: const EdgeInsets.only(top: 13),
           child: TextFormField(
             controller: nameController,
             // initialValue: widget.initialName,
@@ -55,12 +54,13 @@ class _BudgetFormState extends State<BudgetForm> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 13),
+          padding: const EdgeInsets.only(top: 13),
           child: Row(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconPicker(
+                  onIconChangedCallback: (p0) {},
                   initialIcon: widget.initialBudgetData != null
                       ? widget.initialBudgetData!.icon
                       : null,
@@ -85,11 +85,13 @@ class _BudgetFormState extends State<BudgetForm> {
           ),
         ),
         RecurringForm(
+          onRecurringDataChangedCallback: (p0) {
+            // TODO: callback
+          },
           initialRecurringData: RecurringData(
             isRecurring: false,
             startDate: DateTime.now(),
           ),
-          // TODO: notification listener
         ),
       ],
     );

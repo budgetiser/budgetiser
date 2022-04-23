@@ -1,7 +1,7 @@
 import 'package:budgetiser/screens/groups/newGroup.dart';
 import 'package:budgetiser/screens/groups/shared/groupItem.dart';
 import 'package:flutter/material.dart';
-import '../../shared/widgets/drawer.dart';
+import '../../drawer.dart';
 
 class Groups extends StatelessWidget {
   static String routeID = 'groups';
@@ -20,7 +20,7 @@ class Groups extends StatelessWidget {
       drawer: createDrawer(context),
       body: SingleChildScrollView(
         child: Column(
-          children: [
+          children: const [
             GroupItem(),
             Divider(),
             GroupItem(),
@@ -37,7 +37,7 @@ class Groups extends StatelessWidget {
               MaterialPageRoute(builder: (BuildContext context) => NewGroup()));
         },
         tooltip: "Create Group",
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

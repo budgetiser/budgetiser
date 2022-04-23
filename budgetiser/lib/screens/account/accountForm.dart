@@ -1,14 +1,9 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/account/accountScreen.dart';
 import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
-import 'package:budgetiser/shared/services/notification/colorPicker.dart';
-import 'package:budgetiser/shared/services/notification/iconPicker.dart';
-import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
+import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:budgetiser/shared/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AccountForm extends StatefulWidget {
   AccountForm({
@@ -77,17 +72,14 @@ class _AccountFormState extends State<AccountForm> {
                             children: <Widget>[
                               Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: NotificationListener<IconPicked>(
-                                    onNotification: (n) {
+                                  child: IconPicker(
+                                    onIconChangedCallback: (icondata) {
                                       setState(() {
-                                        _icon = n.icon;
+                                        _icon = icondata;
                                       });
-                                      return true;
                                     },
-                                    child: IconPicker(
-                                      initialIcon: _icon,
-                                      initialColor: _color,
-                                    ),
+                                    initialIcon: _icon,
+                                    initialColor: _color,
                                   )),
                               Flexible(
                                 child: TextFormField(
@@ -102,13 +94,12 @@ class _AccountFormState extends State<AccountForm> {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          NotificationListener<ColorPicked>(
-                            child: Colorpicker(selectedColor: _color),
-                            onNotification: (n) {
+                          Colorpicker(
+                            initialSelectedColor: _color,
+                            onColorChangedCallback: (color) {
                               setState(() {
-                                _color = n.col;
+                                _color = color;
                               });
-                              return true;
                             },
                           ),
                           Padding(

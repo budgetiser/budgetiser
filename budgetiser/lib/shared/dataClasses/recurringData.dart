@@ -1,10 +1,10 @@
-import 'package:budgetiser/shared/widgets/recurringForm.dart';
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 
 class RecurringData {
   DateTime startDate;
   bool isRecurring;
   IntervalType? intervalType;
-  String? intervalUnit;
+  IntervalUnit? intervalUnit;
   int? intervalAmount;
   DateTime? endDate;
 

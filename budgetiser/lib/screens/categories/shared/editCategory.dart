@@ -3,25 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class EditCategory extends StatefulWidget {
-  Color selectedColor;
-  String categoryTitle;
-  EditCategory({
+  final Color selectedColor;
+  final String categoryTitle;
+  const EditCategory({
     Key? key,
     required Color this.selectedColor,
     required String this.categoryTitle,
   }) : super(key: key);
 
   @override
-  State<EditCategory> createState() => _EditCategoryState(selectedColor, categoryTitle);
+  State<EditCategory> createState() =>
+      _EditCategoryState(selectedColor, categoryTitle);
 }
 
 class _EditCategoryState extends State<EditCategory> {
   Color selectedColor = Colors.white;
   String categoryTitle = "";
-  _EditCategoryState(Color selectedColor, String categoryTitle){
-    this.selectedColor = selectedColor;
-    this.categoryTitle = categoryTitle;
-  }
+
+  _EditCategoryState(this.selectedColor, this.categoryTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +42,7 @@ class _EditCategoryState extends State<EditCategory> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Pick a color!'),
+                            title: const Text('Pick a color!'),
                             content: SingleChildScrollView(
                               child: MaterialPicker(
                                 pickerColor: selectedColor, //default color
@@ -70,7 +69,7 @@ class _EditCategoryState extends State<EditCategory> {
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     height: 30,
-                    margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: selectedColor,
