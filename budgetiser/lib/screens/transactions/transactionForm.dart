@@ -296,8 +296,6 @@ class _TransactionFormState extends State<TransactionForm> {
 
   AbstractTransaction _currentTransaction() {
     AbstractTransaction transaction;
-    print(
-        "selected account name: ${selectedAccount?.name} selected account2 name: ${selectedAccount2?.name}");
     if (!recurringData.isRecurring) {
       transaction = SingleTransaction(
         id: 0,

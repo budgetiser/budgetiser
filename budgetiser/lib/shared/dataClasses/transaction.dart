@@ -58,19 +58,25 @@ class SingleTransaction extends AbstractTransaction {
   }
 }
 
-// enum IntervalType {  TODO: discuss enum
-//   Daily,
-//   Weekly,
-//   Monthly,
-//   Yearly,
-// }
+enum IntervalUnit {
+  day,
+  week,
+  month,
+  quarter,
+  year,
+}
+
+enum IntervalType {
+  fixedPointOfTime,
+  fixedInterval,
+}
 
 class RecurringTransaction extends AbstractTransaction {
   DateTime startDate;
   DateTime endDate;
   IntervalType intervalType;
   int intervalAmount;
-  String intervalUnit;
+  IntervalUnit intervalUnit;
 
   RecurringTransaction({
     required int id,
