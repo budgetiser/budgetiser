@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class EditCategory extends StatefulWidget {
-  Color selectedColor;
-  String categoryTitle;
-  EditCategory({
+  final Color selectedColor;
+  final String categoryTitle;
+  const EditCategory({
     Key? key,
     required Color this.selectedColor,
     required String this.categoryTitle,
@@ -19,10 +19,8 @@ class EditCategory extends StatefulWidget {
 class _EditCategoryState extends State<EditCategory> {
   Color selectedColor = Colors.white;
   String categoryTitle = "";
-  _EditCategoryState(Color selectedColor, String categoryTitle) {
-    this.selectedColor = selectedColor;
-    this.categoryTitle = categoryTitle;
-  }
+
+  _EditCategoryState(this.selectedColor, this.categoryTitle);
 
   @override
   Widget build(BuildContext context) {

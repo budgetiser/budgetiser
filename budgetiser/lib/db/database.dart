@@ -4,7 +4,6 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
-import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -461,8 +460,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     if (transaction is SingleTransaction) {
       // TODO: current only balance change with single transaction
       if (transaction.account2 == null) {
-        print(
-            "before delete: ${transaction.account.balance} name: ${transaction.account.name} | transaction title: ${transaction.title} | transaction value: ${transaction.value}");
         await db.update('account',
             {'balance': transaction.account.balance - transaction.value},
             where: 'id = ?', whereArgs: [transaction.account.id]);
