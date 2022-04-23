@@ -9,16 +9,16 @@ class BalanceText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (balance > 0) ...[
+        if (balance >= 0) ...[
           Text(
-            "+ $balance €",
+            "+ ${balance.toStringAsFixed(2)} €",
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
                   color: const Color.fromARGB(239, 29, 129, 37),
                 ),
           ),
         ] else ...[
           Text(
-            "- ${0 - balance} €",
+            "- ${(0 - balance).toStringAsFixed(2)} €",
             style: Theme.of(context).textTheme.bodyText2?.copyWith(
                   color: const Color.fromARGB(255, 174, 74, 99),
                 ),

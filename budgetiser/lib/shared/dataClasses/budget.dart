@@ -5,7 +5,7 @@ class Budget {
   int id;
   String name;
   IconData icon;
-  Color color;
+  MaterialColor color;
   String description;
   double balance;
   double limit;

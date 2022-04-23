@@ -1,22 +1,16 @@
-import 'package:budgetiser/screens/account/shared/accountForm.dart';
-import 'package:budgetiser/screens/account/shared/savingAccountForm.dart';
+import 'package:budgetiser/screens/savings/shared/savingForm.dart';
+import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:flutter/material.dart';
 
-class EditAccount extends StatelessWidget {
-  const EditAccount({
-    Key? key,
-    required this.accountName,
-    required this.accountBalance,
-  }) : super(key: key);
-
-  final String accountName;
-  final int accountBalance;
+class EditSaving extends StatelessWidget {
+  EditSaving({Key? key, required this.savingData}) : super(key: key);
+  Savings savingData;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Account"),
+        title: const Text("Edit Saving"),
       ),
       body: Container(
         alignment: Alignment.topCenter,
@@ -25,14 +19,9 @@ class EditAccount extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
-                AccountForm(
-                  initialName: accountName,
-                  initalBalance: accountBalance,
+                SavingForm(
+                  initialSavingData: savingData,
                 ),
-                const Divider(
-                  indent: 8,
-                ),
-                const SavingAccountForm(),
               ],
             ),
           ),

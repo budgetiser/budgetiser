@@ -2,7 +2,7 @@ import 'package:budgetiser/routes.dart';
 import 'package:flutter/material.dart';
 
 import 'config/themes/themes.dart';
-import 'screens/home.dart';
+import 'screens/homeScreen.dart';
 
 void main() {
   runApp(const MyApp());

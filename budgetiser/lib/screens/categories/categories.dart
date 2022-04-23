@@ -1,7 +1,7 @@
 import 'package:budgetiser/screens/categories/newCategory.dart';
 import 'package:budgetiser/shared/services/categoryItem/categoryItem.dart';
 import 'package:flutter/material.dart';
-import '../../shared/widgets/drawer.dart';
+import 'package:budgetiser/shared/widgets/drawer.dart';
 
 class Categories extends StatelessWidget {
   static String routeID = 'categories';

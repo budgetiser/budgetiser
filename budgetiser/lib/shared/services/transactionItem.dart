@@ -1,4 +1,4 @@
-import 'package:budgetiser/screens/transactions/editTransaction.dart';
+import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/services/balanceText.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ class TransactionItem extends StatelessWidget {
     required this.transactionData,
   }) : super(key: key);
 
-  Transaction transactionData;
+  AbstractTransaction transactionData;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,8 @@ class TransactionItem extends StatelessWidget {
           onTap: () => {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => EditTransaction(
-                  transactionData: transactionData,
+                builder: (context) => TransactionForm(
+                  initialTransactionData: transactionData,
                 ),
               ),
             )
@@ -81,12 +81,12 @@ class TransactionItem extends StatelessWidget {
                       children: [
                         if (transactionData is SingleTransaction)
                           Text(
-                            "${(transactionData as SingleTransaction).date.day}/${(transactionData as SingleTransaction).date.month}/${(transactionData as SingleTransaction).date.year}",
+                            "${(transactionData as SingleTransaction).date.day}.${(transactionData as SingleTransaction).date.month}.${(transactionData as SingleTransaction).date.year}",
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                         if (transactionData is RecurringTransaction)
                           Text(
-                            "${(transactionData as RecurringTransaction).startDate.day}/${(transactionData as RecurringTransaction).startDate.month}/${(transactionData as RecurringTransaction).startDate.year}",
+                            "${(transactionData as RecurringTransaction).startDate.day}.${(transactionData as RecurringTransaction).startDate.month}.${(transactionData as RecurringTransaction).startDate.year}",
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                         const SizedBox(width: 10),
@@ -99,17 +99,14 @@ class TransactionItem extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Container(
-                          child: Text(
-                            transactionData.description,
-                            overflow: TextOverflow.ellipsis,
-                            textWidthBasis: TextWidthBasis.parent,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                ?.merge(const TextStyle(fontSize: 18)),
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.25,
+                        Text(
+                          transactionData.description,
+                          overflow: TextOverflow.ellipsis,
+                          textWidthBasis: TextWidthBasis.parent,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.merge(const TextStyle(fontSize: 18)),
                         ),
                       ],
                     ),

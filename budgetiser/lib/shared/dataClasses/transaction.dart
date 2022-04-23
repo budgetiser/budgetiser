@@ -1,7 +1,8 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 
-abstract class Transaction {
+abstract class AbstractTransaction {
   int id;
   String title;
   double value;
@@ -10,7 +11,7 @@ abstract class Transaction {
   Account? account2;
   String description;
 
-  Transaction({
+  AbstractTransaction({
     required this.id,
     required this.title,
     required this.value,
@@ -19,9 +20,16 @@ abstract class Transaction {
     this.account2,
     required this.description,
   });
+
+  Map<String, dynamic> toMapAbstract() => {
+        'title': title,
+        'value': value,
+        'description': description,
+        'category_id': category.id,
+      };
 }
 
-class SingleTransaction extends Transaction {
+class SingleTransaction extends AbstractTransaction {
   DateTime date;
 
   SingleTransaction({
@@ -42,6 +50,12 @@ class SingleTransaction extends Transaction {
           account2: account2,
           description: description,
         );
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "singleTransaction ${this.id} ${this.title} ${this.value} ${this.category} ${this.account} ${this.account2} ${this.description} ${this.date}";
+  }
 }
 
 // enum IntervalType {  TODO: discuss enum
@@ -51,10 +65,10 @@ class SingleTransaction extends Transaction {
 //   Yearly,
 // }
 
-class RecurringTransaction extends Transaction {
+class RecurringTransaction extends AbstractTransaction {
   DateTime startDate;
   DateTime endDate;
-  String intervalType;
+  IntervalType intervalType;
   int intervalAmount;
   String intervalUnit;
 

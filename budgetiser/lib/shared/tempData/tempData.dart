@@ -4,6 +4,7 @@ import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 List<Account> TMP_DATA_accountList = [
@@ -25,7 +26,7 @@ List<Account> TMP_DATA_accountList = [
   ),
   Account(
     id: 3,
-    name: "Bank Account",
+    name: "Bank Account long name",
     icon: Icons.account_balance_wallet,
     balance: 0,
     color: Colors.orange,
@@ -81,14 +82,14 @@ List<Group> TMP_DATA_groupList = [
 
 List<TransactionCategory> TMP_DATA_categoryList = [
   TransactionCategory(
-      id: 1,
+      id: 2,
       name: "Food",
       icon: Icons.fastfood,
       color: Colors.red,
       description: "category food description",
       isHidden: false),
   TransactionCategory(
-      id: 2,
+      id: 1,
       name: "Entertainment",
       icon: Icons.local_movies,
       color: Colors.blue,
@@ -131,7 +132,7 @@ List<TransactionCategory> TMP_DATA_categoryList = [
       isHidden: false),
 ];
 
-List<Transaction> TMP_DATA_transactionList = [
+List<AbstractTransaction> TMP_DATA_transactionList = [
   SingleTransaction(
     id: 1,
     title: 'birthday present',
@@ -158,9 +159,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[1],
     startDate: DateTime(2043, 1, 2),
     endDate: DateTime(1999, 9, 1),
-    intervalType: 'Days',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'Days',
+    intervalUnit: 'day',
     description: 'at the supermarket',
   ),
   RecurringTransaction(
@@ -171,9 +172,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[1],
     startDate: DateTime(2020, 1, 1),
     endDate: DateTime(2099, 9, 9),
-    intervalType: 'Months',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'Months',
+    intervalUnit: 'month',
     description: 'Test description',
   ),
   RecurringTransaction(
@@ -184,9 +185,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account: TMP_DATA_accountList[2],
     startDate: DateTime(2020, 1, 1),
     endDate: DateTime(2030, 1, 1),
-    intervalType: 'Months',
+    intervalType: IntervalType.fixedInterval,
     intervalAmount: 1,
-    intervalUnit: 'Years',
+    intervalUnit: 'month',
     description: '',
   ),
   RecurringTransaction(
@@ -198,9 +199,9 @@ List<Transaction> TMP_DATA_transactionList = [
     account2: TMP_DATA_accountList[0],
     startDate: DateTime(2021, 2, 4),
     endDate: DateTime(2022, 2, 4),
-    intervalType: 'Months',
+    intervalType: IntervalType.fixedPointOfTime,
     intervalAmount: 1,
-    intervalUnit: 'Months',
+    intervalUnit: 'week',
     description: 'at the bank',
   ),
   SingleTransaction(
@@ -249,7 +250,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.red,
     description: "savings pc description",
     balance: 100.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
     goal: 1200.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -260,7 +261,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.blue,
     description: "savings car description",
     balance: 100.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 8),
     goal: 1200.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -271,7 +272,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.green,
     description: "savings house description",
     balance: 800.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 12, 13),
     goal: 1200.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -282,7 +283,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.orange,
     description: "savings other description",
     balance: 10.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2023, 01, 2),
     goal: 300.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -333,13 +334,13 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.home,
     color: Colors.green,
     description: "budget house description",
-    balance: 800.0,
+    balance: 400.0,
     endDate: DateTime(2022, 10, 2),
     startDate: DateTime(2020, 10, 2),
     intervalAmount: 3,
     intervalUnit: 'Months',
     intervalType: 'isTheXofUnit',
-    isRecurring: true,
+    isRecurring: false,
     limit: 500,
     transactionCategories: [
       TMP_DATA_categoryList[0],

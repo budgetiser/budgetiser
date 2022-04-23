@@ -23,3 +23,7 @@ doc/api/
 .idea/libraries/Dart_Packages.xml
 
 .vscode
+budgetiser/windows/flutter/generated_plugins.cmake
+budgetiser/windows/flutter/generated_plugin_registrant.h
+budgetiser/windows/flutter/generated_plugin_registrant.cc
+/.idea

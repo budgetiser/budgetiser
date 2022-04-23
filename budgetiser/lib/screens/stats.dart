@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../shared/widgets/drawer.dart';
+import 'package:budgetiser/shared/widgets/drawer.dart';
 
 class Stats extends StatelessWidget {
   static String routeID = 'stats';

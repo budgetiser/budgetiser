@@ -1,4 +1,4 @@
-import 'package:budgetiser/screens/account/shared/selectIcon.dart';
+import 'package:budgetiser/shared/widgets/picker/selectIcon.dart';
 import 'package:flutter/material.dart';
 
 class CategoryForm extends StatefulWidget {
@@ -42,9 +42,9 @@ class _CategoryFormState extends State<CategoryForm> {
           children: [
             Row(
               children: <Widget>[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: SelectIcon(),
+                  child: IconPicker(),
                 ),
                 Flexible(
                   child: TextFormField(

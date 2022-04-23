@@ -1,14 +1,10 @@
-import 'package:budgetiser/screens/account/shared/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/widgets/categoryPicker.dart';
-import 'package:budgetiser/shared/widgets/colorpicker.dart';
+import 'package:budgetiser/shared/widgets/picker/colorpicker.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {
-  GroupForm({
-    Key? key,
-    Group? initialGroup
-  }) : super(key: key);
+  GroupForm({Key? key, Group? initialGroup}) : super(key: key);
 
   Group? initialGroup;
 
@@ -17,7 +13,6 @@ class GroupForm extends StatefulWidget {
 }
 
 class _GroupFormState extends State<GroupForm> {
-
   var nameController = new TextEditingController();
 
   @override
@@ -38,9 +33,9 @@ class _GroupFormState extends State<GroupForm> {
               ),
             ),
             Colorpicker(),
-            Divider(),
-            CategoryPicker(),
-            Divider(),
+            const Divider(),
+            const CategoryPicker(),
+            const Divider(),
           ],
         ),
       ),
