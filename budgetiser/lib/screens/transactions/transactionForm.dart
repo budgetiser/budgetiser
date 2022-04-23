@@ -46,13 +46,13 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   void initState() {
-    DatabaseHelper.instance.allAccountsStream.listen((event) {
-      // TODO: BUG: gets executed after hasAccount2 is set to true by the user
-      selectedAccount = event.first;
-    });
-    DatabaseHelper.instance.allCategoryStream.listen((event) {
-      selectedCategory = event.first;
-    });
+    // DatabaseHelper.instance.allAccountsStream.listen((event) {
+    //   // TODO: BUG: gets executed after hasAccount2 is set to true by the user
+    //   selectedAccount = event.first;
+    // });
+    // DatabaseHelper.instance.allCategoryStream.listen((event) {
+    //   selectedCategory = event.first;
+    // });
 
     if (widget.initialNegative == true) {
       valueController.text = "-";
@@ -76,6 +76,7 @@ class _TransactionFormState extends State<TransactionForm> {
       } else {
         recurringData.isRecurring = false;
       }
+      print("here");
       titleController.text = widget.initialTransactionData!.title;
       valueController.text = widget.initialTransactionData!.value.toString();
       selectedAccount = widget.initialTransactionData!.account;
@@ -304,9 +305,9 @@ class _TransactionFormState extends State<TransactionForm> {
 
   AbstractTransaction _currentTransaction() {
     AbstractTransaction transaction;
+    print(
+        "selected account name: ${selectedAccount?.name} selected account2 name: ${selectedAccount2?.name}");
     if (!recurringData.isRecurring) {
-      print(
-          "selected account: ${selectedAccount}\n selected account2: ${selectedAccount2}");
       transaction = SingleTransaction(
         id: 0,
         title: titleController.text,

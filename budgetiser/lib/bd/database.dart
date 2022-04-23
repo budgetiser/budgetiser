@@ -189,18 +189,18 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   }
 
   fillDBwithTMPdata() async {
-    TMP_DATA_accountList.forEach((account) async {
+    for (var account in TMP_DATA_accountList) {
       await createAccount(account);
-    });
+    }
     // TMP_DATA_budgetList.forEach((budget) async {
     //   await createBudget(budget);
     // });
-    TMP_DATA_categoryList.forEach((category) async {
+    for (var category in TMP_DATA_categoryList) {
       await createCategory(category);
-    });
-    TMP_DATA_transactionList.forEach((transaction) async {
+    }
+    for (var transaction in TMP_DATA_transactionList) {
       await createTransaction(transaction);
-    });
+    }
     // TMP_DATA_groupList.forEach((group) async {
     //   await createGroup(group);
     // });
@@ -416,17 +416,25 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     }
 
     // TODO: adjust account balance in recurring transactions
-    if (transaction.account2 == null) {
-      await db.update('account',
-          {'balance': transaction.account.balance + transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account.id]);
-    } else {
-      await db.update('account',
-          {'balance': transaction.account.balance - transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account.id]);
-      await db.update('account',
-          {'balance': transaction.account2!.balance + transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account2!.id]);
+    if (transaction is SingleTransaction) {
+      Account account = await _getOneAccount(transaction.account.id);
+      if (transaction.account2 == null) {
+        await db.update(
+          'account',
+          {'balance': account.balance + transaction.value},
+          where: 'id = ?',
+          whereArgs: [account.id],
+          conflictAlgorithm: ConflictAlgorithm.fail,
+        );
+      } else {
+        Account account2 = await _getOneAccount(transaction.account2!.id);
+        await db.update(
+            'account', {'balance': account.balance - transaction.value},
+            where: 'id = ?', whereArgs: [account.id]);
+        await db.update(
+            'account', {'balance': account2.balance + transaction.value},
+            where: 'id = ?', whereArgs: [account2.id]);
+      }
     }
 
     await db.insert('transactionToAccount', {
@@ -444,17 +452,22 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<void> deleteTransaction(AbstractTransaction transaction) async {
     final db = await database;
 
-    if (transaction.account2 == null) {
-      await db.update('account',
-          {'balance': transaction.account.balance - transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account.id]);
-    } else {
-      await db.update('account',
-          {'balance': transaction.account.balance + transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account.id]);
-      await db.update('account',
-          {'balance': transaction.account2!.balance - transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account2!.id]);
+    if (transaction is SingleTransaction) {
+      // TODO: current only balance change with single transaction
+      if (transaction.account2 == null) {
+        print(
+            "before delete: ${transaction.account.balance} name: ${transaction.account.name} | transaction title: ${transaction.title} | transaction value: ${transaction.value}");
+        await db.update('account',
+            {'balance': transaction.account.balance - transaction.value},
+            where: 'id = ?', whereArgs: [transaction.account.id]);
+      } else {
+        await db.update('account',
+            {'balance': transaction.account.balance + transaction.value},
+            where: 'id = ?', whereArgs: [transaction.account.id]);
+        await db.update('account',
+            {'balance': transaction.account2!.balance - transaction.value},
+            where: 'id = ?', whereArgs: [transaction.account2!.id]);
+      }
     }
 
     await db.delete(

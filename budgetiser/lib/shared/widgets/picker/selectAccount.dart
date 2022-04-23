@@ -32,6 +32,7 @@ class _SelectAccountState extends State<SelectAccount> {
           selectedAccount = _accounts?.first;
         }
       });
+      widget.callback(selectedAccount!);
     });
     DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
@@ -48,6 +49,7 @@ class _SelectAccountState extends State<SelectAccount> {
           elevation: 16,
           onChanged: (Account? newValue) {
             setState(() {
+              print("callback123");
               widget.callback(newValue!);
               selectedAccount = newValue;
             });

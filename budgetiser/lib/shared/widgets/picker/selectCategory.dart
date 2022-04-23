@@ -33,6 +33,7 @@ class _SelectCategoryState extends State<SelectCategory> {
           selectedCategory = _categories?.first;
         }
       });
+      widget.callback(selectedCategory!);
     });
     DatabaseHelper.instance.pushGetAllCategoriesStream();
     super.initState();
