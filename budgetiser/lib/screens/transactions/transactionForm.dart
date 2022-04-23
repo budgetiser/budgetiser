@@ -46,14 +46,6 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   void initState() {
-    // DatabaseHelper.instance.allAccountsStream.listen((event) {
-    //   // TODO: BUG: gets executed after hasAccount2 is set to true by the user
-    //   selectedAccount = event.first;
-    // });
-    // DatabaseHelper.instance.allCategoryStream.listen((event) {
-    //   selectedCategory = event.first;
-    // });
-
     if (widget.initialNegative == true) {
       valueController.text = "-";
     }
