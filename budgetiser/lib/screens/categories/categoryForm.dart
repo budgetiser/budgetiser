@@ -2,8 +2,8 @@ import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/picker/colorpicker.dart';
 import 'package:budgetiser/shared/picker/selectIcon.dart';
+import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CategoryForm extends StatefulWidget {
   CategoryForm({
@@ -82,7 +82,7 @@ class _CategoryFormState extends State<CategoryForm> {
                                 child: TextFormField(
                                   controller: nameController,
                                   validator: (data) {
-                                    if(data == null || data == ''){
+                                    if (data == null || data == '') {
                                       return "Please enter a valid name";
                                     }
                                   },
@@ -100,7 +100,18 @@ class _CategoryFormState extends State<CategoryForm> {
                                 setState(() {
                                   _color = color;
                                 });
-                              })
+                              }),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: TextFormField(
+                              controller: descriptionController,
+                              keyboardType: TextInputType.multiline,
+                              decoration: const InputDecoration(
+                                labelText: "Description",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -115,13 +126,25 @@ class _CategoryFormState extends State<CategoryForm> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: 'cancel',
             backgroundColor: Colors.red,
             mini: true,
             onPressed: () {
               if (widget.categoryData != null) {
-                widget.categoryData!.id;
-                DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
-                Navigator.of(context).pop();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ConfirmationDialog(
+                        onSubmitCallback: () {
+                          DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        onCancelCallback: () {
+                          Navigator.pop(context);
+                        },
+                      );
+                    });
               } else {
                 Navigator.of(context).pop();
               }
@@ -134,6 +157,7 @@ class _CategoryFormState extends State<CategoryForm> {
             width: 5,
           ),
           FloatingActionButton.extended(
+            heroTag: 'save',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
