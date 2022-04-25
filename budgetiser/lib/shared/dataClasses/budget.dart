@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
@@ -5,14 +6,14 @@ class Budget {
   int id;
   String name;
   IconData icon;
-  MaterialColor color;
+  Color color;
   String description;
   double balance;
   double limit;
   bool isRecurring;
-  String intervalType;
+  IntervalType intervalType;
   int intervalAmount;
-  String intervalUnit;
+  IntervalUnit intervalUnit;
   DateTime startDate;
   DateTime endDate;
   List<TransactionCategory> transactionCategories;

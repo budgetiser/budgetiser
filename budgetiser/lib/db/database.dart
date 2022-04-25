@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
@@ -197,20 +199,20 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     for (var account in TMP_DATA_accountList) {
       await createAccount(account);
     }
-    // TMP_DATA_budgetList.forEach((budget) async {
-    //   await createBudget(budget);
-    // });
+    for (var budget in TMP_DATA_budgetList) {
+      await createBudget(budget);
+    }
     for (var category in TMP_DATA_categoryList) {
       await createCategory(category);
     }
     for (var transaction in TMP_DATA_transactionList) {
       await createTransaction(transaction);
     }
+    for (var saving in TMP_DATA_savingsList) {
+      await createSaving(saving);
+    }
     // TMP_DATA_groupList.forEach((group) async {
     //   await createGroup(group);
-    // });
-    // TMP_DATA_savingsList.forEach((saving) async {
-    //   await createSaving(saving);
     // });
   }
 
@@ -244,7 +246,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   final StreamController<List<Account>> _AllAccountsStreamController =
       StreamController<List<Account>>.broadcast();
+
   Sink<List<Account>> get allAccountsSink => _AllAccountsStreamController.sink;
+
   Stream<List<Account>> get allAccountsStream =>
       _AllAccountsStreamController.stream;
 
@@ -309,8 +313,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   final StreamController<List<AbstractTransaction>>
       _AllTransactionStreamController =
       StreamController<List<AbstractTransaction>>.broadcast();
+
   Sink<List<AbstractTransaction>> get allTransactionSink =>
       _AllTransactionStreamController.sink;
+
   Stream<List<AbstractTransaction>> get allTransactionStream =>
       _AllTransactionStreamController.stream;
 
@@ -560,8 +566,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   final StreamController<List<TransactionCategory>>
       _AllCategoryStreamController =
       StreamController<List<TransactionCategory>>.broadcast();
+
   Sink<List<TransactionCategory>> get allCategorySink =>
       _AllCategoryStreamController.sink;
+
   Stream<List<TransactionCategory>> get allCategoryStream =>
       _AllCategoryStreamController.stream;
 
@@ -592,7 +600,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     pushGetAllCategoriesStream();
   }
 
-
   Future<void> hideCategory(int categoryID) async {
     final db = await database;
 
@@ -615,5 +622,114 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       whereArgs: [category.id],
     );
     pushGetAllCategoriesStream();
+  }
+
+  final StreamController<List<Savings>> _AllSavingsStreamController =
+      StreamController<List<Savings>>.broadcast();
+
+  Sink<List<Savings>> get allSavingsSink => _AllSavingsStreamController.sink;
+
+  Stream<List<Savings>> get allSavingsStream =>
+      _AllSavingsStreamController.stream;
+
+  void pushGetAllSavingsStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('saving');
+
+    allSavingsSink.add(List.generate(maps.length, (i) {
+      return Savings(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        balance: maps[i]['balance'],
+        startDate: DateTime.parse(maps[i]['start_date']),
+        endDate: DateTime.parse(maps[i]['end_date']),
+        goal: maps[i]['goal'],
+        description: maps[i]['description'].toString(),
+      );
+    }));
+  }
+
+  Future<int> createSaving(Savings saving) async{
+    final db = await database;
+    Map<String, dynamic> row = {
+      'name': saving.name,
+      'icon': saving.icon.codePoint,
+      'color': saving.color.value,
+      'description': saving.description,
+      'balance': saving.balance,
+      'goal': saving.goal,
+      'start_date': saving.startDate.toString().substring(0, 10),
+      'end_date': saving.endDate.toString().substring(0, 10),
+    };
+
+    int id = await db.insert(
+      'saving',
+      row,
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+    pushGetAllSavingsStream();
+    return id;
+  }
+
+  final StreamController<List<Budget>> _AllBudgetsStreamController =
+      StreamController<List<Budget>>.broadcast();
+
+  Sink<List<Budget>> get allBudgetsSink => _AllBudgetsStreamController.sink;
+
+  Stream<List<Budget>> get allBudgetsStream =>
+      _AllBudgetsStreamController.stream;
+
+  void pushGetAllBudgetsStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('budget');
+
+    allBudgetsSink.add(List.generate(maps.length, (i) {
+      return Budget(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        balance: maps[i]['balance'],
+        limit: maps[i]['limitXX'],
+        isRecurring: maps[i]['is_recurring'] == 1,
+        intervalAmount: maps[i]['intervalAmount'],
+        intervalUnit: IntervalUnit.values
+            .firstWhere((e) => e.toString() == maps[i]['intervalUnit']),
+        intervalType: IntervalType.values
+            .firstWhere((e) => e.toString() == maps[i]['intervalType']),
+        startDate: DateTime.parse(maps[i]['start_date']),
+        endDate: DateTime.parse(maps[i]['end_date']),
+        description: maps[i]['description'].toString(),
+        transactionCategories: [],
+      );
+    }));
+  }
+  
+  Future<int> createBudget(Budget budget) async{
+    final db = await database;
+    Map<String, dynamic> row = {
+      'name': budget.name,
+      'icon': budget.icon.codePoint,
+      'color': budget.color.value,
+      'description': budget.description,
+      'balance': budget.balance,
+      'limitXX': budget.limit,
+      'is_recurring': budget.isRecurring ? 1 : 0,
+      'intervalAmount': budget.intervalAmount,
+      'IntervalUnit': budget.intervalUnit.toString(),
+      'IntervalType': budget.intervalType.toString(),
+      'start_date': budget.startDate.toString().substring(0, 10),
+      'end_date': budget.endDate.toString().substring(0, 10),
+    };
+
+    int id = await db.insert(
+      'budget',
+      row,
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+    pushGetAllBudgetsStream();
+    return id;
   }
 }
