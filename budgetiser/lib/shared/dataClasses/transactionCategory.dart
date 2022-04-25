@@ -16,4 +16,12 @@ class TransactionCategory {
     required this.description,
     required this.isHidden,
   });
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'icon': icon.codePoint,
+    'color': color.value,
+    'description': description,
+    'is_hidden': isHidden,
+  };
 }
