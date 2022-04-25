@@ -56,49 +56,56 @@ class _CategoryFormState extends State<CategoryForm> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: IconPicker(
-                                initialColor: _color,
-                                initialIcon: _icon,
-                                onIconChangedCallback: (icondata) {
-                                  _icon = icondata;
-                                },
-                              ),
-                            ),
-                            Flexible(
-                              child: TextFormField(
-                                controller: nameController,
-                                // initialValue: widget.initialName,
-                                decoration: const InputDecoration(
-                                  labelText: "Category title",
-                                  border: OutlineInputBorder(),
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: IconPicker(
+                                  initialColor: _color,
+                                  initialIcon: _icon,
+                                  onIconChangedCallback: (icondata) {
+                                    _icon = icondata;
+                                  },
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              Flexible(
+                                child: TextFormField(
+                                  controller: nameController,
+                                  validator: (data) {
+                                    if(data == null || data == ''){
+                                      return "Please enter a valid name";
+                                    }
+                                  },
+                                  decoration: const InputDecoration(
+                                    labelText: "Category title",
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Colorpicker(
+                              initialSelectedColor: _color,
+                              onColorChangedCallback: (color) {
+                                setState(() {
+                                  _color = color;
+                                });
+                              })
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Colorpicker(
-                  initialSelectedColor: _color,
-                  onColorChangedCallback: (color) {
-                    setState(() {
-                      _color = color;
-                    });
-                  })
+                )
               ],
             ),
           ),
