@@ -592,6 +592,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     pushGetAllCategoriesStream();
   }
 
+
   Future<void> hideCategory(int categoryID) async {
     final db = await database;
 
