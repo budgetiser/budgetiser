@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ConfirmationDialog extends StatefulWidget {
-  ConfirmationDialog(
-      {Key? key, required this.onCancelCallback, required this.onSubmitCallback})
-      : super(key: key);
+  ConfirmationDialog({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.onCancelCallback,
+    required this.onSubmitCallback,
+  }) : super(key: key);
   Function onCancelCallback;
   Function onSubmitCallback;
+  String title;
+  String description;
 
   @override
   State<ConfirmationDialog> createState() => _ConfirmationDialogState();
@@ -15,9 +21,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Attention"),
-      content: const Text(
-          "Are you sure to perform this action? This can't be undone!"),
+      title: Text(widget.title),
+      content: Text(
+          widget.description),
       actions: [
         TextButton(
           child: Text("Cancel"),
@@ -26,7 +32,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
           },
         ),
         TextButton(
-          child: Text("Continue"),
+          child: Text("Submit"),
           onPressed: () {
             widget.onSubmitCallback();
           },

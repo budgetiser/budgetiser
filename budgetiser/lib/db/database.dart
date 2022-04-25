@@ -23,6 +23,7 @@ class DatabaseHelper {
     if (kDebugMode) {
       print("creating database");
     }
+    await db.execute('PRAGMA foreign_keys = ON');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS account(
   id INTEGER,
@@ -41,7 +42,7 @@ CREATE TABLE IF NOT EXISTS XXtransaction(
   description TEXT,
   category_id INTEGER,
   PRIMARY KEY(id),
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE SET NULL
+  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE
   );
     ''');
     await db.execute('''
@@ -143,7 +144,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   PRIMARY KEY(transaction_id, toAccount_id, fromAccount_id),
   FOREIGN KEY(toAccount_id) REFERENCES account
   FOREIGN KEY(fromAccount_id) REFERENCES account,
-  FOREIGN KEY(transaction_id) REFERENCES XXtransaction);
+  FOREIGN KEY(transaction_id) REFERENCES XXtransaction ON DELETE CASCADE);
 ''');
     if (kDebugMode) {
       print("done");
@@ -585,6 +586,19 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
     await db.delete(
       'category',
+      where: 'id = ?',
+      whereArgs: [categoryID],
+    );
+    pushGetAllCategoriesStream();
+  }
+
+
+  Future<void> hideCategory(int categoryID) async {
+    final db = await database;
+
+    await db.update(
+      'category',
+      {'is_hidden': true},
       where: 'id = ?',
       whereArgs: [categoryID],
     );

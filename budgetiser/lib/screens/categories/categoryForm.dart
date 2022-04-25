@@ -135,6 +135,8 @@ class _CategoryFormState extends State<CategoryForm> {
                     context: context,
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
+                        title: "Attention",
+                        description: "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
                           DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
                           Navigator.of(context).pop();
