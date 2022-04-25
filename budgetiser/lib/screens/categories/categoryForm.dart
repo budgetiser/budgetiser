@@ -1,5 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/picker/colorpicker.dart';
 import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -18,6 +19,7 @@ class CategoryForm extends StatefulWidget {
 class _CategoryFormState extends State<CategoryForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   Color _color = Colors.blue;
   IconData _icon = Icons.blur_on;
 
@@ -90,46 +92,13 @@ class _CategoryFormState extends State<CategoryForm> {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Pick a color!'),
-                            content: SingleChildScrollView(
-                              child: MaterialPicker(
-                                pickerColor: _color, //default color
-                                onColorChanged: (Color color) {
-                                  setState(() {
-                                    _color = color;
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                child: const Text('Close'),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); //dismiss the color picker
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: 30,
-                    margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: _color,
-                    ),
-                  ),
-                ),
+                Colorpicker(
+                  initialSelectedColor: _color,
+                  onColorChangedCallback: (color) {
+                    setState(() {
+                      _color = color;
+                    });
+                  })
               ],
             ),
           ),
@@ -142,7 +111,7 @@ class _CategoryFormState extends State<CategoryForm> {
             backgroundColor: Colors.red,
             mini: true,
             onPressed: () {
-              if(widget.categoryData != null){
+              if (widget.categoryData != null) {
                 widget.categoryData!.id;
                 DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
                 Navigator.of(context).pop();
@@ -150,27 +119,31 @@ class _CategoryFormState extends State<CategoryForm> {
                 Navigator.of(context).pop();
               }
             },
-            child: widget.categoryData != null ? const Icon(Icons.delete_outline) : const Icon(Icons.close),
+            child: widget.categoryData != null
+                ? const Icon(Icons.delete_outline)
+                : const Icon(Icons.close),
           ),
           const SizedBox(
             width: 5,
           ),
           FloatingActionButton.extended(
             onPressed: () {
-              TransactionCategory a = TransactionCategory(
-                  name: nameController.text,
-                  icon: _icon,
-                  color: _color,
-                  description: descriptionController.text,
-                  isHidden: false,
-                  id: 0);
-              if(widget.categoryData != null){
-                a.id = widget.categoryData!.id;
-                DatabaseHelper.instance.updateCategory(a);
-              } else {
-                DatabaseHelper.instance.createCategory(a);
+              if (_formKey.currentState!.validate()) {
+                TransactionCategory a = TransactionCategory(
+                    name: nameController.text,
+                    icon: _icon,
+                    color: _color,
+                    description: descriptionController.text,
+                    isHidden: false,
+                    id: 0);
+                if (widget.categoryData != null) {
+                  a.id = widget.categoryData!.id;
+                  DatabaseHelper.instance.updateCategory(a);
+                } else {
+                  DatabaseHelper.instance.createCategory(a);
+                }
+                Navigator.of(context).pop();
               }
-              Navigator.of(context).pop();
             },
             label: const Text("Save"),
             icon: const Icon(Icons.check),
