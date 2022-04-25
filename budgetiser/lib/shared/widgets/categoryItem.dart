@@ -1,25 +1,18 @@
-import 'package:budgetiser/screens/categories/shared/editCategory.dart';
+import 'package:budgetiser/screens/categories/categoryForm.dart';
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatelessWidget {
-  final String id;
-  final String name;
-  final IconData icon;
-  final Color color;
-  final bool hidden;
+  final TransactionCategory categoryData;
 
   const CategoryItem(
-    this.id,
-    this.name,
-    this.icon,
-    this.color,
-    this.hidden, {
-    Key? key,
+    { required this.categoryData,
+      Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (hidden) {
+    if (categoryData.isHidden) {
       return Container(
         height: 0,
       );
@@ -42,9 +35,8 @@ class CategoryItem extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EditCategory(
-                              categoryTitle: name,
-                              selectedColor: color,
+                        builder: (context) => CategoryForm(
+                              categoryData: categoryData,
                             )));
                   },
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -62,19 +54,19 @@ class CategoryItem extends StatelessWidget {
                               Row(
                                 children: [
                                   Icon(
-                                    icon,
-                                    color: color,
+                                    categoryData.icon,
+                                    color: categoryData.color,
                                   ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                     child: Text(
-                                      name,
+                                      categoryData.name,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2
                                           ?.copyWith(
-                                            color: color,
+                                            color: categoryData.color,
                                           ),
                                       overflow: TextOverflow.ellipsis,
                                     ),

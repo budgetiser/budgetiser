@@ -537,7 +537,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       row,
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
-
+    pushGetAllCategoriesStream();
     return id;
   }
 
@@ -578,5 +578,28 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         isHidden: maps[i]['is_hidden'] == 1,
       );
     }));
+  }
+
+  Future<void> deleteCategory(int categoryID) async {
+    final db = await database;
+
+    await db.delete(
+      'category',
+      where: 'id = ?',
+      whereArgs: [categoryID],
+    );
+    pushGetAllCategoriesStream();
+  }
+
+  Future<void> updateCategory(TransactionCategory category) async {
+    final db = await database;
+
+    await db.update(
+      'category',
+      category.toMap(),
+      where: 'id = ?',
+      whereArgs: [category.id],
+    );
+    pushGetAllCategoriesStream();
   }
 }
