@@ -135,25 +135,47 @@ class _CategoryFormState extends State<CategoryForm> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          TransactionCategory a = TransactionCategory(
-              name: nameController.text,
-              icon: _icon,
-              color: _color,
-              description: descriptionController.text,
-              isHidden: false,
-              id: 0);
-          if(widget.categoryData != null){
-            a.id = widget.categoryData!.id;
-            DatabaseHelper.instance.updateCategory(a);
-          } else {
-            DatabaseHelper.instance.createCategory(a);
-          }
-          Navigator.of(context).pop();
-        },
-        label: const Text("Save"),
-        icon: const Icon(Icons.check),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.red,
+            mini: true,
+            onPressed: () {
+              if(widget.categoryData != null){
+                widget.categoryData!.id;
+                DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
+                Navigator.of(context).pop();
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+            child: widget.categoryData != null ? const Icon(Icons.delete_outline) : const Icon(Icons.close),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          FloatingActionButton.extended(
+            onPressed: () {
+              TransactionCategory a = TransactionCategory(
+                  name: nameController.text,
+                  icon: _icon,
+                  color: _color,
+                  description: descriptionController.text,
+                  isHidden: false,
+                  id: 0);
+              if(widget.categoryData != null){
+                a.id = widget.categoryData!.id;
+                DatabaseHelper.instance.updateCategory(a);
+              } else {
+                DatabaseHelper.instance.createCategory(a);
+              }
+              Navigator.of(context).pop();
+            },
+            label: const Text("Save"),
+            icon: const Icon(Icons.check),
+          ),
+        ],
       ),
     );
   }
