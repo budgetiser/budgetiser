@@ -5,6 +5,7 @@ import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/picker/selectAccount.dart';
 import 'package:budgetiser/shared/picker/selectCategory.dart';
+import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
@@ -232,58 +233,65 @@ class _TransactionFormState extends State<TransactionForm> {
                   ),
                 ),
               ),
-              if (widget.initialTransactionData != null)
-                Column(
-                  children: [
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    FloatingActionButton.extended(
-                      onPressed: () => showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Delete Transaction?'),
-                          content: const Text('This action cannot be undone.'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                await DatabaseHelper.instance
-                                    .deleteTransaction(_currentTransaction());
-                                Navigator.pop(context, 'OK');
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      label: const Text("Delete"),
-                      heroTag: "delete",
-                    ),
-                  ],
-                ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            if (widget.initialTransactionData != null) {
-              print("update");
-              DatabaseHelper.instance.updateTransaction(_currentTransaction());
-            } else {
-              DatabaseHelper.instance.createTransaction(_currentTransaction());
-            }
-            Navigator.of(context).pop();
-          }
-        },
-        label: const Text("Save"),
-        icon: const Icon(Icons.save),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: 'cancel',
+            backgroundColor: Colors.red,
+            mini: true,
+            onPressed: () {
+              if (widget.initialTransactionData != null) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ConfirmationDialog(
+                        title: "Attention",
+                        description:
+                            "Are you sure to delete this Transaction? This action can't be undone!",
+                        onSubmitCallback: () {
+                          DatabaseHelper.instance
+                              .deleteTransaction(_currentTransaction());
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        onCancelCallback: () {
+                          Navigator.pop(context);
+                        },
+                      );
+                    });
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+            child: widget.initialTransactionData != null
+                ? const Icon(Icons.delete_outline)
+                : const Icon(Icons.close),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          FloatingActionButton.extended(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                if (widget.initialTransactionData != null) {
+                  DatabaseHelper.instance
+                      .updateTransaction(_currentTransaction());
+                } else {
+                  DatabaseHelper.instance
+                      .createTransaction(_currentTransaction());
+                }
+                Navigator.of(context).pop();
+              }
+            },
+            label: const Text("Save"),
+            icon: const Icon(Icons.save),
+          ),
+        ],
       ),
     );
   }
