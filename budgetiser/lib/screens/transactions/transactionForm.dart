@@ -195,9 +195,6 @@ class _TransactionFormState extends State<TransactionForm> {
                               labelText: "Value",
                               border: OutlineInputBorder(),
                             ),
-                            enabled: (widget.initialTransactionData != null)
-                                ? false
-                                : true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a value';
@@ -277,6 +274,7 @@ class _TransactionFormState extends State<TransactionForm> {
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             if (widget.initialTransactionData != null) {
+              print("update");
               DatabaseHelper.instance.updateTransaction(_currentTransaction());
             } else {
               DatabaseHelper.instance.createTransaction(_currentTransaction());
