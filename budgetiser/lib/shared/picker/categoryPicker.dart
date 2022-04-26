@@ -13,7 +13,7 @@ class CategoryPicker extends StatefulWidget {
 }
 
 class _CategoryPickerState extends State<CategoryPicker> {
-  List<TransactionCategory> _selected = [];
+  List<int> _selected = [];
   List<bool> _isChecked = [];
   List<TransactionCategory> _available = TMP_DATA_categoryList;
 
@@ -25,7 +25,9 @@ class _CategoryPickerState extends State<CategoryPicker> {
     _available.sort((a, b) => a.name.compareTo(b.name));
     _isChecked = List<bool>.filled(_available.length, false);
     if(widget.initialCategories != null){
-      _selected = widget.initialCategories!;
+      _selected = List.generate(widget.initialCategories!.length, (index) =>
+        widget.initialCategories![index].id,
+      );
     }
   }
 
@@ -49,7 +51,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                           context: context,
                           builder: (BuildContext context) {
                             for (var i = 0; i < _available.length; i++) {
-                              if (_selected.contains(_available[i])) {
+                              if (_selected.contains(_available[i].id)) {
                                 _isChecked[i] = true;
                               } else {
                                 _isChecked[i] = false;
@@ -93,12 +95,12 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                                   if (value == true) {
                                                     _isChecked[j] = true;
                                                     _selected
-                                                        .add(_available[j]);
+                                                        .add(_available[j].id);
                                                   } else {
                                                     _isChecked[j] = false;
                                                     _selected.removeWhere(
                                                         (element) =>
-                                                            element.id ==
+                                                            element ==
                                                             _available[j].id);
                                                   }
                                                 });
@@ -113,9 +115,9 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                   child: const Text('Close'),
                                   onPressed: () {
                                     setState(() {
-                                      _selected.sort(
-                                          (a, b) => a.name.compareTo(b.name));
-                                      widget.onCategoryPickedCallback(_selected);
+                                      // _selected.sort(
+                                      //     (a, b) => a.name.compareTo(b.name));
+                                      widget.onCategoryPickedCallback((_available.where((element) => _selected.contains(element.id)).toList()));
                                     });
                                     Navigator.of(context)
                                         .pop(); //dismiss the color picker
@@ -131,18 +133,18 @@ class _CategoryPickerState extends State<CategoryPicker> {
                       title: Text("Add Category"),
                     ),
                   );
-                } else if (_selected[i - 1].isHidden == false) {
+                } else if (_available.firstWhere((element) => element.id == _selected[i - 1]).isHidden == false) {
                   return ListTile(
-                    leading: Icon(_selected[i - 1].icon),
-                    title: Text(_selected[i - 1].name),
-                    iconColor: _selected[i - 1].color,
-                    textColor: _selected[i - 1].color,
+                    leading: Icon(_available.firstWhere((element) => element.id == _selected[i - 1]).icon),
+                    title: Text(_available.firstWhere((element) => element.id == _selected[i - 1]).name),
+                    iconColor: _available.firstWhere((element) => element.id == _selected[i - 1]).color,
+                    textColor: _available.firstWhere((element) => element.id == _selected[i - 1]).color,
                     trailing: InkWell(
                       borderRadius: BorderRadius.circular(25),
                       onTap: () {
                         setState(() {
                           _selected.removeAt(i - 1);
-                          widget.onCategoryPickedCallback(_selected);
+                          widget.onCategoryPickedCallback(_available.where((element) => _selected.contains(element.id)).toList());
                         });
                       },
                       child: const Icon(Icons.remove_circle_outline),
@@ -155,7 +157,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                 }
               },
               shrinkWrap: true,
-              itemCount: _selected.length + 1,
+              itemCount: (_selected.length) + 1,
             ),
           )),
       height: 225,
