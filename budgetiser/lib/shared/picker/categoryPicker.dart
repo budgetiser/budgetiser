@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import '../tempData/tempData.dart';
 
 class CategoryPicker extends StatefulWidget {
-  const CategoryPicker({Key? key}) : super(key: key);
+  CategoryPicker({Key? key, required this.onCategoryPickedCallback, this.initialCategories}) : super(key: key);
 
   @override
   State<CategoryPicker> createState() => _CategoryPickerState();
+  final Function(List<TransactionCategory>) onCategoryPickedCallback;
+  final List<TransactionCategory>? initialCategories;
 }
 
 class _CategoryPickerState extends State<CategoryPicker> {
@@ -22,6 +24,9 @@ class _CategoryPickerState extends State<CategoryPicker> {
     super.initState();
     _available.sort((a, b) => a.name.compareTo(b.name));
     _isChecked = List<bool>.filled(_available.length, false);
+    if(widget.initialCategories != null){
+      _selected = widget.initialCategories!;
+    }
   }
 
   @override
@@ -110,6 +115,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                     setState(() {
                                       _selected.sort(
                                           (a, b) => a.name.compareTo(b.name));
+                                      widget.onCategoryPickedCallback(_selected);
                                     });
                                     Navigator.of(context)
                                         .pop(); //dismiss the color picker
@@ -136,6 +142,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                       onTap: () {
                         setState(() {
                           _selected.removeAt(i - 1);
+                          widget.onCategoryPickedCallback(_selected);
                         });
                       },
                       child: const Icon(Icons.remove_circle_outline),

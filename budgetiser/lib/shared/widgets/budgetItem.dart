@@ -18,8 +18,8 @@ class BudgetItem extends StatelessWidget {
           onTap: () => {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => BudgetForm(
-                  initialBudgetData: budgetData,
-                ))),
+                      budgetData: budgetData,
+                    ))),
           },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -36,17 +36,30 @@ class BudgetItem extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(budgetData.name),
                       Row(
                         children: [
-                          Text("days left: " +
-                              (budgetData.endDate)
-                                  .difference(DateTime.now())
-                                  .inDays
-                                  .toString()),
-                          if (budgetData.isRecurring) const Icon(Icons.repeat)
+                          Icon(
+                            budgetData.icon,
+                            color: budgetData.color,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(budgetData.name),
                         ],
-                      )
+                      ),
+                      budgetData.isRecurring
+                          ? Row(
+                              children: [
+                                Text("days left: " +
+                                    (budgetData.endDate!)
+                                        .difference(DateTime.now())
+                                        .inDays
+                                        .toString()),
+                                const Icon(Icons.repeat)
+                              ],
+                            )
+                          : Container(),
                     ]),
                 Row(
                   children: [
@@ -84,13 +97,20 @@ class BudgetItem extends StatelessWidget {
 
   List<Color> createGradient(Color baseColor) {
     List<Color> gradient = [];
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
     return gradient;
   }
 }

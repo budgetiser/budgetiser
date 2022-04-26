@@ -36,7 +36,13 @@ class _GroupFormState extends State<GroupForm> {
               onColorChangedCallback: (color) {},
             ),
             const Divider(),
-            const CategoryPicker(),
+            CategoryPicker(
+              onCategoryPickedCallback: (data) {
+                setState(() {
+
+                });
+              },
+            ),
             const Divider(),
           ],
         ),

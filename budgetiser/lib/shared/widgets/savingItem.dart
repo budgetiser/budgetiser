@@ -33,7 +33,18 @@ class SavingItem extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(savingData.name),
+                      Row(
+                        children: [
+                          Icon(
+                            savingData.icon,
+                            color: savingData.color,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(savingData.name),
+                        ],
+                      ),
                       Text("days left: " +
                           (savingData.endDate)
                               .difference(DateTime.now())
@@ -76,13 +87,20 @@ class SavingItem extends StatelessWidget {
 
   List<Color> createGradient(Color baseColor) {
     List<Color> gradient = [];
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
-    gradient.add(Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
     return gradient;
   }
 }
