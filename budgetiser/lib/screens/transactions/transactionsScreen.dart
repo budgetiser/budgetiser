@@ -92,7 +92,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               if (_currentFilterAccountName == "") {
                 return true;
               } else {
-                return element.account.name == _currentFilterAccountName;
+                return element.account.name == _currentFilterAccountName ||
+                    (element.account2 != null &&
+                        element.account2!.name == _currentFilterAccountName);
               }
             }).toList();
             return ListView.builder(
