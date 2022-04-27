@@ -808,6 +808,12 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     );
     List<TransactionCategory> _categories = budget.transactionCategories;
 
+    await db.delete(
+      'categoryToBudget',
+      where: 'budget_id = ?',
+      whereArgs: [budget.id],
+    );
+
     for (int i = 0; i < _categories.length; i++) {
       Map<String, dynamic> rowCategory = {
         'category_id': _categories[i].id,
@@ -816,7 +822,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       await db.insert(
         'categoryToBudget',
         rowCategory,
-        conflictAlgorithm: ConflictAlgorithm.replace, //TODO: filter before
+        conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
     pushGetAllBudgetsStream();

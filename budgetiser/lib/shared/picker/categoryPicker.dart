@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
@@ -13,23 +14,23 @@ class CategoryPicker extends StatefulWidget {
 }
 
 class _CategoryPickerState extends State<CategoryPicker> {
-  List<int> _selected = [];
-  List<bool> _isChecked = [];
-  List<TransactionCategory> _available = TMP_DATA_categoryList;
+  List<TransactionCategory> _selected = [];
 
-  var scrollController = new ScrollController();
+  var scrollController = ScrollController();
 
   @override
   void initState() {
-    super.initState();
-    _available.sort((a, b) => a.name.compareTo(b.name));
-    _isChecked = List<bool>.filled(_available.length, false);
-    if(_available[0] == _available[1]){};
     if(widget.initialCategories != null){
-      _selected = List.generate(widget.initialCategories!.length, (index) =>
-        widget.initialCategories![index].id,
-      );
+      _selected = widget.initialCategories!;
     }
+    DatabaseHelper.instance.pushGetAllCategoriesStream();
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,74 +52,74 @@ class _CategoryPickerState extends State<CategoryPicker> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            for (var i = 0; i < _available.length; i++) {
-                              if (_selected.contains(_available[i].id)) {
-                                _isChecked[i] = true;
-                              } else {
-                                _isChecked[i] = false;
-                              }
-                            }
+                            DatabaseHelper.instance.pushGetAllCategoriesStream();
                             return AlertDialog(
                               title: const Text('Select categories'),
                               content: SizedBox(
                                 width: double.maxFinite,
-                                child: ListView.builder(
-                                  itemBuilder: (context, j) {
-                                    return StatefulBuilder(
-                                        builder: (context, _setState) =>
-                                            CheckboxListTile(
-                                              title: Row(
-                                                children: [
-                                                  Icon(
-                                                    _available[j].icon,
-                                                    color: _available[j].color,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Flexible(
-                                                    child: Text(
-                                                      _available[j].name,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                        color:
-                                                            _available[j].color,
+                                child: StreamBuilder<List<TransactionCategory>>(
+                                  stream: DatabaseHelper.instance.allCategoryStream,
+                                  builder: (context, snapshot) {
+                                    if(snapshot.hasData){
+                                      return ListView.builder(
+                                          itemBuilder: (context, j) {
+                                            return StatefulBuilder(
+                                                builder: (context, _setState) =>
+                                                    CheckboxListTile(
+                                                      title: Row(
+                                                        children: [
+                                                          Icon(
+                                                            snapshot.data![j].icon,
+                                                            color: snapshot.data![j].color,
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 8,
+                                                          ),
+                                                          Flexible(
+                                                            child: Text(
+                                                              snapshot.data![j].name,
+                                                              overflow:
+                                                                  TextOverflow.ellipsis,
+                                                              maxLines: 1,
+                                                              style: TextStyle(
+                                                                color:
+                                                                snapshot.data![j].color,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              value: _isChecked[j],
-                                              onChanged: (bool? value) {
-                                                _setState(() {
-                                                  if (value == true) {
-                                                    _isChecked[j] = true;
-                                                    _selected
-                                                        .add(_available[j].id);
-                                                  } else {
-                                                    _isChecked[j] = false;
-                                                    _selected.removeWhere(
-                                                        (element) =>
-                                                            element ==
-                                                            _available[j].id);
-                                                  }
-                                                });
-                                              },
-                                            ));
+                                                      value: _selected.contains(snapshot.data![j]),
+                                                      onChanged: (bool? value) {
+                                                        _setState(() {
+                                                          if (value == true) {
+                                                            _selected
+                                                                .add(snapshot.data![j]);
+                                                          } else {
+                                                            _selected.remove(snapshot.data![j]);
+                                                          }
+                                                        });
+                                                      },
+                                                    ));
+                                          },
+                                          itemCount: snapshot.data!.length,
+                                        );
+                                    }else if (snapshot.hasError) {
+                                      return const Text("Oops!");
+                                    }
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
                                   },
-                                  itemCount: _available.length,
                                 ),
+                                // child:
                               ),
                               actions: <Widget>[
                                 ElevatedButton(
                                   child: const Text('Close'),
                                   onPressed: () {
                                     setState(() {
-                                      // _selected.sort(
-                                      //     (a, b) => a.name.compareTo(b.name));
-                                      widget.onCategoryPickedCallback((_available.where((element) => _selected.contains(element.id)).toList()));
+                                      widget.onCategoryPickedCallback(_selected);
                                     });
                                     Navigator.of(context)
                                         .pop(); //dismiss the color picker
@@ -134,18 +135,18 @@ class _CategoryPickerState extends State<CategoryPicker> {
                       title: Text("Add Category"),
                     ),
                   );
-                } else if (_available.firstWhere((element) => element.id == _selected[i - 1]).isHidden == false) {
+                } else if (_selected[i - 1].isHidden == false) {
                   return ListTile(
-                    leading: Icon(_available.firstWhere((element) => element.id == _selected[i - 1]).icon),
-                    title: Text(_available.firstWhere((element) => element.id == _selected[i - 1]).name),
-                    iconColor: _available.firstWhere((element) => element.id == _selected[i - 1]).color,
-                    textColor: _available.firstWhere((element) => element.id == _selected[i - 1]).color,
+                    leading: Icon(_selected[i - 1].icon),
+                    title: Text(_selected[i - 1].name),
+                    iconColor: _selected[i - 1].color,
+                    textColor: _selected[i - 1].color,
                     trailing: InkWell(
                       borderRadius: BorderRadius.circular(25),
                       onTap: () {
                         setState(() {
                           _selected.removeAt(i - 1);
-                          widget.onCategoryPickedCallback(_available.where((element) => _selected.contains(element.id)).toList());
+                          widget.onCategoryPickedCallback(_selected);
                         });
                       },
                       child: const Icon(Icons.remove_circle_outline),
