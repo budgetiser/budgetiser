@@ -653,20 +653,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   Future<int> createSaving(Savings saving) async {
     final db = await database;
-    Map<String, dynamic> row = {
-      'name': saving.name,
-      'icon': saving.icon.codePoint,
-      'color': saving.color.value,
-      'description': saving.description,
-      'balance': saving.balance,
-      'goal': saving.goal,
-      'start_date': saving.startDate.toString().substring(0, 10),
-      'end_date': saving.endDate.toString().substring(0, 10),
-    };
 
     int id = await db.insert(
       'saving',
-      row,
+      saving.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
     pushGetAllSavingsStream();
@@ -703,30 +693,29 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Stream<List<Budget>> get allBudgetsStream =>
       _AllBudgetsStreamController.stream;
 
-  Future<List<TransactionCategory>> _getCategoriesToBudget(
-      int budgetID) async {
+  Future<List<TransactionCategory>> _getCategoriesToBudget(int budgetID) async {
     final db = await database;
 
     final List<Map<String, dynamic>> mapCategories = await db.rawQuery(
         'Select distinct id, name, icon, color, description, is_hidden from category, categoryToBudget where category_id = category.id and budget_id = ?',
         [budgetID]);
     return List.generate(mapCategories.length, (i) {
-        return TransactionCategory(
-          id: mapCategories[i]['id'],
-          name: mapCategories[i]['name'].toString(),
-          icon: IconData(mapCategories[i]['icon'], fontFamily: 'MaterialIcons'),
-          color: Color(mapCategories[i]['color']),
-          description: mapCategories[i]['description'].toString(),
-          isHidden: mapCategories[i]['is_hidden'] == 1,
-        );
-      });
+      return TransactionCategory(
+        id: mapCategories[i]['id'],
+        name: mapCategories[i]['name'].toString(),
+        icon: IconData(mapCategories[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(mapCategories[i]['color']),
+        description: mapCategories[i]['description'].toString(),
+        isHidden: mapCategories[i]['is_hidden'] == 1,
+      );
+    });
   }
 
   void pushGetAllBudgetsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('budget');
     List<List<TransactionCategory>> categoryList = [];
-    for(int i = 0; i<maps.length;i++){
+    for (int i = 0; i < maps.length; i++) {
       categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
     }
 
@@ -757,38 +746,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   Future<int> createBudget(Budget budget) async {
     final db = await database;
-    Map<String, dynamic> row = {};
-    if (budget.isRecurring) {
-      row = {
-        'name': budget.name,
-        'icon': budget.icon.codePoint,
-        'color': budget.color.value,
-        'description': budget.description,
-        'balance': budget.balance,
-        'limitXX': budget.limit,
-        'is_recurring': 1,
-        'intervalAmount': budget.intervalAmount,
-        'IntervalUnit': budget.intervalUnit.toString(),
-        'IntervalType': budget.intervalType.toString(),
-        'start_date': budget.startDate.toString().substring(0, 10),
-        'end_date': budget.endDate.toString().substring(0, 10),
-      };
-    } else {
-      row = {
-        'name': budget.name,
-        'icon': budget.icon.codePoint,
-        'color': budget.color.value,
-        'description': budget.description,
-        'balance': budget.balance,
-        'limitXX': budget.limit,
-        'is_recurring': 0,
-        'start_date': budget.startDate.toString().substring(0, 10),
-      };
-    }
 
     int id = await db.insert(
       'budget',
-      row,
+      budget.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
