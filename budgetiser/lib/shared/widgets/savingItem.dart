@@ -1,4 +1,4 @@
-import 'package:budgetiser/screens/savings/editSaving.dart';
+import 'package:budgetiser/screens/plans/savingForm.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -14,7 +14,7 @@ class SavingItem extends StatelessWidget {
         InkWell(
           onTap: () => {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditSaving(
+                builder: (context) => SavingForm(
                       savingData: savingData,
                     ))),
           },
@@ -33,7 +33,18 @@ class SavingItem extends StatelessWidget {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(savingData.name),
+                      Row(
+                        children: [
+                          Icon(
+                            savingData.icon,
+                            color: savingData.color,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(savingData.name),
+                        ],
+                      ),
                       Text("days left: " +
                           (savingData.endDate)
                               .difference(DateTime.now())
@@ -74,15 +85,22 @@ class SavingItem extends StatelessWidget {
     );
   }
 
-  List<Color> createGradient(MaterialColor baseColor) {
+  List<Color> createGradient(Color baseColor) {
     List<Color> gradient = [];
-    gradient.add(baseColor.shade300);
-    gradient.add(baseColor.shade400);
-    gradient.add(baseColor.shade500);
-    gradient.add(baseColor.shade600);
-    gradient.add(baseColor.shade700);
-    gradient.add(baseColor.shade800);
-    gradient.add(baseColor.shade900);
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
+    gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
     return gradient;
   }
 }

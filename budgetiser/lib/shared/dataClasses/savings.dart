@@ -4,7 +4,7 @@ class Savings {
   int id;
   String name;
   IconData icon;
-  MaterialColor color;
+  Color color;
   double balance;
   DateTime startDate;
   DateTime endDate;
@@ -22,4 +22,15 @@ class Savings {
     required this.goal,
     required this.description,
   });
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'icon': icon.codePoint,
+    'color': color.value,
+    'balance': balance,
+    'start_date': startDate.toString().substring(0, 10),
+    'end_date': endDate.toString().substring(0, 10),
+    'goal': goal,
+    'description': description,
+  };
 }

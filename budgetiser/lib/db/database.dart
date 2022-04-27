@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
@@ -125,8 +127,8 @@ CREATE TABLE IF NOT EXISTS categoryToBudget(
   category_id INTEGER,
   budget_id INTEGER,
   PRIMARY KEY(category_id, budget_id),
-  FOREIGN KEY(budget_id) REFERENCES budget,
-  FOREIGN KEY(category_id) REFERENCES category);
+  FOREIGN KEY(budget_id) REFERENCES budget ON DELETE CASCADE,
+  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE);
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS categoryToGroup(
@@ -197,20 +199,20 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     for (var account in TMP_DATA_accountList) {
       await createAccount(account);
     }
-    // TMP_DATA_budgetList.forEach((budget) async {
-    //   await createBudget(budget);
-    // });
     for (var category in TMP_DATA_categoryList) {
       await createCategory(category);
     }
     for (var transaction in TMP_DATA_transactionList) {
       await createTransaction(transaction);
     }
+    for (var saving in TMP_DATA_savingsList) {
+      await createSaving(saving);
+    }
+    for (var budget in TMP_DATA_budgetList) {
+      await createBudget(budget);
+    }
     // TMP_DATA_groupList.forEach((group) async {
     //   await createGroup(group);
-    // });
-    // TMP_DATA_savingsList.forEach((saving) async {
-    //   await createSaving(saving);
     // });
   }
 
@@ -244,7 +246,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   final StreamController<List<Account>> _AllAccountsStreamController =
       StreamController<List<Account>>.broadcast();
+
   Sink<List<Account>> get allAccountsSink => _AllAccountsStreamController.sink;
+
   Stream<List<Account>> get allAccountsStream =>
       _AllAccountsStreamController.stream;
 
@@ -309,8 +313,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   final StreamController<List<AbstractTransaction>>
       _AllTransactionStreamController =
       StreamController<List<AbstractTransaction>>.broadcast();
+
   Sink<List<AbstractTransaction>> get allTransactionSink =>
       _AllTransactionStreamController.sink;
+
   Stream<List<AbstractTransaction>> get allTransactionStream =>
       _AllTransactionStreamController.stream;
 
@@ -560,8 +566,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   final StreamController<List<TransactionCategory>>
       _AllCategoryStreamController =
       StreamController<List<TransactionCategory>>.broadcast();
+
   Sink<List<TransactionCategory>> get allCategorySink =>
       _AllCategoryStreamController.sink;
+
   Stream<List<TransactionCategory>> get allCategoryStream =>
       _AllCategoryStreamController.stream;
 
@@ -592,7 +600,6 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     pushGetAllCategoriesStream();
   }
 
-
   Future<void> hideCategory(int categoryID) async {
     final db = await database;
 
@@ -615,5 +622,192 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       whereArgs: [category.id],
     );
     pushGetAllCategoriesStream();
+  }
+
+  final StreamController<List<Savings>> _AllSavingsStreamController =
+      StreamController<List<Savings>>.broadcast();
+
+  Sink<List<Savings>> get allSavingsSink => _AllSavingsStreamController.sink;
+
+  Stream<List<Savings>> get allSavingsStream =>
+      _AllSavingsStreamController.stream;
+
+  void pushGetAllSavingsStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('saving');
+
+    allSavingsSink.add(List.generate(maps.length, (i) {
+      return Savings(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        balance: maps[i]['balance'],
+        startDate: DateTime.parse(maps[i]['start_date']),
+        endDate: DateTime.parse(maps[i]['end_date']),
+        goal: maps[i]['goal'],
+        description: maps[i]['description'].toString(),
+      );
+    }));
+  }
+
+  Future<int> createSaving(Savings saving) async {
+    final db = await database;
+
+    int id = await db.insert(
+      'saving',
+      saving.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+    pushGetAllSavingsStream();
+    return id;
+  }
+
+  void deleteSaving(int savingID) async {
+    final db = await database;
+
+    await db.delete(
+      'saving',
+      where: 'id = ?',
+      whereArgs: [savingID],
+    );
+    pushGetAllSavingsStream();
+  }
+
+  Future<void> updateSaving(Savings saving) async {
+    final db = await database;
+    await db.update(
+      'saving',
+      saving.toMap(),
+      where: 'id = ?',
+      whereArgs: [saving.id],
+    );
+    pushGetAllSavingsStream();
+  }
+
+  final StreamController<List<Budget>> _AllBudgetsStreamController =
+      StreamController<List<Budget>>.broadcast();
+
+  Sink<List<Budget>> get allBudgetsSink => _AllBudgetsStreamController.sink;
+
+  Stream<List<Budget>> get allBudgetsStream =>
+      _AllBudgetsStreamController.stream;
+
+  Future<List<TransactionCategory>> _getCategoriesToBudget(int budgetID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> mapCategories = await db.rawQuery(
+        'Select distinct id, name, icon, color, description, is_hidden from category, categoryToBudget where category_id = category.id and budget_id = ?',
+        [budgetID]);
+    return List.generate(mapCategories.length, (i) {
+      return TransactionCategory(
+        id: mapCategories[i]['id'],
+        name: mapCategories[i]['name'].toString(),
+        icon: IconData(mapCategories[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(mapCategories[i]['color']),
+        description: mapCategories[i]['description'].toString(),
+        isHidden: mapCategories[i]['is_hidden'] == 1,
+      );
+    });
+  }
+
+  void pushGetAllBudgetsStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('budget');
+    List<List<TransactionCategory>> categoryList = [];
+    for (int i = 0; i < maps.length; i++) {
+      categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
+    }
+
+    allBudgetsSink.add(List.generate(maps.length, (i) {
+      Budget returnBudget = Budget(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        balance: maps[i]['balance'],
+        limit: maps[i]['limitXX'],
+        startDate: DateTime.parse(maps[i]['start_date']),
+        description: maps[i]['description'].toString(),
+        isRecurring: maps[i]['is_recurring'] == 1,
+        transactionCategories: categoryList[i],
+      );
+      if (maps[i]['is_recurring'] == 1) {
+        returnBudget.endDate = DateTime.parse(maps[i]['end_date']);
+        returnBudget.intervalUnit = IntervalUnit.values
+            .firstWhere((e) => e.toString() == maps[i]['intervalUnit']);
+        returnBudget.intervalType = IntervalType.values
+            .firstWhere((e) => e.toString() == maps[i]['intervalType']);
+        returnBudget.intervalAmount = maps[i]['intervalAmount'];
+      }
+      return returnBudget;
+    }));
+  }
+
+  Future<int> createBudget(Budget budget) async {
+    final db = await database;
+
+    int id = await db.insert(
+      'budget',
+      budget.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+
+    List<TransactionCategory> _categories = budget.transactionCategories;
+
+    for (int i = 0; i < _categories.length; i++) {
+      Map<String, dynamic> rowCategory = {
+        'category_id': _categories[i].id,
+        'budget_id': id,
+      };
+      await db.insert(
+        'categoryToBudget',
+        rowCategory,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    }
+    pushGetAllBudgetsStream();
+    return id;
+  }
+
+  void deleteBudget(int budgetID) async {
+    final db = await database;
+
+    await db.delete(
+      'budget',
+      where: 'id = ?',
+      whereArgs: [budgetID],
+    );
+    pushGetAllBudgetsStream();
+  }
+
+  Future<void> updateBudget(Budget budget) async {
+    final db = await database;
+    await db.update(
+      'budget',
+      budget.toMap(),
+      where: 'id = ?',
+      whereArgs: [budget.id],
+    );
+    List<TransactionCategory> _categories = budget.transactionCategories;
+
+    await db.delete(
+      'categoryToBudget',
+      where: 'budget_id = ?',
+      whereArgs: [budget.id],
+    );
+
+    for (int i = 0; i < _categories.length; i++) {
+      Map<String, dynamic> rowCategory = {
+        'category_id': _categories[i].id,
+        'budget_id': budget.id,
+      };
+      await db.insert(
+        'categoryToBudget',
+        rowCategory,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    }
+    pushGetAllBudgetsStream();
   }
 }
