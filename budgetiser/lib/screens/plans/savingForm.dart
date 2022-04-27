@@ -173,6 +173,18 @@ class _SavingFormState extends State<SavingForm> {
                       ))
                     ],
                   ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: TextFormField(
+                      controller: descriptionController,
+                      keyboardType: TextInputType.multiline,
+                      decoration: const InputDecoration(
+                        labelText: "Description",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
