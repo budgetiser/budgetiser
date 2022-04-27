@@ -43,6 +43,7 @@ class _SavingFormState extends State<SavingForm> {
     nameController.dispose();
     balController.dispose();
     goalController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
