@@ -97,6 +97,7 @@ class _BudgetFormState extends State<BudgetForm> {
                             if (data == null || data == '') {
                               return "Please enter a valid name";
                             }
+                            return null;
                           },
                           decoration: const InputDecoration(
                             labelText: "Category title",

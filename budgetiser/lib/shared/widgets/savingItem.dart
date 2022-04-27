@@ -15,7 +15,7 @@ class SavingItem extends StatelessWidget {
           onTap: () => {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => SavingForm(
-                      initialSavingData: savingData,
+                      savingData: savingData,
                     ))),
           },
           child: Container(

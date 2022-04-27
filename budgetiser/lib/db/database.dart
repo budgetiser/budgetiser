@@ -673,6 +673,28 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     return id;
   }
 
+  void deleteSaving(int savingID) async {
+    final db = await database;
+
+    await db.delete(
+      'saving',
+      where: 'id = ?',
+      whereArgs: [savingID],
+    );
+    pushGetAllSavingsStream();
+  }
+
+  Future<void> updateSaving(Savings saving) async {
+    final db = await database;
+    await db.update(
+      'saving',
+      saving.toMap(),
+      where: 'id = ?',
+      whereArgs: [saving.id],
+    );
+    pushGetAllSavingsStream();
+  }
+
   final StreamController<List<Budget>> _AllBudgetsStreamController =
       StreamController<List<Budget>>.broadcast();
 
