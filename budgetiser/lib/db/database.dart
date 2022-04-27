@@ -681,15 +681,14 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Stream<List<Budget>> get allBudgetsStream =>
       _AllBudgetsStreamController.stream;
 
-  Future<Map<String, List<TransactionCategory>>> _getCategoriesToBudget(
+  Future<List<TransactionCategory>> _getCategoriesToBudget(
       int budgetID) async {
     final db = await database;
 
     final List<Map<String, dynamic>> mapCategories = await db.rawQuery(
         'Select distinct id, name, icon, color, description, is_hidden from category, categoryToBudget where category_id = category.id and budget_id = ?',
         [budgetID]);
-    return {
-      'categories': List.generate(mapCategories.length, (i) {
+    return List.generate(mapCategories.length, (i) {
         return TransactionCategory(
           id: mapCategories[i]['id'],
           name: mapCategories[i]['name'].toString(),
@@ -698,16 +697,15 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           description: mapCategories[i]['description'].toString(),
           isHidden: mapCategories[i]['is_hidden'] == 1,
         );
-      })
-    };
+      });
   }
 
   void pushGetAllBudgetsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('budget');
-    List<Map<String, List<TransactionCategory>>> categoryMap =[];
+    List<List<TransactionCategory>> categoryList = [];
     for(int i = 0; i<maps.length;i++){
-      categoryMap.add( await _getCategoriesToBudget(maps[i]['id']));
+      categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
     }
 
     allBudgetsSink.add(List.generate(maps.length, (i) {
@@ -721,7 +719,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         startDate: DateTime.parse(maps[i]['start_date']),
         description: maps[i]['description'].toString(),
         isRecurring: maps[i]['is_recurring'] == 1,
-        transactionCategories: categoryMap[i]['categories']!,
+        transactionCategories: categoryList[i],
       );
       if (maps[i]['is_recurring'] == 1) {
         returnBudget.endDate = DateTime.parse(maps[i]['end_date']);

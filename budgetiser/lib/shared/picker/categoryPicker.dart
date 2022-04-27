@@ -24,6 +24,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
     super.initState();
     _available.sort((a, b) => a.name.compareTo(b.name));
     _isChecked = List<bool>.filled(_available.length, false);
+    if(_available[0] == _available[1]){};
     if(widget.initialCategories != null){
       _selected = List.generate(widget.initialCategories!.length, (index) =>
         widget.initialCategories![index].id,
