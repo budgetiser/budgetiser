@@ -74,7 +74,9 @@ class _CategoryFormState extends State<CategoryForm> {
                                   initialColor: _color,
                                   initialIcon: _icon,
                                   onIconChangedCallback: (icondata) {
-                                    _icon = icondata;
+                                    setState(() {
+                                      _icon = icondata;
+                                    });
                                   },
                                 ),
                               ),

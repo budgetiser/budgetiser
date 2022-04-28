@@ -159,7 +159,9 @@ class _SavingFormState extends State<SavingForm> {
                             ? widget.savingData!.startDate
                             : DateTime.now(),
                         onDateChangedCallback: (date) {
-                          start_date = date;
+                          setState(() {
+                            start_date = date;
+                          });
                         },
                       )),
                       Flexible(
@@ -169,7 +171,9 @@ class _SavingFormState extends State<SavingForm> {
                             ? widget.savingData!.endDate
                             : DateTime.now().add(const Duration(days: 30)),
                         onDateChangedCallback: (date) {
-                          end_date = date;
+                          setState(() {
+                            end_date = date;
+                          });
                         },
                       ))
                     ],

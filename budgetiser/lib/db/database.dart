@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
@@ -135,8 +136,8 @@ CREATE TABLE IF NOT EXISTS categoryToGroup(
   category_id INTEGER,
   group_id INTEGER,
   PRIMARY KEY(category_id, group_id),
-  FOREIGN KEY(category_id) REFERENCES category,
-  FOREIGN KEY(group_id) REFERENCES XXGroup);
+  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
+  FOREIGN KEY(group_id) REFERENCES XXGroup ON DELETE CASCADE);
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS transactionToAccount(
@@ -211,9 +212,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
     }
-    // TMP_DATA_groupList.forEach((group) async {
-    //   await createGroup(group);
-    // });
+    for (var group in TMP_DATA_groupList) {
+      await createGroup(group);
+    }
   }
 
   initializeDatabase() async {
@@ -820,5 +821,118 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       );
     }
     pushGetAllBudgetsStream();
+  }
+
+  //AB hier Groups
+  final StreamController<List<Group>> _AllGroupsStreamController =
+      StreamController<List<Group>>.broadcast();
+
+  Sink<List<Group>> get allGroupsSink => _AllGroupsStreamController.sink;
+
+  Stream<List<Group>> get allGroupsStream => _AllGroupsStreamController.stream;
+
+  Future<List<TransactionCategory>> _getCategoriesToGroup(int groupID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> mapCategories = await db.rawQuery(
+        'Select distinct id, name, icon, color, description, is_hidden from category, categoryToGroup where category_id = category.id and group_id = ?',
+        [groupID]);
+    return List.generate(mapCategories.length, (i) {
+      return TransactionCategory(
+        id: mapCategories[i]['id'],
+        name: mapCategories[i]['name'].toString(),
+        icon: IconData(mapCategories[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(mapCategories[i]['color']),
+        description: mapCategories[i]['description'].toString(),
+        isHidden: mapCategories[i]['is_hidden'] == 1,
+      );
+    });
+  }
+
+  void pushGetAllGroupsStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('XXGroup');
+    List<List<TransactionCategory>> categoryList = [];
+    for (int i = 0; i < maps.length; i++) {
+      categoryList.add(await _getCategoriesToGroup(maps[i]['id']));
+    }
+
+    allGroupsSink.add(List.generate(maps.length, (i) {
+      return Group(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        description: maps[i]['description'].toString(),
+        transactionCategories: categoryList[i],
+      );
+    }));
+  }
+
+  Future<int> createGroup(Group group) async {
+    final db = await database;
+
+    int id = await db.insert(
+      'XXGroup',
+      group.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+
+    List<TransactionCategory> _categories = group.transactionCategories;
+
+    for (int i = 0; i < _categories.length; i++) {
+      Map<String, dynamic> rowCategory = {
+        'category_id': _categories[i].id,
+        'group_id': id,
+      };
+      await db.insert(
+        'categoryToGroup',
+        rowCategory,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    }
+    pushGetAllGroupsStream();
+    return id;
+  }
+
+  void deleteGroup(int groupID) async {
+    final db = await database;
+
+    await db.delete(
+      'XXGroup',
+      where: 'id = ?',
+      whereArgs: [groupID],
+    );
+    pushGetAllGroupsStream();
+  }
+
+  Future<void> updateGroup(Group group) async {
+    final db = await database;
+    await db.update(
+      'XXGroup',
+      group.toMap(),
+      where: 'id = ?',
+      whereArgs: [group.id],
+    );
+    List<TransactionCategory> _categories = group.transactionCategories;
+
+    await db.delete(
+      'categoryToGroup',
+      where: 'group_id = ?',
+      whereArgs: [group.id],
+    );
+
+    for (int i = 0; i < _categories.length; i++) {
+      Map<String, dynamic> rowCategory = {
+        'category_id': _categories[i].id,
+        'group_id': group.id,
+      };
+      await db.insert(
+        'categoryToGroup',
+        rowCategory,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    }
+    pushGetAllGroupsStream();
   }
 }
