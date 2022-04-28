@@ -5,10 +5,10 @@ import 'package:budgetiser/shared/widgets/groupItem.dart';
 import 'package:flutter/material.dart';
 import '../../drawer.dart';
 
-class Groups extends StatelessWidget {
+class GroupsScreen extends StatelessWidget {
   static String routeID = 'groups';
 
-  const Groups({Key? key}) : super(key: key);
+  const GroupsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
