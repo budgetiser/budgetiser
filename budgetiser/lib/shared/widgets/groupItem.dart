@@ -9,9 +9,7 @@ class GroupItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: Column(
+    return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
@@ -65,7 +63,6 @@ class GroupItem extends StatelessWidget {
             endIndent: 15,
           )
         ],
-      ),
     );
   }
 }

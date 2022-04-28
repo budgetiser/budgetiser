@@ -21,15 +21,12 @@ class GroupsScreen extends StatelessWidget {
         ),
       ),
       drawer: createDrawer(context),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: StreamBuilder<List<Group>>(
+      body:  StreamBuilder<List<Group>>(
             stream: DatabaseHelper.instance.allGroupsStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GroupItem(groupData: snapshot.data![index]);
@@ -43,13 +40,13 @@ class GroupsScreen extends StatelessWidget {
                 );
               }
             }),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => GroupForm()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => GroupForm()));
         },
-        tooltip: "Create Group",
+        tooltip: 'New Group',
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );
