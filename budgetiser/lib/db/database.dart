@@ -329,43 +329,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
     List<AbstractTransaction> list = [];
     for (int i = 0; i < mapSingle.length; i++) {
-      TransactionCategory cat = await _getCategory(mapSingle[i]['category_id']);
-      Account account = await _getOneAccount(mapSingle[i]['toAccount_id']);
-      list.add(SingleTransaction(
-        id: mapSingle[i]['id'],
-        title: mapSingle[i]['title'].toString(),
-        value: mapSingle[i]['value'],
-        description: mapSingle[i]['description'].toString(),
-        category: cat,
-        account: account,
-        account2: mapSingle[i]['fromAccount_id'] == null
-            ? null
-            : await _getOneAccount(mapSingle[i]['fromAccount_id']),
-        date: DateTime.parse(mapSingle[i]['date'].toString()),
-      ));
+      list.add(await _mapToSingleTransaction(mapSingle[i]));
     }
     for (int i = 0; i < mapRecurring.length; i++) {
-      TransactionCategory cat =
-          await _getCategory(mapRecurring[i]['category_id']);
-      Account account = await _getOneAccount(mapRecurring[i]['toAccount_id']);
-      list.add(RecurringTransaction(
-        id: mapRecurring[i]['id'],
-        title: mapRecurring[i]['title'].toString(),
-        value: mapRecurring[i]['value'],
-        description: mapRecurring[i]['description'].toString(),
-        category: cat,
-        account: account,
-        account2: mapRecurring[i]['fromAccount_id'] == null
-            ? null
-            : await _getOneAccount(mapRecurring[i]['fromAccount_id']),
-        startDate: DateTime.parse(mapRecurring[i]['start_date'].toString()),
-        endDate: DateTime.parse(mapRecurring[i]['end_date'].toString()),
-        intervalAmount: mapRecurring[i]['intervalAmount'],
-        intervalUnit: IntervalUnit.values
-            .firstWhere((e) => e.toString() == mapRecurring[i]['intervalUnit']),
-        intervalType: IntervalType.values
-            .firstWhere((e) => e.toString() == mapRecurring[i]['intervalType']),
-      ));
+      list.add(await _mapToRecurringTransaction(mapRecurring[i]));
     }
     list.sort((a, b) {
       if (b is SingleTransaction && a is SingleTransaction) {
@@ -381,6 +348,66 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       }
     });
     allTransactionSink.add(list);
+  }
+
+  Future<RecurringTransaction> _mapToRecurringTransaction(
+      Map<String, dynamic> mapItem) async {
+    TransactionCategory cat = await _getCategory(mapItem['category_id']);
+    Account account = await _getOneAccount(mapItem['toAccount_id']);
+    return RecurringTransaction(
+      id: mapItem['id'],
+      title: mapItem['title'].toString(),
+      value: mapItem['value'],
+      description: mapItem['description'].toString(),
+      category: cat,
+      account: account,
+      account2: mapItem['fromAccount_id'] == null
+          ? null
+          : await _getOneAccount(mapItem['fromAccount_id']),
+      startDate: DateTime.parse(mapItem['start_date'].toString()),
+      endDate: DateTime.parse(mapItem['end_date'].toString()),
+      intervalAmount: mapItem['intervalAmount'],
+      intervalUnit: IntervalUnit.values
+          .firstWhere((e) => e.toString() == mapItem['intervalUnit']),
+      intervalType: IntervalType.values
+          .firstWhere((e) => e.toString() == mapItem['intervalType']),
+    );
+  }
+
+  Future<SingleTransaction> _mapToSingleTransaction(
+      Map<String, dynamic> mapItem) async {
+    TransactionCategory cat = await _getCategory(mapItem['category_id']);
+    Account account = await _getOneAccount(mapItem['toAccount_id']);
+    return SingleTransaction(
+      id: mapItem['id'],
+      title: mapItem['title'].toString(),
+      value: mapItem['value'],
+      description: mapItem['description'].toString(),
+      category: cat,
+      account: account,
+      account2: mapItem['fromAccount_id'] == null
+          ? null
+          : await _getOneAccount(mapItem['fromAccount_id']),
+      date: DateTime.parse(mapItem['date'].toString()),
+    );
+  }
+
+  Future<AbstractTransaction> getOneTransaction(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
+        'Select distinct * from XXtransaction, transactionToAccount, singleTransaction where XXtransaction.id = transactionToAccount.transaction_id and XXtransaction.id = singleTransaction.transaction_id and XXtransaction.id = ?',
+        [id]);
+    final List<Map<String, dynamic>> mapRecurring = await db.rawQuery(
+        'Select distinct * from XXtransaction, transactionToAccount, recurringTransaction where XXtransaction.id = transactionToAccount.transaction_id and XXtransaction.id = recurringTransaction.transaction_id and XXtransaction.id = ?',
+        [id]);
+
+    if (mapSingle.length == 1) {
+      return await _mapToSingleTransaction(mapSingle[0]);
+    } else if (mapRecurring.length == 1) {
+      return await _mapToRecurringTransaction(mapRecurring[0]);
+    } else {
+      throw Exception('Error in getOneTransaction');
+    }
   }
 
   Future<int> createTransaction(AbstractTransaction transaction) async {
@@ -506,25 +533,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<void> updateTransaction(AbstractTransaction transaction) async {
     final db = await database;
 
-    await db.update(
-      'XXtransaction',
-      transaction.toMapAbstract(),
-      where: 'id = ?',
-      whereArgs: [transaction.id],
-    );
-
-    // TODO: everything else with getting initial transaction and then changing
-
-    // disabled in edit transaction
-    // await db.update(
-    //   'account',
-    //   {'balance': transaction.account.balance + transaction.value},
-    //   where: 'id = ?',
-    //   whereArgs: [transaction.account.id],
-    // );
-
-    // TODO: update recurring
-    // TODO: update transaction to account table
+    var oldTransaction = await getOneTransaction(transaction.id);
+    await deleteTransaction(oldTransaction);
+    await createTransaction(transaction);
 
     pushGetAllTransactionsStream();
   }
