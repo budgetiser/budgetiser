@@ -68,7 +68,7 @@ class BudgetItem extends StatelessWidget {
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: budgetData.balance > budgetData.limit
+                        percent: budgetData.balance/budgetData.limit < 0 || budgetData.balance/budgetData.limit > 0
                             ? 1
                             : (budgetData.balance / budgetData.limit),
                         backgroundColor: Colors.white,
