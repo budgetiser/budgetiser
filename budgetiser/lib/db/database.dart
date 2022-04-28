@@ -212,9 +212,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
     }
-    // TMP_DATA_groupList.forEach((group) async {
-    //   await createGroup(group);
-    // });
+    for (var group in TMP_DATA_groupList) {
+      await createGroup(group);
+    }
   }
 
   initializeDatabase() async {
@@ -840,10 +840,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   void pushGetAllGroupsStream() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('group');
+    final List<Map<String, dynamic>> maps = await db.query('XXGroup');
     List<List<TransactionCategory>> categoryList = [];
     for (int i = 0; i < maps.length; i++) {
-      categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
+      categoryList.add(await _getCategoriesToGroup(maps[i]['id']));
     }
 
     allGroupsSink.add(List.generate(maps.length, (i) {
@@ -862,7 +862,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     final db = await database;
 
     int id = await db.insert(
-      'group',
+      'XXGroup',
       group.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
@@ -888,7 +888,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     final db = await database;
 
     await db.delete(
-      'group',
+      'XXGroup',
       where: 'id = ?',
       whereArgs: [groupID],
     );
@@ -898,7 +898,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<void> updateGroup(Group group) async {
     final db = await database;
     await db.update(
-      'group',
+      'XXGroup',
       group.toMap(),
       where: 'id = ?',
       whereArgs: [group.id],

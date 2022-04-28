@@ -75,7 +75,7 @@ List<Group> TMP_DATA_groupList = [
     transactionCategories: [
       TMP_DATA_categoryList[5],
       TMP_DATA_categoryList[6],
-      TMP_DATA_categoryList[7],
+      TMP_DATA_categoryList[4],
     ],
   ),
 ];
