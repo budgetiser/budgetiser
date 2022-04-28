@@ -136,8 +136,8 @@ CREATE TABLE IF NOT EXISTS categoryToGroup(
   category_id INTEGER,
   group_id INTEGER,
   PRIMARY KEY(category_id, group_id),
-  FOREIGN KEY(category_id) REFERENCES category,
-  FOREIGN KEY(group_id) REFERENCES XXGroup);
+  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
+  FOREIGN KEY(group_id) REFERENCES XXGroup ON DELETE CASCADE);
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS transactionToAccount(
@@ -811,14 +811,14 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     }
     pushGetAllBudgetsStream();
   }
+
   //AB hier Groups
   final StreamController<List<Group>> _AllGroupsStreamController =
-  StreamController<List<Group>>.broadcast();
+      StreamController<List<Group>>.broadcast();
 
   Sink<List<Group>> get allGroupsSink => _AllGroupsStreamController.sink;
 
-  Stream<List<Group>> get allGroupsStream =>
-      _AllGroupsStreamController.stream;
+  Stream<List<Group>> get allGroupsStream => _AllGroupsStreamController.stream;
 
   Future<List<TransactionCategory>> _getCategoriesToGroup(int groupID) async {
     final db = await database;
