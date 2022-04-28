@@ -15,11 +15,9 @@ class BudgetItem extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: () =>
-          {
+          onTap: () => {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    BudgetForm(
+                builder: (context) => BudgetForm(
                       budgetData: budgetData,
                     ))),
           },
@@ -52,15 +50,15 @@ class BudgetItem extends StatelessWidget {
                       ),
                       budgetData.isRecurring
                           ? Row(
-                        children: [
-                          Text("days left: " +
-                              (budgetData.endDate!)
-                                  .difference(DateTime.now())
-                                  .inDays
-                                  .toString()),
-                          const Icon(Icons.repeat)
-                        ],
-                      )
+                              children: [
+                                Text("days left: " +
+                                    (budgetData.endDate!)
+                                        .difference(DateTime.now())
+                                        .inDays
+                                        .toString()),
+                                const Icon(Icons.repeat)
+                              ],
+                            )
                           : Container(),
                     ]),
                 Row(
@@ -68,7 +66,8 @@ class BudgetItem extends StatelessWidget {
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: budgetData.balance/budgetData.limit < 0 || budgetData.balance/budgetData.limit > 1
+                        percent: budgetData.balance / budgetData.limit < 0 ||
+                                budgetData.balance / budgetData.limit > 1
                             ? 1
                             : (budgetData.balance / budgetData.limit),
                         backgroundColor: Colors.white,
@@ -82,11 +81,14 @@ class BudgetItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(budgetData.balance.toString(), style: TextStyle(
-                      color: budgetData.balance > budgetData.limit
-                          ? Colors.red
-                          : Colors.white,
-                    ),),
+                    Text(
+                      budgetData.balance.toString(),
+                      style: TextStyle(
+                        color: budgetData.balance > budgetData.limit
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                    ),
                     Text(budgetData.limit.toString()),
                   ],
                 ),
