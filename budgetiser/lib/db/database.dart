@@ -518,7 +518,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       where: 'id = ?',
       whereArgs: [transaction.id],
     );
-    await db.delete(
+    await db.delete( //unnötig, da CASCADE?
       'singleTransaction',
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
@@ -528,7 +528,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
     );
-    await db.delete(
+    await db.delete( //Unnötig, da CASCADE?
       'transactionToAccount',
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
