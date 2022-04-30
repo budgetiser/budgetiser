@@ -402,23 +402,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       'date': transaction.date.toString().substring(0, 10),
     };
 
-    // } else if (transaction is RecurringTransaction) {
-    //   Map<String, dynamic> rowRecurringTransaction = {
-    //     'transaction_id': transactionId,
-    //     'interval_type': transaction.intervalType.toString(),
-    //     'interval_amount': transaction.interval_amount,
-    //     'interval_unit': transaction.intervalUnit.toString(),
-    //     'start_date': transaction.startDate.toString().substring(0, 10),
-    //     'end_date': transaction.endDate.toString().substring(0, 10),
-    //   };
-
-    // await db.insert(
-    //   'recurringTransaction',
-    //   rowRecurringTransaction,
-    //   conflictAlgorithm: ConflictAlgorithm.fail,
-    // );
-    // }
-
     Account account = await _getOneAccount(transaction.account.id);
     if (transaction.account2 == null) {
       await db.update(
