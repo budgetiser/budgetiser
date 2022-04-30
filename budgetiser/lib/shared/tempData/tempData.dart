@@ -2,6 +2,7 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
+import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
@@ -349,5 +350,53 @@ List<Budget> TMP_DATA_budgetList = [
       TMP_DATA_categoryList[0],
       TMP_DATA_categoryList[1],
     ],
+  ),
+];
+
+List<RecurringTransaction> TMP_DATA_recurringTransactionList = [
+  RecurringTransaction(
+    id: 1,
+    title: "pc building",
+    value: 100.0,
+    description: "recurring pc description",
+    category: TMP_DATA_categoryList[0],
+    account: TMP_DATA_accountList[0],
+    account2: TMP_DATA_accountList[0],
+    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
+    intervalAmount: 3,
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
+    repetitionAmount: 4,
+  ),
+  RecurringTransaction(
+    id: 2,
+    title: "saving",
+    value: 1030.0,
+    description: "recurring pc description",
+    category: TMP_DATA_categoryList[0],
+    account: TMP_DATA_accountList[0],
+    account2: TMP_DATA_accountList[0],
+    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
+    intervalAmount: 3,
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
+    repetitionAmount: 4,
+  ),
+  RecurringTransaction(
+    id: 3,
+    title: "car",
+    value: 50,
+    description: "recurring pc description",
+    category: TMP_DATA_categoryList[0],
+    account: TMP_DATA_accountList[0],
+    account2: TMP_DATA_accountList[0],
+    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
+    intervalAmount: 3,
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
+    repetitionAmount: 4,
   ),
 ];

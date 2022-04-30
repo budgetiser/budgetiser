@@ -4,6 +4,7 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
+import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
@@ -225,7 +226,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       await createCategory(category);
     }
     for (var transaction in TMP_DATA_transactionList) {
-      await createTransaction(transaction);
+      await createSingleTransaction(transaction);
     }
     for (var saving in TMP_DATA_savingsList) {
       await createSaving(saving);
@@ -235,6 +236,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     }
     for (var group in TMP_DATA_groupList) {
       await createGroup(group);
+    }
+    for (var recurringTransaction in TMP_DATA_recurringTransactionList) {
+      await createRecurringTransaction(recurringTransaction);
     }
   }
 
@@ -366,30 +370,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     allTransactionSink.add(list);
   }
 
-  // Future<RecurringTransaction> _mapToRecurringTransaction(
-  //     Map<String, dynamic> mapItem) async {
-  //   TransactionCategory cat = await _getCategory(mapItem['category_id']);
-  //   Account account = await _getOneAccount(mapItem['account1_id']);
-  //   return RecurringTransaction(
-  //     id: mapItem['id'],
-  //     title: mapItem['title'].toString(),
-  //     value: mapItem['value'],
-  //     description: mapItem['description'].toString(),
-  //     category: cat,
-  //     account: account,
-  //     account2: mapItem['account2_id'] == null
-  //         ? null
-  //         : await _getOneAccount(mapItem['account2_id']),
-  //     startDate: DateTime.parse(mapItem['start_date'].toString()),
-  //     endDate: DateTime.parse(mapItem['end_date'].toString()),
-  //     interval_amount: mapItem['interval_amount'],
-  //     interval_unit: IntervalUnit.values
-  //         .firstWhere((e) => e.toString() == mapItem['interval_unit']),
-  //     interval_type: IntervalType.values
-  //         .firstWhere((e) => e.toString() == mapItem['interval_type']),
-  //   );
-  // }
-
   Future<SingleTransaction> _mapToSingleTransaction(
       Map<String, dynamic> mapItem) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
@@ -408,7 +388,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     );
   }
 
-  Future<int> createTransaction(SingleTransaction transaction) async {
+  Future<int> createSingleTransaction(SingleTransaction transaction) async {
     final db = await database;
 
     int transactionId = await db.insert(
@@ -509,7 +489,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
     var oldTransaction = await getOneTransaction(transaction.id);
     await deleteSingleTransaction(oldTransaction);
-    await createTransaction(transaction);
+    await createSingleTransaction(transaction);
 
     pushGetAllTransactionsStream();
   }
@@ -527,6 +507,106 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     } else {
       throw Exception('Error in getOneTransaction');
     }
+  }
+
+  /*
+  * RecurringTransaction
+  */
+
+  final StreamController<List<RecurringTransaction>>
+      _AllRecurringTransactionStreamController =
+      StreamController<List<RecurringTransaction>>.broadcast();
+
+  Sink<List<RecurringTransaction>> get allRecurringTransactionSink =>
+      _AllRecurringTransactionStreamController.sink;
+
+  Stream<List<RecurringTransaction>> get allRecurringTransactionStream =>
+      _AllRecurringTransactionStreamController.stream;
+
+  void pushGetAlRecurringTransactionsStream() async {
+    final db = await database;
+    final List<Map<String, dynamic>> mapRecurring = await db.rawQuery(
+        'Select distinct * from recurringTransaction, recurringTransactionToAccount where recurringTransaction.id = recurringTransactionToAccount.transaction_id ');
+
+    List<RecurringTransaction> list = [];
+    for (int i = 0; i < mapRecurring.length; i++) {
+      list.add(await _mapToRecurringTransaction(mapRecurring[i]));
+    }
+
+    list.sort((a, b) {
+      return b.startDate.compareTo(a.startDate);
+    });
+
+    allRecurringTransactionSink.add(list);
+  }
+
+  Future<RecurringTransaction> _mapToRecurringTransaction(
+      Map<String, dynamic> mapItem) async {
+    TransactionCategory cat = await _getCategory(mapItem['category_id']);
+    Account account = await _getOneAccount(mapItem['account1_id']);
+    return RecurringTransaction(
+      id: mapItem['id'],
+      title: mapItem['title'].toString(),
+      value: mapItem['value'],
+      description: mapItem['description'].toString(),
+      category: cat,
+      account: account,
+      account2: mapItem['account2_id'] == null
+          ? null
+          : await _getOneAccount(mapItem['account2_id']),
+      startDate: DateTime.parse(mapItem['start_date'].toString()),
+      endDate: DateTime.parse(mapItem['end_date'].toString()),
+      intervalType: IntervalType.values
+          .firstWhere((e) => e.toString() == mapItem['interval_type']),
+      intervalUnit: IntervalUnit.values
+          .firstWhere((e) => e.toString() == mapItem['interval_unit']),
+      intervalAmount: mapItem['interval_amount'],
+      repetitionAmount: mapItem['repetition_amount'],
+    );
+  }
+
+  Future<int> createRecurringTransaction(
+      RecurringTransaction recurringTransaction) async {
+    final db = await database;
+
+    int transactionId = await db.insert(
+      'recurringTransaction',
+      recurringTransaction.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+
+    await db.insert('recurringTransactionToAccount', {
+      'transaction_id': transactionId,
+      'account1_id': recurringTransaction.account.id,
+      'account2_id': recurringTransaction.account2 != null
+          ? recurringTransaction.account2!.id
+          : null,
+    });
+    pushGetAlRecurringTransactionsStream();
+
+    return transactionId;
+  }
+
+  Future<void> deleteRecurringTransaction(
+      RecurringTransaction transaction) async {
+    final db = await database;
+
+    await db.delete(
+      'recurringTransaction',
+      where: 'id = ?',
+      whereArgs: [transaction.id],
+    );
+    await db.delete(
+      'singleToRecurringTransaction',
+      where: 'recurring_transaction_id = ?',
+      whereArgs: [transaction.id],
+    );
+    await db.delete(
+      'recurringTransactionToAccount',
+      where: 'transaction_id = ?',
+      whereArgs: [transaction.id],
+    );
+    pushGetAlRecurringTransactionsStream();
   }
 
   /*

@@ -283,7 +283,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       .updateTransaction(_currentTransaction());
                 } else {
                   DatabaseHelper.instance
-                      .createTransaction(_currentTransaction());
+                      .createSingleTransaction(_currentTransaction());
                 }
                 Navigator.of(context).pop();
               }

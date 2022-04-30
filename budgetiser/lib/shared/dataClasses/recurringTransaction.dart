@@ -37,6 +37,7 @@ class RecurringTransaction {
         'title': title,
         'value': value,
         'description': description,
+        'category_id': category.id,
         'start_date': startDate.toString().substring(0, 10),
         'end_date': endDate.toString().substring(0, 10),
         'interval_type': intervalType.toString(),
