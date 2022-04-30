@@ -1,5 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';

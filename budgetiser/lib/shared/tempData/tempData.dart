@@ -3,7 +3,7 @@ import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 

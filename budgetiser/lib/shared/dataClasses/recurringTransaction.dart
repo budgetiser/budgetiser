@@ -33,11 +33,15 @@ class RecurringTransaction {
     required this.repetitionAmount,
   });
 
-  // Map<String, dynamic> toMap() => {
-  //       'title': title,
-  //       'value': value,
-  //       'description': description,
-  //       'category_id': category.id,
-  //       'date': startDate.toString().substring(0, 10)
-  //     };
+  Map<String, dynamic> toMap() => {
+        'title': title,
+        'value': value,
+        'description': description,
+        'start_date': startDate.toString().substring(0, 10),
+        'end_date': endDate.toString().substring(0, 10),
+        'interval_type': intervalType.toString(),
+        'interval_unit': intervalUnit.toString(),
+        'interval_amount': intervalAmount,
+        'repetition_amount': repetitionAmount,
+      };
 }

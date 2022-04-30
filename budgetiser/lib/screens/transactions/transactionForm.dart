@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/picker/selectAccount.dart';
 import 'package:budgetiser/shared/picker/selectCategory.dart';

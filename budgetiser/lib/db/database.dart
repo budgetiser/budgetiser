@@ -5,7 +5,7 @@ import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/foundation.dart';
@@ -16,7 +16,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser4.db';
+  static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -68,15 +68,16 @@ CREATE TABLE IF NOT EXISTS recurringTransaction(
   value REAL,
   description TEXT,
   category_id INTEGER,
-  intervalType TEXT,
-  intervalAmount INTEGER,
-  intervalUnit TEXT,
   start_date TEXT,
   end_date TEXT,
+  interval_type TEXT,
+  interval_unit TEXT,
+  interval_amount INTEGER,
+  repetition_amount INTEGER,
   PRIMARY KEY(id),
   FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
-  CHECK(intervalType IN ('IntervalType.fixedPointOfTime', 'IntervalType.fixedInterval')),
-  CHECK(intervalUnit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
+  CHECK(interval_type IN ('IntervalType.fixedPointOfTime', 'IntervalType.fixedInterval')),
+  CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
   );
   ''');
     await db.execute('''
@@ -119,16 +120,16 @@ CREATE TABLE IF NOT EXISTS budget(
   balance REAL,
   limitXX REAL,
   is_recurring INTEGER,
-  intervalType TEXT,
-  intervalAmount INTEGER,
-  intervalUnit TEXT,
+  interval_type TEXT,
+  interval_amount INTEGER,
+  interval_unit TEXT,
   start_date TEXT,
   end_date TEXT,
   description TEXT,
   PRIMARY KEY(id),
   CHECK(is_recurring IN (0, 1)),
-  CHECK(intervalType IN ('IntervalType.fixedInterval', 'IntervalType.fixedPointOfTime')),
-  CHECK(intervalUnit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year')));
+  CHECK(interval_type IN ('IntervalType.fixedInterval', 'IntervalType.fixedPointOfTime')),
+  CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year')));
   ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS categoryToBudget(
@@ -381,11 +382,11 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   //         : await _getOneAccount(mapItem['account2_id']),
   //     startDate: DateTime.parse(mapItem['start_date'].toString()),
   //     endDate: DateTime.parse(mapItem['end_date'].toString()),
-  //     intervalAmount: mapItem['intervalAmount'],
-  //     intervalUnit: IntervalUnit.values
-  //         .firstWhere((e) => e.toString() == mapItem['intervalUnit']),
-  //     intervalType: IntervalType.values
-  //         .firstWhere((e) => e.toString() == mapItem['intervalType']),
+  //     interval_amount: mapItem['interval_amount'],
+  //     interval_unit: IntervalUnit.values
+  //         .firstWhere((e) => e.toString() == mapItem['interval_unit']),
+  //     interval_type: IntervalType.values
+  //         .firstWhere((e) => e.toString() == mapItem['interval_type']),
   //   );
   // }
 
@@ -424,9 +425,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     // } else if (transaction is RecurringTransaction) {
     //   Map<String, dynamic> rowRecurringTransaction = {
     //     'transaction_id': transactionId,
-    //     'intervalType': transaction.intervalType.toString(),
-    //     'intervalAmount': transaction.intervalAmount,
-    //     'intervalUnit': transaction.intervalUnit.toString(),
+    //     'interval_type': transaction.intervalType.toString(),
+    //     'interval_amount': transaction.interval_amount,
+    //     'interval_unit': transaction.intervalUnit.toString(),
     //     'start_date': transaction.startDate.toString().substring(0, 10),
     //     'end_date': transaction.endDate.toString().substring(0, 10),
     //   };
@@ -728,10 +729,10 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       if (maps[i]['is_recurring'] == 1) {
         returnBudget.endDate = DateTime.parse(maps[i]['end_date']);
         returnBudget.intervalUnit = IntervalUnit.values
-            .firstWhere((e) => e.toString() == maps[i]['intervalUnit']);
+            .firstWhere((e) => e.toString() == maps[i]['interval_unit']);
         returnBudget.intervalType = IntervalType.values
-            .firstWhere((e) => e.toString() == maps[i]['intervalType']);
-        returnBudget.intervalAmount = maps[i]['intervalAmount'];
+            .firstWhere((e) => e.toString() == maps[i]['interval_type']);
+        returnBudget.intervalAmount = maps[i]['interval_amount'];
       }
       return returnBudget;
     }));

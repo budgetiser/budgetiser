@@ -1,4 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 
 class SingleTransaction {
@@ -10,6 +11,7 @@ class SingleTransaction {
   Account? account2;
   String description;
   DateTime date;
+  RecurringTransaction? recurringTransaction;
 
   SingleTransaction({
     required this.id,
@@ -20,6 +22,7 @@ class SingleTransaction {
     this.account2,
     required this.description,
     required this.date,
+    this.recurringTransaction,
   });
 
   Map<String, dynamic> toMap() => {
