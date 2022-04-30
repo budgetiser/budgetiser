@@ -21,7 +21,7 @@ class TransactionForm extends StatefulWidget {
     this.initialTransactionData,
     this.initialNegative,
   }) : super(key: key);
-  AbstractTransaction? initialTransactionData;
+  SingleTransaction? initialTransactionData;
   bool? initialNegative;
 
   @override
@@ -50,21 +50,21 @@ class _TransactionFormState extends State<TransactionForm> {
       valueController.text = "-";
     }
     if (widget.initialTransactionData != null) {
-      if (widget.initialTransactionData is RecurringTransaction) {
-        recurringData = RecurringData(
-          isRecurring: true,
-          startDate:
-              (widget.initialTransactionData as RecurringTransaction).startDate,
-          intervalType: (widget.initialTransactionData as RecurringTransaction)
-              .intervalType,
-          intervalUnit: (widget.initialTransactionData as RecurringTransaction)
-              .intervalUnit,
-          intervalAmount:
-              (widget.initialTransactionData as RecurringTransaction)
-                  .intervalAmount,
-          endDate:
-              (widget.initialTransactionData as RecurringTransaction).endDate,
-        );
+      if (false) {
+        // recurringData = RecurringData(
+        //   isRecurring: true,
+        //   startDate:
+        //       (widget.initialTransactionData as RecurringTransaction).startDate,
+        //   intervalType: (widget.initialTransactionData as RecurringTransaction)
+        //       .intervalType,
+        //   intervalUnit: (widget.initialTransactionData as RecurringTransaction)
+        //       .intervalUnit,
+        //   intervalAmount:
+        //       (widget.initialTransactionData as RecurringTransaction)
+        //           .intervalAmount,
+        //   endDate:
+        //       (widget.initialTransactionData as RecurringTransaction).endDate,
+        // );
       } else {
         recurringData.isRecurring = false;
       }
@@ -255,7 +255,7 @@ class _TransactionFormState extends State<TransactionForm> {
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
                           DatabaseHelper.instance
-                              .deleteTransaction(_currentTransaction());
+                              .deleteSingleTransaction(_currentTransaction());
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },
@@ -296,35 +296,19 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  AbstractTransaction _currentTransaction() {
-    AbstractTransaction transaction;
-    if (!recurringData.isRecurring) {
-      transaction = SingleTransaction(
-        id: 0,
-        title: titleController.text,
-        value: double.parse(valueController.text),
-        category: selectedCategory!,
-        account: selectedAccount!,
-        account2: selectedAccount2,
-        description: descriptionController.text,
-        date: recurringData.startDate,
-      );
-    } else {
-      transaction = RecurringTransaction(
-        id: 0,
-        title: titleController.text,
-        value: double.parse(valueController.text),
-        category: selectedCategory!,
-        account: selectedAccount!,
-        account2: selectedAccount2,
-        description: descriptionController.text,
-        startDate: recurringData.startDate,
-        endDate: recurringData.endDate!,
-        intervalAmount: recurringData.intervalAmount!,
-        intervalType: recurringData.intervalType!,
-        intervalUnit: recurringData.intervalUnit!,
-      );
-    }
+  SingleTransaction _currentTransaction() {
+    SingleTransaction transaction;
+    transaction = SingleTransaction(
+      id: 0,
+      title: titleController.text,
+      value: double.parse(valueController.text),
+      category: selectedCategory!,
+      account: selectedAccount!,
+      account2: selectedAccount2,
+      description: descriptionController.text,
+      date: recurringData.startDate,
+    );
+
     if (widget.initialTransactionData != null) {
       transaction.id = widget.initialTransactionData!.id;
     }

@@ -84,7 +84,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
       ),
       drawer: createDrawer(context),
-      body: StreamBuilder<List<AbstractTransaction>>(
+      body: StreamBuilder<List<SingleTransaction>>(
         stream: DatabaseHelper.instance.allTransactionStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {

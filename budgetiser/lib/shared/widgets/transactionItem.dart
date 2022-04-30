@@ -9,7 +9,7 @@ class TransactionItem extends StatelessWidget {
     required this.transactionData,
   }) : super(key: key);
 
-  AbstractTransaction transactionData;
+  SingleTransaction transactionData;
 
   @override
   Widget build(BuildContext context) {
@@ -79,18 +79,12 @@ class TransactionItem extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        if (transactionData is SingleTransaction)
-                          Text(
-                            "${(transactionData as SingleTransaction).date.day}.${(transactionData as SingleTransaction).date.month}.${(transactionData as SingleTransaction).date.year}",
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        if (transactionData is RecurringTransaction)
-                          Text(
-                            "${(transactionData as RecurringTransaction).startDate.day}.${(transactionData as RecurringTransaction).startDate.month}.${(transactionData as RecurringTransaction).startDate.year}",
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
+                        Text(
+                          "${transactionData.date.day}.${transactionData.date.month}.${transactionData.date.year}",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
                         const SizedBox(width: 10),
-                        if (transactionData is RecurringTransaction)
+                        if (false)
                           Icon(
                             Icons.repeat,
                             color: Theme.of(context).colorScheme.primary,

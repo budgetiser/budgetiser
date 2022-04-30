@@ -132,7 +132,7 @@ List<TransactionCategory> TMP_DATA_categoryList = [
       isHidden: false),
 ];
 
-List<AbstractTransaction> TMP_DATA_transactionList = [
+List<SingleTransaction> TMP_DATA_transactionList = [
   SingleTransaction(
     id: 1,
     title: 'birthday present',
@@ -151,57 +151,41 @@ List<AbstractTransaction> TMP_DATA_transactionList = [
     date: DateTime(2021, 10, 9),
     description: 'with friends',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 3,
     title: 'weekly groceries',
     value: -40,
     category: TMP_DATA_categoryList[0],
     account: TMP_DATA_accountList[1],
-    startDate: DateTime(2043, 1, 2),
-    endDate: DateTime(1999, 9, 1),
-    intervalType: IntervalType.fixedInterval,
-    intervalAmount: 1,
-    intervalUnit: IntervalUnit.day,
+    date: DateTime(2043, 1, 2),
     description: 'at the supermarket',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 4,
     title: 'car insurance',
     value: 123,
     category: TMP_DATA_categoryList[3],
     account: TMP_DATA_accountList[1],
-    startDate: DateTime(2020, 1, 1),
-    endDate: DateTime(2099, 9, 9),
-    intervalType: IntervalType.fixedInterval,
-    intervalAmount: 1,
-    intervalUnit: IntervalUnit.month,
+    date: DateTime(2020, 1, 1),
     description: 'Test description',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 5,
     title: 'rent',
     value: 1000.0,
     category: TMP_DATA_categoryList[3],
     account: TMP_DATA_accountList[2],
-    startDate: DateTime(2020, 1, 1),
-    endDate: DateTime(2030, 1, 1),
-    intervalType: IntervalType.fixedInterval,
-    intervalAmount: 1,
-    intervalUnit: IntervalUnit.month,
+    date: DateTime(2020, 1, 1),
     description: '',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 6,
     title: 'savings',
     value: 59,
     category: TMP_DATA_categoryList[4],
     account: TMP_DATA_accountList[3],
     account2: TMP_DATA_accountList[0],
-    startDate: DateTime(2021, 2, 4),
-    endDate: DateTime(2022, 2, 4),
-    intervalType: IntervalType.fixedPointOfTime,
-    intervalAmount: 1,
-    intervalUnit: IntervalUnit.week,
+    date: DateTime(2021, 2, 4),
     description: 'at the bank',
   ),
   SingleTransaction(
