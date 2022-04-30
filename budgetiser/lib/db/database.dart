@@ -486,6 +486,11 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
     pushGetAllTransactionsStream();
     pushGetAllAccountsStream();
 
+    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget', columns: ['budget_id'], where: 'category_id = ?', whereArgs: [transaction.category.id], distinct: true);
+    for(int i = 0; i<maps.length; i++){
+      reloadBudgetBalanceFromID(maps[i]['budget_id']);
+    }
+
     return transactionId;
   }
 
@@ -603,7 +608,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   Future<void> deleteCategory(int categoryID) async {
     final db = await database;
-    
+
     final List<Map<String, dynamic>> maps = await db.query('categoryToBudget', columns: ['budget_id'], where: 'category_id = ?', whereArgs: [categoryID], distinct: true);
     for(int i = 0; i<maps.length; i++){
       reloadBudgetBalanceFromID(maps[i]['budget_id']);
