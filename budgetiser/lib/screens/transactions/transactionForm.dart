@@ -1,6 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
+import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/picker/selectAccount.dart';
@@ -13,15 +14,20 @@ import 'package:flutter/material.dart';
 /// or edit an existing one
 ///
 /// attributes:
-/// * [initialTransactionData] - the data of the transaction to edit
 /// * [initialNegative] - if true, the transaction has a "-"" prefilled
+///
+/// ONE of the following can be passed in:
+/// - a SingleTransaction
+/// - a RecurringTransaction
 class TransactionForm extends StatefulWidget {
   TransactionForm({
     Key? key,
-    this.initialTransactionData,
+    this.initialSingleTransactionData,
+    this.initialRecurringTransactionData,
     this.initialNegative,
   }) : super(key: key);
-  SingleTransaction? initialTransactionData;
+  SingleTransaction? initialSingleTransactionData;
+  RecurringTransaction? initialRecurringTransactionData;
   bool? initialNegative;
 
   @override
@@ -37,6 +43,7 @@ class _TransactionFormState extends State<TransactionForm> {
   Account? selectedAccount2;
   TransactionCategory? selectedCategory;
   bool hasAccount2 = false;
+  bool hasInitalData = false;
 
   var titleController = TextEditingController();
   var valueController = TextEditingController();
@@ -49,32 +56,38 @@ class _TransactionFormState extends State<TransactionForm> {
     if (widget.initialNegative == true) {
       valueController.text = "-";
     }
-    if (widget.initialTransactionData != null) {
-      if (false) {
-        // recurringData = RecurringData(
-        //   isRecurring: true,
-        //   startDate:
-        //       (widget.initialTransactionData as RecurringTransaction).startDate,
-        //   intervalType: (widget.initialTransactionData as RecurringTransaction)
-        //       .intervalType,
-        //   intervalUnit: (widget.initialTransactionData as RecurringTransaction)
-        //       .intervalUnit,
-        //   intervalAmount:
-        //       (widget.initialTransactionData as RecurringTransaction)
-        //           .intervalAmount,
-        //   endDate:
-        //       (widget.initialTransactionData as RecurringTransaction).endDate,
-        // );
-      } else {
-        recurringData.isRecurring = false;
-      }
-      titleController.text = widget.initialTransactionData!.title;
-      valueController.text = widget.initialTransactionData!.value.toString();
-      selectedAccount = widget.initialTransactionData!.account;
-      selectedCategory = widget.initialTransactionData!.category;
-      hasAccount2 = widget.initialTransactionData!.account2 != null;
-      selectedAccount2 = widget.initialTransactionData!.account2;
-      descriptionController.text = widget.initialTransactionData!.description;
+    if (widget.initialSingleTransactionData != null) {
+      hasInitalData = true;
+      titleController.text = widget.initialSingleTransactionData!.title;
+      valueController.text =
+          widget.initialSingleTransactionData!.value.toString();
+      selectedAccount = widget.initialSingleTransactionData!.account;
+      selectedCategory = widget.initialSingleTransactionData!.category;
+      hasAccount2 = widget.initialSingleTransactionData!.account2 != null;
+      selectedAccount2 = widget.initialSingleTransactionData!.account2;
+      descriptionController.text =
+          widget.initialSingleTransactionData!.description;
+    }
+    if (widget.initialRecurringTransactionData != null) {
+      hasInitalData = true;
+      titleController.text = widget.initialRecurringTransactionData!.title;
+      valueController.text =
+          widget.initialRecurringTransactionData!.value.toString();
+      selectedAccount = widget.initialRecurringTransactionData!.account;
+      selectedCategory = widget.initialRecurringTransactionData!.category;
+      hasAccount2 = widget.initialRecurringTransactionData!.account2 != null;
+      selectedAccount2 = widget.initialRecurringTransactionData!.account2;
+      descriptionController.text =
+          widget.initialRecurringTransactionData!.description;
+
+      recurringData = RecurringData(
+        isRecurring: true,
+        startDate: widget.initialRecurringTransactionData!.startDate,
+        intervalType: widget.initialRecurringTransactionData!.intervalType,
+        intervalUnit: (widget.initialRecurringTransactionData)!.intervalUnit,
+        intervalAmount: widget.initialRecurringTransactionData!.intervalAmount,
+        endDate: widget.initialRecurringTransactionData!.endDate,
+      );
     }
 
     super.initState();
@@ -96,7 +109,7 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.initialTransactionData != null
+        title: hasInitalData
             ? const Text("Edit Transaction")
             : const Text("New Transaction"),
       ),
@@ -245,7 +258,7 @@ class _TransactionFormState extends State<TransactionForm> {
             backgroundColor: Colors.red,
             mini: true,
             onPressed: () {
-              if (widget.initialTransactionData != null) {
+              if (hasInitalData) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -268,7 +281,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 Navigator.of(context).pop();
               }
             },
-            child: widget.initialTransactionData != null
+            child: hasInitalData
                 ? const Icon(Icons.delete_outline)
                 : const Icon(Icons.close),
           ),
@@ -278,9 +291,10 @@ class _TransactionFormState extends State<TransactionForm> {
           FloatingActionButton.extended(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                if (widget.initialTransactionData != null) {
+                if (hasInitalData) {
+                  // TODO: recurring implementation
                   DatabaseHelper.instance
-                      .updateTransaction(_currentTransaction());
+                      .updateSingleTransaction(_currentTransaction());
                 } else {
                   DatabaseHelper.instance
                       .createSingleTransaction(_currentTransaction());
@@ -309,8 +323,11 @@ class _TransactionFormState extends State<TransactionForm> {
       date: recurringData.startDate,
     );
 
-    if (widget.initialTransactionData != null) {
-      transaction.id = widget.initialTransactionData!.id;
+    if (widget.initialSingleTransactionData != null) {
+      transaction.id = widget.initialSingleTransactionData!.id;
+    }
+    if (widget.initialRecurringTransactionData != null) {
+      transaction.id = widget.initialRecurringTransactionData!.id;
     }
 
     return transaction;

@@ -6,14 +6,12 @@ import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/widgets/balanceText.dart';
 import 'package:flutter/material.dart';
 
-/*
-  * TransactionItem widget
-  * - displays a transaction
-  *
-  * ONE of the following NEEDS to be passed in:
-  * - a SingleTransaction
-  * - a RecurringTransaction
-*/
+/// TransactionItem widget
+/// - displays a transaction
+///
+/// ONE of the following NEEDS to be passed in:
+/// - a SingleTransaction
+/// - a RecurringTransaction
 class TransactionItem extends StatelessWidget {
   TransactionItem({
     Key? key,
@@ -64,7 +62,9 @@ class TransactionItem extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => TransactionForm(
-                  initialTransactionData: singleTransactionData,
+                  // always one of these will be null
+                  initialSingleTransactionData: singleTransactionData,
+                  initialRecurringTransactionData: recurringTransactionData,
                 ),
               ),
             )

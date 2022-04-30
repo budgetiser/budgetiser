@@ -467,7 +467,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     pushGetAllTransactionsStream();
   }
 
-  Future<void> updateTransaction(SingleTransaction transaction) async {
+  Future<void> updateSingleTransaction(SingleTransaction transaction) async {
     final db = await database;
 
     var oldTransaction = await getOneTransaction(transaction.id);
