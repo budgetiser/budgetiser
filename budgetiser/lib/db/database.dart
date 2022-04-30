@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
+import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
@@ -15,7 +16,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser3.db';
+  static const databaseName = 'budgetiser4.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -37,6 +38,17 @@ CREATE TABLE IF NOT EXISTS account(
   description TEXT,
   PRIMARY KEY(id));
     ''');
+    await db.execute('''
+CREATE TABLE IF NOT EXISTS category(
+  id INTEGER,
+  name TEXT,
+  icon INTEGER,
+  color INTEGER,
+  description TEXT,
+  is_hidden INTEGER,
+  PRIMARY KEY(id),
+  CHECK(is_hidden IN (0, 1)));
+  ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS singleTransaction(
   id INTEGER,
@@ -76,17 +88,6 @@ CREATE TABLE IF NOT EXISTS singleToRecurringTransaction(
   FOREIGN KEY(recurring_transaction_id) REFERENCES recurringTransaction ON DELETE CASCADE
   );
     ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS category(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  description TEXT,
-  is_hidden INTEGER,
-  PRIMARY KEY(id),
-  CHECK(is_hidden IN (0, 1)));
-  ''');
     await db.execute('''
 CREATE TABLE IF NOT EXISTS XXGroup(
   id INTEGER,
@@ -146,14 +147,24 @@ CREATE TABLE IF NOT EXISTS categoryToGroup(
   FOREIGN KEY(group_id) REFERENCES XXGroup ON DELETE CASCADE);
   ''');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS transactionToAccount(
+CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
   transaction_id INTEGER,
-  toAccount_id INTEGER,
-  fromAccount_id INTEGER,
-  PRIMARY KEY(transaction_id, toAccount_id, fromAccount_id),
-  FOREIGN KEY(toAccount_id) REFERENCES account
-  FOREIGN KEY(fromAccount_id) REFERENCES account,
+  account1_id INTEGER,
+  account2_id INTEGER,
+  PRIMARY KEY(transaction_id, account1_id, account2_id),
+  FOREIGN KEY(account1_id) REFERENCES account
+  FOREIGN KEY(account2_id) REFERENCES account,
   FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE);
+''');
+    await db.execute('''
+CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
+  transaction_id INTEGER,
+  account1_id INTEGER,
+  account2_id INTEGER,
+  PRIMARY KEY(transaction_id, account1_id, account2_id),
+  FOREIGN KEY(account1_id) REFERENCES account
+  FOREIGN KEY(account2_id) REFERENCES account,
+  FOREIGN KEY(transaction_id) REFERENCES recurringTransaction ON DELETE CASCADE);
 ''');
     if (kDebugMode) {
       print("done");
@@ -162,7 +173,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   _dropTables(Database db) async {
     await db.execute('''
-          DROP TABLE IF EXISTS singleTransaction;
+          DROP TABLE IF EXISTS recurringTransactionToAccount;
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS XXGroup;
@@ -180,13 +191,16 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           DROP TABLE IF EXISTS categoryToGroup;
           ''');
     await db.execute('''
-          DROP TABLE IF EXISTS transactionToAccount;
+          DROP TABLE IF EXISTS singleTransactionToAccount;
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS account; 
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS singleToRecurringTransaction;
+          ''');
+    await db.execute('''
+          DROP TABLE IF EXISTS singleTransaction;
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS recurringTransaction;
@@ -330,7 +344,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   void pushGetAllTransactionsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from singleTransaction, transactionToAccount where singleTransaction.id = transactionToAccount.transaction_id ');
+        'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id ');
     // and singleToRecurringTransaction.single_transaction_id = singleTransaction.id
 
     List<SingleTransaction> list = [];
@@ -348,7 +362,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   // Future<RecurringTransaction> _mapToRecurringTransaction(
   //     Map<String, dynamic> mapItem) async {
   //   TransactionCategory cat = await _getCategory(mapItem['category_id']);
-  //   Account account = await _getOneAccount(mapItem['toAccount_id']);
+  //   Account account = await _getOneAccount(mapItem['account1_id']);
   //   return RecurringTransaction(
   //     id: mapItem['id'],
   //     title: mapItem['title'].toString(),
@@ -356,9 +370,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   //     description: mapItem['description'].toString(),
   //     category: cat,
   //     account: account,
-  //     account2: mapItem['fromAccount_id'] == null
+  //     account2: mapItem['account2_id'] == null
   //         ? null
-  //         : await _getOneAccount(mapItem['fromAccount_id']),
+  //         : await _getOneAccount(mapItem['account2_id']),
   //     startDate: DateTime.parse(mapItem['start_date'].toString()),
   //     endDate: DateTime.parse(mapItem['end_date'].toString()),
   //     intervalAmount: mapItem['intervalAmount'],
@@ -372,7 +386,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<SingleTransaction> _mapToSingleTransaction(
       Map<String, dynamic> mapItem) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
-    Account account = await _getOneAccount(mapItem['toAccount_id']);
+    Account account = await _getOneAccount(mapItem['account1_id']);
     return SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -380,9 +394,9 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       description: mapItem['description'].toString(),
       category: cat,
       account: account,
-      account2: mapItem['fromAccount_id'] == null
+      account2: mapItem['account2_id'] == null
           ? null
-          : await _getOneAccount(mapItem['fromAccount_id']),
+          : await _getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
   }
@@ -390,7 +404,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   Future<SingleTransaction> getOneTransaction(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from SingleTransaction, transactionToAccount where SingleTransaction.id = transactionToAccount.transaction_id and SingleTransaction.id = ?',
+        'Select distinct * from SingleTransaction, singleTransactionToAccount where SingleTransaction.id = singleTransactionToAccount.transaction_id and SingleTransaction.id = ?',
         [id]);
 
     if (mapSingle.length == 1) {
@@ -452,10 +466,10 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           where: 'id = ?', whereArgs: [account2.id]);
     }
 
-    await db.insert('transactionToAccount', {
+    await db.insert('singleTransactionToAccount', {
       'transaction_id': transactionId,
-      'toAccount_id': transaction.account.id,
-      'fromAccount_id':
+      'account1_id': transaction.account.id,
+      'account2_id':
           transaction.account2 != null ? transaction.account2!.id : null,
     });
     pushGetAllTransactionsStream();
@@ -491,7 +505,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       whereArgs: [transaction.id],
     );
     await db.delete(
-      'transactionToAccount',
+      'singleTransactionToAccount',
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
     );

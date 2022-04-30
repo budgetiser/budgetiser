@@ -30,16 +30,3 @@ class SingleTransaction {
         'date': date.toString().substring(0, 10)
       };
 }
-
-enum IntervalUnit {
-  day,
-  week,
-  month,
-  quarter,
-  year,
-}
-
-enum IntervalType {
-  fixedPointOfTime,
-  fixedInterval,
-}

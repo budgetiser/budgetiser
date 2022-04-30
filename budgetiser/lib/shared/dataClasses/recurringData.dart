@@ -1,5 +1,3 @@
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
-
 class RecurringData {
   DateTime startDate;
   bool isRecurring;
@@ -16,4 +14,17 @@ class RecurringData {
     this.intervalAmount,
     this.endDate,
   });
+}
+
+enum IntervalUnit {
+  day,
+  week,
+  month,
+  quarter,
+  year,
+}
+
+enum IntervalType {
+  fixedPointOfTime,
+  fixedInterval,
 }
