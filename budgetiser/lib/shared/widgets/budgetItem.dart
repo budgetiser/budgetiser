@@ -66,10 +66,7 @@ class BudgetItem extends StatelessWidget {
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: budgetData.balance / budgetData.limit < 0 ||
-                                budgetData.balance / budgetData.limit > 1
-                            ? 1
-                            : (budgetData.balance / budgetData.limit),
+                        percent: getPercentInterval(budgetData.balance, budgetData.limit),
                         backgroundColor: Colors.white,
                         linearGradient: LinearGradient(
                             colors: createGradient(budgetData.color)),
@@ -122,5 +119,15 @@ class BudgetItem extends StatelessWidget {
     gradient.add(
         Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
     return gradient;
+  }
+
+  double getPercentInterval(double value, double base) {
+    if(value >= base){
+      return 1.00;
+    }else if(value <= 0){
+      return 0.00;
+    }else {
+      return value/base;
+    }
   }
 }
