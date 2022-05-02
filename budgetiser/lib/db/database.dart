@@ -496,6 +496,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   Future<void> deleteTransaction(AbstractTransaction transaction) async {
     final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget', columns: ['budget_id'], where: 'category_id = ?', whereArgs: [transaction.category.id], distinct: true);
 
     if (transaction is SingleTransaction) {
       // TODO: current only balance change with single transaction
@@ -533,6 +534,11 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
     );
+
+    for(int i = 0; i<maps.length; i++){
+      reloadBudgetBalanceFromID(maps[i]['budget_id']);
+    }
+
     pushGetAllTransactionsStream();
   }
 
@@ -608,12 +614,17 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   Future<void> deleteCategory(int categoryID) async {
     final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget', columns: ['budget_id'], where: 'category_id = ?', whereArgs: [categoryID], distinct: true);
 
     await db.delete(
       'category',
       where: 'id = ?',
       whereArgs: [categoryID],
     );
+
+    for(int i = 0; i<maps.length; i++){
+      reloadBudgetBalanceFromID(maps[i]['budget_id']);
+    }
     pushGetAllCategoriesStream();
   }
 
