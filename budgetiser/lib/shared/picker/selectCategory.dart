@@ -23,7 +23,7 @@ class _SelectCategoryState extends State<SelectCategory> {
   @override
   void initState() {
     DatabaseHelper.instance.allCategoryStream.listen((event) {
-      setState(() {
+      setState(() { //memory leak because of setState. -> DELETE?
         _categories?.clear();
         _categories = (event.map((e) => e).toList());
         if (widget.initialCategory != null) {
