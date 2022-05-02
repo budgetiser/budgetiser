@@ -468,10 +468,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   }
 
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
-    final db = await database;
-
-    var oldTransaction = await getOneTransaction(transaction.id);
-    await deleteSingleTransaction(oldTransaction);
+    await deleteTransactionById(transaction.id);
     await createSingleTransaction(transaction);
 
     pushGetAllTransactionsStream();
@@ -506,7 +503,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   Stream<List<RecurringTransaction>> get allRecurringTransactionStream =>
       _AllRecurringTransactionStreamController.stream;
 
-  void pushGetAlRecurringTransactionsStream() async {
+  void pushGetAllRecurringTransactionsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> mapRecurring = await db.rawQuery(
         'Select distinct * from recurringTransaction, recurringTransactionToAccount where recurringTransaction.id = recurringTransactionToAccount.transaction_id ');
@@ -565,7 +562,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
           ? recurringTransaction.account2!.id
           : null,
     });
-    pushGetAlRecurringTransactionsStream();
+    pushGetAllRecurringTransactionsStream();
 
     return transactionId;
   }
@@ -589,7 +586,56 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
     );
-    pushGetAlRecurringTransactionsStream();
+    pushGetAllRecurringTransactionsStream();
+  }
+
+  Future<void> updateRecurringTransaction(
+      RecurringTransaction recurringTransaction) async {
+    await deleteTransactionById(recurringTransaction.id);
+    await createRecurringTransaction(recurringTransaction);
+
+    pushGetAllRecurringTransactionsStream();
+  }
+
+  /*
+  * Single & Recurring Transaction 
+  */
+
+  Future<void> deleteTransactionById(int id) async {
+    final db = await database;
+
+    await db.delete(
+      'singleTransaction',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.delete(
+      'singleTransactionToAccount',
+      where: 'transaction_id = ?',
+      whereArgs: [id],
+    );
+    await db.delete(
+      'recurringTransaction',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.delete(
+      'recurringTransactionToAccount',
+      where: 'transaction_id = ?',
+      whereArgs: [id],
+    );
+    await db.delete(
+      'singleToRecurringTransaction',
+      where: 'single_transaction_id = ?',
+      whereArgs: [id],
+    );
+    await db.delete(
+      'singleToRecurringTransaction',
+      where: 'recurring_transaction_id = ?',
+      whereArgs: [id],
+    );
+    pushGetAllTransactionsStream();
+    pushGetAllRecurringTransactionsStream();
   }
 
   /*

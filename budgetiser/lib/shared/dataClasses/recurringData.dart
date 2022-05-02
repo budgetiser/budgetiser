@@ -5,6 +5,7 @@ class RecurringData {
   IntervalUnit? intervalUnit;
   int? intervalAmount;
   DateTime? endDate;
+  int? repetitionAmount;
 
   RecurringData({
     required this.startDate,
@@ -13,6 +14,7 @@ class RecurringData {
     this.intervalUnit,
     this.intervalAmount,
     this.endDate,
+    this.repetitionAmount,
   });
 }
 

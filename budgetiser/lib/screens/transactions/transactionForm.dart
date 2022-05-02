@@ -87,6 +87,8 @@ class _TransactionFormState extends State<TransactionForm> {
         intervalUnit: (widget.initialRecurringTransactionData)!.intervalUnit,
         intervalAmount: widget.initialRecurringTransactionData!.intervalAmount,
         endDate: widget.initialRecurringTransactionData!.endDate,
+        repetitionAmount:
+            widget.initialRecurringTransactionData!.repetitionAmount,
       );
     }
 
@@ -267,8 +269,10 @@ class _TransactionFormState extends State<TransactionForm> {
                         description:
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance
-                              .deleteSingleTransaction(_currentTransaction());
+                          DatabaseHelper.instance.deleteTransactionById(
+                              widget.initialRecurringTransactionData != null
+                                  ? widget.initialRecurringTransactionData!.id
+                                  : widget.initialSingleTransactionData!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },
@@ -292,12 +296,21 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
-                  // TODO: recurring implementation
-                  DatabaseHelper.instance
-                      .updateSingleTransaction(_currentTransaction());
+                  if (recurringData.isRecurring) {
+                    DatabaseHelper.instance.updateRecurringTransaction(
+                        _currentRecurringTransaction());
+                  } else {
+                    DatabaseHelper.instance
+                        .updateSingleTransaction(_currentSingleTransaction());
+                  }
                 } else {
-                  DatabaseHelper.instance
-                      .createSingleTransaction(_currentTransaction());
+                  if (recurringData.isRecurring) {
+                    DatabaseHelper.instance.createRecurringTransaction(
+                        _currentRecurringTransaction());
+                  } else {
+                    DatabaseHelper.instance
+                        .createSingleTransaction(_currentSingleTransaction());
+                  }
                 }
                 Navigator.of(context).pop();
               }
@@ -310,7 +323,7 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  SingleTransaction _currentTransaction() {
+  SingleTransaction _currentSingleTransaction() {
     SingleTransaction transaction;
     transaction = SingleTransaction(
       id: 0,
@@ -321,6 +334,34 @@ class _TransactionFormState extends State<TransactionForm> {
       account2: selectedAccount2,
       description: descriptionController.text,
       date: recurringData.startDate,
+    );
+
+    if (widget.initialSingleTransactionData != null) {
+      transaction.id = widget.initialSingleTransactionData!.id;
+    }
+    if (widget.initialRecurringTransactionData != null) {
+      transaction.id = widget.initialRecurringTransactionData!.id;
+    }
+
+    return transaction;
+  }
+
+  RecurringTransaction _currentRecurringTransaction() {
+    RecurringTransaction transaction;
+    transaction = RecurringTransaction(
+      id: 0,
+      title: titleController.text,
+      value: double.parse(valueController.text),
+      category: selectedCategory!,
+      account: selectedAccount!,
+      account2: selectedAccount2,
+      description: descriptionController.text,
+      startDate: recurringData.startDate,
+      endDate: recurringData.endDate!,
+      intervalType: recurringData.intervalType!,
+      intervalAmount: recurringData.intervalAmount!,
+      intervalUnit: recurringData.intervalUnit!,
+      repetitionAmount: recurringData.repetitionAmount!,
     );
 
     if (widget.initialSingleTransactionData != null) {

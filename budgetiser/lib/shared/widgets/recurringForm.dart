@@ -394,6 +394,9 @@ class _RecurringFormState extends State<RecurringForm> {
                 ? int.parse(fixedPointOfTimeAmountController.text)
                 : int.parse(fixedIntervalAmountController.text),
         endDate: enddate,
+        repetitionAmount: repetitionsController.text.isEmpty
+            ? null
+            : int.parse(repetitionsController.text),
       ),
     );
   }

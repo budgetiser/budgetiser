@@ -23,7 +23,7 @@ class TransactionsScreen extends StatefulWidget {
 enum pages { singleTransactions, recurringTransactions }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  PageController _pageController = PageController(
+  final PageController _pageController = PageController(
     initialPage: pages.singleTransactions.index,
   );
   String title = "Transactions";
@@ -32,7 +32,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   void initState() {
     DatabaseHelper.instance.pushGetAllTransactionsStream();
-    DatabaseHelper.instance.pushGetAlRecurringTransactionsStream();
+    DatabaseHelper.instance.pushGetAllRecurringTransactionsStream();
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       _accountList = event;
     });
@@ -108,7 +108,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             } else if (page == pages.recurringTransactions.index) {
               // title = "Savings";
               _currentPage = pages.recurringTransactions.index;
-              DatabaseHelper.instance.pushGetAlRecurringTransactionsStream();
+              DatabaseHelper.instance.pushGetAllRecurringTransactionsStream();
             }
           });
         },

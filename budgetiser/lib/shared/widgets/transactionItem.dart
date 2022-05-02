@@ -135,18 +135,17 @@ class TransactionItem extends StatelessWidget {
                           ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          description,
-                          overflow: TextOverflow.ellipsis,
-                          textWidthBasis: TextWidthBasis.parent,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              ?.merge(const TextStyle(fontSize: 18)),
-                        ),
-                      ],
+                    Expanded(
+                      child: Text(
+                        description,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        textWidthBasis: TextWidthBasis.parent,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            ?.merge(const TextStyle(fontSize: 18)),
+                      ),
                     ),
                     BalanceText(value),
                   ],
