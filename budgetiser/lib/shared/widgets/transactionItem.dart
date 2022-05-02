@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
@@ -50,7 +52,7 @@ class TransactionItem extends StatelessWidget {
       account = singleTransactionData!.account;
       account2 = singleTransactionData!.account2;
       date = singleTransactionData!.date;
-      isRecurring = false;
+      isRecurring = singleTransactionData!.recurringTransaction != null;
     } else {
       throw Exception('TransactionItem: No transaction data provided');
     }

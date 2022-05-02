@@ -17,7 +17,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser.db';
+  static const databaseName = 'budgetiser11.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -225,6 +225,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     for (var category in TMP_DATA_categoryList) {
       await createCategory(category);
     }
+    for (var recurringTransaction in TMP_DATA_recurringTransactionList) {
+      await createRecurringTransaction(recurringTransaction);
+    }
     for (var transaction in TMP_DATA_transactionList) {
       await createSingleTransaction(transaction);
     }
@@ -236,9 +239,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     }
     for (var group in TMP_DATA_groupList) {
       await createGroup(group);
-    }
-    for (var recurringTransaction in TMP_DATA_recurringTransactionList) {
-      await createRecurringTransaction(recurringTransaction);
     }
   }
 
@@ -355,8 +355,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   void pushGetAllTransactionsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id ');
-    // and singleToRecurringTransaction.single_transaction_id = singleTransaction.id
+        'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');
 
     List<SingleTransaction> list = [];
     for (int i = 0; i < mapSingle.length; i++) {
@@ -374,6 +373,8 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       Map<String, dynamic> mapItem) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
     Account account = await _getOneAccount(mapItem['account1_id']);
+    RecurringTransaction? recurringTransaction =
+        await _getRecurringTransactionFromSingeId(mapItem['id']);
     return SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -385,6 +386,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
           ? null
           : await _getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
+      recurringTransaction: recurringTransaction,
     );
   }
 
@@ -421,12 +423,24 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
           where: 'id = ?', whereArgs: [account2.id]);
     }
 
+    if (transaction.recurringTransaction != null) {
+      await db.insert(
+        'singleToRecurringTransaction',
+        {
+          'single_transaction_id': transactionId,
+          'recurring_transaction_id': transaction.recurringTransaction!.id,
+        },
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    }
+
     await db.insert('singleTransactionToAccount', {
       'transaction_id': transactionId,
       'account1_id': transaction.account.id,
       'account2_id':
           transaction.account2 != null ? transaction.account2!.id : null,
     });
+
     pushGetAllTransactionsStream();
     pushGetAllAccountsStream();
 
@@ -595,6 +609,34 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     await createRecurringTransaction(recurringTransaction);
 
     pushGetAllRecurringTransactionsStream();
+  }
+
+  Future<RecurringTransaction> getOneRecurringTransactionById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> mapRecurring = await db.rawQuery(
+        'Select distinct * from recurringTransaction, recurringTransactionToAccount where recurringTransaction.id = recurringTransactionToAccount.transaction_id and recurringTransaction.id = ?',
+        [id]);
+
+    if (mapRecurring.length == 1) {
+      return await _mapToRecurringTransaction(mapRecurring[0]);
+    } else {
+      throw Exception('Error in getOneRecurringTransaction');
+    }
+  }
+
+  Future<RecurringTransaction?> _getRecurringTransactionFromSingeId(
+      int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> mapRecurring = await db.rawQuery(
+        'Select distinct * from singleToRecurringTransaction, recurringTransaction, recurringTransactionToAccount where singleToRecurringTransaction.single_transaction_id = ? and singleToRecurringTransaction.recurring_transaction_id = recurringTransaction.id and recurringTransaction.id = recurringTransactionToAccount.transaction_id',
+        [
+          id,
+        ]);
+    if (mapRecurring.length == 1) {
+      return await _mapToRecurringTransaction(mapRecurring[0]);
+    } else {
+      return null;
+    }
   }
 
   /*

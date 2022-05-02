@@ -154,12 +154,13 @@ List<SingleTransaction> TMP_DATA_transactionList = [
   ),
   SingleTransaction(
     id: 3,
-    title: 'weekly groceries',
+    title: 'pc building',
     value: -40,
     category: TMP_DATA_categoryList[0],
     account: TMP_DATA_accountList[1],
-    date: DateTime(2043, 1, 2),
+    date: DateTime(2022, 1, 2),
     description: 'at the supermarket',
+    recurringTransaction: TMP_DATA_recurringTransactionList[0],
   ),
   SingleTransaction(
     id: 4,
