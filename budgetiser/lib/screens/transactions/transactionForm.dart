@@ -150,48 +150,74 @@ class _TransactionFormState extends State<TransactionForm> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
-                        SelectAccount(
-                            initialAccount: selectedAccount,
-                            callback: setAccount),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: hasAccount2,
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  hasAccount2 = newValue!;
-                                });
-                                if (hasAccount2) {
-                                  DatabaseHelper.instance.allAccountsStream
-                                      .listen((event) {
-                                    setState(() {
-                                      selectedAccount2 = event.first;
-                                    });
-                                  });
-                                } else {
-                                  selectedAccount2 = null;
-                                }
-                              },
-                            ),
-                            const Text("transfer to another account"),
-                          ],
-                        ),
-                        if (hasAccount2)
-                          Row(
+                        ExpansionTile(
+                          title: Row(
                             children: [
-                              const Text("to "),
-                              SelectAccount(
-                                initialAccount: selectedAccount2,
-                                callback: setAccount2,
+                              const Text("Account "),
+                              Icon(
+                                selectedAccount!.icon,
+                                color: selectedAccount!.color,
                               ),
+                              if (selectedAccount2 != null)
+                                Row(
+                                  children: [
+                                    const Text(" to "),
+                                    Icon(
+                                      selectedAccount2!.icon,
+                                      color: selectedAccount2!.color,
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
+                          children: [
+                            Column(
+                              children: [
+                                SelectAccount(
+                                    initialAccount: selectedAccount,
+                                    callback: setAccount),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: hasAccount2,
+                                      onChanged: (bool? newValue) {
+                                        setState(() {
+                                          hasAccount2 = newValue!;
+                                        });
+                                        if (hasAccount2) {
+                                          DatabaseHelper
+                                              .instance.allAccountsStream
+                                              .listen((event) {
+                                            setState(() {
+                                              selectedAccount2 = event.first;
+                                            });
+                                          });
+                                        } else {
+                                          selectedAccount2 = null;
+                                        }
+                                      },
+                                    ),
+                                    const Text("transfer to another account"),
+                                  ],
+                                ),
+                                if (hasAccount2)
+                                  Row(
+                                    children: [
+                                      const Text("to "),
+                                      SelectAccount(
+                                        initialAccount: selectedAccount2,
+                                        callback: setAccount2,
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                         Row(
                           children: [
-                            const Text("Category:"),
-                            const SizedBox(width: 8),
+                            const Text("   Category: "),
                             SelectCategory(
                                 initialCategory: selectedCategory,
                                 callback: (TransactionCategory c) {
@@ -224,17 +250,43 @@ class _TransactionFormState extends State<TransactionForm> {
                             },
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, bottom: 10),
-                          child: TextFormField(
-                            controller: descriptionController,
-                            decoration: const InputDecoration(
-                              labelText: "Notes",
-                              border: OutlineInputBorder(),
+                        ExpansionTile(
+                          title: const Text("Notes"),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: TextFormField(
+                                controller: descriptionController,
+                                maxLines: 5,
+                                decoration: const InputDecoration(
+                                  labelText: "Notes",
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                         const Divider(),
+                        if (widget.initialSingleTransactionData != null &&
+                            widget.initialSingleTransactionData!
+                                    .recurringTransaction !=
+                                null)
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TransactionForm(
+                                    initialRecurringTransactionData: widget
+                                        .initialSingleTransactionData!
+                                        .recurringTransaction,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                                "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
+                          ),
                         RecurringForm(
                           onRecurringDataChangedCallback: (data) {
                             setState(() {

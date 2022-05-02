@@ -69,24 +69,34 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     title: const Text('Filter by Account'),
                     alignment: Alignment.topRight,
                     children: <Widget>[
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _currentFilterAccountName = '';
-                          });
-                        },
-                        child: const Text('All'),
+                      ListTile(
+                        title: const Text("All Accounts"),
+                        visualDensity: VisualDensity.compact,
+                        leading: Radio(
+                          value: "",
+                          groupValue: _currentFilterAccountName,
+                          onChanged: (value) {
+                            setState(() {
+                              _currentFilterAccountName = value.toString();
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
                       ),
                       for (var account in _accountList)
-                        SimpleDialogOption(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              _currentFilterAccountName = account.name;
-                            });
-                          },
-                          child: Text(account.name),
+                        ListTile(
+                          visualDensity: VisualDensity.compact,
+                          title: Text(account.name),
+                          leading: Radio(
+                            value: account.name,
+                            groupValue: _currentFilterAccountName,
+                            onChanged: (value) {
+                              setState(() {
+                                _currentFilterAccountName = value.toString();
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          ),
                         ),
                     ],
                   );
