@@ -10,17 +10,32 @@ import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser.db';
+  static const databaseName = 'budgetiser_secure2.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
+  static int? _passcode;
 
   Future<Database> get database async =>
-      _database ??= await initializeDatabase();
+    _database ??= await initializeDatabase();
+
+  Future<int> login(int value) async{
+    _passcode = value;
+    _database = await initializeDatabase();
+    return _database != null ? (_database!.isOpen ? 1: 0) : 0;
+  }
+
+  void logout() async{
+    final db = await database;
+    if(db.isOpen){
+      db.close();
+    }
+    print('logout');
+  }
 
   _onCreate(Database db, int version) async {
     if (kDebugMode) {
@@ -219,19 +234,24 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
 
   initializeDatabase() async {
     var databasesPath = await getDatabasesPath();
-    return await openDatabase(
-      join(databasesPath, databaseName),
-      version: 1,
-      onCreate: _onCreate,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        _dropTables(db);
-        _onCreate(db, newVersion);
-      },
-      onDowngrade: (db, oldVersion, newVersion) async {
-        _dropTables(db);
-        _onCreate(db, newVersion);
-      },
-    );
+    try {
+      return await openDatabase(
+        join(databasesPath, databaseName),
+        version: 1,
+        password: _passcode != null && _passcode.toString() != '' ? _passcode.toString() : '12345',
+        onCreate: _onCreate,
+        onUpgrade: (db, oldVersion, newVersion) async {
+          _dropTables(db);
+          _onCreate(db, newVersion);
+        },
+        onDowngrade: (db, oldVersion, newVersion) async {
+          _dropTables(db);
+          _onCreate(db, newVersion);
+        },
+      );
+    } catch (e){
+      print("----------" + e.toString());
+    }
   }
 
   Future<int> createAccount(Account account) async {

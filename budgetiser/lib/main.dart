@@ -1,8 +1,8 @@
 import 'package:budgetiser/routes.dart';
+import 'package:budgetiser/screens/login.dart';
 import 'package:flutter/material.dart';
 
 import 'config/themes/themes.dart';
-import 'screens/homeScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
-      home: const Home(),
+      home: LoginScreen(),
       routes: routes,
     );
   }
