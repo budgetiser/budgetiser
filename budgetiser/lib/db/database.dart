@@ -444,11 +444,25 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     pushGetAllTransactionsStream();
     pushGetAllAccountsStream();
 
+    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
+        columns: ['budget_id'],
+        where: 'category_id = ?',
+        whereArgs: [transaction.category.id],
+        distinct: true);
+    for (int i = 0; i < maps.length; i++) {
+      reloadBudgetBalanceFromID(maps[i]['budget_id']);
+    }
+
     return transactionId;
   }
 
   Future<void> deleteSingleTransaction(SingleTransaction transaction) async {
     final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
+        columns: ['budget_id'],
+        where: 'category_id = ?',
+        whereArgs: [transaction.category.id],
+        distinct: true);
 
     if (transaction.account2 == null) {
       await db.update('account',
@@ -478,6 +492,11 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       where: 'transaction_id = ?',
       whereArgs: [transaction.id],
     );
+
+    for (int i = 0; i < maps.length; i++) {
+      reloadBudgetBalanceFromID(maps[i]['budget_id']);
+    }
+
     pushGetAllTransactionsStream();
   }
 
@@ -731,12 +750,21 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
   Future<void> deleteCategory(int categoryID) async {
     final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
+        columns: ['budget_id'],
+        where: 'category_id = ?',
+        whereArgs: [categoryID],
+        distinct: true);
 
     await db.delete(
       'category',
       where: 'id = ?',
       whereArgs: [categoryID],
     );
+
+    for (int i = 0; i < maps.length; i++) {
+      reloadBudgetBalanceFromID(maps[i]['budget_id']);
+    }
     pushGetAllCategoriesStream();
   }
 
@@ -856,6 +884,18 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   Stream<List<Budget>> get allBudgetsStream =>
       _AllBudgetsStreamController.stream;
 
+  // UPDATE budget SET balance =
+  // (
+  //   SELECT -SUM(value)
+  //   FROM XXtransaction
+  //   INNER JOIN category ON category.id = XXTransaction.category_id
+  //   INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
+  //   INNER JOIN budget ON categoryToBudget.budget_id = budget.id
+  //   WHERE categoryToBudget.budget_id = 5
+  //       and budget.start_date <= XXtransaction.date
+  //       and budget.end_date >= XXtransaction.date
+  // )
+  // WHERE id = 5;
   void pushGetAllBudgetsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('budget');
@@ -863,14 +903,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     for (int i = 0; i < maps.length; i++) {
       categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
     }
-
     allBudgetsSink.add(List.generate(maps.length, (i) {
       Budget returnBudget = Budget(
         id: maps[i]['id'],
         name: maps[i]['name'].toString(),
         icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(maps[i]['color']),
-        balance: maps[i]['balance'],
+        balance: maps[i]['balance'] ?? 0,
         limit: maps[i]['limitXX'],
         startDate: DateTime.parse(maps[i]['start_date']),
         description: maps[i]['description'].toString(),
@@ -929,6 +968,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
+    reloadBudgetBalanceFromID(id);
     pushGetAllBudgetsStream();
     return id;
   }
@@ -970,6 +1010,25 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         rowCategory,
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
+    }
+    reloadBudgetBalanceFromID(budget.id);
+    pushGetAllBudgetsStream();
+  }
+
+  void reloadBudgetBalanceFromID(int budgetID) async {
+    final db = await database;
+    await db.rawUpdate(
+        'UPDATE budget SET balance = (SELECT -SUM(value) FROM XXtransaction INNER JOIN category ON category.id = XXTransaction.category_id INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id  INNER JOIN budget ON categoryToBudget.budget_id = budget.id WHERE categoryToBudget.budget_id = ?) WHERE id = ?;',
+        [budgetID, budgetID]);
+    pushGetAllBudgetsStream();
+  }
+
+  void reloadAllBudgetBalance() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('budget', columns: ['id']);
+    for (int i = 0; i < maps.length; i++) {
+      reloadBudgetBalanceFromID(maps[i]['id']);
     }
     pushGetAllBudgetsStream();
   }
