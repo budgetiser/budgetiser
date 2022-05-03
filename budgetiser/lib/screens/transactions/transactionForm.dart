@@ -151,13 +151,17 @@ class _TransactionFormState extends State<TransactionForm> {
                           ],
                         ),
                         ExpansionTile(
+                          initiallyExpanded: true,
                           title: Row(
                             children: [
-                              const Text("Account "),
-                              Icon(
-                                selectedAccount!.icon,
-                                color: selectedAccount!.color,
+                              const Text(
+                                "Account ",
                               ),
+                              if (selectedAccount != null)
+                                Icon(
+                                  selectedAccount!.icon,
+                                  color: selectedAccount!.color,
+                                ),
                               if (selectedAccount2 != null)
                                 Row(
                                   children: [
@@ -211,6 +215,7 @@ class _TransactionFormState extends State<TransactionForm> {
                                       ),
                                     ],
                                   ),
+                                const SizedBox(height: 8),
                               ],
                             ),
                           ],

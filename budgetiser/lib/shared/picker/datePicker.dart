@@ -31,7 +31,6 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed
     dateController.dispose();
     super.dispose();
   }
@@ -52,7 +51,7 @@ class _DatePickerState extends State<DatePicker> {
             onTap: () async {
               var date = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
+                  initialDate: widget.initialDate ?? DateTime.now(),
                   firstDate: DateTime(1900),
                   lastDate: DateTime(2100));
               if (date != null) {

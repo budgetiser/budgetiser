@@ -69,7 +69,10 @@ class _RecurringFormState extends State<RecurringForm> {
         fixedIntervalUnit = widget.initialRecurringData.intervalUnit!;
       }
       enddate = widget.initialRecurringData.endDate;
-      repetitionsController.text = _calculateNeededRepetitions().toString();
+      repetitionsController.text =
+          widget.initialRecurringData.repetitionAmount != null
+              ? widget.initialRecurringData.repetitionAmount.toString()
+              : _calculateNeededRepetitions().toString();
     }
     _calculateEndDate();
   }
