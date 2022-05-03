@@ -326,10 +326,14 @@ class _TransactionFormState extends State<TransactionForm> {
                         description:
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance.deleteTransactionById(
-                              widget.initialRecurringTransactionData != null
-                                  ? widget.initialRecurringTransactionData!.id
-                                  : widget.initialSingleTransactionData!.id);
+                          if (recurringData.isRecurring) {
+                            DatabaseHelper.instance
+                                .deleteRecurringTransactionById(
+                                    widget.initialRecurringTransactionData!.id);
+                          } else {
+                            DatabaseHelper.instance.deleteSingleTransactionById(
+                                widget.initialSingleTransactionData!.id);
+                          }
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },

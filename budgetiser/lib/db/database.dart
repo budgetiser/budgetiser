@@ -17,7 +17,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser11.db';
+  static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
@@ -501,7 +501,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   }
 
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
-    await deleteTransactionById(transaction.id);
+    await deleteSingleTransactionById(transaction.id);
     await createSingleTransaction(transaction);
 
     pushGetAllTransactionsStream();
@@ -624,7 +624,8 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
   Future<void> updateRecurringTransaction(
       RecurringTransaction recurringTransaction) async {
-    await deleteTransactionById(recurringTransaction.id);
+    print(recurringTransaction.id);
+    await deleteRecurringTransactionById(recurringTransaction.id);
     await createRecurringTransaction(recurringTransaction);
 
     pushGetAllRecurringTransactionsStream();
@@ -662,7 +663,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   * Single & Recurring Transaction 
   */
 
-  Future<void> deleteTransactionById(int id) async {
+  Future<void> deleteSingleTransactionById(int id) async {
     final db = await database;
 
     await db.delete(
@@ -675,6 +676,19 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       where: 'transaction_id = ?',
       whereArgs: [id],
     );
+
+    await db.delete(
+      'singleToRecurringTransaction',
+      where: 'single_transaction_id = ?',
+      whereArgs: [id],
+    );
+
+    pushGetAllTransactionsStream();
+  }
+
+  Future<void> deleteRecurringTransactionById(int id) async {
+    final db = await database;
+
     await db.delete(
       'recurringTransaction',
       where: 'id = ?',
@@ -687,18 +701,11 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     );
     await db.delete(
       'singleToRecurringTransaction',
-      where: 'single_transaction_id = ?',
-      whereArgs: [id],
-    );
-    await db.delete(
-      'singleToRecurringTransaction',
       where: 'recurring_transaction_id = ?',
       whereArgs: [id],
     );
-    pushGetAllTransactionsStream();
     pushGetAllRecurringTransactionsStream();
   }
-
   /*
   * Category
   */
@@ -884,18 +891,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   Stream<List<Budget>> get allBudgetsStream =>
       _AllBudgetsStreamController.stream;
 
-  // UPDATE budget SET balance =
-  // (
-  //   SELECT -SUM(value)
-  //   FROM XXtransaction
-  //   INNER JOIN category ON category.id = XXTransaction.category_id
-  //   INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
-  //   INNER JOIN budget ON categoryToBudget.budget_id = budget.id
-  //   WHERE categoryToBudget.budget_id = 5
-  //       and budget.start_date <= XXtransaction.date
-  //       and budget.end_date >= XXtransaction.date
-  // )
-  // WHERE id = 5;
   void pushGetAllBudgetsStream() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('budget');
@@ -1017,9 +1012,20 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
   void reloadBudgetBalanceFromID(int budgetID) async {
     final db = await database;
-    await db.rawUpdate(
-        'UPDATE budget SET balance = (SELECT -SUM(value) FROM XXtransaction INNER JOIN category ON category.id = XXTransaction.category_id INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id  INNER JOIN budget ON categoryToBudget.budget_id = budget.id WHERE categoryToBudget.budget_id = ?) WHERE id = ?;',
-        [budgetID, budgetID]);
+
+    await db.rawUpdate("""UPDATE budget SET balance =
+            (
+              SELECT -SUM(value)
+              FROM singleTransaction
+              INNER JOIN category ON category.id = singleTransaction.category_id
+              INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
+              INNER JOIN budget ON categoryToBudget.budget_id = budget.id
+              WHERE categoryToBudget.budget_id = ?
+                  and budget.start_date <= singleTransaction.date
+                  and budget.end_date >= singleTransaction.date
+            )
+        WHERE id = ?;
+    """, [budgetID, budgetID]);
     pushGetAllBudgetsStream();
   }
 
