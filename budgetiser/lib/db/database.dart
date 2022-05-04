@@ -10,6 +10,7 @@ import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 
 class DatabaseHelper {
@@ -24,12 +25,16 @@ class DatabaseHelper {
     _database ??= await initializeDatabase();
 
   Future<int> login(String passCode) async{
+    final prefs = await SharedPreferences.getInstance();
+    if(!prefs.containsKey('encrypted')){ prefs.setBool('encrypted', false); };
     _passcode = passCode;
     _database = await initializeDatabase();
     return _database != null ? (_database!.isOpen ? 1: 0) : 0;
   }
 
   Future<int> createDatabase(String passCode) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('encrypted', passCode != '' ? true : false);
     _passcode = passCode;
     _database = await initializeDatabase();
     return _database != null ? (_database!.isOpen ? 1: 0) : 0;
@@ -238,12 +243,13 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
   }
 
   initializeDatabase() async {
+    final prefs = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
         version: 1,
-        password: _passcode != null && _passcode != '' ? _passcode : '1234',
+        password:  prefs.getBool('encrypted')! ? _passcode : null,
         onCreate: _onCreate,
         onUpgrade: (db, oldVersion, newVersion) async {
           _dropTables(db);

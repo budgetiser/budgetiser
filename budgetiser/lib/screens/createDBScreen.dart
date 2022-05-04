@@ -3,12 +3,20 @@ import 'package:flutter/material.dart';
 
 import 'homeScreen.dart';
 
-class CreateDatabaseScreen extends StatelessWidget {
+
+class CreateDatabaseScreen extends StatefulWidget {
   CreateDatabaseScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CreateDatabaseScreen> createState() => _CreateDatabaseScreenState();
+}
+class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
   final _passcodeController = TextEditingController();
   final _repeatPasscodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _passKey = GlobalKey<FormFieldState>();
+  final _encryptionKey = GlobalKey<FormFieldState>();
+  bool _noEncryption = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +90,21 @@ class CreateDatabaseScreen extends StatelessWidget {
                       hintText: 'Repeat secure passcode'),
                 ),
               ),
+              CheckboxListTile(
+                key: _encryptionKey,
+                title: Text("Do not use encryption."),
+                value: _noEncryption,
+                onChanged: (newValue) {
+                  setState(() {
+                    _noEncryption = !_noEncryption;
+                    if(_noEncryption){
+                      _passcodeController.clear();
+                      _repeatPasscodeController.clear();
+                    }
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
               SizedBox(
                 height: 25,
               ),
@@ -93,7 +116,7 @@ class CreateDatabaseScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate() == true) {
+                    if (_formKey.currentState!.validate() == true || _noEncryption) {
                       int verify = await DatabaseHelper.instance
                           .createDatabase(_passcodeController.text);
                       if (verify == 1) {
