@@ -41,13 +41,15 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   controller: _passcodeController,
                   obscureText: true,
                   validator: (data) {
-                    if (data!.isEmpty || data.length < 4) {
-                      return "Passcode must have at least 4 characters";
-                    }
-                    try {
-                      int.parse(data);
-                    } catch (e) {
-                      return "Please enter a valid passcode";
+                    if(_noEncryption == false){
+                      if ((data!.isEmpty || data.length < 4)) {
+                        return "Passcode must have at least 4 characters";
+                      }
+                      try {
+                        int.parse(data);
+                      } catch (e) {
+                        return "Please enter a valid passcode";
+                      }
                     }
                     return null;
                   },
@@ -69,17 +71,20 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   controller: _repeatPasscodeController,
                   obscureText: true,
                   validator: (data) {
-                    if (data!.isEmpty) {
-                      return "Please repeat the passcode";
+                    if(_noEncryption == false){
+                      if (data!.isEmpty) {
+                        return "Please repeat the passcode";
+                      }
+                      try {
+                        int.parse(data);
+                        return data == _passKey.currentState!.value
+                            ? null
+                            : "Repeated Passcode should match passcode";
+                      } catch (e) {
+                        return "Please enter a valid passcode";
+                      }
                     }
-                    try {
-                      int.parse(data);
-                      return data == _passKey.currentState!.value
-                          ? null
-                          : "Repeated Passcode should match passcode";
-                    } catch (e) {
-                      return "Please enter a valid passcode";
-                    }
+                    return null;
                   },
                   obscuringCharacter: "*",
                   keyboardType:
@@ -92,11 +97,12 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
               ),
               CheckboxListTile(
                 key: _encryptionKey,
-                title: Text("Do not use encryption."),
+                title: const Text("Do not use encryption."),
                 value: _noEncryption,
                 onChanged: (newValue) {
                   setState(() {
                     _noEncryption = !_noEncryption;
+                    _formKey.currentState?.validate();
                     if(_noEncryption){
                       _passcodeController.clear();
                       _repeatPasscodeController.clear();
@@ -105,7 +111,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                 },
                 controlAffinity: ListTileControlAffinity.leading,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Container(
@@ -131,7 +137,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               const SizedBox(
@@ -143,12 +149,12 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Icon(Icons.info),
                     SizedBox(
                       width: 5,
                     ),
-                    Container(
+                    SizedBox(
                       width: 250,
                       child: Text(
                         "Attention!\nIf you forget your passcode all data stored in the database will be lost!.",

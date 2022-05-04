@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                       hintText: 'Enter secure passcode'),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Container(
@@ -74,7 +74,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               const SizedBox(
