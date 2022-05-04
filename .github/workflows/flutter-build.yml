@@ -19,4 +19,7 @@ jobs:
           cd budgetiser 
           flutter pub get
           flutter build apk --no-tree-shake-icons
-          flutter build appbundle
+      - uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
