@@ -2,7 +2,7 @@ import 'package:budgetiser/screens/categories/categoriesScreen.dart';
 import 'package:budgetiser/screens/groups/groupsScreen.dart';
 import 'package:budgetiser/screens/help.dart';
 import 'package:budgetiser/screens/plans/plans.dart';
-import 'package:budgetiser/screens/settings.dart';
+import 'package:budgetiser/screens/settingsScreen.dart';
 import 'package:budgetiser/screens/stats.dart';
 import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 
