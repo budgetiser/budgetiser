@@ -1,6 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget createDrawer(BuildContext context) {
   return Drawer(
@@ -44,7 +45,7 @@ Widget createDrawer(BuildContext context) {
         singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
         ListTile(
           title: Text(
-            'Logout',
+            'Exit',
             style: Theme.of(context).textTheme.subtitle1?.copyWith(
                   color: Colors.redAccent,
                 ),
@@ -55,10 +56,7 @@ Widget createDrawer(BuildContext context) {
           ),
           onTap: () {
             DatabaseHelper.instance.logout();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
-            );
+            SystemNavigator.pop();
           },
         ),
       ],

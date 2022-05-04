@@ -9,7 +9,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DatabaseHelper.instance.logout();
+    // DatabaseHelper.instance.logout();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login Page"),

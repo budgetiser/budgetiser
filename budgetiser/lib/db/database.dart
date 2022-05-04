@@ -42,6 +42,7 @@ class DatabaseHelper {
 
   void logout() async{
     final db = await database;
+    if(db == null) return;
     if(db.isOpen){
       db.close();
     }
