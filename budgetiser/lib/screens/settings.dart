@@ -1,6 +1,5 @@
-import 'package:budgetiser/shared/services/notification/themeChangedNotification.dart';
+import 'package:budgetiser/drawer.dart';
 import 'package:flutter/material.dart';
-import '../shared/widgets/drawer.dart';
 
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
@@ -44,9 +43,9 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               selected: "system",
               onChange: (value) {
-                ThemeChangedNotification(value).dispatch(context);
-                sendToParent(value);
-                debugPrint('key-themeMode: $value');
+                // ThemeChangedNotification(value).dispatch(context);
+                // sendToParent(value);
+                // debugPrint('key-themeMode: $value');
               },
             ),
           ],
@@ -55,9 +54,9 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void sendToParent(String value) {
-    ThemeChangedNotification(value).dispatch(context);
-  }
+  // void sendToParent(String value) {
+  //   ThemeChangedNotification(value).dispatch(context);
+  // }
 
   Widget _buildPreferenceSwitch(BuildContext context) {
     return Row(

@@ -1,8 +1,10 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
+import 'package:budgetiser/shared/dataClasses/recurringData.dart';
+import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +27,7 @@ List<Account> TMP_DATA_accountList = [
   ),
   Account(
     id: 3,
-    name: "Bank Account",
+    name: "Bank Account long name",
     icon: Icons.account_balance_wallet,
     balance: 0,
     color: Colors.orange,
@@ -74,21 +76,21 @@ List<Group> TMP_DATA_groupList = [
     transactionCategories: [
       TMP_DATA_categoryList[5],
       TMP_DATA_categoryList[6],
-      TMP_DATA_categoryList[7],
+      TMP_DATA_categoryList[4],
     ],
   ),
 ];
 
 List<TransactionCategory> TMP_DATA_categoryList = [
   TransactionCategory(
-      id: 1,
+      id: 2,
       name: "Food",
       icon: Icons.fastfood,
       color: Colors.red,
       description: "category food description",
       isHidden: false),
   TransactionCategory(
-      id: 2,
+      id: 1,
       name: "Entertainment",
       icon: Icons.local_movies,
       color: Colors.blue,
@@ -131,7 +133,7 @@ List<TransactionCategory> TMP_DATA_categoryList = [
       isHidden: false),
 ];
 
-List<Transaction> TMP_DATA_transactionList = [
+List<SingleTransaction> TMP_DATA_transactionList = [
   SingleTransaction(
     id: 1,
     title: 'birthday present',
@@ -150,57 +152,42 @@ List<Transaction> TMP_DATA_transactionList = [
     date: DateTime(2021, 10, 9),
     description: 'with friends',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 3,
-    title: 'weekly groceries',
+    title: 'pc building',
     value: -40,
     category: TMP_DATA_categoryList[0],
     account: TMP_DATA_accountList[1],
-    startDate: DateTime(2043, 1, 2),
-    endDate: DateTime(1999, 9, 1),
-    intervalType: 'Days',
-    intervalAmount: 1,
-    intervalUnit: 'Days',
+    date: DateTime(2022, 1, 2),
     description: 'at the supermarket',
+    recurringTransaction: TMP_DATA_recurringTransactionList[0],
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 4,
     title: 'car insurance',
     value: 123,
     category: TMP_DATA_categoryList[3],
     account: TMP_DATA_accountList[1],
-    startDate: DateTime(2020, 1, 1),
-    endDate: DateTime(2099, 9, 9),
-    intervalType: 'Months',
-    intervalAmount: 1,
-    intervalUnit: 'Months',
+    date: DateTime(2020, 1, 1),
     description: 'Test description',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 5,
     title: 'rent',
     value: 1000.0,
     category: TMP_DATA_categoryList[3],
     account: TMP_DATA_accountList[2],
-    startDate: DateTime(2020, 1, 1),
-    endDate: DateTime(2030, 1, 1),
-    intervalType: 'Months',
-    intervalAmount: 1,
-    intervalUnit: 'Years',
+    date: DateTime(2020, 1, 1),
     description: '',
   ),
-  RecurringTransaction(
+  SingleTransaction(
     id: 6,
     title: 'savings',
     value: 59,
     category: TMP_DATA_categoryList[4],
     account: TMP_DATA_accountList[3],
     account2: TMP_DATA_accountList[0],
-    startDate: DateTime(2021, 2, 4),
-    endDate: DateTime(2022, 2, 4),
-    intervalType: 'Months',
-    intervalAmount: 1,
-    intervalUnit: 'Months',
+    date: DateTime(2021, 2, 4),
     description: 'at the bank',
   ),
   SingleTransaction(
@@ -249,7 +236,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.red,
     description: "savings pc description",
     balance: 100.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
     goal: 1200.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -260,7 +247,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.blue,
     description: "savings car description",
     balance: 100.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 8),
     goal: 1200.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -271,7 +258,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.green,
     description: "savings house description",
     balance: 800.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 12, 13),
     goal: 1200.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -282,7 +269,7 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.orange,
     description: "savings other description",
     balance: 10.0,
-    endDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2023, 01, 2),
     goal: 300.0,
     startDate: DateTime(2020, 10, 2),
   ),
@@ -299,8 +286,8 @@ List<Budget> TMP_DATA_budgetList = [
     endDate: DateTime(2022, 10, 2),
     startDate: DateTime(2020, 10, 2),
     intervalAmount: 3,
-    intervalUnit: 'Months',
-    intervalType: 'isTheXofUnit',
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
     isRecurring: true,
     limit: 500,
     transactionCategories: [
@@ -318,8 +305,8 @@ List<Budget> TMP_DATA_budgetList = [
     endDate: DateTime(2023, 2, 2),
     startDate: DateTime(2020, 7, 21),
     intervalAmount: 3,
-    intervalUnit: 'Days',
-    intervalType: 'isTheXofUnit',
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
     isRecurring: true,
     limit: 500,
     transactionCategories: [
@@ -333,13 +320,13 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.home,
     color: Colors.green,
     description: "budget house description",
-    balance: 800.0,
+    balance: 400.0,
     endDate: DateTime(2022, 10, 2),
     startDate: DateTime(2020, 10, 2),
     intervalAmount: 3,
-    intervalUnit: 'Months',
-    intervalType: 'isTheXofUnit',
-    isRecurring: true,
+    intervalUnit: IntervalUnit.day,
+    intervalType: IntervalType.fixedInterval,
+    isRecurring: false,
     limit: 500,
     transactionCategories: [
       TMP_DATA_categoryList[0],
@@ -352,17 +339,64 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.more,
     color: Colors.orange,
     description: "budget other description",
-    balance: 10.0,
+    balance: 499,
     endDate: DateTime(2022, 10, 2),
     startDate: DateTime(2020, 10, 2),
     intervalAmount: 3,
-    intervalUnit: 'Months',
-    intervalType: 'isTheXofUnit',
+    intervalUnit: IntervalUnit.day,
+    intervalType: IntervalType.fixedInterval,
     isRecurring: true,
     limit: 500,
     transactionCategories: [
       TMP_DATA_categoryList[0],
       TMP_DATA_categoryList[1],
     ],
+  ),
+];
+
+List<RecurringTransaction> TMP_DATA_recurringTransactionList = [
+  RecurringTransaction(
+    id: 1,
+    title: "pc building",
+    value: 100.0,
+    description: "recurring pc description",
+    category: TMP_DATA_categoryList[2],
+    account: TMP_DATA_accountList[0],
+    account2: TMP_DATA_accountList[1],
+    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
+    intervalAmount: 3,
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
+    repetitionAmount: 4,
+  ),
+  RecurringTransaction(
+    id: 2,
+    title: "saving",
+    value: 1030.0,
+    description: "recurring pc description",
+    category: TMP_DATA_categoryList[0],
+    account: TMP_DATA_accountList[0],
+    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
+    intervalAmount: 3,
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
+    repetitionAmount: 4,
+  ),
+  RecurringTransaction(
+    id: 3,
+    title: "car",
+    value: 50,
+    description: "recurring pc description",
+    category: TMP_DATA_categoryList[0],
+    account: TMP_DATA_accountList[0],
+    account2: TMP_DATA_accountList[0],
+    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime(2022, 10, 7),
+    intervalAmount: 3,
+    intervalUnit: IntervalUnit.month,
+    intervalType: IntervalType.fixedInterval,
+    repetitionAmount: 4,
   ),
 ];

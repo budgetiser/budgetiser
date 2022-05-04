@@ -17,4 +17,11 @@ class Group {
     required this.description,
     required this.transactionCategories,
   });
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'icon': icon.codePoint,
+    'color': color.value,
+    'description': description,
+  };
 }

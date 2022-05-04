@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 import 'config/themes/themes.dart';
-import 'screens/home.dart';
+import 'screens/homeScreen.dart';
 
 Future<void> main() async {
   SharePreferenceCache spCache = SharePreferenceCache();

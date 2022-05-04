@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +11,11 @@ class Budget {
   double balance;
   double limit;
   bool isRecurring;
-  String intervalType;
-  int intervalAmount;
-  String intervalUnit;
+  IntervalType? intervalType;
+  int? intervalAmount;
+  IntervalUnit? intervalUnit;
   DateTime startDate;
-  DateTime endDate;
+  DateTime? endDate;
   List<TransactionCategory> transactionCategories;
 
   Budget({
@@ -26,11 +27,26 @@ class Budget {
     required this.balance,
     required this.limit,
     required this.isRecurring,
-    required this.intervalType,
-    required this.intervalAmount,
-    required this.intervalUnit,
+    this.intervalType,
+    this.intervalAmount,
+    this.intervalUnit,
     required this.startDate,
-    required this.endDate,
+    this.endDate,
     required this.transactionCategories,
   });
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'icon': icon.codePoint,
+        'color': color.value,
+        'description': description,
+        'balance': balance,
+        'limitXX': limit,
+        'is_recurring': isRecurring ? 1 : 0,
+        'interval_amount': isRecurring ? intervalAmount : null,
+        'Interval_unit': isRecurring ? intervalUnit.toString() : null,
+        'Interval_type': isRecurring ? intervalType.toString() : null,
+        'start_date': startDate.toString().substring(0, 10),
+        'end_date': isRecurring ? endDate.toString().substring(0, 10) : null,
+      };
 }
