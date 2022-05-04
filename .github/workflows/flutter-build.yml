@@ -15,8 +15,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - run: cd budgetiser
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - run: |
+          cd budgetiser 
+          flutter pub get
+          flutter test
+          flutter build apk --no-tree-shake-icons
+          flutter build appbundle
