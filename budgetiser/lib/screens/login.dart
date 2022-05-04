@@ -9,7 +9,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context);
+    DatabaseHelper.instance.logout();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login Page"),
@@ -26,6 +26,7 @@ class LoginScreen extends StatelessWidget {
                 const EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  autofocus: true,
                   controller: _passcodeController,
                   obscureText: true,
                   validator: (data) {
@@ -59,7 +60,7 @@ class LoginScreen extends StatelessWidget {
                 child: TextButton(
                   onPressed: () async {
                     if(_formKey.currentState!.validate() == true){
-                      int verify = await DatabaseHelper.instance.login(int.parse(_passcodeController.text));
+                      int verify = await DatabaseHelper.instance.login(_passcodeController.text);
                       if(verify == 1){
                         Navigator.pushReplacement(
                             context, MaterialPageRoute(builder: (_) => Home()));
@@ -76,21 +77,6 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(
                 height: 5,
-              ),
-              Container(
-                height: 50,
-                width: 250,
-                decoration: BoxDecoration(
-                    color: Colors.transparent, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.redAccent)),
-                child: TextButton(
-                  onPressed: () {
-                    DatabaseHelper.instance.logout();
-                  },
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(color: Colors.redAccent, fontSize: 25),
-                  ),
-                ),
               ),
               const SizedBox(
                 height: 130,

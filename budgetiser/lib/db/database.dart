@@ -15,16 +15,22 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
-  static const databaseName = 'budgetiser_secure2.db';
+  static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
-  static int? _passcode;
+  static String? _passcode;
 
   Future<Database> get database async =>
     _database ??= await initializeDatabase();
 
-  Future<int> login(int value) async{
-    _passcode = value;
+  Future<int> login(String passCode) async{
+    _passcode = passCode;
+    _database = await initializeDatabase();
+    return _database != null ? (_database!.isOpen ? 1: 0) : 0;
+  }
+
+  Future<int> createDatabase(String passCode) async{
+    _passcode = passCode;
     _database = await initializeDatabase();
     return _database != null ? (_database!.isOpen ? 1: 0) : 0;
   }
@@ -34,7 +40,6 @@ class DatabaseHelper {
     if(db.isOpen){
       db.close();
     }
-    print('logout');
   }
 
   _onCreate(Database db, int version) async {
@@ -238,7 +243,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       return await openDatabase(
         join(databasesPath, databaseName),
         version: 1,
-        password: _passcode != null && _passcode.toString() != '' ? _passcode.toString() : '12345',
+        password: _passcode != null && _passcode != '' ? _passcode : '1234',
         onCreate: _onCreate,
         onUpgrade: (db, oldVersion, newVersion) async {
           _dropTables(db);
@@ -250,7 +255,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         },
       );
     } catch (e){
-      print("----------" + e.toString());
+      print("" + e.toString());
     }
   }
 
