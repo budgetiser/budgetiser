@@ -18,6 +18,5 @@ jobs:
       - run: |
           cd budgetiser 
           flutter pub get
-          flutter test
           flutter build apk --no-tree-shake-icons
           flutter build appbundle
