@@ -11,7 +11,7 @@ class SettingsStreamClass {
   final StreamController<ThemeMode> _SettingsStreamController =
       StreamController<ThemeMode>.broadcast();
 
-  Sink<ThemeMode> get settingsStreamSink => _SettingsStreamController.sink;
+  Sink<ThemeMode> get _settingsStreamSink => _SettingsStreamController.sink;
 
   Stream<ThemeMode> get settingsStream => _SettingsStreamController.stream;
 
@@ -23,6 +23,15 @@ class SettingsStreamClass {
                 ? ThemeMode.light
                 : ThemeMode.dark;
 
-    settingsStreamSink.add(_currentThemeMode);
+    _settingsStreamSink.add(_currentThemeMode);
+  }
+
+  void setThemeModeFromString(String themeMode) {
+    ThemeMode _currentThemeMode = themeMode == "system"
+        ? ThemeMode.system
+        : themeMode == "light"
+            ? ThemeMode.light
+            : ThemeMode.dark;
+    _settingsStreamSink.add(_currentThemeMode);
   }
 }

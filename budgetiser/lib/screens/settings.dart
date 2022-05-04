@@ -21,7 +21,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: const Text(
           "Settings",
-          // style: Theme.of(context).textTheme.caption,
         ),
       ),
       drawer: createDrawer(context),
@@ -31,7 +30,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: <Widget>[
             const Text(
               'Settings Page',
-              // style: Theme.of(context).textTheme.headline,
             ),
             DropDownSettingsTile<String>(
               title: 'Theme',
@@ -43,12 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               selected: "system",
               onChange: (value) {
-                ThemeMode themeMode = value == 'system'
-                    ? ThemeMode.system
-                    : value == 'light'
-                        ? ThemeMode.light
-                        : ThemeMode.dark;
-                SettingsStreamClass.instance.settingsStreamSink.add(themeMode);
+                SettingsStreamClass.instance.setThemeModeFromString(value);
               },
             ),
           ],
