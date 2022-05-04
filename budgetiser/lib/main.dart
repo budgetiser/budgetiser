@@ -1,5 +1,5 @@
 import 'package:budgetiser/routes.dart';
-import 'package:budgetiser/shared/services/notification/themeChangedNotification.dart';
+import 'package:budgetiser/shared/services/SettingsStream.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
@@ -10,7 +10,6 @@ Future<void> main() async {
   SharePreferenceCache spCache = SharePreferenceCache();
   await spCache.init();
   await Settings.init(cacheProvider: spCache);
-  print(Settings.getValue("key-themeMode", "123"));
   runApp(const MyApp());
 }
 
@@ -22,39 +21,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _themeModeString = Settings.getValue("key-themeMode", "system");
+  ThemeMode _currentThemeMode =
+      Settings.getValue("key-themeMode", "system") == "system"
+          ? ThemeMode.system
+          : Settings.getValue("key-themeMode", "system") == "light"
+              ? ThemeMode.light
+              : ThemeMode.dark;
+
+  @override
+  void initState() {
+    SettingsStreamClass.instance.settingsStream.listen((themeMode) {
+      setState(() {
+        _currentThemeMode = themeMode;
+      });
+    });
+    SettingsStreamClass.instance.pushGetSettingsStream();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: _getThemeModeFromString(_themeModeString),
+      themeMode: _currentThemeMode,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
-      home: NotificationListener<ThemeChangedNotification>(
-        child: const Home(),
-        onNotification: (n) {
-          print("got");
-          setState(() {
-            _themeModeString = n.themeMode.toString();
-          });
-          return true;
-        },
-      ),
+      home: const HomeScreen(),
       routes: routes,
     );
-  }
-
-  ThemeMode _getThemeModeFromString(String themMode) {
-    switch (Settings.getValue("key-themeMode", "system")) {
-      case "system":
-        print("system");
-        return ThemeMode.system;
-      case "light":
-        return ThemeMode.light;
-      case "dark":
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
   }
 }
