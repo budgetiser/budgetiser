@@ -1,5 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/dataClasses/transaction.dart';
+import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -69,7 +69,10 @@ class _RecurringFormState extends State<RecurringForm> {
         fixedIntervalUnit = widget.initialRecurringData.intervalUnit!;
       }
       enddate = widget.initialRecurringData.endDate;
-      repetitionsController.text = _calculateNeededRepetitions().toString();
+      repetitionsController.text =
+          widget.initialRecurringData.repetitionAmount != null
+              ? widget.initialRecurringData.repetitionAmount.toString()
+              : _calculateNeededRepetitions().toString();
     }
     _calculateEndDate();
   }
@@ -394,6 +397,9 @@ class _RecurringFormState extends State<RecurringForm> {
                 ? int.parse(fixedPointOfTimeAmountController.text)
                 : int.parse(fixedIntervalAmountController.text),
         endDate: enddate,
+        repetitionAmount: repetitionsController.text.isEmpty
+            ? null
+            : int.parse(repetitionsController.text),
       ),
     );
   }
