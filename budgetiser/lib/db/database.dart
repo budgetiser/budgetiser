@@ -12,7 +12,8 @@ import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
@@ -20,9 +21,36 @@ class DatabaseHelper {
   static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
+  static String? _passcode;
 
   Future<Database> get database async =>
       _database ??= await initializeDatabase();
+
+  Future<int> login(String passCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('encrypted')) {
+      prefs.setBool('encrypted', false);
+    }
+    _passcode = passCode;
+    _database = await initializeDatabase();
+    return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
+  }
+
+  Future<int> createDatabase(String passCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('encrypted', passCode != '' ? true : false);
+    _passcode = passCode;
+    _database = await initializeDatabase();
+    return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
+  }
+
+  void logout() async {
+    final db = await database;
+    if (db == null) return;
+    if (db.isOpen) {
+      db.close();
+    }
+  }
 
   _onCreate(Database db, int version) async {
     if (kDebugMode) {
@@ -243,20 +271,26 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   }
 
   initializeDatabase() async {
+    final prefs = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
-    return await openDatabase(
-      join(databasesPath, databaseName),
-      version: 1,
-      onCreate: _onCreate,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        _dropTables(db);
-        _onCreate(db, newVersion);
-      },
-      onDowngrade: (db, oldVersion, newVersion) async {
-        _dropTables(db);
-        _onCreate(db, newVersion);
-      },
-    );
+    try {
+      return await openDatabase(
+        join(databasesPath, databaseName),
+        version: 1,
+        password: prefs.getBool('encrypted')! ? _passcode : null,
+        onCreate: _onCreate,
+        onUpgrade: (db, oldVersion, newVersion) async {
+          _dropTables(db);
+          _onCreate(db, newVersion);
+        },
+        onDowngrade: (db, oldVersion, newVersion) async {
+          _dropTables(db);
+          _onCreate(db, newVersion);
+        },
+      );
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   /*
