@@ -3,13 +3,13 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:flutter/material.dart';
 
 class SelectAccount extends StatefulWidget {
-  SelectAccount({
+  const SelectAccount({
     Key? key,
     this.initialAccount,
     required this.callback,
     // this.blackListAccountId,
   }) : super(key: key);
-  Account? initialAccount;
+  final Account? initialAccount;
   final Function(Account) callback;
   // int? blackListAccountId = 1;
 

@@ -436,11 +436,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    Map<String, dynamic> rowSingleTransaction = {
-      'transaction_id': transactionId,
-      'date': transaction.date.toString().substring(0, 10),
-    };
-
     Account account = await _getOneAccount(transaction.account.id);
     if (transaction.account2 == null) {
       await db.update(
