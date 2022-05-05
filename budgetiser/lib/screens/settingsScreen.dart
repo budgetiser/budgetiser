@@ -2,7 +2,7 @@ import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/shared/services/SettingsStream.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String routeID = 'settings';
@@ -15,6 +15,21 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  var selectedValue;
+
+  @override
+  void initState() {
+    yxc();
+    super.initState();
+  }
+
+  void yxc() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedValue = prefs.getString('key-themeMode');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,19 +46,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const Text(
               'Settings Page',
             ),
-            DropDownSettingsTile<String>(
-              title: 'Theme',
-              settingKey: 'key-themeMode',
-              values: const <String, String>{
-                'system': 'system',
-                'light': 'light',
-                'dark': 'dark',
-              },
-              selected: "system",
-              onChange: (value) {
-                SettingsStreamClass.instance.setThemeModeFromString(value);
-              },
-            ),
+            DropdownButton<String>(
+                value: selectedValue,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text("system"),
+                    value: "system",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("light"),
+                    value: "light",
+                  ),
+                  DropdownMenuItem(
+                    child: Text("dark"),
+                    value: "dark",
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value;
+                    if (value != null) {
+                      SettingsStreamClass.instance
+                          .setThemeModeFromString(value);
+                    }
+                  });
+                })
           ],
         ),
       ),

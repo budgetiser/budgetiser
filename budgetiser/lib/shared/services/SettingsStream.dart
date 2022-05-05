@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsStreamClass {
   SettingsStreamClass._privateConstructor();
@@ -15,18 +15,23 @@ class SettingsStreamClass {
 
   Stream<ThemeMode> get settingsStream => _SettingsStreamController.stream;
 
-  void pushGetSettingsStream() {
-    ThemeMode _currentThemeMode =
-        Settings.getValue("key-themeMode", "system") == "system"
-            ? ThemeMode.system
-            : Settings.getValue("key-themeMode", "system") == "light"
-                ? ThemeMode.light
-                : ThemeMode.dark;
+  void pushGetSettingsStream() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? currentModeString = prefs.getString('key-themeMode');
+
+    ThemeMode _currentThemeMode = currentModeString == "system"
+        ? ThemeMode.system
+        : currentModeString == "light"
+            ? ThemeMode.light
+            : ThemeMode.dark;
 
     _settingsStreamSink.add(_currentThemeMode);
   }
 
-  void setThemeModeFromString(String themeMode) {
+  void setThemeModeFromString(String themeMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('key-themeMode', themeMode);
+
     ThemeMode _currentThemeMode = themeMode == "system"
         ? ThemeMode.system
         : themeMode == "light"

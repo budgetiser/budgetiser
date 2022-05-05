@@ -1,15 +1,16 @@
 import 'package:budgetiser/routes.dart';
 import 'package:budgetiser/shared/services/SettingsStream.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/themes/themes.dart';
 import 'screens/homeScreen.dart';
 
 Future<void> main() async {
-  SharePreferenceCache spCache = SharePreferenceCache();
-  await spCache.init();
-  await Settings.init(cacheProvider: spCache);
+  // SharePreferenceCache spCache = SharePreferenceCache();
+  // await spCache.init();
+  // await Settings.init(cacheProvider: spCache);
+
   runApp(const MyApp());
 }
 
@@ -21,12 +22,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode _currentThemeMode =
-      Settings.getValue("key-themeMode", "system") == "system"
-          ? ThemeMode.system
-          : Settings.getValue("key-themeMode", "system") == "light"
-              ? ThemeMode.light
-              : ThemeMode.dark;
+  ThemeMode? _currentThemeMode;
 
   @override
   void initState() {
