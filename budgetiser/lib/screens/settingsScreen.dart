@@ -19,11 +19,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    yxc();
+    asyncSetStateFromPreferences();
     super.initState();
   }
 
-  void yxc() async {
+  void asyncSetStateFromPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       selectedValue = prefs.getString('key-themeMode');
