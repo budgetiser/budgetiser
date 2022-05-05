@@ -60,6 +60,23 @@ class _HomeState extends State<Home> {
               ),
               heroTag: "fillDB",
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton.extended(
+              onPressed: () async {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("DB reset and filled with TMP data"),
+                  ),
+                );
+              },
+              label: const Text("test"),
+              icon: const Icon(
+                Icons.refresh,
+              ),
+              heroTag: "test",
+            ),
           ],
         ),
       ),
