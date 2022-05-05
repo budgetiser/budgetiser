@@ -22,28 +22,30 @@ class DatabaseHelper {
   static String? _passcode;
 
   Future<Database> get database async =>
-    _database ??= await initializeDatabase();
+      _database ??= await initializeDatabase();
 
-  Future<int> login(String passCode) async{
+  Future<int> login(String passCode) async {
     final prefs = await SharedPreferences.getInstance();
-    if(!prefs.containsKey('encrypted')){ prefs.setBool('encrypted', false); };
+    if (!prefs.containsKey('encrypted')) {
+      prefs.setBool('encrypted', false);
+    }
     _passcode = passCode;
     _database = await initializeDatabase();
-    return _database != null ? (_database!.isOpen ? 1: 0) : 0;
+    return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
   }
 
-  Future<int> createDatabase(String passCode) async{
+  Future<int> createDatabase(String passCode) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('encrypted', passCode != '' ? true : false);
     _passcode = passCode;
     _database = await initializeDatabase();
-    return _database != null ? (_database!.isOpen ? 1: 0) : 0;
+    return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
   }
 
-  void logout() async{
+  void logout() async {
     final db = await database;
-    if(db == null) return;
-    if(db.isOpen){
+    if (db == null) return;
+    if (db.isOpen) {
       db.close();
     }
   }
@@ -250,7 +252,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
       return await openDatabase(
         join(databasesPath, databaseName),
         version: 1,
-        password:  prefs.getBool('encrypted')! ? _passcode : null,
+        password: prefs.getBool('encrypted')! ? _passcode : null,
         onCreate: _onCreate,
         onUpgrade: (db, oldVersion, newVersion) async {
           _dropTables(db);
@@ -261,7 +263,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
           _onCreate(db, newVersion);
         },
       );
-    } catch (e){
+    } catch (e) {
       print("" + e.toString());
     }
   }
