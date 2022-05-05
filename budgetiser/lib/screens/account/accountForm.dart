@@ -7,11 +7,11 @@ import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class AccountForm extends StatefulWidget {
-  AccountForm({
+  const AccountForm({
     Key? key,
     this.initialAccount,
   }) : super(key: key);
-  Account? initialAccount;
+  final Account? initialAccount;
 
   @override
   State<AccountForm> createState() => _AccountFormState();

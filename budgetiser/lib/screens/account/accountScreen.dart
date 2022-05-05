@@ -112,8 +112,8 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AccountForm()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AccountForm()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
