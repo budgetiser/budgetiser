@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
@@ -152,7 +154,7 @@ CREATE TABLE IF NOT EXISTS budget(
   interval_type TEXT,
   interval_amount INTEGER,
   interval_unit TEXT,
-  interval_repititions INTEGER,
+  interval_repetitions INTEGER,
   start_date TEXT,
   end_date TEXT,
   description TEXT,
@@ -953,15 +955,16 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         returnBudget.intervalType = IntervalType.values
             .firstWhere((e) => e.toString() == maps[i]['interval_type']);
         returnBudget.intervalAmount = maps[i]['interval_amount'];
-        returnBudget.intervalRepititions = maps[i]['interval_repititions'];
+        returnBudget.intervalRepititions = maps[i]['interval_repetitions'];
       }
       return returnBudget;
     }));
   }
 
-  Future<Budget> _getBudgetToID(int budgetID) async{
+  Future<Budget> _getBudgetToID(int budgetID) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('budget', where: 'id = ?', whereArgs: [budgetID]);
+    final List<Map<String, dynamic>> maps =
+        await db.query('budget', where: 'id = ?', whereArgs: [budgetID]);
     List<List<TransactionCategory>> categoryList = [];
     for (int i = 0; i < maps.length; i++) {
       categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
@@ -979,13 +982,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       transactionCategories: categoryList[0],
     );
     if (maps[0]['is_recurring'] == 1) {
-    returnBudget.endDate = DateTime.parse(maps[0]['end_date']);
-    returnBudget.intervalUnit = IntervalUnit.values
-        .firstWhere((e) => e.toString() == maps[0]['interval_unit']);
-    returnBudget.intervalType = IntervalType.values
-        .firstWhere((e) => e.toString() == maps[0]['interval_type']);
-    returnBudget.intervalAmount = maps[0]['interval_amount'];
-    returnBudget.intervalRepititions = maps[0]['interval_repititions'];
+      returnBudget.endDate = DateTime.parse(maps[0]['end_date']);
+      returnBudget.intervalUnit = IntervalUnit.values
+          .firstWhere((e) => e.toString() == maps[0]['interval_unit']);
+      returnBudget.intervalType = IntervalType.values
+          .firstWhere((e) => e.toString() == maps[0]['interval_type']);
+      returnBudget.intervalAmount = maps[0]['interval_amount'];
+      returnBudget.intervalRepititions = maps[0]['interval_repetitions'];
     }
     return returnBudget;
   }
@@ -1083,7 +1086,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     Budget budget = await _getBudgetToID(budgetID);
     Map<String, DateTime> interval = budget.calculateCurrentInterval();
 
-    if(budget.isRecurring){
+    if (budget.isRecurring) {
       await db.rawUpdate("""UPDATE budget SET balance =
             (
               SELECT -SUM(value)
@@ -1096,8 +1099,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
                   and ? >= singleTransaction.date
             )
         WHERE id = ?;
-    """, [budgetID, budgetID, interval['start'].toString().substring(0, 10), interval['end'].toString().substring(0, 10)]);
-    }else {
+    """, [
+        budgetID,
+        budgetID,
+        interval['start'].toString().substring(0, 10),
+        interval['end'].toString().substring(0, 10)
+      ]);
+    } else {
       await db.rawUpdate("""UPDATE budget SET balance =
             (
               SELECT -SUM(value)
