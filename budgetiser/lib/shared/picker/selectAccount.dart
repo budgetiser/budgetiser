@@ -44,21 +44,27 @@ class _SelectAccountState extends State<SelectAccount> {
       children: [
         const Text("Account:"),
         const SizedBox(width: 8),
-        DropdownButton<Account>(
-          value: selectedAccount,
-          elevation: 16,
-          onChanged: (Account? newValue) {
-            setState(() {
-              widget.callback(newValue!);
-              selectedAccount = newValue;
-            });
-          },
-          items: _accounts?.map<DropdownMenuItem<Account>>((Account account) {
-            return DropdownMenuItem<Account>(
-              value: account,
-              child: Text(account.name),
-            );
-          }).toList(),
+        Expanded(
+          child: DropdownButton<Account>(
+            isExpanded: true,
+            value: selectedAccount,
+            elevation: 16,
+            onChanged: (Account? newValue) {
+              setState(() {
+                widget.callback(newValue!);
+                selectedAccount = newValue;
+              });
+            },
+            items: _accounts?.map<DropdownMenuItem<Account>>((Account account) {
+              return DropdownMenuItem<Account>(
+                value: account,
+                child: Text(
+                  account.name,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );

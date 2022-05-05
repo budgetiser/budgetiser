@@ -121,7 +121,7 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Form(
                   key: _formKey,
                   child: Container(
@@ -175,48 +175,54 @@ class _TransactionFormState extends State<TransactionForm> {
                             ],
                           ),
                           children: [
-                            Column(
-                              children: [
-                                SelectAccount(
-                                    initialAccount: selectedAccount,
-                                    callback: setAccount),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: hasAccount2,
-                                      onChanged: (bool? newValue) {
-                                        setState(() {
-                                          hasAccount2 = newValue!;
-                                        });
-                                        if (hasAccount2) {
-                                          DatabaseHelper
-                                              .instance.allAccountsStream
-                                              .listen((event) {
-                                            setState(() {
-                                              selectedAccount2 = event.first;
-                                            });
-                                          });
-                                        } else {
-                                          selectedAccount2 = null;
-                                        }
-                                      },
-                                    ),
-                                    const Text("transfer to another account"),
-                                  ],
-                                ),
-                                if (hasAccount2)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Column(
+                                children: [
+                                  SelectAccount(
+                                      initialAccount: selectedAccount,
+                                      callback: setAccount),
+                                  const SizedBox(height: 8),
                                   Row(
                                     children: [
-                                      const Text("to "),
-                                      SelectAccount(
-                                        initialAccount: selectedAccount2,
-                                        callback: setAccount2,
+                                      Checkbox(
+                                        value: hasAccount2,
+                                        onChanged: (bool? newValue) {
+                                          setState(() {
+                                            hasAccount2 = newValue!;
+                                          });
+                                          if (hasAccount2) {
+                                            DatabaseHelper
+                                                .instance.allAccountsStream
+                                                .listen((event) {
+                                              setState(() {
+                                                selectedAccount2 = event.first;
+                                              });
+                                            });
+                                          } else {
+                                            selectedAccount2 = null;
+                                          }
+                                        },
                                       ),
+                                      const Text("transfer to another account"),
                                     ],
                                   ),
-                                const SizedBox(height: 8),
-                              ],
+                                  if (hasAccount2)
+                                    Row(
+                                      children: [
+                                        const Text("to "),
+                                        Flexible(
+                                          child: SelectAccount(
+                                            initialAccount: selectedAccount2,
+                                            callback: setAccount2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  const SizedBox(height: 8),
+                                ],
+                              ),
                             ),
                           ],
                         ),
