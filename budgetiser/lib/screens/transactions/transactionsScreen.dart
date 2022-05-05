@@ -146,31 +146,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                       ),
                       for (var account in _accountList)
-                        ListTile(
-                          title: Row(
-                            children: [
-                              Icon(
-                                account.icon,
-                                color: account.color,
-                              ),
-                              Flexible(
-                                child: Text(" " + account.name,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                            ],
-                          ),
-                          visualDensity: VisualDensity.compact,
-                          leading: Radio(
-                            value: account.name,
-                            groupValue: _currentFilterAccountName,
-                            onChanged: (value) {
-                              setState(() {
-                                _currentFilterAccountName = value.toString();
-                              });
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ),
+                        _filterListTile(account),
                       const Divider(
                         indent: 25,
                       ),
@@ -196,31 +172,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                       ),
                       for (var category in _categoryList)
-                        ListTile(
-                          title: Row(
-                            children: [
-                              Icon(
-                                category.icon,
-                                color: category.color,
-                              ),
-                              Flexible(
-                                child: Text(" " + category.name,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                            ],
-                          ),
-                          visualDensity: VisualDensity.compact,
-                          leading: Radio(
-                            value: category.name,
-                            groupValue: _currentFilterCategoryName,
-                            onChanged: (value) {
-                              setState(() {
-                                _currentFilterCategoryName = value.toString();
-                              });
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ),
+                        _filterListTile(category),
                     ],
                   );
                 },
@@ -301,5 +253,42 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  ListTile _filterListTile(element) {
+    if (element is Account || element is TransactionCategory) {
+      return ListTile(
+        title: Row(
+          children: [
+            Icon(
+              element.icon,
+              color: element.color,
+            ),
+            Flexible(
+              child: Text(" " + element.name, overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
+        visualDensity: VisualDensity.compact,
+        leading: Radio(
+          value: element.name.toString(),
+          groupValue: (element is Account)
+              ? _currentFilterAccountName
+              : _currentFilterCategoryName,
+          onChanged: (value) {
+            setState(() {
+              if (element is Account) {
+                _currentFilterAccountName = value.toString();
+              } else {
+                _currentFilterCategoryName = value.toString();
+              }
+            });
+            Navigator.of(context).pop();
+          },
+        ),
+      );
+    } else {
+      throw Exception("Unknown element passed to _filterListTile");
+    }
   }
 }
