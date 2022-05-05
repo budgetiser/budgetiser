@@ -3,6 +3,7 @@ import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 import 'package:budgetiser/shared/picker/selectIcon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/colorpicker.dart';
+import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class AccountForm extends StatefulWidget {
@@ -145,19 +146,6 @@ class _AccountFormState extends State<AccountForm> {
                                 ),
                                 FloatingActionButton.extended(
                                   onPressed: (() {
-                                    DatabaseHelper.instance.deleteAccount(
-                                        widget.initialAccount!.id);
-                                    Navigator.of(context).pop();
-                                  }),
-                                  label: const Text("Delete"),
-                                  heroTag: "delete",
-                                  icon: const Icon(Icons.delete),
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                FloatingActionButton.extended(
-                                  onPressed: (() {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (context) => TransactionsScreen(
@@ -181,29 +169,68 @@ class _AccountFormState extends State<AccountForm> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            Account a = Account(
-                name: nameController.text,
-                icon: _icon,
-                color: _color,
-                balance: double.parse(balanceController.text),
-                description: descriptionController.text,
-                id: 0);
+      floatingActionButton:
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        FloatingActionButton(
+          heroTag: 'cancel',
+          backgroundColor: Colors.red,
+          mini: true,
+          onPressed: () {
             if (widget.initialAccount != null) {
-              a.id = widget.initialAccount!.id;
-              DatabaseHelper.instance.updateAccount(a);
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: "Attention",
+                      description:
+                          "Are you sure to delete this Transaction? This action can't be undone!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.deleteAccount(
+                          widget.initialAccount!.id,
+                        );
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  });
             } else {
-              DatabaseHelper.instance.createAccount(a);
+              Navigator.of(context).pop();
             }
-            Navigator.of(context).pop();
-          }
-        },
-        label: const Text("Save"),
-        icon: const Icon(Icons.save),
-        heroTag: "save",
-      ),
+          },
+          child: widget.initialAccount != null
+              ? const Icon(Icons.delete_outline)
+              : const Icon(Icons.close),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        FloatingActionButton.extended(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              Account a = Account(
+                  name: nameController.text,
+                  icon: _icon,
+                  color: _color,
+                  balance: double.parse(balanceController.text),
+                  description: descriptionController.text,
+                  id: 0);
+              if (widget.initialAccount != null) {
+                a.id = widget.initialAccount!.id;
+                DatabaseHelper.instance.updateAccount(a);
+              } else {
+                DatabaseHelper.instance.createAccount(a);
+              }
+              Navigator.of(context).pop();
+            }
+          },
+          label: const Text("Save"),
+          icon: const Icon(Icons.save),
+          heroTag: "save",
+        ),
+      ]),
     );
   }
 }
