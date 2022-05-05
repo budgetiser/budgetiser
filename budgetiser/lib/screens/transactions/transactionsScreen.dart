@@ -101,7 +101,27 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return SimpleDialog(
-                    title: const Text('Filter'),
+                    elevation: 0,
+                    contentPadding: const EdgeInsets.only(right: 25),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Filter'),
+                        ElevatedButton(
+                          onPressed: (_currentFilterAccountName == "" &&
+                                  _currentFilterCategoryName == "")
+                              ? null
+                              : () {
+                                  setState(() {
+                                    _currentFilterAccountName = "";
+                                    _currentFilterCategoryName = "";
+                                  });
+                                  Navigator.pop(context);
+                                },
+                          child: const Text("Reset"),
+                        ),
+                      ],
+                    ),
                     alignment: Alignment.topRight,
                     children: [
                       const Padding(
