@@ -49,15 +49,28 @@ class BudgetItem extends StatelessWidget {
                         ],
                       ),
                       budgetData.isRecurring
-                          ? _getTimeInfos(budgetData.startDate, budgetData.endDate!)
-                          : Container(),
+                          ? _getTimeInfos(
+                              budgetData.startDate, budgetData.endDate!)
+                          : (budgetData.startDate.compareTo(DateTime.now()) >= 0
+                              ? Row(
+                                  children: [
+                                    Text("starts in: " +
+                                        budgetData.startDate
+                                            .difference(DateTime.now())
+                                            .inDays
+                                            .toString()),
+                                    const Icon(Icons.arrow_forward)
+                                  ],
+                                )
+                              : Container()),
                     ]),
                 Row(
                   children: [
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: getPercentInterval(budgetData.balance, budgetData.limit),
+                        percent: getPercentInterval(
+                            budgetData.balance, budgetData.limit),
                         backgroundColor: Colors.white,
                         linearGradient: LinearGradient(
                             colors: createGradient(budgetData.color)),
@@ -93,22 +106,24 @@ class BudgetItem extends StatelessWidget {
     );
   }
 
-  Widget _getTimeInfos(DateTime start, DateTime end){
-    if(DateTime.now().compareTo(start) < 0){
+  Widget _getTimeInfos(DateTime start, DateTime end) {
+    if (DateTime.now().compareTo(start) < 0) {
       return Row(
         children: [
-          Text("starting in: " + start.difference(DateTime.now()).inDays.toString()),
+          Text("starting in: " +
+              start.difference(DateTime.now()).inDays.toString()),
           const Icon(Icons.arrow_forward)
         ],
       );
-    }else if(DateTime.now().compareTo(end) > 0){
+    } else if (DateTime.now().compareTo(end) > 0) {
       return Row(
         children: [
-          Text("ended before: " + DateTime.now().difference(end).inDays.toString()),
+          Text("ended before: " +
+              DateTime.now().difference(end).inDays.toString()),
           const Icon(Icons.arrow_back)
         ],
       );
-    }else {
+    } else {
       return Row(
         children: [
           Text("days left: " +
@@ -142,12 +157,12 @@ class BudgetItem extends StatelessWidget {
   }
 
   double getPercentInterval(double value, double base) {
-    if(value >= base){
+    if (value >= base) {
       return 1.00;
-    }else if(value <= 0){
+    } else if (value <= 0) {
       return 0.00;
-    }else {
-      return value/base;
+    } else {
+      return value / base;
     }
   }
 }

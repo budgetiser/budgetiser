@@ -1049,7 +1049,8 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     Budget budget = await _getBudgetToID(budgetID);
     Map<String, DateTime> interval = budget.calculateCurrentInterval();
 
-    await db.rawUpdate("""UPDATE budget SET balance =
+    if(budget.isRecurring){
+      await db.rawUpdate("""UPDATE budget SET balance =
             (
               SELECT -SUM(value)
               FROM singleTransaction
@@ -1062,6 +1063,20 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
             )
         WHERE id = ?;
     """, [budgetID, budgetID, interval['start'].toString().substring(0, 10), interval['end'].toString().substring(0, 10)]);
+    }else {
+      await db.rawUpdate("""UPDATE budget SET balance =
+            (
+              SELECT -SUM(value)
+              FROM singleTransaction
+              INNER JOIN category ON category.id = singleTransaction.category_id
+              INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
+              INNER JOIN budget ON categoryToBudget.budget_id = budget.id
+              WHERE categoryToBudget.budget_id = ?
+                  and ? <= singleTransaction.date
+            )
+        WHERE id = ?;
+    """, [budgetID, budgetID, budget.startDate.toString().substring(0, 10)]);
+    }
     pushGetAllBudgetsStream();
   }
 
