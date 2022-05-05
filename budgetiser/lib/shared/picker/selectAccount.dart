@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/account/accountScreen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:flutter/material.dart';
 
@@ -54,33 +55,46 @@ class _SelectAccountState extends State<SelectAccount> {
     // });
     // print(
     //     "_accounts: ${_accounts?.length}; selectedAccount: ${selectedAccount?.id}");
-    return Row(
-      children: [
-        const Text("Account:"),
-        const SizedBox(width: 8),
-        Expanded(
-          child: DropdownButton<Account>(
-            isExpanded: true,
-            value: selectedAccount,
-            elevation: 16,
-            onChanged: (Account? newValue) {
-              setState(() {
-                widget.callback(newValue!);
-                selectedAccount = newValue;
-              });
-            },
-            items: _accounts?.map<DropdownMenuItem<Account>>((Account account) {
-              return DropdownMenuItem<Account>(
-                value: account,
-                child: Text(
-                  account.name,
-                  overflow: TextOverflow.ellipsis,
+    return Container(
+      child: (_accounts != null && _accounts!.isNotEmpty)
+          ? Row(
+              children: [
+                const Text("Account:"),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: DropdownButton<Account>(
+                    isExpanded: true,
+                    value: selectedAccount,
+                    elevation: 16,
+                    onChanged: (Account? newValue) {
+                      setState(() {
+                        widget.callback(newValue!);
+                        selectedAccount = newValue;
+                      });
+                    },
+                    items: _accounts
+                        ?.map<DropdownMenuItem<Account>>((Account account) {
+                      return DropdownMenuItem<Account>(
+                        value: account,
+                        child: Text(
+                          account.name,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
+              ],
+            )
+          : Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, "account");
+                },
+                child: const Text("No accounts found\nClick here to add one",
+                    textAlign: TextAlign.center),
+              ),
+            ),
     );
   }
 }
