@@ -371,11 +371,26 @@ class _TransactionFormState extends State<TransactionForm> {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
                   if (recurringData.isRecurring) {
-                    DatabaseHelper.instance.updateRecurringTransaction(
-                        _currentRecurringTransaction());
+                    if (widget.initialRecurringTransactionData != null) {
+                      DatabaseHelper.instance.updateRecurringTransaction(
+                          _currentRecurringTransaction());
+                    } else {
+                      DatabaseHelper.instance.deleteSingleTransactionById(
+                          widget.initialSingleTransactionData!.id);
+                      DatabaseHelper.instance.createRecurringTransaction(
+                          _currentRecurringTransaction());
+                    }
                   } else {
-                    DatabaseHelper.instance
-                        .updateSingleTransaction(_currentSingleTransaction());
+                    // isRecurring is false
+                    if (widget.initialSingleTransactionData != null) {
+                      DatabaseHelper.instance
+                          .updateSingleTransaction(_currentSingleTransaction());
+                    } else {
+                      DatabaseHelper.instance.deleteRecurringTransactionById(
+                          widget.initialRecurringTransactionData!.id);
+                      DatabaseHelper.instance
+                          .createSingleTransaction(_currentSingleTransaction());
+                    }
                   }
                 } else {
                   if (recurringData.isRecurring) {
