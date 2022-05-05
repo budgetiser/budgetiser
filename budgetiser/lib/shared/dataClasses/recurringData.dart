@@ -1,3 +1,5 @@
+import 'package:jiffy/jiffy.dart';
+
 class RecurringData {
   DateTime startDate;
   bool isRecurring;
@@ -16,6 +18,62 @@ class RecurringData {
     this.endDate,
     this.repetitionAmount,
   });
+
+  DateTime? calculateEndDate() {
+    if (!isRecurring || intervalAmount == null || intervalUnit == null) {
+      return null;
+    }
+
+    if (intervalType == IntervalType.fixedPointOfTime) {
+      switch (intervalUnit) {
+        case IntervalUnit.week:
+          Duration untilFirstPointOfTime = Duration(
+              days: (intervalAmount! - startDate.weekday) >= 0
+                  ? intervalAmount! - startDate.weekday
+                  : 7 - (startDate.weekday - intervalAmount!));
+          Duration fromRepetitions =
+              Duration(days: 7 * (repetitionAmount! - 1));
+          return startDate.add(untilFirstPointOfTime + fromRepetitions);
+        case IntervalUnit.month:
+          Duration untilFirstPointOfTime = Duration(
+              days: intervalAmount! - startDate.day >= 0
+                  ? intervalAmount! - startDate.day
+                  : Jiffy(startDate).daysInMonth -
+                      startDate.day +
+                      intervalAmount!);
+          DateTime enddate = startDate.add(untilFirstPointOfTime);
+          return Jiffy(enddate).add(months: repetitionAmount! - 1).dateTime;
+        case IntervalUnit.year:
+          Duration untilFirstPointOfTime = Duration(
+            days: (intervalAmount! - Jiffy(startDate).dayOfYear >= 0)
+                ? intervalAmount! - Jiffy(startDate).dayOfYear
+                : ((Jiffy(startDate).isLeapYear == true) ? 366 : 365) -
+                    Jiffy(startDate).dayOfYear +
+                    intervalAmount!,
+          );
+          DateTime enddate = startDate.add(untilFirstPointOfTime);
+          return Jiffy(enddate).add(years: repetitionAmount! - 1).dateTime;
+        default:
+          throw Exception('Error in _calculateEndDate: Unknown interval unit');
+      }
+    } else {
+      switch (intervalUnit) {
+        case IntervalUnit.day:
+          return startDate
+              .add(Duration(days: intervalAmount!) * repetitionAmount!);
+        case IntervalUnit.week:
+          return startDate
+              .add(Duration(days: intervalAmount! * repetitionAmount! * 7));
+        case IntervalUnit.month:
+          return Jiffy(startDate)
+              .add(months: intervalAmount! * repetitionAmount!)
+              .dateTime;
+        default:
+          throw Exception(
+              "Error in _calculateEndDate(fixedInterval): Unknown interval unit");
+      }
+    }
+  }
 }
 
 enum IntervalUnit {

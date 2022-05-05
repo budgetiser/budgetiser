@@ -1,7 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
 
 class RecurringForm extends StatefulWidget {
   RecurringForm({
@@ -73,8 +72,13 @@ class _RecurringFormState extends State<RecurringForm> {
       repetitions = widget.initialRecurringData.repetitionAmount != null
           ? widget.initialRecurringData.repetitionAmount!.toDouble()
           : _calculateNeededRepetitions().toDouble();
+    } else {
+      fixedIntervalAmountController.text = "1";
+      fixedIntervalUnit = IntervalUnit.day;
+      fixedPointOfTimeAmountController.text = "1";
+      fixedPointOfTimeUnit = IntervalUnit.week;
     }
-    _calculateEndDate();
+    enddate = _getRecurringData().calculateEndDate();
   }
 
   int _calculateNeededRepetitions() {
@@ -107,89 +111,6 @@ class _RecurringFormState extends State<RecurringForm> {
     }
   }
 
-  void _calculateEndDate() {
-    if (fixedIntervalAmountController.text.isEmpty &&
-            _selectedIntervalType == IntervalType.fixedInterval ||
-        fixedPointOfTimeAmountController.text.isEmpty &&
-            _selectedIntervalType == IntervalType.fixedPointOfTime) {
-      enddate = null;
-      return;
-    }
-
-    if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
-      switch (fixedPointOfTimeUnit) {
-        case IntervalUnit.week:
-          Duration untilFirstPointOfTime = Duration(
-              days: (int.parse(fixedPointOfTimeAmountController.text) -
-                          startDate.weekday) >=
-                      0
-                  ? int.parse(fixedPointOfTimeAmountController.text) -
-                      startDate.weekday
-                  : 7 -
-                      (startDate.weekday -
-                          int.parse(fixedPointOfTimeAmountController.text)));
-          Duration fromRepetitions =
-              Duration(days: 7 * (repetitions.toInt() - 1));
-          enddate = startDate.add(untilFirstPointOfTime + fromRepetitions);
-          break;
-        case IntervalUnit.month:
-          Duration untilFirstPointOfTime = Duration(
-              days: int.parse(fixedPointOfTimeAmountController.text) -
-                          startDate.day >=
-                      0
-                  ? int.parse(fixedPointOfTimeAmountController.text) -
-                      startDate.day
-                  : Jiffy(startDate).daysInMonth -
-                      startDate.day +
-                      int.parse(fixedPointOfTimeAmountController.text));
-          enddate = startDate.add(untilFirstPointOfTime);
-          enddate =
-              Jiffy(enddate).add(months: repetitions.toInt() - 1).dateTime;
-          break;
-        case IntervalUnit.year:
-          Duration untilFirstPointOfTime = Duration(
-            days: (int.parse(fixedPointOfTimeAmountController.text) -
-                        Jiffy(startDate).dayOfYear >=
-                    0)
-                ? int.parse(fixedPointOfTimeAmountController.text) -
-                    Jiffy(startDate).dayOfYear
-                : ((Jiffy(startDate).isLeapYear == true) ? 366 : 365) -
-                    Jiffy(startDate).dayOfYear +
-                    int.parse(fixedPointOfTimeAmountController.text),
-          );
-          enddate = startDate.add(untilFirstPointOfTime);
-          enddate = Jiffy(enddate).add(years: repetitions.toInt() - 1).dateTime;
-          break;
-        default:
-          print("Error in _calculateEndDate: unknown intervalMode");
-      }
-    } else {
-      switch (fixedIntervalUnit) {
-        case IntervalUnit.day:
-          enddate = startDate.add(
-              Duration(days: int.parse(fixedIntervalAmountController.text)) *
-                  repetitions.toInt());
-          break;
-        case IntervalUnit.week:
-          enddate = startDate.add(Duration(
-              days: int.parse(fixedIntervalAmountController.text) *
-                  repetitions.toInt() *
-                  7));
-          break;
-        case IntervalUnit.month:
-          enddate = Jiffy(startDate)
-              .add(
-                  months: int.parse(fixedIntervalAmountController.text) *
-                      repetitions.toInt())
-              .dateTime;
-          break;
-        default:
-          print(
-              "Error in _calculateEndDate(fixedInterval): unknown intervalMode");
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -206,7 +127,7 @@ class _RecurringFormState extends State<RecurringForm> {
                   onDateChangedCallback: (date) {
                     setState(() {
                       startDate = date;
-                      _calculateEndDate();
+                      enddate = _getRecurringData().calculateEndDate();
                       _callCallback();
                     });
                   },
@@ -217,7 +138,7 @@ class _RecurringFormState extends State<RecurringForm> {
                 onChanged: (bool? newValue) {
                   setState(() {
                     isRecurring = newValue!;
-                    _calculateEndDate();
+                    enddate = _getRecurringData().calculateEndDate();
                     _callCallback();
                   });
                   if (newValue == true) {
@@ -241,7 +162,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     onChanged: (IntervalType? value) {
                       setState(() {
                         _selectedIntervalType = value!;
-                        _calculateEndDate();
+                        enddate = _getRecurringData().calculateEndDate();
                         _callCallback();
                       });
                     },
@@ -260,7 +181,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       ),
                       onChanged: (string) {
                         setState(() {
-                          _calculateEndDate();
+                          enddate = _getRecurringData().calculateEndDate();
                           _callCallback();
                         });
                       },
@@ -281,7 +202,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (IntervalUnit? value) {
                         setState(() {
                           fixedPointOfTimeUnit = value!;
-                          _calculateEndDate();
+                          enddate = _getRecurringData().calculateEndDate();
                           _callCallback();
                         });
                       },
@@ -293,7 +214,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     onChanged: (IntervalType? value) {
                       setState(() {
                         _selectedIntervalType = value!;
-                        _calculateEndDate();
+                        enddate = _getRecurringData().calculateEndDate();
                         _callCallback();
                       });
                     },
@@ -312,7 +233,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       ),
                       onChanged: (string) {
                         setState(() {
-                          _calculateEndDate();
+                          enddate = _getRecurringData().calculateEndDate();
                           _callCallback();
                         });
                       },
@@ -333,7 +254,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (IntervalUnit? value) {
                         setState(() {
                           fixedIntervalUnit = value!;
-                          _calculateEndDate();
+                          enddate = _getRecurringData().calculateEndDate();
                           _callCallback();
                         });
                       },
@@ -352,7 +273,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (string) {
                         repetitions = string;
                         setState(() {
-                          _calculateEndDate();
+                          enddate = _getRecurringData().calculateEndDate();
                           _callCallback();
                         });
                       },
@@ -376,25 +297,27 @@ class _RecurringFormState extends State<RecurringForm> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    widget.onRecurringDataChangedCallback(
-      RecurringData(
-        startDate: startDate,
-        isRecurring: isRecurring,
-        intervalType: _selectedIntervalType,
-        intervalUnit: _selectedIntervalType == IntervalType.fixedInterval
-            ? fixedIntervalUnit
-            : fixedPointOfTimeUnit,
-        intervalAmount: fixedPointOfTimeAmountController.text.isEmpty &&
-                    _selectedIntervalType == IntervalType.fixedPointOfTime ||
-                fixedIntervalAmountController.text.isEmpty &&
-                    _selectedIntervalType == IntervalType.fixedInterval
-            ? null
-            : _selectedIntervalType == IntervalType.fixedPointOfTime
-                ? int.parse(fixedPointOfTimeAmountController.text)
-                : int.parse(fixedIntervalAmountController.text),
-        endDate: enddate,
-        repetitionAmount: repetitions.toInt(),
-      ),
+    widget.onRecurringDataChangedCallback(_getRecurringData());
+  }
+
+  RecurringData _getRecurringData() {
+    return RecurringData(
+      startDate: startDate,
+      isRecurring: isRecurring,
+      intervalType: _selectedIntervalType,
+      intervalUnit: _selectedIntervalType == IntervalType.fixedInterval
+          ? fixedIntervalUnit
+          : fixedPointOfTimeUnit,
+      intervalAmount: fixedPointOfTimeAmountController.text.isEmpty &&
+                  _selectedIntervalType == IntervalType.fixedPointOfTime ||
+              fixedIntervalAmountController.text.isEmpty &&
+                  _selectedIntervalType == IntervalType.fixedInterval
+          ? null
+          : _selectedIntervalType == IntervalType.fixedPointOfTime
+              ? int.parse(fixedPointOfTimeAmountController.text)
+              : int.parse(fixedIntervalAmountController.text),
+      endDate: enddate,
+      repetitionAmount: repetitions.toInt(),
     );
   }
 }
