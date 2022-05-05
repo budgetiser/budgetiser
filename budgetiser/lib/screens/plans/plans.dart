@@ -8,7 +8,6 @@ import 'package:budgetiser/shared/widgets/budgetItem.dart';
 import 'package:budgetiser/shared/widgets/savingItem.dart';
 import 'package:flutter/material.dart';
 
-
 class Plans extends StatefulWidget {
   static String routeID = 'plans';
 
@@ -68,7 +67,7 @@ class _PlansState extends State<Plans> {
           StreamBuilder<List<Budget>>(
             stream: DatabaseHelper.instance.allBudgetsStream,
             builder: (context, snapshot) {
-              if(snapshot.hasData){
+              if (snapshot.hasData) {
                 List<Budget> _budgets = snapshot.data!.toList();
                 _budgets.sort((a, b) => a.compareTo(b));
                 return ListView.builder(
@@ -79,8 +78,9 @@ class _PlansState extends State<Plans> {
                       budgetData: _budgets[index],
                     );
                   },
+                  padding: const EdgeInsets.only(bottom: 80),
                 );
-              }else if (snapshot.hasError) {
+              } else if (snapshot.hasError) {
                 return const Text("Oops!");
               }
               return const Center(
@@ -91,7 +91,7 @@ class _PlansState extends State<Plans> {
           StreamBuilder<List<Savings>>(
             stream: DatabaseHelper.instance.allSavingsStream,
             builder: (context, snapshot) {
-              if(snapshot.hasData){
+              if (snapshot.hasData) {
                 List<Savings> _savings = snapshot.data!.toList();
                 _savings.sort((a, b) => a.name.compareTo(b.name));
                 return ListView.builder(
@@ -102,8 +102,9 @@ class _PlansState extends State<Plans> {
                       savingData: _savings[index],
                     );
                   },
+                  padding: const EdgeInsets.only(bottom: 80),
                 );
-              }else if (snapshot.hasError) {
+              } else if (snapshot.hasError) {
                 return const Text("Oops!");
               }
               return const Center(

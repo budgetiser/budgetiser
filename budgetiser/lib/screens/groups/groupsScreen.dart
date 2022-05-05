@@ -21,25 +21,27 @@ class GroupsScreen extends StatelessWidget {
         ),
       ),
       drawer: createDrawer(context),
-      body:  StreamBuilder<List<Group>>(
-            stream: DatabaseHelper.instance.allGroupsStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GroupItem(groupData: snapshot.data![index]);
-                  },
-                );
-              }else if (snapshot.hasError){
-                return const Text("Oops!");
-              }else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+      body: StreamBuilder<List<Group>>(
+        stream: DatabaseHelper.instance.allGroupsStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GroupItem(groupData: snapshot.data![index]);
+              },
+              padding: const EdgeInsets.only(bottom: 80),
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Oops!");
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)

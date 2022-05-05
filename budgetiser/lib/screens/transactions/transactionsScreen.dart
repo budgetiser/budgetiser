@@ -54,6 +54,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   var _accountList = <Account>[];
 
+  // Function to filter all transactions by account and category
+  bool filterFunction(transaction) {
+    if (transaction is SingleTransaction ||
+        transaction is RecurringTransaction) {
+      transaction = transaction;
+    } else {
+      throw Exception("Unknown transaction type");
+    }
+
+    if (_currentFilterAccountName == "") {
+      return true;
+    } else {
+      return transaction.account.name == _currentFilterAccountName ||
+          (transaction.account2 != null &&
+              transaction.account2!.name == _currentFilterAccountName);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,16 +145,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             stream: DatabaseHelper.instance.allTransactionStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var filteredList = snapshot.data!.where((element) {
-                  if (_currentFilterAccountName == "") {
-                    return true;
-                  } else {
-                    return element.account.name == _currentFilterAccountName ||
-                        (element.account2 != null &&
-                            element.account2!.name ==
-                                _currentFilterAccountName);
-                  }
-                }).toList();
+                var filteredList =
+                    snapshot.data!.where(filterFunction).toList();
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -146,6 +156,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       singleTransactionData: filteredList[index],
                     );
                   },
+                  padding: const EdgeInsets.only(bottom: 80),
                 );
               } else if (snapshot.hasError) {
                 return const Text("Oops!");
@@ -157,16 +168,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             stream: DatabaseHelper.instance.allRecurringTransactionStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var filteredList = snapshot.data!.where((element) {
-                  if (_currentFilterAccountName == "") {
-                    return true;
-                  } else {
-                    return element.account.name == _currentFilterAccountName ||
-                        (element.account2 != null &&
-                            element.account2!.name ==
-                                _currentFilterAccountName);
-                  }
-                }).toList();
+                var filteredList =
+                    snapshot.data!.where(filterFunction).toList();
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -176,6 +179,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       recurringTransactionData: filteredList[index],
                     );
                   },
+                  padding: const EdgeInsets.only(bottom: 80),
                 );
               } else if (snapshot.hasError) {
                 return const Text("Oops!");

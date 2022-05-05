@@ -312,6 +312,7 @@ class _TransactionFormState extends State<TransactionForm> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // Cancel/ Delete button
           FloatingActionButton(
             heroTag: 'cancel',
             backgroundColor: Colors.red,
@@ -353,6 +354,7 @@ class _TransactionFormState extends State<TransactionForm> {
           const SizedBox(
             width: 5,
           ),
+          // Save button
           FloatingActionButton.extended(
             onPressed: () {
               if (_formKey.currentState!.validate()) {

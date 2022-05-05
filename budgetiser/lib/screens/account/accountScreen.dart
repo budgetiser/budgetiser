@@ -101,6 +101,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   accountData: snapshot.data![index],
                 );
               },
+              padding: const EdgeInsets.only(bottom: 80),
             );
           } else if (snapshot.hasError) {
             return const Text("Oops!");

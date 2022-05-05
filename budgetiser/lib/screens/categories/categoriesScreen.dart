@@ -22,28 +22,29 @@ class CategoriesScreen extends StatelessWidget {
       ),
       drawer: createDrawer(context),
       body: StreamBuilder<List<TransactionCategory>>(
-              stream: DatabaseHelper.instance.allCategoryStream,
-              builder: (context, snapshot) {
-                if(snapshot.hasData){
-                  List<TransactionCategory> _categories = snapshot.data!.toList();
-                  _categories.sort((a, b) => a.name.compareTo(b.name));
-                  return ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: _categories.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return CategoryItem(
-                        categoryData: _categories[index],
-                      );
-                    },
-                  );
-                }else if (snapshot.hasError) {
-                  return const Text("Oops!");
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
+        stream: DatabaseHelper.instance.allCategoryStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<TransactionCategory> _categories = snapshot.data!.toList();
+            _categories.sort((a, b) => a.name.compareTo(b.name));
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: _categories.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CategoryItem(
+                  categoryData: _categories[index],
                 );
               },
-            ),
+              padding: const EdgeInsets.only(bottom: 80),
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Oops!");
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
