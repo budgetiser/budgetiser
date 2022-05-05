@@ -79,6 +79,7 @@ class _RecurringFormState extends State<RecurringForm> {
 
   int _calculateNeededRepetitions() {
     // TODO: not finished and buggy
+    print("NO");
     if (isRecurring) {
       if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
         switch (fixedPointOfTimeUnit) {

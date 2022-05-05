@@ -52,7 +52,7 @@ class BudgetItem extends StatelessWidget {
                           ? Row(
                               children: [
                                 Text("days left: " +
-                                    (budgetData.endDate!)
+                                    (budgetData.calculateCurrentInterval()['end']!)
                                         .difference(DateTime.now())
                                         .inDays
                                         .toString()),
