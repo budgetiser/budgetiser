@@ -15,7 +15,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  var selectedValue;
+  String? selectedValue;
 
   @override
   void initState() {

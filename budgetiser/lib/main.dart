@@ -1,16 +1,11 @@
 import 'package:budgetiser/routes.dart';
 import 'package:budgetiser/shared/services/SettingsStream.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/themes/themes.dart';
 import 'screens/homeScreen.dart';
 
 Future<void> main() async {
-  // SharePreferenceCache spCache = SharePreferenceCache();
-  // await spCache.init();
-  // await Settings.init(cacheProvider: spCache);
-
   runApp(const MyApp());
 }
 

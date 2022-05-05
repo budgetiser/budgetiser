@@ -19,11 +19,7 @@ class SettingsStreamClass {
     final prefs = await SharedPreferences.getInstance();
     final String? currentModeString = prefs.getString('key-themeMode');
 
-    ThemeMode _currentThemeMode = currentModeString == "system"
-        ? ThemeMode.system
-        : currentModeString == "light"
-            ? ThemeMode.light
-            : ThemeMode.dark;
+    ThemeMode _currentThemeMode = _stringToThemeMode(currentModeString);
 
     _settingsStreamSink.add(_currentThemeMode);
   }
@@ -32,11 +28,27 @@ class SettingsStreamClass {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('key-themeMode', themeMode);
 
-    ThemeMode _currentThemeMode = themeMode == "system"
-        ? ThemeMode.system
-        : themeMode == "light"
-            ? ThemeMode.light
-            : ThemeMode.dark;
+    ThemeMode _currentThemeMode = _stringToThemeMode(themeMode);
+
     _settingsStreamSink.add(_currentThemeMode);
+  }
+
+  ThemeMode _stringToThemeMode(themeModeString) {
+    ThemeMode themeMode;
+    switch (themeModeString) {
+      case "system":
+        themeMode = ThemeMode.system;
+        break;
+      case "light":
+        themeMode = ThemeMode.light;
+        break;
+      case "dark":
+        themeMode = ThemeMode.dark;
+        break;
+      default:
+        themeMode = ThemeMode.system;
+        break;
+    }
+    return themeMode;
   }
 }
