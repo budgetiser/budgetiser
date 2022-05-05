@@ -1047,11 +1047,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     final db = await database;
     //Get BudgetData
     Budget budget = await _getBudgetToID(budgetID);
-    DateTime startOfInterval = budget.startDate;
-    //Get Start of current Interval
-    DateTime start = budget.startDate;
-
-    //Get End of Current Interval
+    Map<String, DateTime> interval = budget.calculateCurrentInterval();
 
     await db.rawUpdate("""UPDATE budget SET balance =
             (
@@ -1061,11 +1057,11 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
               INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
               INNER JOIN budget ON categoryToBudget.budget_id = budget.id
               WHERE categoryToBudget.budget_id = ?
-                  and budget.start_date <= singleTransaction.date
-                  and budget.end_date >= singleTransaction.date
+                  and ? <= singleTransaction.date
+                  and ? >= singleTransaction.date
             )
         WHERE id = ?;
-    """, [budgetID, budgetID]);
+    """, [budgetID, budgetID, interval['start'].toString().substring(0, 10), interval['end'].toString().substring(0, 10)]);
     pushGetAllBudgetsStream();
   }
 
