@@ -24,10 +24,10 @@ class _RecurringFormState extends State<RecurringForm> {
   IntervalType _selectedIntervalType = IntervalType.fixedInterval;
   var fixedPointOfTimeAmountController = TextEditingController();
   var fixedIntervalAmountController = TextEditingController();
-  var repetitionsController = TextEditingController();
   IntervalUnit fixedPointOfTimeUnit = IntervalUnit.week;
   IntervalUnit fixedIntervalUnit = IntervalUnit.day;
   DateTime? enddate;
+  double repetitions = 1;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -69,10 +69,9 @@ class _RecurringFormState extends State<RecurringForm> {
         fixedIntervalUnit = widget.initialRecurringData.intervalUnit!;
       }
       enddate = widget.initialRecurringData.endDate;
-      repetitionsController.text =
-          widget.initialRecurringData.repetitionAmount != null
-              ? widget.initialRecurringData.repetitionAmount.toString()
-              : _calculateNeededRepetitions().toString();
+      repetitions = widget.initialRecurringData.repetitionAmount != null
+          ? widget.initialRecurringData.repetitionAmount!.toDouble()
+          : _calculateNeededRepetitions().toDouble();
     }
     _calculateEndDate();
   }
@@ -111,8 +110,7 @@ class _RecurringFormState extends State<RecurringForm> {
     if (fixedIntervalAmountController.text.isEmpty &&
             _selectedIntervalType == IntervalType.fixedInterval ||
         fixedPointOfTimeAmountController.text.isEmpty &&
-            _selectedIntervalType == IntervalType.fixedPointOfTime ||
-        repetitionsController.text.isEmpty) {
+            _selectedIntervalType == IntervalType.fixedPointOfTime) {
       enddate = null;
       return;
     }
@@ -130,7 +128,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       (startDate.weekday -
                           int.parse(fixedPointOfTimeAmountController.text)));
           Duration fromRepetitions =
-              Duration(days: 7 * (int.parse(repetitionsController.text) - 1));
+              Duration(days: 7 * (repetitions.toInt() - 1));
           enddate = startDate.add(untilFirstPointOfTime + fromRepetitions);
           break;
         case IntervalUnit.month:
@@ -144,9 +142,8 @@ class _RecurringFormState extends State<RecurringForm> {
                       startDate.day +
                       int.parse(fixedPointOfTimeAmountController.text));
           enddate = startDate.add(untilFirstPointOfTime);
-          enddate = Jiffy(enddate)
-              .add(months: int.parse(repetitionsController.text) - 1)
-              .dateTime;
+          enddate =
+              Jiffy(enddate).add(months: repetitions.toInt() - 1).dateTime;
           break;
         case IntervalUnit.year:
           Duration untilFirstPointOfTime = Duration(
@@ -160,9 +157,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     int.parse(fixedPointOfTimeAmountController.text),
           );
           enddate = startDate.add(untilFirstPointOfTime);
-          enddate = Jiffy(enddate)
-              .add(years: int.parse(repetitionsController.text) - 1)
-              .dateTime;
+          enddate = Jiffy(enddate).add(years: repetitions.toInt() - 1).dateTime;
           break;
         default:
           print("Error in _calculateEndDate: unknown intervalMode");
@@ -172,19 +167,19 @@ class _RecurringFormState extends State<RecurringForm> {
         case IntervalUnit.day:
           enddate = startDate.add(
               Duration(days: int.parse(fixedIntervalAmountController.text)) *
-                  int.parse(repetitionsController.text));
+                  repetitions.toInt());
           break;
         case IntervalUnit.week:
           enddate = startDate.add(Duration(
               days: int.parse(fixedIntervalAmountController.text) *
-                  int.parse(repetitionsController.text) *
+                  repetitions.toInt() *
                   7));
           break;
         case IntervalUnit.month:
           enddate = Jiffy(startDate)
               .add(
                   months: int.parse(fixedIntervalAmountController.text) *
-                      int.parse(repetitionsController.text))
+                      repetitions.toInt())
               .dateTime;
           break;
         default:
@@ -337,30 +332,21 @@ class _RecurringFormState extends State<RecurringForm> {
                   )
                 ]),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Repetitions: "),
-                    SizedBox(
-                      width: 40,
-                      height: 30,
-                      child: TextFormField(
-                        controller: repetitionsController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: false,
-                          signed: false,
-                        ),
-                        onChanged: (string) {
-                          setState(() {
-                            _calculateEndDate();
-                            _callCallback();
-                          });
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter a number";
-                          }
-                          return null;
-                        },
-                      ),
+                    Text("Repetitions: ${repetitions.toInt()}"),
+                    Slider(
+                      value: repetitions,
+                      min: 1,
+                      max: 100,
+                      divisions: 99,
+                      onChanged: (string) {
+                        repetitions = string;
+                        setState(() {
+                          _calculateEndDate();
+                          _callCallback();
+                        });
+                      },
                     )
                   ],
                 ),
@@ -398,9 +384,7 @@ class _RecurringFormState extends State<RecurringForm> {
                 ? int.parse(fixedPointOfTimeAmountController.text)
                 : int.parse(fixedIntervalAmountController.text),
         endDate: enddate,
-        repetitionAmount: repetitionsController.text.isEmpty
-            ? null
-            : int.parse(repetitionsController.text),
+        repetitionAmount: repetitions.toInt(),
       ),
     );
   }
