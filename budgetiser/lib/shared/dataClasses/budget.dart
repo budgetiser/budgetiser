@@ -38,8 +38,7 @@ class Budget {
     required this.transactionCategories,
   });
 
-  Map<String, dynamic> toMap() =>
-      {
+  Map<String, dynamic> toMap() => {
         'name': name,
         'icon': icon.codePoint,
         'color': color.value,
@@ -68,7 +67,7 @@ class Budget {
                     ? intervalAmount! - startDate.weekday
                     : 7 - (startDate.weekday - intervalAmount!));
             Duration fromRepetitions =
-            Duration(days: 7 * (intervalRepititions! - 1 - i));
+                Duration(days: 7 * (intervalRepititions! - 1 - i));
             DateTime a = startDate.add(untilFirstPointOfTime + fromRepetitions);
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
@@ -80,18 +79,14 @@ class Budget {
                 days: intervalAmount! - startDate.day >= 0
                     ? intervalAmount! - startDate.day
                     : Jiffy(startDate).daysInMonth -
-                    startDate.day +
-                    intervalAmount!);
+                        startDate.day +
+                        intervalAmount!);
             DateTime a = startDate.add(untilFirstPointOfTime);
-            a = Jiffy(a)
-                .add(months: intervalRepititions! - 1 - i)
-                .dateTime;
+            a = Jiffy(a).add(months: intervalRepititions! - 1 - i).dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval =
-                  Jiffy(a)
-                      .add(months: intervalRepititions! - 2 - i)
-                      .dateTime;
+                  Jiffy(a).add(months: intervalRepititions! - 2 - i).dateTime;
             }
             break;
           case IntervalUnit.year:
@@ -99,19 +94,15 @@ class Budget {
               days: (intervalAmount! - Jiffy(startDate).dayOfYear >= 0)
                   ? intervalAmount! - Jiffy(startDate).dayOfYear
                   : ((Jiffy(startDate).isLeapYear == true) ? 366 : 365) -
-                  Jiffy(startDate).dayOfYear +
-                  intervalAmount!,
+                      Jiffy(startDate).dayOfYear +
+                      intervalAmount!,
             );
             DateTime a = startDate.add(untilFirstPointOfTime);
-            a = Jiffy(a)
-                .add(years: intervalRepititions! - 1 - i)
-                .dateTime;
+            a = Jiffy(a).add(years: intervalRepititions! - 1 - i).dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval =
-                  Jiffy(a)
-                      .add(years: intervalRepititions! - 2 - i)
-                      .dateTime;
+                  Jiffy(a).add(years: intervalRepititions! - 2 - i).dateTime;
             }
             break;
           default:
@@ -182,8 +173,8 @@ class Budget {
       } else if (DateTime.now().compareTo(endDate!) <= 0 &&
           DateTime.now().compareTo(other.endDate!) <= 0) {
         //both not ended
-        if (calculateCurrentInterval()['end']!.difference(
-            other.calculateCurrentInterval()['end']!) <=
+        if (calculateCurrentInterval()['end']!
+                .difference(other.calculateCurrentInterval()['end']!) <=
             const Duration(days: 0)) {
           //this has less time than other
           return -1;
