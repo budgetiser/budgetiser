@@ -69,7 +69,14 @@ class _AccountScreenState extends State<AccountScreen> {
                             }
                           });
                         },
-                        child: const Text('Name'),
+                        child: Row(
+                          children: [
+                            const Text('Name'),
+                            (currentSort == "name")
+                                ? const Icon(Icons.keyboard_arrow_up)
+                                : const Icon(Icons.keyboard_arrow_down),
+                          ],
+                        ),
                       ),
                       SimpleDialogOption(
                         onPressed: () {
@@ -82,7 +89,14 @@ class _AccountScreenState extends State<AccountScreen> {
                             }
                           });
                         },
-                        child: const Text('Balance'),
+                        child: Row(
+                          children: [
+                            const Text('Balance'),
+                            (currentSort == "balance")
+                                ? const Icon(Icons.keyboard_arrow_up)
+                                : const Icon(Icons.keyboard_arrow_down),
+                          ],
+                        ),
                       ),
                     ],
                   );
