@@ -183,7 +183,7 @@ class _AccountFormState extends State<AccountForm> {
                     return ConfirmationDialog(
                       title: "Attention",
                       description:
-                          "Are you sure to delete this Transaction? This action can't be undone!",
+                          "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
                       onSubmitCallback: () {
                         DatabaseHelper.instance.deleteAccount(
                           widget.initialAccount!.id,
