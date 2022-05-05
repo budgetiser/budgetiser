@@ -49,16 +49,7 @@ class BudgetItem extends StatelessWidget {
                         ],
                       ),
                       budgetData.isRecurring
-                          ? Row(
-                              children: [
-                                Text("days left: " +
-                                    (budgetData.calculateCurrentInterval()['end']!)
-                                        .difference(DateTime.now())
-                                        .inDays
-                                        .toString()),
-                                const Icon(Icons.repeat)
-                              ],
-                            )
+                          ? _getTimeInfos(budgetData.startDate, budgetData.endDate!)
                           : Container(),
                     ]),
                 Row(
@@ -100,6 +91,35 @@ class BudgetItem extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _getTimeInfos(DateTime start, DateTime end){
+    if(DateTime.now().compareTo(start) < 0){
+      return Row(
+        children: [
+          Text("starting in: " + start.difference(DateTime.now()).inDays.toString()),
+          const Icon(Icons.arrow_forward)
+        ],
+      );
+    }else if(DateTime.now().compareTo(end) > 0){
+      return Row(
+        children: [
+          Text("ended before: " + DateTime.now().difference(end).inDays.toString()),
+          const Icon(Icons.arrow_back)
+        ],
+      );
+    }else {
+      return Row(
+        children: [
+          Text("days left: " +
+              (budgetData.calculateCurrentInterval()['end']!)
+                  .difference(DateTime.now())
+                  .inDays
+                  .toString()),
+          const Icon(Icons.repeat)
+        ],
+      );
+    }
   }
 
   List<Color> createGradient(Color baseColor) {
