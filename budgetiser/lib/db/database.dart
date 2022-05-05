@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS transactionToAccount(
         },
       );
     } catch (e) {
-      print("" + e.toString());
+      print(e.toString());
     }
   }
 

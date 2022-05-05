@@ -28,20 +28,19 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder(
         future: checkForStartScreen(),
         builder: (BuildContext context, snapshot) {
-          if(snapshot.hasData){
-            print(snapshot.data);
-            switch(snapshot.data){
+          if (snapshot.hasData) {
+            switch (snapshot.data) {
               case 0: //Codes: [0 - Database found, no encryption preference]
                 return Home();
               case 1: //Codes: [1 - Database found, encryption preference]
                 return LoginScreen();
               case 2: //Codes: [2 - no database found]
                 return CreateDatabaseScreen();
-              case -1:  //Codes: [-1 - Error]
+              case -1: //Codes: [-1 - Error]
               default:
                 break;
             }
-          }else if (snapshot.hasError) {
+          } else if (snapshot.hasError) {
             return const Text("Oops!");
           }
           return const Center(
@@ -61,17 +60,17 @@ class MyApp extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
 
-    if(File(join(databasesPath, 'budgetiser.db')).existsSync()){
-      if(prefs.containsKey('encrypted')){
-        if(prefs.getBool('encrypted')!){
+    if (File(join(databasesPath, 'budgetiser.db')).existsSync()) {
+      if (prefs.containsKey('encrypted')) {
+        if (prefs.getBool('encrypted')!) {
           return 1;
-        }else {
+        } else {
           return 0;
         }
-      }else {
+      } else {
         return -1;
       }
-    }else {
+    } else {
       return 2;
     }
   }
