@@ -47,6 +47,7 @@ class _BudgetFormState extends State<BudgetForm> {
           intervalType: widget.budgetData!.intervalType,
           intervalUnit: widget.budgetData!.intervalUnit,
           intervalAmount: widget.budgetData!.intervalAmount,
+          repetitionAmount: widget.budgetData!.intervalRepititions,
           isRecurring: true,
         );
       }
@@ -102,7 +103,7 @@ class _BudgetFormState extends State<BudgetForm> {
                             return null;
                           },
                           decoration: const InputDecoration(
-                            labelText: "Category title",
+                            labelText: "Budget title",
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -226,20 +227,22 @@ class _BudgetFormState extends State<BudgetForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Budget a = Budget(
-                    name: nameController.text,
-                    icon: _icon,
-                    color: _color,
-                    description: descriptionController.text,
-                    id: 0,
-                    limit: double.parse(limitController.text),
-                    balance: double.parse(balanceController.text),
-                    transactionCategories: budgetCategories,
-                    isRecurring: recurringData.isRecurring,
-                    startDate: recurringData.startDate,
-                    endDate: recurringData.endDate,
-                    intervalType: recurringData.intervalType,
-                    intervalUnit: recurringData.intervalUnit,
-                    intervalAmount: recurringData.intervalAmount);
+                  name: nameController.text,
+                  icon: _icon,
+                  color: _color,
+                  description: descriptionController.text,
+                  id: 0,
+                  limit: double.parse(limitController.text),
+                  balance: double.parse(balanceController.text),
+                  transactionCategories: budgetCategories,
+                  isRecurring: recurringData.isRecurring,
+                  startDate: recurringData.startDate,
+                  endDate: recurringData.endDate,
+                  intervalType: recurringData.intervalType,
+                  intervalUnit: recurringData.intervalUnit,
+                  intervalAmount: recurringData.intervalAmount,
+                  intervalRepititions: recurringData.repetitionAmount,
+                );
                 if (widget.budgetData != null) {
                   a.id = widget.budgetData!.id;
                   DatabaseHelper.instance.updateBudget(a);

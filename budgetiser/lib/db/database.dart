@@ -152,6 +152,7 @@ CREATE TABLE IF NOT EXISTS budget(
   interval_type TEXT,
   interval_amount INTEGER,
   interval_unit TEXT,
+  interval_repititions INTEGER,
   start_date TEXT,
   end_date TEXT,
   description TEXT,
@@ -952,9 +953,41 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         returnBudget.intervalType = IntervalType.values
             .firstWhere((e) => e.toString() == maps[i]['interval_type']);
         returnBudget.intervalAmount = maps[i]['interval_amount'];
+        returnBudget.intervalRepititions = maps[i]['interval_repititions'];
       }
       return returnBudget;
     }));
+  }
+
+  Future<Budget> _getBudgetToID(int budgetID) async{
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('budget', where: 'id = ?', whereArgs: [budgetID]);
+    List<List<TransactionCategory>> categoryList = [];
+    for (int i = 0; i < maps.length; i++) {
+      categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
+    }
+    Budget returnBudget = Budget(
+      id: maps[0]['id'],
+      name: maps[0]['name'].toString(),
+      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
+      color: Color(maps[0]['color']),
+      balance: maps[0]['balance'] ?? 0,
+      limit: maps[0]['limitXX'],
+      startDate: DateTime.parse(maps[0]['start_date']),
+      description: maps[0]['description'].toString(),
+      isRecurring: maps[0]['is_recurring'] == 1,
+      transactionCategories: categoryList[0],
+    );
+    if (maps[0]['is_recurring'] == 1) {
+    returnBudget.endDate = DateTime.parse(maps[0]['end_date']);
+    returnBudget.intervalUnit = IntervalUnit.values
+        .firstWhere((e) => e.toString() == maps[0]['interval_unit']);
+    returnBudget.intervalType = IntervalType.values
+        .firstWhere((e) => e.toString() == maps[0]['interval_type']);
+    returnBudget.intervalAmount = maps[0]['interval_amount'];
+    returnBudget.intervalRepititions = maps[0]['interval_repititions'];
+    }
+    return returnBudget;
   }
 
   Future<List<TransactionCategory>> _getCategoriesToBudget(int budgetID) async {
@@ -1046,8 +1079,12 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
   void reloadBudgetBalanceFromID(int budgetID) async {
     final db = await database;
+    //Get BudgetData
+    Budget budget = await _getBudgetToID(budgetID);
+    Map<String, DateTime> interval = budget.calculateCurrentInterval();
 
-    await db.rawUpdate("""UPDATE budget SET balance =
+    if(budget.isRecurring){
+      await db.rawUpdate("""UPDATE budget SET balance =
             (
               SELECT -SUM(value)
               FROM singleTransaction
@@ -1055,11 +1092,25 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
               INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
               INNER JOIN budget ON categoryToBudget.budget_id = budget.id
               WHERE categoryToBudget.budget_id = ?
-                  and budget.start_date <= singleTransaction.date
-                  and budget.end_date >= singleTransaction.date
+                  and ? <= singleTransaction.date
+                  and ? >= singleTransaction.date
             )
         WHERE id = ?;
-    """, [budgetID, budgetID]);
+    """, [budgetID, budgetID, interval['start'].toString().substring(0, 10), interval['end'].toString().substring(0, 10)]);
+    }else {
+      await db.rawUpdate("""UPDATE budget SET balance =
+            (
+              SELECT -SUM(value)
+              FROM singleTransaction
+              INNER JOIN category ON category.id = singleTransaction.category_id
+              INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
+              INNER JOIN budget ON categoryToBudget.budget_id = budget.id
+              WHERE categoryToBudget.budget_id = ?
+                  and ? <= singleTransaction.date
+            )
+        WHERE id = ?;
+    """, [budgetID, budgetID, budget.startDate.toString().substring(0, 10)]);
+    }
     pushGetAllBudgetsStream();
   }
 
