@@ -31,6 +31,9 @@ class _BudgetFormState extends State<BudgetForm> {
   IconData _icon = Icons.blur_on;
   Color _color = Colors.blue;
 
+  // scrollcontroller for the recurring form to scroll to the bottom
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     if (widget.budgetData != null) {
@@ -75,6 +78,7 @@ class _BudgetFormState extends State<BudgetForm> {
         child: Container(
           alignment: Alignment.topCenter,
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -171,6 +175,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   ),
                   const Divider(),
                   RecurringForm(
+                    scrollController: _scrollController,
                     onRecurringDataChangedCallback: (data) {
                       setState(() {
                         recurringData = data;

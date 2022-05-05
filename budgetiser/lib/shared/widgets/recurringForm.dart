@@ -1,5 +1,4 @@
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -9,10 +8,12 @@ class RecurringForm extends StatefulWidget {
     Key? key,
     required this.initialRecurringData,
     required this.onRecurringDataChangedCallback,
+    required this.scrollController,
   }) : super(key: key);
 
   RecurringData initialRecurringData;
   Function(RecurringData) onRecurringDataChangedCallback;
+  ScrollController scrollController;
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();
@@ -219,6 +220,14 @@ class _RecurringFormState extends State<RecurringForm> {
                     _calculateEndDate();
                     _callCallback();
                   });
+                  if (newValue == true) {
+                    // scrolling to the bottom of the page to show the recurring fields
+                    // +90 because the recurring fields are expanding
+                    widget.scrollController.animateTo(
+                        widget.scrollController.position.maxScrollExtent + 90,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut);
+                  }
                 },
               ),
               const Text("recurring"),

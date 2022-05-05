@@ -51,6 +51,9 @@ class _TransactionFormState extends State<TransactionForm> {
 
   final _formKey = GlobalKey<FormState>();
 
+  // for the recurring form to scroll to the bottom
+  ScrollController listScrollController = ScrollController();
+
   @override
   void initState() {
     if (widget.initialNegative == true) {
@@ -118,6 +121,7 @@ class _TransactionFormState extends State<TransactionForm> {
       body: Container(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
+          controller: listScrollController,
           child: Column(
             children: [
               Padding(
@@ -299,6 +303,7 @@ class _TransactionFormState extends State<TransactionForm> {
                                 "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
                           ),
                         RecurringForm(
+                          scrollController: listScrollController,
                           onRecurringDataChangedCallback: (data) {
                             setState(() {
                               recurringData = data;
