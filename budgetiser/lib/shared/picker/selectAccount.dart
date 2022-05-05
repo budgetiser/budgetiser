@@ -7,9 +7,11 @@ class SelectAccount extends StatefulWidget {
     Key? key,
     this.initialAccount,
     required this.callback,
+    // this.blackListAccountId,
   }) : super(key: key);
   Account? initialAccount;
   final Function(Account) callback;
+  // int? blackListAccountId = 1;
 
   @override
   _SelectAccountState createState() => _SelectAccountState();
@@ -25,6 +27,8 @@ class _SelectAccountState extends State<SelectAccount> {
       setState(() {
         _accounts?.clear();
         _accounts = (event.map((e) => e).toList());
+        // .where((element) => element.id != widget.blackListAccountId)
+        // .toList();
         if (widget.initialAccount != null) {
           selectedAccount = _accounts?.firstWhere(
               (element) => element.id == widget.initialAccount!.id);
@@ -40,6 +44,16 @@ class _SelectAccountState extends State<SelectAccount> {
 
   @override
   Widget build(BuildContext context) {
+    // setState(() {
+    //   if (_accounts != null) {
+    //     List<Account> TMPaccounts = _accounts!;
+    //     // _accounts?.clear();
+    //     _accounts = TMPaccounts.where(
+    //         (element) => element.id != widget.blackListAccountId).toList();
+    //   }
+    // });
+    // print(
+    //     "_accounts: ${_accounts?.length}; selectedAccount: ${selectedAccount?.id}");
     return Row(
       children: [
         const Text("Account:"),
