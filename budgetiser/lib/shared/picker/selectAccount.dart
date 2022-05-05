@@ -25,19 +25,21 @@ class _SelectAccountState extends State<SelectAccount> {
   @override
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) {
-      setState(() {
-        _accounts?.clear();
-        _accounts = (event.map((e) => e).toList());
-        // .where((element) => element.id != widget.blackListAccountId)
-        // .toList();
-        if (widget.initialAccount != null) {
-          selectedAccount = _accounts?.firstWhere(
-              (element) => element.id == widget.initialAccount!.id);
-        } else {
-          selectedAccount = _accounts?.first;
+      _accounts?.clear();
+      _accounts = (event.map((e) => e).toList());
+      // .where((element) => element.id != widget.blackListAccountId)
+      // .toList();
+      if (widget.initialAccount != null) {
+        selectedAccount = _accounts
+            ?.firstWhere((element) => element.id == widget.initialAccount!.id);
+      } else {
+        selectedAccount = _accounts?.first;
+      }
+      if (selectedAccount != null) {
+        if (mounted) {
+          widget.callback(selectedAccount!);
         }
-      });
-      widget.callback(selectedAccount!);
+      }
     });
     DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();

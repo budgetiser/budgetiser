@@ -23,20 +23,29 @@ class _SelectCategoryState extends State<SelectCategory> {
   @override
   void initState() {
     DatabaseHelper.instance.allCategoryStream.listen((event) {
-      setState(() { //memory leak because of setState. -> DELETE?
-        _categories?.clear();
-        _categories = (event.map((e) => e).toList());
-        if (widget.initialCategory != null) {
-          selectedCategory = _categories?.firstWhere(
-              (element) => element.id == widget.initialCategory!.id);
-        } else {
-          selectedCategory = _categories?.first;
-        }
-      });
-      widget.callback(selectedCategory!);
+      _categories?.clear();
+      _categories = (event.map((e) => e).toList());
+      if (widget.initialCategory != null) {
+        selectedCategory = _categories
+            ?.firstWhere((element) => element.id == widget.initialCategory!.id);
+      } else {
+        selectedCategory = _categories?.first;
+      }
+      // if (selectedCategory != null) {
+      if (mounted) {
+        widget.callback(selectedCategory!);
+      }
+      // }
     });
     DatabaseHelper.instance.pushGetAllCategoriesStream();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    // nameController.dispose();
+    super.dispose();
   }
 
   @override

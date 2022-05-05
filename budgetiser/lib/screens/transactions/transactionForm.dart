@@ -237,7 +237,9 @@ class _TransactionFormState extends State<TransactionForm> {
                                 initialCategory: selectedCategory,
                                 callback: (TransactionCategory c) {
                                   setState(() {
-                                    selectedCategory = c;
+                                    if (mounted) {
+                                      selectedCategory = c;
+                                    }
                                   });
                                 }),
                           ],
