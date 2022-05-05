@@ -103,7 +103,7 @@ class _BudgetFormState extends State<BudgetForm> {
                             return null;
                           },
                           decoration: const InputDecoration(
-                            labelText: "Category title",
+                            labelText: "Budget title",
                             border: OutlineInputBorder(),
                           ),
                         ),

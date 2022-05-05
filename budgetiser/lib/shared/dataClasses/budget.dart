@@ -172,13 +172,7 @@ class Budget {
       if (DateTime.now().compareTo(endDate!) >= 0 &&
           DateTime.now().compareTo(other.endDate!) >= 0) {
         //both ended
-        if (DateTime.now().compareTo(endDate!) >= 0 && DateTime.now().compareTo(other.endDate!) <= 0) {
-          //this ended but other not
-          return 1;
-        } else if (DateTime.now().compareTo(endDate!) >= 0 && DateTime.now().compareTo(other.endDate!) <= 0) {
-          //other ended but this not
-          return -1;
-        } else if (endDate!.compareTo(other.endDate!) >= 0) {
+        if (endDate!.compareTo(other.endDate!) >= 0) {
           //this ended after other
           return -1;
         } else {
@@ -198,14 +192,23 @@ class Budget {
           return 1;
         }
       }
-    } else {
-      //both not recurring
-      if (startDate.difference(other.startDate) <= const Duration(days: 0)) {
-        //this started before other
+      if (DateTime.now().compareTo(endDate!) >= 0 &&
+          DateTime.now().compareTo(other.endDate!) <= 0) {
+        //this ended but other not
+        return 1;
+      } else if (DateTime.now().compareTo(endDate!) >= 0 &&
+          DateTime.now().compareTo(other.endDate!) <= 0) {
+        //other ended but this not
         return -1;
       } else {
-        //this started after other
-        return 1;
+        //both not recurring
+        if (startDate.difference(other.startDate) <= const Duration(days: 0)) {
+          //this started before other
+          return -1;
+        } else {
+          //this started after other
+          return 1;
+        }
       }
     }
     return 0;
