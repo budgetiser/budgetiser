@@ -55,6 +55,7 @@ class Budget {
       };
 
   Map<String, DateTime> calculateCurrentInterval() {
+    if(!isRecurring) return {};
     DateTime endInterval = DateTime.now();
     DateTime startInterval = DateTime.now();
     for(int i=0; i<intervalRepititions!; i++){
