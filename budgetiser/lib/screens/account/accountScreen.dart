@@ -19,12 +19,28 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  String currentSort = '';
+  String currentSort = "name";
 
   @override
   void initState() {
     DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
+  }
+
+  int sortFunction(a, b) {
+    switch (currentSort) {
+      case 'nameReverse':
+        return b.name.compareTo(a.name);
+      case 'name':
+        return a.name.compareTo(b.name);
+      case 'balance':
+        return b.balance.compareTo(a.balance);
+      case 'balanceReverse':
+        return a.balance.compareTo(b.balance);
+      default:
+        // by name
+        return a.name.compareTo(b.name);
+    }
   }
 
   @override
@@ -47,13 +63,9 @@ class _AccountScreenState extends State<AccountScreen> {
                           Navigator.of(context).pop();
                           setState(() {
                             if (currentSort == 'name') {
-                              currentSort = '';
-                              widget.accountList
-                                  .sort((b, a) => a.name.compareTo(b.name));
+                              currentSort = 'nameReverse';
                             } else {
                               currentSort = 'name';
-                              widget.accountList
-                                  .sort((a, b) => a.name.compareTo(b.name));
                             }
                           });
                         },
@@ -64,12 +76,8 @@ class _AccountScreenState extends State<AccountScreen> {
                           Navigator.of(context).pop();
                           setState(() {
                             if (currentSort == "balance") {
-                              widget.accountList.sort(
-                                  (a, b) => a.balance.compareTo(b.balance));
-                              currentSort = "";
+                              currentSort = "balanceReverse";
                             } else {
-                              widget.accountList.sort(
-                                  (a, b) => b.balance.compareTo(a.balance));
                               currentSort = "balance";
                             }
                           });
@@ -92,6 +100,7 @@ class _AccountScreenState extends State<AccountScreen> {
         stream: DatabaseHelper.instance.allAccountsStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            snapshot.data!.sort(sortFunction);
             return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
