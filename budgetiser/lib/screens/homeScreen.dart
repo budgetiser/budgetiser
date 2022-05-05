@@ -3,15 +3,15 @@ import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static String routeID = 'home';
-  const Home({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

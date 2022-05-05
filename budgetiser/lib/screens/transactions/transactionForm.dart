@@ -121,7 +121,7 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                 child: Form(
                   key: _formKey,
                   child: Container(

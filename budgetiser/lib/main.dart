@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasData) {
             switch (snapshot.data) {
               case 0: //Codes: [0 - Database found, no encryption preference]
-                return Home();
+                return const HomeScreen();
               case 1: //Codes: [1 - Database found, encryption preference]
                 return LoginScreen();
               case 2: //Codes: [2 - no database found]

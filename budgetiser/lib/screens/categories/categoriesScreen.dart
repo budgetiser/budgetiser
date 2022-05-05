@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/categories/categoryForm.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/categoryItem.dart';
+import 'package:budgetiser/shared/widgets/items/categoryItem.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetiser/drawer.dart';
 

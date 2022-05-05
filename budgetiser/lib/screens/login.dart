@@ -22,8 +22,8 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding:
-                const EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 0),
+                padding: const EdgeInsets.only(
+                    left: 15.0, right: 15.0, top: 15, bottom: 0),
                 child: TextFormField(
                   autofocus: true,
                   controller: _passcodeController,
@@ -40,8 +40,8 @@ class LoginScreen extends StatelessWidget {
                     return null;
                   },
                   obscuringCharacter: "*",
-                  keyboardType: const TextInputType.numberWithOptions(
-                      decimal: false),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Passcode',
@@ -55,15 +55,17 @@ class LoginScreen extends StatelessWidget {
                 height: 50,
                 width: 250,
                 decoration: BoxDecoration(
-                    color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    if(_formKey.currentState!.validate() == true){
-                      int verify = await DatabaseHelper.instance.login(_passcodeController.text);
-                      if(verify == 1){
-                        Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (_) => Home()));
-                      }else {
+                    if (_formKey.currentState!.validate() == true) {
+                      int verify = await DatabaseHelper.instance
+                          .login(_passcodeController.text);
+                      if (verify == 1) {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (_) => HomeScreen()));
+                      } else {
                         _passcodeController.clear();
                       }
                     }
@@ -84,7 +86,6 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
-
     );
   }
 }

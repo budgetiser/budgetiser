@@ -4,8 +4,8 @@ import 'package:budgetiser/screens/plans/budgetForm.dart';
 import 'package:budgetiser/screens/plans/savingForm.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
-import 'package:budgetiser/shared/widgets/budgetItem.dart';
-import 'package:budgetiser/shared/widgets/savingItem.dart';
+import 'package:budgetiser/shared/widgets/items/budgetItem.dart';
+import 'package:budgetiser/shared/widgets/items/savingItem.dart';
 import 'package:flutter/material.dart';
 
 class Plans extends StatefulWidget {
