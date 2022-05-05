@@ -3,18 +3,19 @@ import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
+import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/widgets/transactionItem.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
-  TransactionsScreen({
+  const TransactionsScreen({
     Key? key,
     this.initalAccountFilterName,
   }) : super(key: key);
 
-  String? initalAccountFilterName;
+  final String? initalAccountFilterName;
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -27,7 +28,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     initialPage: pages.singleTransactions.index,
   );
   String title = "Transactions";
-  int _currentPage = pages.singleTransactions.index;
 
   @override
   void initState() {
@@ -36,7 +36,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       _accountList = event;
     });
+    DatabaseHelper.instance.allCategoryStream.listen((event) {
+      _categoryList = event;
+    });
     DatabaseHelper.instance.pushGetAllAccountsStream();
+    DatabaseHelper.instance.pushGetAllCategoriesStream();
 
     if (widget.initalAccountFilterName != null) {
       _currentFilterAccountName = widget.initalAccountFilterName!;
@@ -50,25 +54,38 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     super.dispose();
   }
 
-  var _currentFilterAccountName = "";
+  String _currentFilterAccountName = "";
+  String _currentFilterCategoryName = "";
 
-  var _accountList = <Account>[];
+  List<Account> _accountList = <Account>[];
+  List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   // Function to filter all transactions by account and category
-  bool filterFunction(transaction) {
+  bool _filterFunction(transaction) {
     if (transaction is SingleTransaction ||
         transaction is RecurringTransaction) {
       transaction = transaction;
     } else {
-      throw Exception("Unknown transaction type");
+      throw Exception("Unknown transaction type passed to filterFunction");
     }
 
     if (_currentFilterAccountName == "") {
-      return true;
+      if (_currentFilterCategoryName == "") {
+        return true;
+      } else {
+        return transaction.category.name == _currentFilterCategoryName;
+      }
     } else {
-      return transaction.account.name == _currentFilterAccountName ||
-          (transaction.account2 != null &&
-              transaction.account2!.name == _currentFilterAccountName);
+      if (_currentFilterCategoryName == "") {
+        return transaction.account.name == _currentFilterAccountName ||
+            (transaction.account2 != null &&
+                transaction.account2!.name == _currentFilterAccountName);
+      } else {
+        return (transaction.account.name == _currentFilterAccountName ||
+                (transaction.account2 != null &&
+                    transaction.account2!.name == _currentFilterAccountName)) &&
+            transaction.category.name == _currentFilterCategoryName;
+      }
     }
   }
 
@@ -84,9 +101,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return SimpleDialog(
-                    title: const Text('Filter by Account'),
+                    title: const Text('Filter'),
                     alignment: Alignment.topRight,
-                    children: <Widget>[
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 10,
+                        ),
+                        child: Text("By Account"),
+                      ),
                       ListTile(
                         title: const Text("All Accounts"),
                         visualDensity: VisualDensity.compact,
@@ -116,6 +140,46 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             },
                           ),
                         ),
+                      // divider
+                      const Divider(
+                        indent: 25,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 10,
+                        ),
+                        child: Text("By Category"),
+                      ),
+                      ListTile(
+                        title: const Text("All Categories"),
+                        visualDensity: VisualDensity.compact,
+                        leading: Radio(
+                          value: "",
+                          groupValue: _currentFilterCategoryName,
+                          onChanged: (value) {
+                            setState(() {
+                              _currentFilterCategoryName = value.toString();
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                      for (var category in _categoryList)
+                        ListTile(
+                          visualDensity: VisualDensity.compact,
+                          title: Text(category.name),
+                          leading: Radio(
+                            value: category.name,
+                            groupValue: _currentFilterCategoryName,
+                            onChanged: (value) {
+                              setState(() {
+                                _currentFilterCategoryName = value.toString();
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
                     ],
                   );
                 },
@@ -131,11 +195,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           setState(() {
             if (page == pages.singleTransactions.index) {
               // title = "Budgets";
-              _currentPage = pages.singleTransactions.index;
               DatabaseHelper.instance.pushGetAllTransactionsStream();
             } else if (page == pages.recurringTransactions.index) {
               // title = "Savings";
-              _currentPage = pages.recurringTransactions.index;
               DatabaseHelper.instance.pushGetAllRecurringTransactionsStream();
             }
           });
@@ -146,7 +208,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var filteredList =
-                    snapshot.data!.where(filterFunction).toList();
+                    snapshot.data!.where(_filterFunction).toList();
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -169,7 +231,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var filteredList =
-                    snapshot.data!.where(filterFunction).toList();
+                    snapshot.data!.where(_filterFunction).toList();
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
