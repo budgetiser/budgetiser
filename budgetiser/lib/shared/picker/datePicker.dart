@@ -22,7 +22,10 @@ class _DatePickerState extends State<DatePicker> {
   void initState() {
     if (widget.initialDate != null) {
       dateController.text = widget.initialDate.toString().substring(0, 10);
+    } else {
+      // dateController.text = DateTime.now().toString().substring(0, 10);
     }
+
     super.initState();
   }
 
