@@ -70,7 +70,7 @@ class _PlansState extends State<Plans> {
             builder: (context, snapshot) {
               if(snapshot.hasData){
                 List<Budget> _budgets = snapshot.data!.toList();
-                _budgets.sort((a, b) => a.name.compareTo(b.name));
+                _budgets.sort((a, b) => a.compareTo(b));
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: _budgets.length,

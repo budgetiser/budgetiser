@@ -2,6 +2,9 @@ name: flutter build
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -15,8 +18,11 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - run: cd budgetiser
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - run: |
+          cd budgetiser 
+          flutter pub get
+          flutter build apk --no-tree-shake-icons
+      - uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: budgetiser/build/app/outputs/flutter-apk/app-release.apk
