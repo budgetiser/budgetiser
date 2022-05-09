@@ -183,8 +183,8 @@ CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
   account1_id INTEGER,
   account2_id INTEGER,
   PRIMARY KEY(transaction_id, account1_id, account2_id),
-  FOREIGN KEY(account1_id) REFERENCES account
-  FOREIGN KEY(account2_id) REFERENCES account,
+  FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
+  FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE,
   FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE);
 ''');
     await db.execute('''
@@ -193,8 +193,8 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   account1_id INTEGER,
   account2_id INTEGER,
   PRIMARY KEY(transaction_id, account1_id, account2_id),
-  FOREIGN KEY(account1_id) REFERENCES account
-  FOREIGN KEY(account2_id) REFERENCES account,
+  FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
+  FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE,
   FOREIGN KEY(transaction_id) REFERENCES recurringTransaction ON DELETE CASCADE);
 ''');
     if (kDebugMode) {

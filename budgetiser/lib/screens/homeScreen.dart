@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeID = 'home';
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
