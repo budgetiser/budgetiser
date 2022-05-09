@@ -1,5 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/widgets/smalStuff/CategoryTextWithIcon.dart';
 import 'package:flutter/material.dart';
 
 class SelectCategory extends StatefulWidget {
@@ -51,12 +52,11 @@ class _SelectCategoryState extends State<SelectCategory> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<TransactionCategory>(
+      isExpanded: true,
       items: _categories
           ?.map((category) => DropdownMenuItem(
                 value: category,
-                child: Text(
-                  category.name,
-                ),
+                child: CategoryTextWithIcon(category),
               ))
           .toList(),
       onChanged: (TransactionCategory? category) {

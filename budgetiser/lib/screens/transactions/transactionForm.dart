@@ -233,7 +233,8 @@ class _TransactionFormState extends State<TransactionForm> {
                         Row(
                           children: [
                             const Text("   Category: "),
-                            SelectCategory(
+                            Flexible(
+                              child: SelectCategory(
                                 initialCategory: selectedCategory,
                                 callback: (TransactionCategory c) {
                                   setState(() {
@@ -241,7 +242,9 @@ class _TransactionFormState extends State<TransactionForm> {
                                       selectedCategory = c;
                                     }
                                   });
-                                }),
+                                },
+                              ),
+                            ),
                           ],
                         ),
                         Padding(
