@@ -19,12 +19,28 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  String currentSort = '';
+  String currentSort = "name";
 
   @override
   void initState() {
     DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
+  }
+
+  int sortFunction(a, b) {
+    switch (currentSort) {
+      case 'nameReverse':
+        return b.name.compareTo(a.name);
+      case 'name':
+        return a.name.compareTo(b.name);
+      case 'balance':
+        return b.balance.compareTo(a.balance);
+      case 'balanceReverse':
+        return a.balance.compareTo(b.balance);
+      default:
+        // by name
+        return a.name.compareTo(b.name);
+    }
   }
 
   @override
@@ -47,34 +63,40 @@ class _AccountScreenState extends State<AccountScreen> {
                           Navigator.of(context).pop();
                           setState(() {
                             if (currentSort == 'name') {
-                              currentSort = '';
-                              widget.accountList
-                                  .sort((b, a) => a.name.compareTo(b.name));
+                              currentSort = 'nameReverse';
                             } else {
                               currentSort = 'name';
-                              widget.accountList
-                                  .sort((a, b) => a.name.compareTo(b.name));
                             }
                           });
                         },
-                        child: const Text('Name'),
+                        child: Row(
+                          children: [
+                            const Text('Name'),
+                            (currentSort == "name")
+                                ? const Icon(Icons.keyboard_arrow_up)
+                                : const Icon(Icons.keyboard_arrow_down),
+                          ],
+                        ),
                       ),
                       SimpleDialogOption(
                         onPressed: () {
                           Navigator.of(context).pop();
                           setState(() {
                             if (currentSort == "balance") {
-                              widget.accountList.sort(
-                                  (a, b) => a.balance.compareTo(b.balance));
-                              currentSort = "";
+                              currentSort = "balanceReverse";
                             } else {
-                              widget.accountList.sort(
-                                  (a, b) => b.balance.compareTo(a.balance));
                               currentSort = "balance";
                             }
                           });
                         },
-                        child: const Text('Balance'),
+                        child: Row(
+                          children: [
+                            const Text('Balance'),
+                            (currentSort == "balance")
+                                ? const Icon(Icons.keyboard_arrow_up)
+                                : const Icon(Icons.keyboard_arrow_down),
+                          ],
+                        ),
                       ),
                     ],
                   );
@@ -92,6 +114,7 @@ class _AccountScreenState extends State<AccountScreen> {
         stream: DatabaseHelper.instance.allAccountsStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            snapshot.data!.sort(sortFunction);
             return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -112,8 +135,8 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AccountForm()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AccountForm()));
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,
