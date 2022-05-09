@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-class Help extends StatelessWidget {
+class HelpScreen extends StatelessWidget {
   static String routeID = 'help';
-  const Help({Key? key}) : super(key: key);
+  const HelpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
