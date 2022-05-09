@@ -6,6 +6,8 @@ import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/widgets/items/transactionItem.dart';
 import 'package:budgetiser/drawer.dart';
+import 'package:budgetiser/shared/widgets/smalStuff/CategoryTextWithIcon.dart';
+import 'package:budgetiser/shared/widgets/smalStuff/accountTextWithIcon.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -256,39 +258,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   ListTile _filterListTile(element) {
-    if (element is Account || element is TransactionCategory) {
-      return ListTile(
-        title: Row(
-          children: [
-            Icon(
-              element.icon,
-              color: element.color,
-            ),
-            Flexible(
-              child: Text(" " + element.name, overflow: TextOverflow.ellipsis),
-            ),
-          ],
-        ),
-        visualDensity: VisualDensity.compact,
-        leading: Radio(
-          value: element.name.toString(),
-          groupValue: (element is Account)
-              ? _currentFilterAccountName
-              : _currentFilterCategoryName,
-          onChanged: (value) {
-            setState(() {
-              if (element is Account) {
-                _currentFilterAccountName = value.toString();
-              } else {
-                _currentFilterCategoryName = value.toString();
-              }
-            });
-            Navigator.of(context).pop();
-          },
-        ),
-      );
-    } else {
+    if (element is! Account && element is! TransactionCategory) {
       throw Exception("Unknown element passed to _filterListTile");
     }
+    return ListTile(
+      title: element is Account
+          ? AccountTextWithIcon(element)
+          : CategoryTextWithIcon(element),
+      visualDensity: VisualDensity.compact,
+      leading: Radio(
+        value: element.name.toString(),
+        groupValue: (element is Account)
+            ? _currentFilterAccountName
+            : _currentFilterCategoryName,
+        onChanged: (value) {
+          setState(() {
+            if (element is Account) {
+              _currentFilterAccountName = value.toString();
+            } else {
+              _currentFilterCategoryName = value.toString();
+            }
+          });
+          Navigator.of(context).pop();
+        },
+      ),
+    );
   }
 }
