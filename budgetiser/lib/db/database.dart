@@ -1095,9 +1095,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         WHERE id = ?;
     """, [
         budgetID,
-        budgetID,
         interval['start'].toString().substring(0, 10),
-        interval['end'].toString().substring(0, 10)
+        interval['end'].toString().substring(0, 10),
+        budgetID,
       ]);
     } else {
       await db.rawUpdate("""UPDATE budget SET balance =
@@ -1111,11 +1111,16 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
                   and ? <= singleTransaction.date
             )
         WHERE id = ?;
-    """, [budgetID, budgetID, budget.startDate.toString().substring(0, 10)]);
+    """, [
+        budgetID,
+        budget.startDate.toString().substring(0, 10),
+        budgetID,
+      ]);
     }
     pushGetAllBudgetsStream();
   }
 
+  /// takes a long time
   void reloadAllBudgetBalance() async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
