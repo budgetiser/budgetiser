@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'homeScreen.dart';
 
-
 class CreateDatabaseScreen extends StatefulWidget {
   CreateDatabaseScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateDatabaseScreen> createState() => _CreateDatabaseScreenState();
 }
+
 class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
   final _passcodeController = TextEditingController();
   final _repeatPasscodeController = TextEditingController();
@@ -41,7 +41,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   controller: _passcodeController,
                   obscureText: true,
                   validator: (data) {
-                    if(_noEncryption == false){
+                    if (_noEncryption == false) {
                       if ((data!.isEmpty || data.length < 4)) {
                         return "Passcode must have at least 4 characters";
                       }
@@ -71,7 +71,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   controller: _repeatPasscodeController,
                   obscureText: true,
                   validator: (data) {
-                    if(_noEncryption == false){
+                    if (_noEncryption == false) {
                       if (data!.isEmpty) {
                         return "Please repeat the passcode";
                       }
@@ -103,7 +103,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   setState(() {
                     _noEncryption = !_noEncryption;
                     _formKey.currentState?.validate();
-                    if(_noEncryption){
+                    if (_noEncryption) {
                       _passcodeController.clear();
                       _repeatPasscodeController.clear();
                     }
@@ -122,12 +122,15 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate() == true || _noEncryption) {
+                    if (_formKey.currentState!.validate() == true ||
+                        _noEncryption) {
                       int verify = await DatabaseHelper.instance
                           .createDatabase(_passcodeController.text);
                       if (verify == 1) {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => const Home()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const HomeScreen()));
                       }
                     }
                   },
