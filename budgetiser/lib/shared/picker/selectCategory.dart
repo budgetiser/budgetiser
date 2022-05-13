@@ -1,6 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/smalStuff/CategoryTextWithIcon.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/CategoryTextWithIcon.dart';
 import 'package:flutter/material.dart';
 
 class SelectCategory extends StatefulWidget {

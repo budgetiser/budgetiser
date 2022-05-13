@@ -6,8 +6,8 @@ import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/widgets/items/transactionItem.dart';
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/shared/widgets/smalStuff/CategoryTextWithIcon.dart';
-import 'package:budgetiser/shared/widgets/smalStuff/accountTextWithIcon.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/CategoryTextWithIcon.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/accountTextWithIcon.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsScreen extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/smalStuff/balanceText.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/balanceText.dart';
 import 'package:flutter/material.dart';
 
 /// TransactionItem widget
