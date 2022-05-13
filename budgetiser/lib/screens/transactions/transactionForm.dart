@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
@@ -208,7 +209,6 @@ class _TransactionFormState extends State<TransactionForm> {
                                               selectedAccount2 =
                                                   _AccountListAtInit[0];
                                             });
-                                            print("nach set state");
                                           } else {
                                             selectedAccount2 = null;
                                           }
@@ -402,6 +402,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           .createSingleTransaction(_currentSingleTransaction());
                     }
                   }
+                  Navigator.of(context).pop();
                 } else {
                   if (recurringData.isRecurring) {
                     DatabaseHelper.instance.createRecurringTransaction(
@@ -410,8 +411,12 @@ class _TransactionFormState extends State<TransactionForm> {
                     DatabaseHelper.instance
                         .createSingleTransaction(_currentSingleTransaction());
                   }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionsScreen(),
+                    ),
+                  );
                 }
-                Navigator.of(context).pop();
               }
             },
             label: const Text("Save"),
