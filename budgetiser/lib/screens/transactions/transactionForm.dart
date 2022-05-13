@@ -54,8 +54,15 @@ class _TransactionFormState extends State<TransactionForm> {
   // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
 
+  var _AccountListAtInit;
+
   @override
   void initState() {
+    DatabaseHelper.instance.allAccountsStream.listen((event) {
+      _AccountListAtInit = event;
+    });
+    DatabaseHelper.instance.pushGetAllAccountsStream();
+
     if (widget.initialNegative == true) {
       valueController.text = "-";
     }
@@ -197,13 +204,11 @@ class _TransactionFormState extends State<TransactionForm> {
                                             hasAccount2 = newValue!;
                                           });
                                           if (hasAccount2) {
-                                            DatabaseHelper
-                                                .instance.allAccountsStream
-                                                .listen((event) {
-                                              setState(() {
-                                                selectedAccount2 = event.first;
-                                              });
+                                            setState(() {
+                                              selectedAccount2 =
+                                                  _AccountListAtInit[0];
                                             });
+                                            print("nach set state");
                                           } else {
                                             selectedAccount2 = null;
                                           }
