@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
@@ -11,6 +13,7 @@ import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
@@ -292,6 +295,25 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<File> writeDBFileToDocumentsFolder() async {
+    String dbName = "budgetiser.db";
+    var databasesPath = await getDatabasesPath();
+    var innerPath = join(databasesPath, dbName);
+    print(innerPath);
+
+    Directory? tempDir = Directory("/storage/emulated/0/Download");
+    String tempPath = tempDir.path;
+    print(tempPath);
+
+    var dbFile = File(innerPath);
+    var filePath = tempPath + "/" + DateTime.now().toString().substring(0, 16) + '_$dbName';
+    var dbFileBytes = dbFile.readAsBytesSync();
+    var bytes = ByteData.view(dbFileBytes.buffer);
+    final buffer = bytes.buffer;
+    return File(filePath).writeAsBytes(buffer.asUint8List(
+        dbFileBytes.offsetInBytes, dbFileBytes.lengthInBytes));
   }
 
   /*
