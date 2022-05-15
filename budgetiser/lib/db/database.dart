@@ -487,7 +487,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     for (int i = 0; i < maps.length; i++) {
       reloadBudgetBalanceFromID(maps[i]['budget_id']);
     }
-
     return transactionId;
   }
 
