@@ -43,9 +43,9 @@ List<Group> TMP_DATA_groupList = [
     color: Colors.green,
     description: "All transportation summarized",
     transactionCategories: [
+      TMP_DATA_categoryList[0],
       TMP_DATA_categoryList[1],
-      TMP_DATA_categoryList[2],
-      TMP_DATA_categoryList[4],
+      TMP_DATA_categoryList[3],
     ],
   ),
 ];
