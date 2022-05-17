@@ -1,6 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/drawer.dart';
+import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,31 +37,63 @@ class _HomeScreenState extends State<HomeScreen> {
               heroTag: "newTransaction",
             ),
             const SizedBox(
-              height: 10,
+              height: 80,
             ),
             FloatingActionButton.extended(
               onPressed: () {
-                DatabaseHelper.instance.resetDB();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: "Attention",
+                      description: "Are you sure? This action can't be undone!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.resetDB();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
               },
               label: const Text("reset DB"),
               icon: const Icon(
                 Icons.delete,
               ),
               heroTag: "resetDB",
+              backgroundColor: Colors.red,
             ),
             const SizedBox(
               height: 10,
             ),
             FloatingActionButton.extended(
               onPressed: () async {
-                await DatabaseHelper.instance.resetDB();
-                await DatabaseHelper.instance.fillDBwithTMPdata();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: "Attention",
+                      description: "Are you sure? This action can't be undone!",
+                      onSubmitCallback: () async {
+                        await DatabaseHelper.instance.resetDB();
+                        await DatabaseHelper.instance.fillDBwithTMPdata();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
               },
               label: const Text("reset and fill DB"),
               icon: const Icon(
                 Icons.refresh,
               ),
               heroTag: "fillDB",
+              backgroundColor: Colors.red,
             ),
             const SizedBox(
               height: 10,
