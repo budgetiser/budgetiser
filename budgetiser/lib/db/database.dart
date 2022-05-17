@@ -405,6 +405,21 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     allTransactionSink.add(list);
   }
 
+  Future<SingleTransaction> _getOneSingleTransaction(int transactionId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and singleTransaction.id = ?',
+      [transactionId],
+    );
+
+    if (maps.length > 1) {
+      throw Exception(
+          ' TODO: check : More than one transaction with id $transactionId');
+    }
+
+    return await _mapToSingleTransaction(maps[0]);
+  }
+
   Future<SingleTransaction> _mapToSingleTransaction(
       Map<String, dynamic> mapItem) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
@@ -527,7 +542,12 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       reloadBudgetBalanceFromID(maps[i]['budget_id']);
     }
 
+    pushGetAllAccountsStream();
     pushGetAllTransactionsStream();
+  }
+
+  Future<void> deleteSingleTransactionById(int id) async {
+    await deleteSingleTransaction(await _getOneSingleTransaction(id));
   }
 
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
@@ -545,11 +565,8 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
     if (mapSingle.length == 1) {
       return await _mapToSingleTransaction(mapSingle[0]);
-      // } else if (mapRecurring.length == 1) {
-      //   return await _mapToRecurringTransaction(mapRecurring[0]);
-    } else {
-      throw Exception('Error in getOneTransaction');
     }
+    throw Exception('Error in getOneTransaction');
   }
 
   /*
@@ -687,33 +704,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     } else {
       return null;
     }
-  }
-
-  /*
-  * Single & Recurring Transaction 
-  */
-
-  Future<void> deleteSingleTransactionById(int id) async {
-    final db = await database;
-
-    await db.delete(
-      'singleTransaction',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-    await db.delete(
-      'singleTransactionToAccount',
-      where: 'transaction_id = ?',
-      whereArgs: [id],
-    );
-
-    await db.delete(
-      'singleToRecurringTransaction',
-      where: 'single_transaction_id = ?',
-      whereArgs: [id],
-    );
-
-    pushGetAllTransactionsStream();
   }
 
   Future<void> deleteRecurringTransactionById(int id) async {
