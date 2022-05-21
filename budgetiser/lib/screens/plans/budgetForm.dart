@@ -28,7 +28,7 @@ class _BudgetFormState extends State<BudgetForm> {
     startDate: DateTime.now(),
   );
   List<TransactionCategory> budgetCategories = [];
-  IconData _icon = Icons.blur_on;
+  IconData? _icon;
   Color? _color;
 
   // scrollcontroller for the recurring form to scroll to the bottom
@@ -233,7 +233,7 @@ class _BudgetFormState extends State<BudgetForm> {
               if (_formKey.currentState!.validate()) {
                 Budget a = Budget(
                   name: nameController.text,
-                  icon: _icon,
+                  icon: _icon ?? Icons.blur_on,
                   color: _color ?? Colors.blue,
                   description: descriptionController.text,
                   id: 0,

@@ -21,7 +21,7 @@ class _GroupFormState extends State<GroupForm> {
   var descriptionController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Color? _color;
-  IconData _icon = Icons.blur_on;
+  IconData? _icon;
   List<TransactionCategory> _categories = [];
 
   @override
@@ -174,7 +174,7 @@ class _GroupFormState extends State<GroupForm> {
               if (_formKey.currentState!.validate()) {
                 Group a = Group(
                     name: nameController.text,
-                    icon: _icon,
+                    icon: _icon ?? Icons.blur_on,
                     color: _color ?? Colors.blue,
                     description: descriptionController.text,
                     id: 0,

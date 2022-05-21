@@ -21,7 +21,7 @@ class _CategoryFormState extends State<CategoryForm> {
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Color? _color;
-  IconData _icon = Icons.blur_on;
+  IconData? _icon;
 
   @override
   void initState() {
@@ -168,7 +168,7 @@ class _CategoryFormState extends State<CategoryForm> {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
                     name: nameController.text,
-                    icon: _icon,
+                    icon: _icon ?? Icons.blur_on,
                     color: _color ?? Colors.blue,
                     description: descriptionController.text,
                     isHidden: false,

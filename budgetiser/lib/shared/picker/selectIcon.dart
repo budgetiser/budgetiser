@@ -19,8 +19,14 @@ class IconPicker extends StatefulWidget {
 }
 
 class _IconPickerState extends State<IconPicker> {
+  IconData _currentIcon = Icons.blur_on;
+
   @override
   Widget build(BuildContext context) {
+    _currentIcon =
+        widget.initialIcon ?? _icons.elementAt(Random().nextInt(_icons.length));
+
+    Future(_executeAfterBuild);
     return SizedBox(
       child: InkWell(
         onTap: () {
@@ -34,9 +40,7 @@ class _IconPickerState extends State<IconPicker> {
               });
         },
         child: Icon(
-          (widget.initialIcon != null)
-              ? widget.initialIcon
-              : _icons.elementAt(Random().nextInt(_icons.length)),
+          _currentIcon,
           color: widget.color,
         ),
       ),
@@ -52,7 +56,7 @@ class _IconPickerState extends State<IconPicker> {
         return InkWell(
           onTap: () {
             setState(() {
-              widget.initialIcon = _icons[index];
+              _currentIcon = _icons[index];
               widget.onIconChangedCallback(_icons[index]);
               Navigator.pop(context);
             });
@@ -64,6 +68,11 @@ class _IconPickerState extends State<IconPicker> {
         );
       }),
     );
+  }
+
+  /// executes after build is done by being called in a Future() from the build() method
+  Future<void> _executeAfterBuild() async {
+    widget.onIconChangedCallback(_currentIcon);
   }
 
   final List<IconData> _icons = [
