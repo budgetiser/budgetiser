@@ -29,7 +29,7 @@ class _BudgetFormState extends State<BudgetForm> {
   );
   List<TransactionCategory> budgetCategories = [];
   IconData _icon = Icons.blur_on;
-  Color _color = Colors.blue;
+  Color? _color;
 
   // scrollcontroller for the recurring form to scroll to the bottom
   final ScrollController _scrollController = ScrollController();
@@ -88,7 +88,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: IconPicker(
-                          color: _color,
+                          color: _color ?? Colors.blue,
                           initialIcon: _icon,
                           onIconChangedCallback: (icondata) {
                             setState(() {
@@ -234,7 +234,7 @@ class _BudgetFormState extends State<BudgetForm> {
                 Budget a = Budget(
                   name: nameController.text,
                   icon: _icon,
-                  color: _color,
+                  color: _color ?? Colors.blue,
                   description: descriptionController.text,
                   id: 0,
                   limit: double.parse(limitController.text),

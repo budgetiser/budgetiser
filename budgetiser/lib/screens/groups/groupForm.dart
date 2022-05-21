@@ -20,7 +20,7 @@ class _GroupFormState extends State<GroupForm> {
   var nameController = new TextEditingController();
   var descriptionController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Colors.blue;
+  Color? _color;
   IconData _icon = Icons.blur_on;
   List<TransactionCategory> _categories = [];
 
@@ -69,7 +69,7 @@ class _GroupFormState extends State<GroupForm> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: IconPicker(
-                            color: _color,
+                            color: _color ?? Colors.blue,
                             initialIcon: _icon,
                             onIconChangedCallback: (icondata) {
                               setState(() {
@@ -175,7 +175,7 @@ class _GroupFormState extends State<GroupForm> {
                 Group a = Group(
                     name: nameController.text,
                     icon: _icon,
-                    color: _color,
+                    color: _color ?? Colors.blue,
                     description: descriptionController.text,
                     id: 0,
                     transactionCategories: _categories);

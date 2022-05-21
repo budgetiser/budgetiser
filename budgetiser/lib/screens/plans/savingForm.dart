@@ -21,7 +21,7 @@ class _SavingFormState extends State<SavingForm> {
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   IconData _icon = Icons.blur_on;
-  Color _color = Colors.blue;
+  Color? _color;
   DateTime start_date = DateTime.now();
   DateTime end_date = DateTime.now().add(Duration(days: 30));
 
@@ -73,7 +73,7 @@ class _SavingFormState extends State<SavingForm> {
                         child: IconPicker(
                           onIconChangedCallback: (p0) {},
                           initialIcon: _icon,
-                          color: _color,
+                          color: _color ?? Colors.blue,
                         ),
                       ),
                       Flexible(
@@ -241,7 +241,7 @@ class _SavingFormState extends State<SavingForm> {
                 Savings a = Savings(
                   name: nameController.text,
                   icon: _icon,
-                  color: _color,
+                  color: _color ?? Colors.blue,
                   description: descriptionController.text,
                   id: 0,
                   goal: double.parse(goalController.text),

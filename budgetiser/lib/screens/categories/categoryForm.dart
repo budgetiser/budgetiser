@@ -20,7 +20,7 @@ class _CategoryFormState extends State<CategoryForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Colors.blue;
+  Color? _color;
   IconData _icon = Icons.blur_on;
 
   @override
@@ -71,7 +71,7 @@ class _CategoryFormState extends State<CategoryForm> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: IconPicker(
-                                  color: _color,
+                                  color: _color ?? Colors.blue,
                                   initialIcon: _icon,
                                   onIconChangedCallback: (icondata) {
                                     setState(() {
@@ -169,7 +169,7 @@ class _CategoryFormState extends State<CategoryForm> {
                 TransactionCategory a = TransactionCategory(
                     name: nameController.text,
                     icon: _icon,
-                    color: _color,
+                    color: _color ?? Colors.blue,
                     description: descriptionController.text,
                     isHidden: false,
                     id: 0);
