@@ -27,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       selectedValue = prefs.getString('key-themeMode');
+      selectedValue ??= 'system'; // default value
     });
   }
 

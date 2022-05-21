@@ -24,11 +24,11 @@ class SettingsStreamClass {
     _settingsStreamSink.add(_currentThemeMode);
   }
 
-  void setThemeModeFromString(String themeMode) async {
+  void setThemeModeFromString(String themeModeString) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('key-themeMode', themeMode);
+    await prefs.setString('key-themeMode', themeModeString);
 
-    ThemeMode _currentThemeMode = _stringToThemeMode(themeMode);
+    ThemeMode _currentThemeMode = _stringToThemeMode(themeModeString);
 
     _settingsStreamSink.add(_currentThemeMode);
   }
