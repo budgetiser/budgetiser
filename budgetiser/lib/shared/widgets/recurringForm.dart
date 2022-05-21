@@ -133,25 +133,27 @@ class _RecurringFormState extends State<RecurringForm> {
                   },
                 ),
               ),
-              Checkbox(
-                value: isRecurring,
-                onChanged: (bool? newValue) {
-                  setState(() {
-                    isRecurring = newValue!;
-                    enddate = _getRecurringData().calculateEndDate();
-                    _callCallback();
-                  });
-                  if (newValue == true) {
-                    // scrolling to the bottom of the page to show the recurring fields
-                    // +90 because the recurring fields are expanding
-                    widget.scrollController.animateTo(
-                        widget.scrollController.position.maxScrollExtent + 90,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut);
-                  }
+              InkWell(
+                customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () {
+                  _onRecurringCheckboxClicked();
                 },
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: isRecurring,
+                      onChanged: (bool? newValue) {
+                        _onRecurringCheckboxClicked();
+                      },
+                    ),
+                    const Text("recurring"),
+                  ],
+                ),
               ),
-              const Text("recurring"),
             ]),
           ),
           if (isRecurring)
@@ -291,6 +293,22 @@ class _RecurringFormState extends State<RecurringForm> {
         ],
       ),
     );
+  }
+
+  void _onRecurringCheckboxClicked() {
+    setState(() {
+      isRecurring = !isRecurring;
+      enddate = _getRecurringData().calculateEndDate();
+      _callCallback();
+    });
+    if (isRecurring) {
+      // scrolling to the bottom of the page to show the recurring fields
+      // +90 because the recurring fields are expanding
+      widget.scrollController.animateTo(
+          widget.scrollController.position.maxScrollExtent + 90,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut);
+    }
   }
 
   void _callCallback() {

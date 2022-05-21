@@ -196,26 +196,25 @@ class _TransactionFormState extends State<TransactionForm> {
                                       initialAccount: selectedAccount,
                                       callback: setAccount),
                                   const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        value: hasAccount2,
-                                        onChanged: (bool? newValue) {
-                                          setState(() {
-                                            hasAccount2 = newValue!;
-                                          });
-                                          if (hasAccount2) {
-                                            setState(() {
-                                              selectedAccount2 =
-                                                  _AccountListAtInit[0];
-                                            });
-                                          } else {
-                                            selectedAccount2 = null;
-                                          }
-                                        },
-                                      ),
-                                      const Text("transfer to another account"),
-                                    ],
+                                  InkWell(
+                                    customBorder: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    onTap: () {
+                                      _onAccount2checkboxClicked();
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Checkbox(
+                                          value: hasAccount2,
+                                          onChanged: (bool? newValue) {
+                                            _onAccount2checkboxClicked();
+                                          },
+                                        ),
+                                        const Text(
+                                            "transfer to another account"),
+                                      ],
+                                    ),
                                   ),
                                   if (hasAccount2)
                                     Row(
@@ -478,5 +477,14 @@ class _TransactionFormState extends State<TransactionForm> {
     }
 
     return transaction;
+  }
+
+  void _onAccount2checkboxClicked() {
+    setState(() {
+      hasAccount2 = !hasAccount2;
+    });
+    if (!hasAccount2) {
+      selectedAccount2 = null;
+    }
   }
 }
