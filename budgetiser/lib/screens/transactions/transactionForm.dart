@@ -10,7 +10,6 @@ import 'package:budgetiser/shared/picker/selectCategory.dart';
 import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// a screen that allows the user to add a transaction
 /// or edit an existing one
@@ -226,6 +225,8 @@ class _TransactionFormState extends State<TransactionForm> {
                                           child: SelectAccount(
                                             initialAccount: selectedAccount2,
                                             callback: setAccount2,
+                                            blackListAccountId:
+                                                selectedAccount?.id,
                                           ),
                                         ),
                                       ],

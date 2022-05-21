@@ -9,11 +9,11 @@ class SelectAccount extends StatefulWidget {
     Key? key,
     this.initialAccount,
     required this.callback,
-    // this.blackListAccountId,
+    this.blackListAccountId,
   }) : super(key: key);
   final Account? initialAccount;
   final Function(Account) callback;
-  // int? blackListAccountId = 1;
+  final int? blackListAccountId;
 
   @override
   _SelectAccountState createState() => _SelectAccountState();
@@ -53,48 +53,69 @@ class _SelectAccountState extends State<SelectAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: (_accounts != null && _accounts!.isNotEmpty)
-          ? Row(
-              children: [
-                const Text("Account:"),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: DropdownButton<Account>(
-                    isExpanded: true,
-                    value: selectedAccount,
-                    elevation: 16,
-                    onChanged: (Account? newValue) async {
-                      setState(() {
-                        widget.callback(newValue!);
-                        selectedAccount = newValue;
-                      });
-                      if (newValue != null) {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.setInt(
-                            'key-last-selected-account', newValue.id);
-                      }
-                    },
-                    items: _accounts
-                        ?.map<DropdownMenuItem<Account>>((Account account) {
-                      return DropdownMenuItem<Account>(
-                        value: account,
-                        child: AccountTextWithIcon(account),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            )
-          : Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, "account");
-                },
-                child: const Text("No accounts found\nClick here to add one",
-                    textAlign: TextAlign.center),
-              ),
-            ),
+    var _filterAccounts =
+        _accounts?.where((element) => element.id != widget.blackListAccountId);
+    String errorText = "No accounts found\nClick here to add one";
+    if (_filterAccounts != null && _filterAccounts.isEmpty) {
+      errorText = "You need a 2nd account\nClick here to add one";
+    }
+
+    if (_accounts == null ||
+        _accounts!.isEmpty ||
+        _filterAccounts != null && _filterAccounts.isEmpty) {
+      return Center(
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, "account");
+          },
+          child: Text(
+            errorText,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    // check if selected account is not in _accounts
+    if (selectedAccount != null &&
+        _filterAccounts != null &&
+        !_filterAccounts.contains(selectedAccount)) {
+      setState(() {
+        selectedAccount = _filterAccounts.first;
+      });
+      // if (mounted) {
+      // widget.callback(selectedAccount!);
+      // }
+    }
+
+    return Row(
+      children: [
+        const Text("Account:"),
+        const SizedBox(width: 8),
+        Expanded(
+          child: DropdownButton<Account>(
+            isExpanded: true,
+            value: selectedAccount,
+            elevation: 16,
+            onChanged: (Account? newValue) async {
+              setState(() {
+                widget.callback(newValue!);
+                selectedAccount = newValue;
+              });
+              if (newValue != null) {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setInt('key-last-selected-account', newValue.id);
+              }
+            },
+            items: _filterAccounts
+                ?.map<DropdownMenuItem<Account>>((Account account) {
+              return DropdownMenuItem<Account>(
+                value: account,
+                child: AccountTextWithIcon(account),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
