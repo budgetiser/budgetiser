@@ -21,7 +21,7 @@ class SelectAccount extends StatefulWidget {
 
 class _SelectAccountState extends State<SelectAccount> {
   List<Account>? _accounts;
-  Account? selectedAccount;
+  Account? _selectedAccount;
 
   @override
   void initState() {
@@ -29,21 +29,21 @@ class _SelectAccountState extends State<SelectAccount> {
       _accounts?.clear();
       _accounts = (event.map((e) => e).toList());
       if (widget.initialAccount != null) {
-        selectedAccount = _accounts
+        _selectedAccount = _accounts
             ?.firstWhere((element) => element.id == widget.initialAccount!.id);
       } else {
         final prefs = await SharedPreferences.getInstance();
         final accountId = prefs.getInt('key-last-selected-account');
         if (accountId == null) {
-          selectedAccount = _accounts?.first;
+          _selectedAccount = _accounts?.first;
         } else {
-          selectedAccount =
+          _selectedAccount =
               _accounts?.firstWhere((element) => element.id == accountId);
         }
       }
-      if (selectedAccount != null) {
+      if (_selectedAccount != null) {
         if (mounted) {
-          widget.callback(selectedAccount!);
+          widget.callback(_selectedAccount!);
         }
       }
     });
@@ -76,11 +76,11 @@ class _SelectAccountState extends State<SelectAccount> {
       );
     }
     // check if selected account is not in _accounts
-    if (selectedAccount != null &&
+    if (_selectedAccount != null &&
         _filterAccounts != null &&
-        !_filterAccounts.contains(selectedAccount)) {
+        !_filterAccounts.contains(_selectedAccount)) {
       setState(() {
-        selectedAccount = _filterAccounts.first;
+        _selectedAccount = _filterAccounts.first;
       });
     }
 
@@ -92,12 +92,12 @@ class _SelectAccountState extends State<SelectAccount> {
         Expanded(
           child: DropdownButton<Account>(
             isExpanded: true,
-            value: selectedAccount,
+            value: _selectedAccount,
             elevation: 16,
             onChanged: (Account? newValue) async {
               setState(() {
                 widget.callback(newValue!);
-                selectedAccount = newValue;
+                _selectedAccount = newValue;
               });
               if (newValue != null) {
                 final prefs = await SharedPreferences.getInstance();
@@ -119,6 +119,8 @@ class _SelectAccountState extends State<SelectAccount> {
 
   /// executes after build is done by being called in a Future() from the build() method
   Future<void> executeAfterBuild() async {
-    widget.callback(selectedAccount!);
+    if (_selectedAccount != null) {
+      widget.callback(_selectedAccount!);
+    }
   }
 }
