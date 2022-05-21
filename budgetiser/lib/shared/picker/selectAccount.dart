@@ -82,11 +82,9 @@ class _SelectAccountState extends State<SelectAccount> {
       setState(() {
         selectedAccount = _filterAccounts.first;
       });
-      // if (mounted) {
-      // widget.callback(selectedAccount!);
-      // }
     }
 
+    Future(executeAfterBuild);
     return Row(
       children: [
         const Text("Account:"),
@@ -117,5 +115,10 @@ class _SelectAccountState extends State<SelectAccount> {
         ),
       ],
     );
+  }
+
+  /// executes after build is done by being called in a Future() from the build() method
+  Future<void> executeAfterBuild() async {
+    widget.callback(selectedAccount!);
   }
 }
