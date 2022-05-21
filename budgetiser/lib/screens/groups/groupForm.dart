@@ -69,7 +69,7 @@ class _GroupFormState extends State<GroupForm> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: IconPicker(
-                            initialColor: _color,
+                            color: _color,
                             initialIcon: _icon,
                             onIconChangedCallback: (icondata) {
                               setState(() {

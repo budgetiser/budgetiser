@@ -71,7 +71,7 @@ class _CategoryFormState extends State<CategoryForm> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: IconPicker(
-                                  initialColor: _color,
+                                  color: _color,
                                   initialIcon: _icon,
                                   onIconChangedCallback: (icondata) {
                                     setState(() {
@@ -138,9 +138,11 @@ class _CategoryFormState extends State<CategoryForm> {
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
                         title: "Attention",
-                        description: "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
+                        description:
+                            "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
+                          DatabaseHelper.instance
+                              .deleteCategory(widget.categoryData!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },

@@ -73,7 +73,7 @@ class _SavingFormState extends State<SavingForm> {
                         child: IconPicker(
                           onIconChangedCallback: (p0) {},
                           initialIcon: _icon,
-                          initialColor: _color,
+                          color: _color,
                         ),
                       ),
                       Flexible(
@@ -132,7 +132,7 @@ class _SavingFormState extends State<SavingForm> {
                           }
                           try {
                             double a = double.parse(data);
-                            if(a <= double.parse(balController.text)){
+                            if (a <= double.parse(balController.text)) {
                               return "Goal must be higher than value";
                             }
                           } catch (e) {
