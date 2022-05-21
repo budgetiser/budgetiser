@@ -1,5 +1,5 @@
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/shared/services/SettingsStream.dart';
+import 'package:budgetiser/shared/services/settingsStream.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:budgetiser/routes.dart';
-import 'package:budgetiser/shared/services/SettingsStream.dart';
+import 'package:budgetiser/shared/services/settingsStream.dart';
 import 'package:budgetiser/screens/createDBScreen.dart';
 import 'package:budgetiser/screens/homeScreen.dart';
 import 'package:budgetiser/screens/login.dart';
