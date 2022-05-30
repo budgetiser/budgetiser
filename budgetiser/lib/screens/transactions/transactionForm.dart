@@ -394,6 +394,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   } else {
                     // isRecurring is false
                     if (widget.initialSingleTransactionData != null) {
+                      print("hier");
                       DatabaseHelper.instance
                           .updateSingleTransaction(_currentSingleTransaction());
                     } else {
@@ -482,9 +483,11 @@ class _TransactionFormState extends State<TransactionForm> {
   void _onAccount2checkboxClicked() {
     setState(() {
       hasAccount2 = !hasAccount2;
+      print("hasAccount2: $hasAccount2");
+      if (!hasAccount2) {
+        selectedAccount2 = null;
+        print("selectedAccount2: $selectedAccount2");
+      }
     });
-    if (!hasAccount2) {
-      selectedAccount2 = null;
-    }
   }
 }
