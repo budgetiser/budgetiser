@@ -361,10 +361,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     final List<Map<String, dynamic>> maps =
         await db.query('account', where: 'id = ?', whereArgs: [id]);
 
-    if (maps.length > 1) {
-      throw Exception(' TODO: check : More than one account with id $id');
-    }
-
     return Account(
       id: maps[0]['id'],
       name: maps[0]['name'],
@@ -412,11 +408,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       [transactionId],
     );
 
-    if (maps.length > 1) {
-      throw Exception(
-          ' TODO: check : More than one transaction with id $transactionId');
-    }
-
     return await _mapToSingleTransaction(maps[0]);
   }
 
@@ -454,18 +445,18 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     if (transaction.account2 == null) {
       await db.update(
         'account',
-        {'balance': account.balance + transaction.value},
+        {'balance': _roundDouble(account.balance + transaction.value)},
         where: 'id = ?',
         whereArgs: [account.id],
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     } else {
       Account account2 = await _getOneAccount(transaction.account2!.id);
-      await db.update(
-          'account', {'balance': account.balance - transaction.value},
+      await db.update('account',
+          {'balance': _roundDouble(account.balance - transaction.value)},
           where: 'id = ?', whereArgs: [account.id]);
-      await db.update(
-          'account', {'balance': account2.balance + transaction.value},
+      await db.update('account',
+          {'balance': _roundDouble(account2.balance + transaction.value)},
           where: 'id = ?', whereArgs: [account2.id]);
     }
 
@@ -510,16 +501,31 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         distinct: true);
 
     if (transaction.account2 == null) {
-      await db.update('account',
-          {'balance': transaction.account.balance - transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account.id]);
+      await db.update(
+          'account',
+          {
+            'balance':
+                _roundDouble(transaction.account.balance - transaction.value)
+          },
+          where: 'id = ?',
+          whereArgs: [transaction.account.id]);
     } else {
-      await db.update('account',
-          {'balance': transaction.account.balance + transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account.id]);
-      await db.update('account',
-          {'balance': transaction.account2!.balance - transaction.value},
-          where: 'id = ?', whereArgs: [transaction.account2!.id]);
+      await db.update(
+          'account',
+          {
+            'balance':
+                _roundDouble(transaction.account.balance + transaction.value)
+          },
+          where: 'id = ?',
+          whereArgs: [transaction.account.id]);
+      await db.update(
+          'account',
+          {
+            'balance':
+                _roundDouble(transaction.account2!.balance - transaction.value)
+          },
+          where: 'id = ?',
+          whereArgs: [transaction.account2!.id]);
     }
 
     await db.delete(
@@ -1233,5 +1239,14 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       );
     }
     pushGetAllGroupsStream();
+  }
+
+  /**
+   * Helper methods
+   */
+
+  /// rounds to 2 decimal places by cutting off all digits after
+  double _roundDouble(double value) {
+    return double.parse(value.toStringAsFixed(2));
   }
 }
