@@ -1,5 +1,18 @@
 import 'package:jiffy/jiffy.dart';
 
+enum IntervalUnit {
+  day,
+  week,
+  month,
+  quarter,
+  year,
+}
+
+enum IntervalType {
+  fixedPointOfTime,
+  fixedInterval,
+}
+
 class RecurringData {
   DateTime startDate;
   bool isRecurring;
@@ -74,17 +87,38 @@ class RecurringData {
       }
     }
   }
-}
 
-enum IntervalUnit {
-  day,
-  week,
-  month,
-  quarter,
-  year,
-}
+  void setEndDateByCalculation() {
+    endDate = calculateEndDate();
+  }
 
-enum IntervalType {
-  fixedPointOfTime,
-  fixedInterval,
+  int calculateNeededRepetitions() {
+    // TODO: not finished and buggy
+    print("NO");
+    if (isRecurring) {
+      if (intervalType == IntervalType.fixedPointOfTime) {
+        switch (intervalUnit) {
+          case IntervalUnit.week:
+            return endDate!.difference(startDate).inDays ~/ 7;
+          // case "month":
+          // return startDate.difference(enddate!).inDays ~/ 30;
+          default:
+            return 0;
+        }
+      } else {
+        switch (intervalUnit) {
+          case IntervalUnit.day:
+            return endDate!.difference(startDate).inDays;
+          case IntervalUnit.week:
+            return endDate!.difference(startDate).inDays ~/ 7;
+          // case "month":
+          // return startDate.difference(enddate!).inDays ~/ 30;
+          default:
+            return 0;
+        }
+      }
+    } else {
+      return 0;
+    }
+  }
 }

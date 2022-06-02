@@ -321,7 +321,20 @@ class _TransactionFormState extends State<TransactionForm> {
                             });
                           },
                           initialRecurringData: recurringData,
-                        )
+                        ),
+                        if (recurringData.isRecurring)
+                          Column(children: [
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                DatabaseHelper.instance
+                                    .createSingleTransactionFromRecurringTransaction(
+                                        _currentRecurringTransaction());
+                              },
+                              child: const Text(
+                                  "Add Single Transaction from this"),
+                            ),
+                          ]),
                       ],
                     ),
                   ),

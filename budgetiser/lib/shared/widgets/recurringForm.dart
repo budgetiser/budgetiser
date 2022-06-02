@@ -71,7 +71,7 @@ class _RecurringFormState extends State<RecurringForm> {
       enddate = widget.initialRecurringData.endDate;
       repetitions = widget.initialRecurringData.repetitionAmount != null
           ? widget.initialRecurringData.repetitionAmount!.toDouble()
-          : _calculateNeededRepetitions().toDouble();
+          : _getRecurringData().calculateNeededRepetitions().toDouble();
     } else {
       fixedIntervalAmountController.text = "1";
       fixedIntervalUnit = IntervalUnit.day;
@@ -79,36 +79,6 @@ class _RecurringFormState extends State<RecurringForm> {
       fixedPointOfTimeUnit = IntervalUnit.week;
     }
     enddate = _getRecurringData().calculateEndDate();
-  }
-
-  int _calculateNeededRepetitions() {
-    // TODO: not finished and buggy
-    print("NO");
-    if (isRecurring) {
-      if (_selectedIntervalType == IntervalType.fixedPointOfTime) {
-        switch (fixedPointOfTimeUnit) {
-          case IntervalUnit.week:
-            return enddate!.difference(startDate).inDays ~/ 7;
-          // case "month":
-          // return startDate.difference(enddate!).inDays ~/ 30;
-          default:
-            return 0;
-        }
-      } else {
-        switch (fixedIntervalUnit) {
-          case IntervalUnit.day:
-            return enddate!.difference(startDate).inDays;
-          case IntervalUnit.week:
-            return enddate!.difference(startDate).inDays ~/ 7;
-          // case "month":
-          // return startDate.difference(enddate!).inDays ~/ 30;
-          default:
-            return 0;
-        }
-      }
-    } else {
-      return 0;
-    }
   }
 
   @override

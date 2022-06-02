@@ -460,17 +460,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
           where: 'id = ?', whereArgs: [account2.id]);
     }
 
-    if (transaction.recurringTransaction != null) {
-      await db.insert(
-        'singleToRecurringTransaction',
-        {
-          'single_transaction_id': transactionId,
-          'recurring_transaction_id': transaction.recurringTransaction!.id,
-        },
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
-    }
-
     await db.insert('singleTransactionToAccount', {
       'transaction_id': transactionId,
       'account1_id': transaction.account.id,
@@ -732,6 +721,41 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     );
     pushGetAllRecurringTransactionsStream();
   }
+
+  /*
+  * Single and Recurring Transaction
+  */
+
+  ///create a single transaction from a recurring transaction
+  Future<int> createSingleTransactionFromRecurringTransaction(
+      RecurringTransaction recurringTransaction) async {
+    final db = await database;
+
+    SingleTransaction singleTransaction = SingleTransaction(
+      id: 0, // id will be overwritten by the database
+      title: recurringTransaction.title,
+      value: recurringTransaction.value,
+      description: recurringTransaction.description,
+      category: recurringTransaction.category,
+      account: recurringTransaction.account,
+      account2: recurringTransaction.account2,
+      date: DateTime.now(),
+    );
+
+    int singleTransactionId = await createSingleTransaction(singleTransaction);
+
+    await db.insert(
+      'singleToRecurringTransaction',
+      {
+        'single_transaction_id': singleTransactionId,
+        'recurring_transaction_id': recurringTransaction.id,
+      },
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+
+    return singleTransactionId;
+  }
+
   /*
   * Category
   */
