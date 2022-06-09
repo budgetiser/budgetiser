@@ -26,10 +26,12 @@ class TransactionForm extends StatefulWidget {
     this.initialSingleTransactionData,
     this.initialRecurringTransactionData,
     this.initialNegative,
+    this.initialSelectedAccount,
   }) : super(key: key);
   SingleTransaction? initialSingleTransactionData;
   RecurringTransaction? initialRecurringTransactionData;
   bool? initialNegative;
+  Account? initialSelectedAccount;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
