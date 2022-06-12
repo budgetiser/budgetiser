@@ -80,6 +80,11 @@ class _TransactionFormState extends State<TransactionForm> {
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
           widget.initialSingleTransactionData!.description;
+
+      recurringData = RecurringData(
+        isRecurring: false,
+        startDate: widget.initialSingleTransactionData!.date,
+      );
     }
     if (widget.initialRecurringTransactionData != null) {
       hasInitalData = true;
