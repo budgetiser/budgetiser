@@ -104,6 +104,9 @@ class _TransactionFormState extends State<TransactionForm> {
             widget.initialRecurringTransactionData!.repetitionAmount,
       );
     }
+    if(widget.initialSelectedAccount != null){
+      selectedAccount = widget.initialSelectedAccount;
+    }
 
     super.initState();
   }
