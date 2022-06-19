@@ -666,7 +666,6 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
 
   Future<void> updateRecurringTransaction(
       RecurringTransaction recurringTransaction) async {
-    print(recurringTransaction.id);
     await deleteRecurringTransactionById(recurringTransaction.id);
     await createRecurringTransaction(recurringTransaction);
 

@@ -32,10 +32,13 @@ class RecurringData {
     this.repetitionAmount,
   });
 
-  DateTime? calculateEndDate() {
+  DateTime? calculateAndSetEndDate() {
     if (!isRecurring || intervalAmount == null || intervalUnit == null) {
+      endDate = null;
       return null;
     }
+
+    DateTime calculatedEndDate = DateTime.now();
 
     if (intervalType == IntervalType.fixedPointOfTime) {
       switch (intervalUnit) {
@@ -46,7 +49,9 @@ class RecurringData {
                   : 7 - (startDate.weekday - intervalAmount!));
           Duration fromRepetitions =
               Duration(days: 7 * (repetitionAmount! - 1));
-          return startDate.add(untilFirstPointOfTime + fromRepetitions);
+          calculatedEndDate =
+              startDate.add(untilFirstPointOfTime + fromRepetitions);
+          break;
         case IntervalUnit.month:
           Duration untilFirstPointOfTime = Duration(
               days: intervalAmount! - startDate.day >= 0
@@ -55,7 +60,9 @@ class RecurringData {
                       startDate.day +
                       intervalAmount!);
           DateTime enddate = startDate.add(untilFirstPointOfTime);
-          return Jiffy(enddate).add(months: repetitionAmount! - 1).dateTime;
+          calculatedEndDate =
+              Jiffy(enddate).add(months: repetitionAmount! - 1).dateTime;
+          break;
         case IntervalUnit.year:
           Duration untilFirstPointOfTime = Duration(
             days: (intervalAmount! - Jiffy(startDate).dayOfYear >= 0)
@@ -65,27 +72,34 @@ class RecurringData {
                     intervalAmount!,
           );
           DateTime enddate = startDate.add(untilFirstPointOfTime);
-          return Jiffy(enddate).add(years: repetitionAmount! - 1).dateTime;
+          calculatedEndDate =
+              Jiffy(enddate).add(years: repetitionAmount! - 1).dateTime;
+          break;
         default:
           throw Exception('Error in _calculateEndDate: Unknown interval unit');
       }
     } else {
       switch (intervalUnit) {
         case IntervalUnit.day:
-          return startDate
+          calculatedEndDate = startDate
               .add(Duration(days: intervalAmount!) * repetitionAmount!);
+          break;
         case IntervalUnit.week:
-          return startDate
+          calculatedEndDate = startDate
               .add(Duration(days: intervalAmount! * repetitionAmount! * 7));
+          break;
         case IntervalUnit.month:
-          return Jiffy(startDate)
+          calculatedEndDate = Jiffy(startDate)
               .add(months: intervalAmount! * repetitionAmount!)
               .dateTime;
+          break;
         default:
           throw Exception(
               "Error in _calculateEndDate(fixedInterval): Unknown interval unit");
       }
     }
+    endDate = calculatedEndDate;
+    return calculatedEndDate;
   }
 
   void setEndDateByCalculation() {

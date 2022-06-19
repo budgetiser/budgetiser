@@ -26,10 +26,12 @@ class TransactionForm extends StatefulWidget {
     this.initialSingleTransactionData,
     this.initialRecurringTransactionData,
     this.initialNegative,
+    this.initialSelectedAccount,
   }) : super(key: key);
   SingleTransaction? initialSingleTransactionData;
   RecurringTransaction? initialRecurringTransactionData;
   bool? initialNegative;
+  Account? initialSelectedAccount;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
@@ -78,6 +80,11 @@ class _TransactionFormState extends State<TransactionForm> {
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
           widget.initialSingleTransactionData!.description;
+
+      recurringData = RecurringData(
+        isRecurring: false,
+        startDate: widget.initialSingleTransactionData!.date,
+      );
     }
     if (widget.initialRecurringTransactionData != null) {
       hasInitalData = true;
@@ -102,20 +109,27 @@ class _TransactionFormState extends State<TransactionForm> {
             widget.initialRecurringTransactionData!.repetitionAmount,
       );
     }
+    if (widget.initialSelectedAccount != null) {
+      selectedAccount = widget.initialSelectedAccount;
+    }
 
     super.initState();
   }
 
   setAccount(Account a) {
-    setState(() {
-      selectedAccount = a;
-    });
+    if (mounted) {
+      setState(() {
+        selectedAccount = a;
+      });
+    }
   }
 
   setAccount2(Account a) {
-    setState(() {
-      selectedAccount2 = a;
-    });
+    if (mounted) {
+      setState(() {
+        selectedAccount2 = a;
+      });
+    }
   }
 
   @override
@@ -407,7 +421,6 @@ class _TransactionFormState extends State<TransactionForm> {
                   } else {
                     // isRecurring is false
                     if (widget.initialSingleTransactionData != null) {
-                      print("hier");
                       DatabaseHelper.instance
                           .updateSingleTransaction(_currentSingleTransaction());
                     } else {
@@ -496,10 +509,8 @@ class _TransactionFormState extends State<TransactionForm> {
   void _onAccount2checkboxClicked() {
     setState(() {
       hasAccount2 = !hasAccount2;
-      print("hasAccount2: $hasAccount2");
       if (!hasAccount2) {
         selectedAccount2 = null;
-        print("selectedAccount2: $selectedAccount2");
       }
     });
   }
