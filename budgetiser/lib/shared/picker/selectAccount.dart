@@ -38,11 +38,17 @@ class _SelectAccountState extends State<SelectAccount> {
         if (accountId == null) {
           _selectedAccount = _accounts?.first;
         } else {
-          _selectedAccount =
-              _accounts?.firstWhere((element) => element.id == accountId);
+          try {
+            _selectedAccount =
+                _accounts?.firstWhere((element) => element.id == accountId);
+          } catch (e) {
+            if (_accounts != null && _accounts!.isNotEmpty) {
+              _selectedAccount = _accounts!.first;
+            }
+          }
         }
       }
-      if (mounted) {
+      if (mounted && _selectedAccount != null) {
         widget.callback(_selectedAccount!);
       }
     });

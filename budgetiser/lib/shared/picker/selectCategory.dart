@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/categories/categoryForm.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/CategoryTextWithIcon.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +38,17 @@ class _SelectCategoryState extends State<SelectCategory> {
         if (categoryIdFromPref == null) {
           selectedCategory = _categories?.first;
         } else {
-          selectedCategory = _categories
-              ?.firstWhere((element) => element.id == categoryIdFromPref);
+          try {
+            selectedCategory = _categories
+                ?.firstWhere((element) => element.id == categoryIdFromPref);
+          } catch (e) {
+            if (_categories != null && _categories!.isNotEmpty) {
+              selectedCategory = _categories!.first;
+            }
+          }
         }
       }
-      if (mounted) {
+      if (mounted && selectedCategory != null) {
         widget.callback(selectedCategory!);
       }
     });
@@ -50,14 +57,23 @@ class _SelectCategoryState extends State<SelectCategory> {
   }
 
   @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    // nameController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // if no categories yet, return a link to add a category
+    if (_categories == null || _categories!.isEmpty) {
+      return Center(
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => CategoryForm()));
+          },
+          child: const Text(
+            "No category found\nClick here to add one",
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return DropdownButton<TransactionCategory>(
       isExpanded: true,
       items: _categories
