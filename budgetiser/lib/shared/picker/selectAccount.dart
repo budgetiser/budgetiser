@@ -22,6 +22,7 @@ class SelectAccount extends StatefulWidget {
 class _SelectAccountState extends State<SelectAccount> {
   List<Account>? _accounts;
   Account? _selectedAccount;
+  final String keySelectedAccount = "key-last-selected-account";
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _SelectAccountState extends State<SelectAccount> {
             ?.firstWhere((element) => element.id == widget.initialAccount!.id);
       } else {
         final prefs = await SharedPreferences.getInstance();
-        final accountId = prefs.getInt('key-last-selected-account');
+        final accountId = prefs.getInt(keySelectedAccount);
         if (accountId == null) {
           _selectedAccount = _accounts?.first;
         } else {
@@ -101,7 +102,7 @@ class _SelectAccountState extends State<SelectAccount> {
               });
               if (newValue != null) {
                 final prefs = await SharedPreferences.getInstance();
-                await prefs.setInt('key-last-selected-account', newValue.id);
+                await prefs.setInt(keySelectedAccount, newValue.id);
               }
             },
             items: _filterAccounts

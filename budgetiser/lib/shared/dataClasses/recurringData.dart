@@ -102,10 +102,6 @@ class RecurringData {
     return calculatedEndDate;
   }
 
-  void setEndDateByCalculation() {
-    endDate = calculateEndDate();
-  }
-
   int calculateNeededRepetitions() {
     // TODO: not finished and buggy
     print("NO");
