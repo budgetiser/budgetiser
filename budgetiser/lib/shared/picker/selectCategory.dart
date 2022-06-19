@@ -2,6 +2,7 @@ import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/CategoryTextWithIcon.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectCategory extends StatefulWidget {
   SelectCategory({
@@ -20,23 +21,29 @@ class SelectCategory extends StatefulWidget {
 class _SelectCategoryState extends State<SelectCategory> {
   List<TransactionCategory>? _categories;
   TransactionCategory? selectedCategory;
+  final String keySelectedCategory = "key-last-selected-category";
 
   @override
   void initState() {
-    DatabaseHelper.instance.allCategoryStream.listen((event) {
+    DatabaseHelper.instance.allCategoryStream.listen((event) async {
       _categories?.clear();
       _categories = (event.map((e) => e).toList());
       if (widget.initialCategory != null) {
         selectedCategory = _categories
             ?.firstWhere((element) => element.id == widget.initialCategory!.id);
       } else {
-        selectedCategory = _categories?.first;
+        final prefs = await SharedPreferences.getInstance();
+        final categoryIdFromPref = prefs.getInt(keySelectedCategory);
+        if (categoryIdFromPref == null) {
+          selectedCategory = _categories?.first;
+        } else {
+          selectedCategory = _categories
+              ?.firstWhere((element) => element.id == categoryIdFromPref);
+        }
       }
-      // if (selectedCategory != null) {
       if (mounted) {
         widget.callback(selectedCategory!);
       }
-      // }
     });
     DatabaseHelper.instance.pushGetAllCategoriesStream();
     super.initState();
@@ -59,11 +66,15 @@ class _SelectCategoryState extends State<SelectCategory> {
                 child: CategoryTextWithIcon(category),
               ))
           .toList(),
-      onChanged: (TransactionCategory? category) {
+      onChanged: (TransactionCategory? category) async {
         setState(() {
           widget.callback(category!);
           selectedCategory = category;
         });
+        if (category != null) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setInt(keySelectedCategory, category.id);
+        }
       },
       value: selectedCategory,
     );

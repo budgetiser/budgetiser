@@ -42,10 +42,8 @@ class _SelectAccountState extends State<SelectAccount> {
               _accounts?.firstWhere((element) => element.id == accountId);
         }
       }
-      if (_selectedAccount != null) {
-        if (mounted) {
-          widget.callback(_selectedAccount!);
-        }
+      if (mounted) {
+        widget.callback(_selectedAccount!);
       }
     });
     DatabaseHelper.instance.pushGetAllAccountsStream();
