@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             FloatingActionButton.extended(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TransactionForm()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TransactionForm()));
               },
               label: const Text("new Transaction"),
               icon: const Icon(

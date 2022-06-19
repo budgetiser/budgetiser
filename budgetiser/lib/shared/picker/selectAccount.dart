@@ -17,7 +17,7 @@ class SelectAccount extends StatefulWidget {
   final int? blackListAccountId;
 
   @override
-  _SelectAccountState createState() => _SelectAccountState();
+  State<SelectAccount> createState() => _SelectAccountState();
 }
 
 class _SelectAccountState extends State<SelectAccount> {
@@ -66,16 +66,16 @@ class _SelectAccountState extends State<SelectAccount> {
 
   @override
   Widget build(BuildContext context) {
-    var _filterAccounts =
+    var filteredAccounts =
         _accounts?.where((element) => element.id != widget.blackListAccountId);
     String errorText = "No accounts found\nClick here to add one";
-    if (_filterAccounts != null && _filterAccounts.isEmpty) {
+    if (filteredAccounts != null && filteredAccounts.isEmpty) {
       errorText = "You need a 2nd account\nClick here to add one";
     }
 
     if (_accounts == null ||
         _accounts!.isEmpty ||
-        _filterAccounts != null && _filterAccounts.isEmpty) {
+        filteredAccounts != null && filteredAccounts.isEmpty) {
       return Center(
         child: InkWell(
           onTap: () {
@@ -91,10 +91,10 @@ class _SelectAccountState extends State<SelectAccount> {
     }
     // check if selected account is not in _accounts
     if (_selectedAccount != null &&
-        _filterAccounts != null &&
-        !_filterAccounts.contains(_selectedAccount)) {
+        filteredAccounts != null &&
+        !filteredAccounts.contains(_selectedAccount)) {
       setState(() {
-        _selectedAccount = _filterAccounts.first;
+        _selectedAccount = filteredAccounts.first;
       });
     }
 
@@ -118,7 +118,7 @@ class _SelectAccountState extends State<SelectAccount> {
                 await prefs.setInt(keySelectedAccount, newValue.id);
               }
             },
-            items: _filterAccounts
+            items: filteredAccounts
                 ?.map<DropdownMenuItem<Account>>((Account account) {
               return DropdownMenuItem<Account>(
                 value: account,

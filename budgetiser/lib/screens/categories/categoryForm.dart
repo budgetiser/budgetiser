@@ -6,11 +6,11 @@ import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class CategoryForm extends StatefulWidget {
-  CategoryForm({
+  const CategoryForm({
     Key? key,
     this.categoryData,
   }) : super(key: key);
-  TransactionCategory? categoryData;
+  final TransactionCategory? categoryData;
 
   @override
   State<CategoryForm> createState() => _CategoryFormState();
@@ -87,6 +87,7 @@ class _CategoryFormState extends State<CategoryForm> {
                                     if (data == null || data == '') {
                                       return "Please enter a valid name";
                                     }
+                                    return null;
                                   },
                                   decoration: const InputDecoration(
                                     labelText: "Category title",

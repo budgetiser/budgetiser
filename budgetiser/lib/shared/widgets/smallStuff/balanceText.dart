@@ -8,6 +8,7 @@ class BalanceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (balance >= 0) ...[
           Text(
@@ -25,7 +26,6 @@ class BalanceText extends StatelessWidget {
           ),
         ]
       ],
-      mainAxisAlignment: MainAxisAlignment.end,
     );
   }
 }

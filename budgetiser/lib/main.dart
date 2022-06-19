@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
               case 1: //Codes: [1 - Database found, encryption preference]
                 return LoginScreen();
               case 2: //Codes: [2 - no database found]
-                return CreateDatabaseScreen();
+                return const CreateDatabaseScreen();
               case -1: //Codes: [-1 - Error]
               default:
                 break;

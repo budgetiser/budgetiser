@@ -15,7 +15,7 @@ class Budget {
   IntervalType? intervalType;
   int? intervalAmount;
   IntervalUnit? intervalUnit;
-  int? intervalRepititions;
+  int? intervalRepetitions;
   DateTime startDate;
   DateTime? endDate;
   List<TransactionCategory> transactionCategories;
@@ -32,7 +32,7 @@ class Budget {
     this.intervalType,
     this.intervalAmount,
     this.intervalUnit,
-    this.intervalRepititions,
+    this.intervalRepetitions,
     required this.startDate,
     this.endDate,
     required this.transactionCategories,
@@ -49,7 +49,7 @@ class Budget {
         'interval_amount': isRecurring ? intervalAmount : null,
         'Interval_unit': isRecurring ? intervalUnit.toString() : null,
         'Interval_type': isRecurring ? intervalType.toString() : null,
-        'Interval_repititions': isRecurring ? intervalRepititions : null,
+        'Interval_repititions': isRecurring ? intervalRepetitions : null,
         'start_date': startDate.toString().substring(0, 10),
         'end_date': isRecurring ? endDate.toString().substring(0, 10) : null,
       };
@@ -58,7 +58,7 @@ class Budget {
     if (!isRecurring) return {};
     DateTime endInterval = DateTime.now();
     DateTime startInterval = DateTime.now();
-    for (int i = 0; i < intervalRepititions!; i++) {
+    for (int i = 0; i < intervalRepetitions!; i++) {
       if (intervalType == IntervalType.fixedPointOfTime) {
         switch (intervalUnit) {
           case IntervalUnit.week:
@@ -67,11 +67,11 @@ class Budget {
                     ? intervalAmount! - startDate.weekday
                     : 7 - (startDate.weekday - intervalAmount!));
             Duration fromRepetitions =
-                Duration(days: 7 * (intervalRepititions! - 1 - i));
+                Duration(days: 7 * (intervalRepetitions! - 1 - i));
             DateTime a = startDate.add(untilFirstPointOfTime + fromRepetitions);
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
-              startInterval = a.subtract(Duration(days: 7));
+              startInterval = a.subtract(const Duration(days: 7));
             }
             break;
           case IntervalUnit.month:
@@ -82,11 +82,11 @@ class Budget {
                         startDate.day +
                         intervalAmount!);
             DateTime a = startDate.add(untilFirstPointOfTime);
-            a = Jiffy(a).add(months: intervalRepititions! - 1 - i).dateTime;
+            a = Jiffy(a).add(months: intervalRepetitions! - 1 - i).dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval =
-                  Jiffy(a).add(months: intervalRepititions! - 2 - i).dateTime;
+                  Jiffy(a).add(months: intervalRepetitions! - 2 - i).dateTime;
             }
             break;
           case IntervalUnit.year:
@@ -98,50 +98,49 @@ class Budget {
                       intervalAmount!,
             );
             DateTime a = startDate.add(untilFirstPointOfTime);
-            a = Jiffy(a).add(years: intervalRepititions! - 1 - i).dateTime;
+            a = Jiffy(a).add(years: intervalRepetitions! - 1 - i).dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval =
-                  Jiffy(a).add(years: intervalRepititions! - 2 - i).dateTime;
+                  Jiffy(a).add(years: intervalRepetitions! - 2 - i).dateTime;
             }
             break;
           default:
-            print("Error in _calculateEndDate: unknown intervalMode");
+            throw Exception("Error in _calculateEndDate: unknown intervalMode");
         }
       } else {
         switch (intervalUnit) {
           case IntervalUnit.day:
             DateTime a = startDate.add(
-                Duration(days: intervalAmount!) * (intervalRepititions! - i));
+                Duration(days: intervalAmount!) * (intervalRepetitions! - i));
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval = a.subtract(Duration(days: intervalAmount!) *
-                  (intervalRepititions! - 1 - i));
+                  (intervalRepetitions! - 1 - i));
             }
             break;
           case IntervalUnit.week:
             DateTime a = startDate.add(Duration(
-                days: intervalAmount! * (intervalRepititions! - i) * 7));
+                days: intervalAmount! * (intervalRepetitions! - i) * 7));
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval = a.subtract(Duration(days: intervalAmount!) *
-                  (intervalRepititions! - 1 - i));
+                  (intervalRepetitions! - 1 - i));
             }
             break;
           case IntervalUnit.month:
             DateTime a = Jiffy(startDate)
-                .add(months: intervalAmount! * (intervalRepititions! - i))
+                .add(months: intervalAmount! * (intervalRepetitions! - i))
                 .dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
               startInterval = Jiffy(startDate)
-                  .add(months: intervalAmount! * (intervalRepititions! - i - 1))
+                  .add(months: intervalAmount! * (intervalRepetitions! - i - 1))
                   .dateTime;
             }
             break;
           default:
-            print(
-                "Error in _calculateEndDate(fixedInterval): unknown intervalMode");
+            throw Exception("Error in _calculateEndDate: unknown intervalMode");
         }
       }
     }

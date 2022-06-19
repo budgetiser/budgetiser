@@ -13,14 +13,14 @@ import 'package:flutter/material.dart';
 /// - a SingleTransaction
 /// - a RecurringTransaction
 class TransactionItem extends StatelessWidget {
-  TransactionItem({
+  const TransactionItem({
     Key? key,
     this.singleTransactionData,
     this.recurringTransactionData,
   }) : super(key: key);
 
-  SingleTransaction? singleTransactionData;
-  RecurringTransaction? recurringTransactionData;
+  final SingleTransaction? singleTransactionData;
+  final RecurringTransaction? recurringTransactionData;
 
   @override
   Widget build(BuildContext context) {

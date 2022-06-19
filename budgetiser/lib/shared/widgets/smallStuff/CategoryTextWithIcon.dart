@@ -1,4 +1,3 @@
-import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +17,7 @@ class CategoryTextWithIcon extends StatelessWidget {
         color: category.color,
       ),
       Flexible(
-        child: Text(" " + category.name, overflow: TextOverflow.ellipsis),
+        child: Text(" ${category.name}", overflow: TextOverflow.ellipsis),
       ),
     ]);
   }

@@ -21,17 +21,17 @@ import 'package:flutter/material.dart';
 /// - a SingleTransaction
 /// - a RecurringTransaction
 class TransactionForm extends StatefulWidget {
-  TransactionForm({
+  const TransactionForm({
     Key? key,
     this.initialSingleTransactionData,
     this.initialRecurringTransactionData,
     this.initialNegative,
     this.initialSelectedAccount,
   }) : super(key: key);
-  SingleTransaction? initialSingleTransactionData;
-  RecurringTransaction? initialRecurringTransactionData;
-  bool? initialNegative;
-  Account? initialSelectedAccount;
+  final SingleTransaction? initialSingleTransactionData;
+  final RecurringTransaction? initialRecurringTransactionData;
+  final bool? initialNegative;
+  final Account? initialSelectedAccount;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
@@ -57,15 +57,8 @@ class _TransactionFormState extends State<TransactionForm> {
   // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
 
-  var _AccountListAtInit;
-
   @override
   void initState() {
-    DatabaseHelper.instance.allAccountsStream.listen((event) {
-      _AccountListAtInit = event;
-    });
-    DatabaseHelper.instance.pushGetAllAccountsStream();
-
     if (widget.initialNegative == true) {
       valueController.text = "-";
     }

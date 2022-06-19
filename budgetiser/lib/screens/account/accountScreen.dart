@@ -1,18 +1,15 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/tempData/tempData.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/shared/widgets/items/accountItem/accountItem.dart';
 import 'package:flutter/material.dart';
 
 class AccountScreen extends StatefulWidget {
   static String routeID = 'account';
-  AccountScreen({
+  const AccountScreen({
     Key? key,
   }) : super(key: key);
-
-  List<Account> accountList = TMP_DATA_accountList;
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();

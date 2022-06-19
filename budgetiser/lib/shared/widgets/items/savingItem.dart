@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SavingItem extends StatelessWidget {
-  SavingItem({Key? key, required this.savingData}) : super(key: key);
-  Savings savingData;
+  const SavingItem({
+    Key? key,
+    required this.savingData,
+  }) : super(key: key);
+
+  final Savings savingData;
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +49,8 @@ class SavingItem extends StatelessWidget {
                           Text(savingData.name),
                         ],
                       ),
-                      Text("days left: " +
-                          (savingData.endDate)
-                              .difference(DateTime.now())
-                              .inDays
-                              .toString())
+                      Text(
+                          "days left: ${(savingData.endDate).difference(DateTime.now()).inDays}")
                     ]),
                 Row(
                   children: [

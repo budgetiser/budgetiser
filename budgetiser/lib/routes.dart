@@ -13,11 +13,11 @@ import 'screens/homeScreen.dart';
 var routes = {
   'home': (context) => const HomeScreen(),
   'plans': (context) => const Plans(),
-  'account': (context) => AccountScreen(),
+  'account': (context) => const AccountScreen(),
   'categories': (context) => const CategoriesScreen(),
   'groups': (context) => const GroupsScreen(),
   'stats': (context) => const Stats(),
-  'transactions': (context) => TransactionsScreen(),
+  'transactions': (context) => const TransactionsScreen(),
   'help': (context) => const HelpScreen(),
   'settings': (context) => const SettingsScreen(),
 };

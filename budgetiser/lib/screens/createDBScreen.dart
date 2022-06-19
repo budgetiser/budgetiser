@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'homeScreen.dart';
 
 class CreateDatabaseScreen extends StatefulWidget {
-  CreateDatabaseScreen({Key? key}) : super(key: key);
+  const CreateDatabaseScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateDatabaseScreen> createState() => _CreateDatabaseScreenState();

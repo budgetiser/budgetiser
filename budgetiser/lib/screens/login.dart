@@ -63,8 +63,12 @@ class LoginScreen extends StatelessWidget {
                       int verify = await DatabaseHelper.instance
                           .login(_passcodeController.text);
                       if (verify == 1) {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => HomeScreen()));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreen(),
+                          ),
+                        );
                       } else {
                         _passcodeController.clear();
                       }

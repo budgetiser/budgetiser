@@ -45,7 +45,7 @@ class GroupsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GroupForm()));
+              .push(MaterialPageRoute(builder: (context) => const GroupForm()));
         },
         tooltip: 'New Group',
         backgroundColor: Theme.of(context).colorScheme.primary,

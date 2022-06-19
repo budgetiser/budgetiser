@@ -3,16 +3,16 @@ import 'package:budgetiser/shared/picker/datePicker.dart';
 import 'package:flutter/material.dart';
 
 class RecurringForm extends StatefulWidget {
-  RecurringForm({
+  const RecurringForm({
     Key? key,
     required this.initialRecurringData,
     required this.onRecurringDataChangedCallback,
     required this.scrollController,
   }) : super(key: key);
 
-  RecurringData initialRecurringData;
-  Function(RecurringData) onRecurringDataChangedCallback;
-  ScrollController scrollController;
+  final RecurringData initialRecurringData;
+  final Function(RecurringData) onRecurringDataChangedCallback;
+  final ScrollController scrollController;
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();
@@ -34,20 +34,26 @@ class _RecurringFormState extends State<RecurringForm> {
   List<DropdownMenuItem<IntervalUnit>> get dropdownItemsFixedPointOfTimeUnit {
     List<DropdownMenuItem<IntervalUnit>> menuItems = [
       const DropdownMenuItem(
-          child: Text("of a week"), value: IntervalUnit.week),
+        value: IntervalUnit.week,
+        child: Text("of a week"),
+      ),
       const DropdownMenuItem(
-          child: Text("of a month"), value: IntervalUnit.month),
+        value: IntervalUnit.month,
+        child: Text("of a month"),
+      ),
       const DropdownMenuItem(
-          child: Text("of a year"), value: IntervalUnit.year),
+        value: IntervalUnit.year,
+        child: Text("of a year"),
+      ),
     ];
     return menuItems;
   }
 
   List<DropdownMenuItem<IntervalUnit>> get dropdownItemsFixedIntervalUnit {
     List<DropdownMenuItem<IntervalUnit>> menuItems = [
-      const DropdownMenuItem(child: Text("day"), value: IntervalUnit.day),
-      const DropdownMenuItem(child: Text("week"), value: IntervalUnit.week),
-      const DropdownMenuItem(child: Text("month"), value: IntervalUnit.month),
+      const DropdownMenuItem(value: IntervalUnit.day, child: Text("day")),
+      const DropdownMenuItem(value: IntervalUnit.week, child: Text("week")),
+      const DropdownMenuItem(value: IntervalUnit.month, child: Text("month")),
     ];
     return menuItems;
   }

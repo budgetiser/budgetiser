@@ -10,8 +10,8 @@ import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
-  BudgetForm({Key? key, this.budgetData}) : super(key: key);
-  Budget? budgetData;
+  const BudgetForm({Key? key, this.budgetData}) : super(key: key);
+  final Budget? budgetData;
 
   @override
   State<BudgetForm> createState() => _BudgetFormState();
@@ -31,7 +31,7 @@ class _BudgetFormState extends State<BudgetForm> {
   IconData? _icon;
   Color? _color;
 
-  // scrollcontroller for the recurring form to scroll to the bottom
+  // scrollController for the recurring form to scroll to the bottom
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -50,7 +50,7 @@ class _BudgetFormState extends State<BudgetForm> {
           intervalType: widget.budgetData!.intervalType,
           intervalUnit: widget.budgetData!.intervalUnit,
           intervalAmount: widget.budgetData!.intervalAmount,
-          repetitionAmount: widget.budgetData!.intervalRepititions,
+          repetitionAmount: widget.budgetData!.intervalRepetitions,
           isRecurring: true,
         );
       }
@@ -246,7 +246,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   intervalType: recurringData.intervalType,
                   intervalUnit: recurringData.intervalUnit,
                   intervalAmount: recurringData.intervalAmount,
-                  intervalRepititions: recurringData.repetitionAmount,
+                  intervalRepetitions: recurringData.repetitionAmount,
                 );
                 if (widget.budgetData != null) {
                   a.id = widget.budgetData!.id;

@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectCategory extends StatefulWidget {
-  SelectCategory({
+  const SelectCategory({
     Key? key,
     this.initialCategory,
     required this.callback,
   }) : super(key: key);
 
-  TransactionCategory? initialCategory;
+  final TransactionCategory? initialCategory;
   final Function(TransactionCategory) callback;
 
   @override
@@ -70,8 +70,8 @@ class _SelectCategoryState extends State<SelectCategory> {
       return Center(
         child: InkWell(
           onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => CategoryForm()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const CategoryForm()));
           },
           child: const Text(
             "No category found\nClick here to add one",

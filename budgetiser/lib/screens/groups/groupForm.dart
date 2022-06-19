@@ -8,17 +8,17 @@ import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {
-  GroupForm({Key? key, this.initialGroup}) : super(key: key);
+  const GroupForm({Key? key, this.initialGroup}) : super(key: key);
 
-  Group? initialGroup;
+  final Group? initialGroup;
 
   @override
   State<GroupForm> createState() => _GroupFormState();
 }
 
 class _GroupFormState extends State<GroupForm> {
-  var nameController = new TextEditingController();
-  var descriptionController = new TextEditingController();
+  var nameController = TextEditingController();
+  var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   Color? _color;
   IconData? _icon;
@@ -85,6 +85,7 @@ class _GroupFormState extends State<GroupForm> {
                               if (data == null || data == '') {
                                 return "Please enter a valid name";
                               }
+                              return null;
                             },
                             decoration: const InputDecoration(
                               labelText: "Group title",

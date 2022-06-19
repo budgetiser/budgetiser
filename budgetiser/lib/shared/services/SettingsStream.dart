@@ -8,29 +8,29 @@ class SettingsStreamClass {
 
   static final SettingsStreamClass instance =
       SettingsStreamClass._privateConstructor();
-  final StreamController<ThemeMode> _SettingsStreamController =
+  final StreamController<ThemeMode> _settingsStreamController =
       StreamController<ThemeMode>.broadcast();
 
-  Sink<ThemeMode> get _settingsStreamSink => _SettingsStreamController.sink;
+  Sink<ThemeMode> get _settingsStreamSink => _settingsStreamController.sink;
 
-  Stream<ThemeMode> get settingsStream => _SettingsStreamController.stream;
+  Stream<ThemeMode> get settingsStream => _settingsStreamController.stream;
 
   void pushGetSettingsStream() async {
     final prefs = await SharedPreferences.getInstance();
     final String? currentModeString = prefs.getString('key-themeMode');
 
-    ThemeMode _currentThemeMode = _stringToThemeMode(currentModeString);
+    ThemeMode currentThemeMode = _stringToThemeMode(currentModeString);
 
-    _settingsStreamSink.add(_currentThemeMode);
+    _settingsStreamSink.add(currentThemeMode);
   }
 
   void setThemeModeFromString(String themeModeString) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('key-themeMode', themeModeString);
 
-    ThemeMode _currentThemeMode = _stringToThemeMode(themeModeString);
+    ThemeMode currentThemeMode = _stringToThemeMode(themeModeString);
 
-    _settingsStreamSink.add(_currentThemeMode);
+    _settingsStreamSink.add(currentThemeMode);
   }
 
   ThemeMode _stringToThemeMode(themeModeString) {

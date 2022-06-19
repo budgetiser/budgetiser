@@ -51,16 +51,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 value: selectedValue,
                 items: const [
                   DropdownMenuItem(
-                    child: Text("system"),
                     value: "system",
+                    child: Text("system"),
                   ),
                   DropdownMenuItem(
-                    child: Text("light"),
                     value: "light",
+                    child: Text("light"),
                   ),
                   DropdownMenuItem(
-                    child: Text("dark"),
                     value: "dark",
+                    child: Text("dark"),
                   ),
                 ],
                 onChanged: (value) {

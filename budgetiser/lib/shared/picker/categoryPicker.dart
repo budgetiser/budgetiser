@@ -3,7 +3,7 @@ import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
 class CategoryPicker extends StatefulWidget {
-  CategoryPicker({
+  const CategoryPicker({
     Key? key,
     required this.onCategoryPickedCallback,
     this.initialCategories,
@@ -38,11 +38,12 @@ class _CategoryPickerState extends State<CategoryPicker> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 225,
       child: InkWell(
           borderRadius: BorderRadius.circular(15),
           child: Scrollbar(
             controller: scrollController,
-            isAlwaysShown: true,
+            thumbVisibility: true,
             radius: const Radius.elliptical(10, 20),
             child: ListView.builder(
               controller: scrollController,
@@ -175,7 +176,6 @@ class _CategoryPickerState extends State<CategoryPicker> {
               itemCount: (_selected.length) + 1,
             ),
           )),
-      height: 225,
     );
   }
 }

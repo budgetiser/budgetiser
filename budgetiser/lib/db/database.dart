@@ -46,7 +46,6 @@ class DatabaseHelper {
 
   void logout() async {
     final db = await database;
-    if (db == null) return;
     if (db.isOpen) {
       db.close();
     }
@@ -298,13 +297,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   /*
   * Account
   */
-  final StreamController<List<Account>> _AllAccountsStreamController =
+  final StreamController<List<Account>> _allAccountsStreamController =
       StreamController<List<Account>>.broadcast();
 
-  Sink<List<Account>> get allAccountsSink => _AllAccountsStreamController.sink;
+  Sink<List<Account>> get allAccountsSink => _allAccountsStreamController.sink;
 
   Stream<List<Account>> get allAccountsStream =>
-      _AllAccountsStreamController.stream;
+      _allAccountsStreamController.stream;
 
   void pushGetAllAccountsStream() async {
     final db = await database;
@@ -375,14 +374,14 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   * SingleTransaction
   */
   final StreamController<List<SingleTransaction>>
-      _AllTransactionStreamController =
+      _allTransactionStreamController =
       StreamController<List<SingleTransaction>>.broadcast();
 
   Sink<List<SingleTransaction>> get allTransactionSink =>
-      _AllTransactionStreamController.sink;
+      _allTransactionStreamController.sink;
 
   Stream<List<SingleTransaction>> get allTransactionStream =>
-      _AllTransactionStreamController.stream;
+      _allTransactionStreamController.stream;
 
   void pushGetAllTransactionsStream() async {
     final db = await database;
@@ -569,14 +568,14 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   */
 
   final StreamController<List<RecurringTransaction>>
-      _AllRecurringTransactionStreamController =
+      _allRecurringTransactionStreamController =
       StreamController<List<RecurringTransaction>>.broadcast();
 
   Sink<List<RecurringTransaction>> get allRecurringTransactionSink =>
-      _AllRecurringTransactionStreamController.sink;
+      _allRecurringTransactionStreamController.sink;
 
   Stream<List<RecurringTransaction>> get allRecurringTransactionStream =>
-      _AllRecurringTransactionStreamController.stream;
+      _allRecurringTransactionStreamController.stream;
 
   void pushGetAllRecurringTransactionsStream() async {
     final db = await database;
@@ -760,14 +759,14 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   */
 
   final StreamController<List<TransactionCategory>>
-      _AllCategoryStreamController =
+      _allCategoryStreamController =
       StreamController<List<TransactionCategory>>.broadcast();
 
   Sink<List<TransactionCategory>> get allCategorySink =>
-      _AllCategoryStreamController.sink;
+      _allCategoryStreamController.sink;
 
   Stream<List<TransactionCategory>> get allCategoryStream =>
-      _AllCategoryStreamController.stream;
+      _allCategoryStreamController.stream;
 
   void pushGetAllCategoriesStream() async {
     final db = await database;
@@ -867,13 +866,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   * Savings
   */
 
-  final StreamController<List<Savings>> _AllSavingsStreamController =
+  final StreamController<List<Savings>> _allSavingsStreamController =
       StreamController<List<Savings>>.broadcast();
 
-  Sink<List<Savings>> get allSavingsSink => _AllSavingsStreamController.sink;
+  Sink<List<Savings>> get allSavingsSink => _allSavingsStreamController.sink;
 
   Stream<List<Savings>> get allSavingsStream =>
-      _AllSavingsStreamController.stream;
+      _allSavingsStreamController.stream;
 
   void pushGetAllSavingsStream() async {
     final db = await database;
@@ -932,13 +931,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   * Budget
   */
 
-  final StreamController<List<Budget>> _AllBudgetsStreamController =
+  final StreamController<List<Budget>> _allBudgetsStreamController =
       StreamController<List<Budget>>.broadcast();
 
-  Sink<List<Budget>> get allBudgetsSink => _AllBudgetsStreamController.sink;
+  Sink<List<Budget>> get allBudgetsSink => _allBudgetsStreamController.sink;
 
   Stream<List<Budget>> get allBudgetsStream =>
-      _AllBudgetsStreamController.stream;
+      _allBudgetsStreamController.stream;
 
   void pushGetAllBudgetsStream() async {
     final db = await database;
@@ -967,7 +966,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         returnBudget.intervalType = IntervalType.values
             .firstWhere((e) => e.toString() == maps[i]['interval_type']);
         returnBudget.intervalAmount = maps[i]['interval_amount'];
-        returnBudget.intervalRepititions = maps[i]['interval_repititions'];
+        returnBudget.intervalRepetitions = maps[i]['interval_repititions'];
       }
       return returnBudget;
     }));
@@ -1000,7 +999,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       returnBudget.intervalType = IntervalType.values
           .firstWhere((e) => e.toString() == maps[0]['interval_type']);
       returnBudget.intervalAmount = maps[0]['interval_amount'];
-      returnBudget.intervalRepititions = maps[0]['interval_repititions'];
+      returnBudget.intervalRepetitions = maps[0]['interval_repititions'];
     }
     return returnBudget;
   }
@@ -1032,11 +1031,11 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    List<TransactionCategory> _categories = budget.transactionCategories;
+    List<TransactionCategory> budgetCategories = budget.transactionCategories;
 
-    for (int i = 0; i < _categories.length; i++) {
+    for (int i = 0; i < budgetCategories.length; i++) {
       Map<String, dynamic> rowCategory = {
-        'category_id': _categories[i].id,
+        'category_id': budgetCategories[i].id,
         'budget_id': id,
       };
       await db.insert(
@@ -1069,7 +1068,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       where: 'id = ?',
       whereArgs: [budget.id],
     );
-    List<TransactionCategory> _categories = budget.transactionCategories;
+    List<TransactionCategory> budgetCategories = budget.transactionCategories;
 
     await db.delete(
       'categoryToBudget',
@@ -1077,9 +1076,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       whereArgs: [budget.id],
     );
 
-    for (int i = 0; i < _categories.length; i++) {
+    for (int i = 0; i < budgetCategories.length; i++) {
       Map<String, dynamic> rowCategory = {
-        'category_id': _categories[i].id,
+        'category_id': budgetCategories[i].id,
         'budget_id': budget.id,
       };
       await db.insert(
@@ -1152,12 +1151,12 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   /*
   * Group
   */
-  final StreamController<List<Group>> _AllGroupsStreamController =
+  final StreamController<List<Group>> _allGroupsStreamController =
       StreamController<List<Group>>.broadcast();
 
-  Sink<List<Group>> get allGroupsSink => _AllGroupsStreamController.sink;
+  Sink<List<Group>> get allGroupsSink => _allGroupsStreamController.sink;
 
-  Stream<List<Group>> get allGroupsStream => _AllGroupsStreamController.stream;
+  Stream<List<Group>> get allGroupsStream => _allGroupsStreamController.stream;
 
   void pushGetAllGroupsStream() async {
     final db = await database;
@@ -1206,11 +1205,11 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    List<TransactionCategory> _categories = group.transactionCategories;
+    List<TransactionCategory> groupCategories = group.transactionCategories;
 
-    for (int i = 0; i < _categories.length; i++) {
+    for (int i = 0; i < groupCategories.length; i++) {
       Map<String, dynamic> rowCategory = {
-        'category_id': _categories[i].id,
+        'category_id': groupCategories[i].id,
         'group_id': id,
       };
       await db.insert(
@@ -1242,7 +1241,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       where: 'id = ?',
       whereArgs: [group.id],
     );
-    List<TransactionCategory> _categories = group.transactionCategories;
+    List<TransactionCategory> groupCategories = group.transactionCategories;
 
     await db.delete(
       'categoryToGroup',
@@ -1250,9 +1249,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       whereArgs: [group.id],
     );
 
-    for (int i = 0; i < _categories.length; i++) {
+    for (int i = 0; i < groupCategories.length; i++) {
       Map<String, dynamic> rowCategory = {
-        'category_id': _categories[i].id,
+        'category_id': groupCategories[i].id,
         'group_id': group.id,
       };
       await db.insert(

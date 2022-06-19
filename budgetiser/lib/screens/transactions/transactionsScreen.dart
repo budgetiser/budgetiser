@@ -23,11 +23,11 @@ class TransactionsScreen extends StatefulWidget {
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
 
-enum pages { singleTransactions, recurringTransactions }
+enum Pages { singleTransactions, recurringTransactions }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   final PageController _pageController = PageController(
-    initialPage: pages.singleTransactions.index,
+    initialPage: Pages.singleTransactions.index,
   );
   String title = "Transactions";
 
@@ -188,10 +188,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       body: PageView(
         onPageChanged: (int page) {
           setState(() {
-            if (page == pages.singleTransactions.index) {
+            if (page == Pages.singleTransactions.index) {
               // title = "Budgets";
               DatabaseHelper.instance.pushGetAllTransactionsStream();
-            } else if (page == pages.recurringTransactions.index) {
+            } else if (page == Pages.recurringTransactions.index) {
               // title = "Savings";
               DatabaseHelper.instance.pushGetAllRecurringTransactionsStream();
             }
@@ -248,8 +248,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => TransactionForm()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const TransactionForm()));
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),

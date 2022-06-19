@@ -3,16 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
-  IconPicker({
+  const IconPicker({
     Key? key,
     this.initialIcon,
     required this.color,
     required this.onIconChangedCallback,
   }) : super(key: key);
 
-  IconData? initialIcon;
+  final IconData? initialIcon;
   final Color color;
-  Function(IconData) onIconChangedCallback;
+  final Function(IconData) onIconChangedCallback;
 
   @override
   State<IconPicker> createState() => _IconPickerState();
