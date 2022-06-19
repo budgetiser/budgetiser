@@ -27,13 +27,21 @@ class _SelectCategoryState extends State<SelectCategory> {
   @override
   void initState() {
     DatabaseHelper.instance.allCategoryStream.listen((event) async {
+      if (event.isEmpty) {
+        return;
+      }
       _categories?.clear();
       _categories = (event.map((e) => e).toList());
+      final prefs = await SharedPreferences.getInstance();
       if (widget.initialCategory != null) {
-        selectedCategory = _categories
-            ?.firstWhere((element) => element.id == widget.initialCategory!.id);
+        try {
+          selectedCategory = _categories?.firstWhere(
+              (element) => element.id == widget.initialCategory!.id);
+        } catch (e) {
+          prefs.remove(keySelectedCategory);
+          selectedCategory = _categories?.first;
+        }
       } else {
-        final prefs = await SharedPreferences.getInstance();
         final categoryIdFromPref = prefs.getInt(keySelectedCategory);
         if (categoryIdFromPref == null) {
           selectedCategory = _categories?.first;
@@ -42,9 +50,8 @@ class _SelectCategoryState extends State<SelectCategory> {
             selectedCategory = _categories
                 ?.firstWhere((element) => element.id == categoryIdFromPref);
           } catch (e) {
-            if (_categories != null && _categories!.isNotEmpty) {
-              selectedCategory = _categories!.first;
-            }
+            prefs.remove(keySelectedCategory);
+            selectedCategory = _categories?.first;
           }
         }
       }

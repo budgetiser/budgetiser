@@ -28,13 +28,21 @@ class _SelectAccountState extends State<SelectAccount> {
   @override
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) async {
+      if (event.isEmpty) {
+        return;
+      }
       _accounts?.clear();
       _accounts = (event.map((e) => e).toList());
+      final prefs = await SharedPreferences.getInstance();
       if (widget.initialAccount != null) {
-        _selectedAccount = _accounts
-            ?.firstWhere((element) => element.id == widget.initialAccount!.id);
+        try {
+          _selectedAccount = _accounts?.firstWhere(
+              (element) => element.id == widget.initialAccount!.id);
+        } catch (e) {
+          prefs.remove(keySelectedAccount);
+          _selectedAccount = _accounts?.first;
+        }
       } else {
-        final prefs = await SharedPreferences.getInstance();
         final accountId = prefs.getInt(keySelectedAccount);
         if (accountId == null) {
           _selectedAccount = _accounts?.first;
@@ -43,9 +51,8 @@ class _SelectAccountState extends State<SelectAccount> {
             _selectedAccount =
                 _accounts?.firstWhere((element) => element.id == accountId);
           } catch (e) {
-            if (_accounts != null && _accounts!.isNotEmpty) {
-              _selectedAccount = _accounts!.first;
-            }
+            prefs.remove(keySelectedAccount);
+            _selectedAccount = _accounts?.first;
           }
         }
       }
