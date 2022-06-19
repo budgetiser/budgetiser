@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/accountTextWithIcon.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,8 @@ class _SelectAccountState extends State<SelectAccount> {
       return Center(
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, "account");
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AccountForm()));
           },
           child: Text(
             errorText,
