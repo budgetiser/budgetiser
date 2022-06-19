@@ -252,17 +252,20 @@ class _TransactionFormState extends State<TransactionForm> {
                         ),
                         Row(
                           children: [
-                            const Text("   Category: "),
                             Flexible(
-                              child: SelectCategory(
-                                initialCategory: selectedCategory,
-                                callback: (TransactionCategory c) {
-                                  setState(() {
-                                    if (mounted) {
-                                      selectedCategory = c;
-                                    }
-                                  });
-                                },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: SelectCategory(
+                                  initialCategory: selectedCategory,
+                                  callback: (TransactionCategory c) {
+                                    setState(() {
+                                      if (mounted) {
+                                        selectedCategory = c;
+                                      }
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                           ],

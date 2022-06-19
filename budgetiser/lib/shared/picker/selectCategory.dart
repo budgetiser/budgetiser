@@ -81,25 +81,33 @@ class _SelectCategoryState extends State<SelectCategory> {
       );
     }
 
-    return DropdownButton<TransactionCategory>(
-      isExpanded: true,
-      items: _categories
-          ?.map((category) => DropdownMenuItem(
-                value: category,
-                child: CategoryTextWithIcon(category),
-              ))
-          .toList(),
-      onChanged: (TransactionCategory? category) async {
-        setState(() {
-          widget.callback(category!);
-          selectedCategory = category;
-        });
-        if (category != null) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setInt(keySelectedCategory, category.id);
-        }
-      },
-      value: selectedCategory,
+    return Row(
+      children: [
+        const Text("Category:"),
+        const SizedBox(width: 8),
+        Expanded(
+          child: DropdownButton<TransactionCategory>(
+            isExpanded: true,
+            items: _categories
+                ?.map((category) => DropdownMenuItem(
+                      value: category,
+                      child: CategoryTextWithIcon(category),
+                    ))
+                .toList(),
+            onChanged: (TransactionCategory? category) async {
+              setState(() {
+                widget.callback(category!);
+                selectedCategory = category;
+              });
+              if (category != null) {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setInt(keySelectedCategory, category.id);
+              }
+            },
+            value: selectedCategory,
+          ),
+        ),
+      ],
     );
   }
 }
