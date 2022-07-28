@@ -79,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onSubmitCallback: () async {
                         await DatabaseHelper.instance.resetDB();
                         await DatabaseHelper.instance.fillDBwithTMPdata();
+                        if (!mounted) return;
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {

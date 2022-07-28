@@ -69,7 +69,8 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                       return ListView.builder(
                                         itemBuilder: (context, j) {
                                           return StatefulBuilder(
-                                              builder: (context, _setState) =>
+                                              builder: (context,
+                                                      localSetState) =>
                                                   CheckboxListTile(
                                                     title: Row(
                                                       children: [
@@ -102,7 +103,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                                     value: _selected.contains(
                                                         snapshot.data![j]),
                                                     onChanged: (bool? value) {
-                                                      _setState(() {
+                                                      localSetState(() {
                                                         if (value == true) {
                                                           _selected.add(snapshot
                                                               .data![j]);

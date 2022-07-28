@@ -59,12 +59,13 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
+                    final navigator = Navigator.of(
+                        context); // store the Navigator to avoid using context after await
                     if (_formKey.currentState!.validate() == true) {
                       int verify = await DatabaseHelper.instance
                           .login(_passcodeController.text);
                       if (verify == 1) {
-                        Navigator.pushReplacement(
-                          context,
+                        navigator.pushReplacement(
                           MaterialPageRoute(
                             builder: (_) => const HomeScreen(),
                           ),

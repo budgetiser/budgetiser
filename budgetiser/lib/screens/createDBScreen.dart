@@ -127,6 +127,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                       int verify = await DatabaseHelper.instance
                           .createDatabase(_passcodeController.text);
                       if (verify == 1) {
+                        if (!mounted) return;
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

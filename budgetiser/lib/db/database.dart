@@ -268,7 +268,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     for (var group in TMP_DATA_groupList) {
       await createGroup(group);
     }
-    print("finished filling DB with TMP data");
+    if (kDebugMode) {
+      print("finished filling DB with TMP data");
+    }
   }
 
   initializeDatabase() async {
@@ -290,7 +292,9 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         },
       );
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 
