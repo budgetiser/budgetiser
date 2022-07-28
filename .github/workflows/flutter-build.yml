@@ -21,8 +21,8 @@ jobs:
       - run: |
           cd budgetiser 
           flutter pub get
-          flutter build apk --no-tree-shake-icons
+          flutter build apk --split-per-abi --no-tree-shake-icons
       - uses: actions/upload-artifact@v3
         with:
-          name: app-release.apk
-          path: budgetiser/build/app/outputs/flutter-apk/app-release.apk
+          name: flutter-apk
+          path: budgetiser/build/app/outputs/flutter-apk/
