@@ -1,6 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/shared/services/settingsStream.dart';
+import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,8 +75,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   });
                 }),
             ElevatedButton(
-              onPressed: (() => DatabaseHelper.instance.exportDB()),
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: "Attention",
+                      description:
+                          "Are you sure? This will potentially override existing budgetiser.db file in the Download folder!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.exportDB();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              },
               child: Text("export db to downloads"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: "Attention",
+                      description:
+                          "Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in the Downloads folder!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.importDB();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              },
+              child: Text("import db from downloads"),
             ),
           ],
         ),

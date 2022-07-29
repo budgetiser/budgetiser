@@ -301,10 +301,15 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   }
 
   exportDB() async {
-    final Database db = await database;
     final String path = '${await getDatabasesPath()}/$databaseName';
     final file = File(path);
     file.copy("/storage/emulated/0/Download/$databaseName");
+  }
+
+  importDB() async {
+    final String path = '${await getDatabasesPath()}/$databaseName';
+    final file = File("/storage/emulated/0/Download/$databaseName");
+    file.copy(path);
   }
 
   /*
