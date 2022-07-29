@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
@@ -388,6 +389,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
       _allTransactionStreamController.stream;
 
   void pushGetAllTransactionsStream() async {
+    Timeline.startSync("allTransactionsStream");
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
         'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');
@@ -402,6 +404,7 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     });
 
     allTransactionSink.add(list);
+    Timeline.finishSync();
   }
 
   Future<SingleTransaction> _getOneSingleTransaction(int transactionId) async {
