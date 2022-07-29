@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
@@ -297,6 +298,13 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
         print(e.toString());
       }
     }
+  }
+
+  exportDB() async {
+    final Database db = await database;
+    final String path = '${await getDatabasesPath()}/$databaseName';
+    final file = File(path);
+    file.copy("/storage/emulated/0/Download/$databaseName");
   }
 
   /*

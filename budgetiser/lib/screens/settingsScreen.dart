@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/shared/services/settingsStream.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           .setThemeModeFromString(value);
                     }
                   });
-                })
+                }),
+            ElevatedButton(
+              onPressed: (() => DatabaseHelper.instance.exportDB()),
+              child: Text("export db to downloads"),
+            ),
           ],
         ),
       ),
