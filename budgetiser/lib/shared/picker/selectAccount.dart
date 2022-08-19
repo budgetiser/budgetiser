@@ -33,26 +33,31 @@ class _SelectAccountState extends State<SelectAccount> {
       }
       _accounts?.clear();
       _accounts = (event.map((e) => e).toList());
+      var filteredAccounts = _accounts
+          ?.where((element) => element.id != widget.blackListAccountId);
+      if (filteredAccounts != null && filteredAccounts.isEmpty) {
+        return;
+      }
       final prefs = await SharedPreferences.getInstance();
       if (widget.initialAccount != null) {
         try {
-          _selectedAccount = _accounts?.firstWhere(
+          _selectedAccount = filteredAccounts?.firstWhere(
               (element) => element.id == widget.initialAccount!.id);
         } catch (e) {
           prefs.remove(keySelectedAccount);
-          _selectedAccount = _accounts?.first;
+          _selectedAccount = filteredAccounts?.first;
         }
       } else {
         final accountId = prefs.getInt(keySelectedAccount);
         if (accountId == null) {
-          _selectedAccount = _accounts?.first;
+          _selectedAccount = filteredAccounts?.first;
         } else {
           try {
-            _selectedAccount =
-                _accounts?.firstWhere((element) => element.id == accountId);
+            _selectedAccount = filteredAccounts
+                ?.firstWhere((element) => element.id == accountId);
           } catch (e) {
             prefs.remove(keySelectedAccount);
-            _selectedAccount = _accounts?.first;
+            _selectedAccount = filteredAccounts?.first;
           }
         }
       }
@@ -95,10 +100,14 @@ class _SelectAccountState extends State<SelectAccount> {
         !filteredAccounts.contains(_selectedAccount)) {
       setState(() {
         _selectedAccount = filteredAccounts.first;
+
+        // wait to not trigger rebuild before this build is finished
+        Future.delayed(Duration.zero, () async {
+          widget.callback(_selectedAccount!);
+        });
       });
     }
 
-    Future(executeAfterBuild);
     return Row(
       children: [
         const Text("Account:"),
@@ -129,12 +138,5 @@ class _SelectAccountState extends State<SelectAccount> {
         ),
       ],
     );
-  }
-
-  /// executes after build is done by being called in a Future() from the build() method
-  Future<void> executeAfterBuild() async {
-    if (_selectedAccount != null) {
-      widget.callback(_selectedAccount!);
-    }
   }
 }
