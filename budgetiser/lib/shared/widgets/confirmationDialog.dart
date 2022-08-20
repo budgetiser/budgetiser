@@ -21,6 +21,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      elevation: 0,
       title: Text(widget.title),
       content: Text(widget.description),
       actions: [

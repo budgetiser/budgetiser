@@ -17,7 +17,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String? selectedValue;
+  String? _selectedDarkModeValue;
 
   @override
   void initState() {
@@ -28,9 +28,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void asyncSetStateFromPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      selectedValue = prefs.getString('key-themeMode');
-      selectedValue ??= 'system'; // default value
+      _selectedDarkModeValue = prefs.getString('key-themeMode');
+      _selectedDarkModeValue ??= 'system'; // default value
     });
+  }
+
+  void setAppearance(String? value) {
+    setState(() {
+      _selectedDarkModeValue = value;
+    });
+    if (value != null) {
+      SettingsStreamClass.instance.setThemeModeFromString(value);
+    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -43,39 +53,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       drawer: createDrawer(context),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: <Widget>[
-            const Text(
-              'Settings Page',
+            ListTile(
+              title: const Text('Appearance'),
+              subtitle: const Text('Choose your light or dark theme',
+                  style: TextStyle(fontSize: 14.0)),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SimpleDialog(
+                      elevation: 0,
+                      title: const Text('Appearance'),
+                      children: [
+                        Column(children: <Widget>[
+                          RadioListTile<String>(
+                            title: const Text('system'),
+                            value: "system",
+                            groupValue: _selectedDarkModeValue,
+                            onChanged: setAppearance,
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('light'),
+                            value: "light",
+                            groupValue: _selectedDarkModeValue,
+                            onChanged: setAppearance,
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('dark'),
+                            value: "dark",
+                            groupValue: _selectedDarkModeValue,
+                            onChanged: setAppearance,
+                          ),
+                        ]),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
-            DropdownButton<String>(
-                value: selectedValue,
-                items: const [
-                  DropdownMenuItem(
-                    value: "system",
-                    child: Text("system"),
-                  ),
-                  DropdownMenuItem(
-                    value: "light",
-                    child: Text("light"),
-                  ),
-                  DropdownMenuItem(
-                    value: "dark",
-                    child: Text("dark"),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue = value;
-                    if (value != null) {
-                      SettingsStreamClass.instance
-                          .setThemeModeFromString(value);
-                    }
-                  });
-                }),
-            ElevatedButton(
-              onPressed: () async {
+            ListTile(
+              title: const Text('Export Database'),
+              subtitle: const Text('Into Downloads',
+                  style: TextStyle(fontSize: 14.0)),
+              onTap: () async {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -94,10 +116,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 );
               },
-              child: const Text("export db to downloads"),
             ),
-            ElevatedButton(
-              onPressed: () async {
+            ListTile(
+              title: const Text('Import Database'),
+              subtitle: const Text('From Downloads',
+                  style: TextStyle(fontSize: 14.0)),
+              onTap: () async {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -116,7 +140,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 );
               },
-              child: const Text("import db from downloads"),
             ),
           ],
         ),
