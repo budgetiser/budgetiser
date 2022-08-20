@@ -54,7 +54,7 @@ class _StatsState extends State<Stats> {
               initialCategory: _selectedCategory,
               callback: setCategory,
             ),
-            Divider(),
+            const Divider(),
             if (_selectedAccount != null && _selectedCategory != null)
               SimpleTextStat(
                 account: _selectedAccount,

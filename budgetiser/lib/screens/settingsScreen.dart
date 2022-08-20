@@ -94,7 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 );
               },
-              child: Text("export db to downloads"),
+              child: const Text("export db to downloads"),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -116,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 );
               },
-              child: Text("import db from downloads"),
+              child: const Text("import db from downloads"),
             ),
           ],
         ),
