@@ -17,6 +17,11 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 
+part 'sql_Part.dart';
+part 'account_part.dart';
+part 'stat_part.dart';
+part 'single_transaction_part.dart';
+
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
 
@@ -51,195 +56,6 @@ class DatabaseHelper {
     if (db.isOpen) {
       db.close();
     }
-  }
-
-  _onCreate(Database db, int version) async {
-    if (kDebugMode) {
-      print("creating database");
-    }
-    await db.execute('PRAGMA foreign_keys = ON');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS account(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  balance REAL,
-  description TEXT,
-  PRIMARY KEY(id));
-    ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS category(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  description TEXT,
-  is_hidden INTEGER,
-  PRIMARY KEY(id),
-  CHECK(is_hidden IN (0, 1)));
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS singleTransaction(
-  id INTEGER,
-  title TEXT,
-  value REAL,
-  description TEXT,
-  category_id INTEGER,
-  date TEXT,
-  PRIMARY KEY(id),
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE
-  );
-    ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS recurringTransaction(
-  id INTEGER,
-  title TEXT,
-  value REAL,
-  description TEXT,
-  category_id INTEGER,
-  start_date TEXT,
-  end_date TEXT,
-  interval_type TEXT,
-  interval_unit TEXT,
-  interval_amount INTEGER,
-  repetition_amount INTEGER,
-  PRIMARY KEY(id),
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
-  CHECK(interval_type IN ('IntervalType.fixedPointOfTime', 'IntervalType.fixedInterval')),
-  CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
-  );
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS singleToRecurringTransaction(
-  single_transaction_id INTEGER,
-  recurring_transaction_id INTEGER,
-  PRIMARY KEY(single_transaction_id, recurring_transaction_id),
-  FOREIGN KEY(single_transaction_id) REFERENCES singleTransaction ON DELETE CASCADE,
-  FOREIGN KEY(recurring_transaction_id) REFERENCES recurringTransaction ON DELETE CASCADE
-  );
-    ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS XXGroup(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  description TEXT,
-  PRIMARY KEY(id));
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS saving(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  balance REAL,
-  start_date TEXT,
-  end_date TEXT,
-  goal REAL,
-  description TEXT,
-  PRIMARY KEY(id));
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS budget(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  balance REAL,
-  limitXX REAL,
-  is_recurring INTEGER,
-  interval_type TEXT,
-  interval_amount INTEGER,
-  interval_unit TEXT,
-  interval_repititions INTEGER,
-  start_date TEXT,
-  end_date TEXT,
-  description TEXT,
-  PRIMARY KEY(id),
-  CHECK(is_recurring IN (0, 1)),
-  CHECK(interval_type IN ('IntervalType.fixedInterval', 'IntervalType.fixedPointOfTime')),
-  CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year')));
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS categoryToBudget(
-  category_id INTEGER,
-  budget_id INTEGER,
-  PRIMARY KEY(category_id, budget_id),
-  FOREIGN KEY(budget_id) REFERENCES budget ON DELETE CASCADE,
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE);
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS categoryToGroup(
-  category_id INTEGER,
-  group_id INTEGER,
-  PRIMARY KEY(category_id, group_id),
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
-  FOREIGN KEY(group_id) REFERENCES XXGroup ON DELETE CASCADE);
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
-  transaction_id INTEGER,
-  account1_id INTEGER,
-  account2_id INTEGER,
-  PRIMARY KEY(transaction_id, account1_id, account2_id),
-  FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
-  FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE,
-  FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE);
-''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
-  transaction_id INTEGER,
-  account1_id INTEGER,
-  account2_id INTEGER,
-  PRIMARY KEY(transaction_id, account1_id, account2_id),
-  FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
-  FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE,
-  FOREIGN KEY(transaction_id) REFERENCES recurringTransaction ON DELETE CASCADE);
-''');
-    if (kDebugMode) {
-      print("done");
-    }
-  }
-
-  _dropTables(Database db) async {
-    await db.execute('''
-          DROP TABLE IF EXISTS recurringTransactionToAccount;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS XXGroup;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS saving;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS budget;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS categoryToBudget;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS categoryToGroup;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS singleTransactionToAccount;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS account; 
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS singleToRecurringTransaction;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS singleTransaction;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS recurringTransaction;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS category;
-          ''');
   }
 
   resetDB() async {
@@ -300,12 +116,14 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
     }
   }
 
+  /// Exports the database to a file in the Download folder.
   exportDB() async {
     final String path = '${await getDatabasesPath()}/$databaseName';
     final file = File(path);
     file.copy("/storage/emulated/0/Download/$databaseName");
   }
 
+  /// Imports the database from a file in the Download folder. Overwrites the current database.
   importDB() async {
     final String path = '${await getDatabasesPath()}/$databaseName';
     final file = File("/storage/emulated/0/Download/$databaseName");
@@ -313,275 +131,14 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   }
 
   /*
-  * Account
+  * All Stream Controller
   */
   final StreamController<List<Account>> _allAccountsStreamController =
       StreamController<List<Account>>.broadcast();
 
-  Sink<List<Account>> get allAccountsSink => _allAccountsStreamController.sink;
-
-  Stream<List<Account>> get allAccountsStream =>
-      _allAccountsStreamController.stream;
-
-  void pushGetAllAccountsStream() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('account');
-
-    allAccountsSink.add(List.generate(maps.length, (i) {
-      return Account(
-        id: maps[i]['id'],
-        name: maps[i]['name'].toString(),
-        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-        color: Color(maps[i]['color']),
-        balance: maps[i]['balance'],
-        description: maps[i]['description'],
-      );
-    }));
-  }
-
-  Future<int> createAccount(Account account) async {
-    final db = await database;
-    int id = await db.insert(
-      'account',
-      account.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
-    pushGetAllAccountsStream();
-    return id;
-  }
-
-  Future<void> deleteAccount(int accountID) async {
-    final db = await database;
-
-    await db.delete(
-      'account',
-      where: 'id = ?',
-      whereArgs: [accountID],
-    );
-    pushGetAllAccountsStream();
-  }
-
-  Future<void> updateAccount(Account account) async {
-    final db = await database;
-
-    await db.update(
-      'account',
-      account.toMap(),
-      where: 'id = ?',
-      whereArgs: [account.id],
-    );
-    pushGetAllAccountsStream();
-  }
-
-  Future<Account> _getOneAccount(int id) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps =
-        await db.query('account', where: 'id = ?', whereArgs: [id]);
-
-    return Account(
-      id: maps[0]['id'],
-      name: maps[0]['name'],
-      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
-      color: Color(maps[0]['color']),
-      balance: maps[0]['balance'],
-      description: maps[0]['description'],
-    );
-  }
-
-  /*
-  * SingleTransaction
-  */
   final StreamController<List<SingleTransaction>>
       _allTransactionStreamController =
       StreamController<List<SingleTransaction>>.broadcast();
-
-  Sink<List<SingleTransaction>> get allTransactionSink =>
-      _allTransactionStreamController.sink;
-
-  Stream<List<SingleTransaction>> get allTransactionStream =>
-      _allTransactionStreamController.stream;
-
-  void pushGetAllTransactionsStream() async {
-    Timeline.startSync("allTransactionsStream");
-    final db = await database;
-    final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');
-
-    List<SingleTransaction> list = [];
-    for (int i = 0; i < mapSingle.length; i++) {
-      list.add(await _mapToSingleTransaction(mapSingle[i]));
-    }
-
-    list.sort((a, b) {
-      return b.date.compareTo(a.date);
-    });
-
-    allTransactionSink.add(list);
-    Timeline.finishSync();
-  }
-
-  Future<SingleTransaction> _getOneSingleTransaction(int transactionId) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-      'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and singleTransaction.id = ?',
-      [transactionId],
-    );
-
-    return await _mapToSingleTransaction(maps[0]);
-  }
-
-  Future<SingleTransaction> _mapToSingleTransaction(
-      Map<String, dynamic> mapItem) async {
-    TransactionCategory cat = await _getCategory(mapItem['category_id']);
-    Account account = await _getOneAccount(mapItem['account1_id']);
-    RecurringTransaction? recurringTransaction =
-        await _getRecurringTransactionFromSingeId(mapItem['id']);
-    return SingleTransaction(
-      id: mapItem['id'],
-      title: mapItem['title'].toString(),
-      value: mapItem['value'],
-      description: mapItem['description'].toString(),
-      category: cat,
-      account: account,
-      account2: mapItem['account2_id'] == null
-          ? null
-          : await _getOneAccount(mapItem['account2_id']),
-      date: DateTime.parse(mapItem['date'].toString()),
-      recurringTransaction: recurringTransaction,
-    );
-  }
-
-  Future<int> createSingleTransaction(SingleTransaction transaction) async {
-    final db = await database;
-
-    int transactionId = await db.insert(
-      'singleTransaction',
-      transaction.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
-
-    Account account = await _getOneAccount(transaction.account.id);
-    if (transaction.account2 == null) {
-      await db.update(
-        'account',
-        {'balance': _roundDouble(account.balance + transaction.value)},
-        where: 'id = ?',
-        whereArgs: [account.id],
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
-    } else {
-      Account account2 = await _getOneAccount(transaction.account2!.id);
-      await db.update('account',
-          {'balance': _roundDouble(account.balance - transaction.value)},
-          where: 'id = ?', whereArgs: [account.id]);
-      await db.update('account',
-          {'balance': _roundDouble(account2.balance + transaction.value)},
-          where: 'id = ?', whereArgs: [account2.id]);
-    }
-
-    await db.insert('singleTransactionToAccount', {
-      'transaction_id': transactionId,
-      'account1_id': transaction.account.id,
-      'account2_id':
-          transaction.account2 != null ? transaction.account2!.id : null,
-    });
-
-    pushGetAllTransactionsStream();
-    pushGetAllAccountsStream();
-
-    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
-        columns: ['budget_id'],
-        where: 'category_id = ?',
-        whereArgs: [transaction.category.id],
-        distinct: true);
-    for (int i = 0; i < maps.length; i++) {
-      reloadBudgetBalanceFromID(maps[i]['budget_id']);
-    }
-    return transactionId;
-  }
-
-  Future<void> deleteSingleTransaction(SingleTransaction transaction) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
-        columns: ['budget_id'],
-        where: 'category_id = ?',
-        whereArgs: [transaction.category.id],
-        distinct: true);
-
-    if (transaction.account2 == null) {
-      await db.update(
-          'account',
-          {
-            'balance':
-                _roundDouble(transaction.account.balance - transaction.value)
-          },
-          where: 'id = ?',
-          whereArgs: [transaction.account.id]);
-    } else {
-      await db.update(
-          'account',
-          {
-            'balance':
-                _roundDouble(transaction.account.balance + transaction.value)
-          },
-          where: 'id = ?',
-          whereArgs: [transaction.account.id]);
-      await db.update(
-          'account',
-          {
-            'balance':
-                _roundDouble(transaction.account2!.balance - transaction.value)
-          },
-          where: 'id = ?',
-          whereArgs: [transaction.account2!.id]);
-    }
-
-    await db.delete(
-      'singleTransaction',
-      where: 'id = ?',
-      whereArgs: [transaction.id],
-    );
-    await db.delete(
-      'singleToRecurringTransaction',
-      where: 'single_transaction_id = ?',
-      whereArgs: [transaction.id],
-    );
-    await db.delete(
-      'singleTransactionToAccount',
-      where: 'transaction_id = ?',
-      whereArgs: [transaction.id],
-    );
-
-    for (int i = 0; i < maps.length; i++) {
-      reloadBudgetBalanceFromID(maps[i]['budget_id']);
-    }
-
-    pushGetAllAccountsStream();
-    pushGetAllTransactionsStream();
-  }
-
-  Future<void> deleteSingleTransactionById(int id) async {
-    await deleteSingleTransaction(await _getOneSingleTransaction(id));
-  }
-
-  Future<void> updateSingleTransaction(SingleTransaction transaction) async {
-    await deleteSingleTransactionById(transaction.id);
-    await createSingleTransaction(transaction);
-
-    pushGetAllTransactionsStream();
-  }
-
-  Future<SingleTransaction> getOneTransaction(int id) async {
-    final db = await database;
-    final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from SingleTransaction, singleTransactionToAccount where SingleTransaction.id = singleTransactionToAccount.transaction_id and SingleTransaction.id = ?',
-        [id]);
-
-    if (mapSingle.length == 1) {
-      return await _mapToSingleTransaction(mapSingle[0]);
-    }
-    throw Exception('Error in getOneTransaction');
-  }
 
   /*
   * RecurringTransaction
@@ -1290,29 +847,5 @@ CREATE TABLE IF NOT EXISTS recurringTransactionToAccount(
   /// rounds to 2 decimal places by cutting off all digits after
   double _roundDouble(double value) {
     return double.parse(value.toStringAsFixed(2));
-  }
-
-  /**
-   * Stat methods
-   */
-
-  /// Get balance of all transactions in a category and account.
-  Future<double> getSpending(
-      Account account, TransactionCategory transactionCategory) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT SUM(value) as value FROM singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and account1_id = ? and category_id = ?',
-        [account.id, transactionCategory.id]);
-    return maps[0]['value'] ?? 0.0;
-  }
-
-  /// Get amount of transactions in a category and account.
-  Future<int> getTransactionCount(
-      Account account, TransactionCategory transactionCategory) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT COUNT(*) as count FROM singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and account1_id = ? and category_id = ?',
-        [account.id, transactionCategory.id]);
-    return maps[0]['count'];
   }
 }
