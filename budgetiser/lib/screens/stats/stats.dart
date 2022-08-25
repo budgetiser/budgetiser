@@ -36,19 +36,23 @@ class _StatsState extends State<Stats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Stats",
-          // style: Theme.of(context).textTheme.caption,
-        ),
+        title: const Text("Stats"),
       ),
       drawer: createDrawer(context),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            SelectAccount(
-              initialAccount: _selectedAccount,
-              callback: setAccount,
+            Row(
+              children: [
+                const Text("Account: "),
+                Expanded(
+                  child: SelectAccount(
+                    initialAccount: _selectedAccount,
+                    callback: setAccount,
+                  ),
+                ),
+              ],
             ),
             SelectCategory(
               initialCategory: _selectedCategory,
