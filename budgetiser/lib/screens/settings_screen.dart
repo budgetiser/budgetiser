@@ -1,6 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/shared/services/settingsStream.dart';
+import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
