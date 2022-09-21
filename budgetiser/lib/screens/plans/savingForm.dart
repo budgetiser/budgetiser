@@ -7,8 +7,8 @@ import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class SavingForm extends StatefulWidget {
-  SavingForm({Key? key, this.savingData}) : super(key: key);
-  Savings? savingData;
+  const SavingForm({Key? key, this.savingData}) : super(key: key);
+  final Savings? savingData;
 
   @override
   State<SavingForm> createState() => _SavingFormState();
@@ -20,10 +20,10 @@ class _SavingFormState extends State<SavingForm> {
   var goalController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  IconData _icon = Icons.blur_on;
-  Color _color = Colors.blue;
-  DateTime start_date = DateTime.now();
-  DateTime end_date = DateTime.now().add(Duration(days: 30));
+  IconData? _icon;
+  Color? _color;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now().add(const Duration(days: 30));
 
   @override
   void initState() {
@@ -71,9 +71,13 @@ class _SavingFormState extends State<SavingForm> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: IconPicker(
-                          onIconChangedCallback: (p0) {},
+                          onIconChangedCallback: (newIcon) {
+                            setState(() {
+                              _icon = newIcon;
+                            });
+                          },
                           initialIcon: _icon,
-                          initialColor: _color,
+                          color: _color ?? Colors.blue,
                         ),
                       ),
                       Flexible(
@@ -83,6 +87,7 @@ class _SavingFormState extends State<SavingForm> {
                           if (data == null || data == '') {
                             return "Please enter a valid name";
                           }
+                          return null;
                         },
                         decoration: const InputDecoration(
                           labelText: "Name",
@@ -132,7 +137,7 @@ class _SavingFormState extends State<SavingForm> {
                           }
                           try {
                             double a = double.parse(data);
-                            if(a <= double.parse(balController.text)){
+                            if (a <= double.parse(balController.text)) {
                               return "Goal must be higher than value";
                             }
                           } catch (e) {
@@ -160,7 +165,7 @@ class _SavingFormState extends State<SavingForm> {
                             : DateTime.now(),
                         onDateChangedCallback: (date) {
                           setState(() {
-                            start_date = date;
+                            startDate = date;
                           });
                         },
                       )),
@@ -172,13 +177,13 @@ class _SavingFormState extends State<SavingForm> {
                             : DateTime.now().add(const Duration(days: 30)),
                         onDateChangedCallback: (date) {
                           setState(() {
-                            end_date = date;
+                            endDate = date;
                           });
                         },
                       ))
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: TextFormField(
@@ -240,14 +245,14 @@ class _SavingFormState extends State<SavingForm> {
               if (_formKey.currentState!.validate()) {
                 Savings a = Savings(
                   name: nameController.text,
-                  icon: _icon,
-                  color: _color,
+                  icon: _icon ?? Icons.blur_on,
+                  color: _color ?? Colors.blue,
                   description: descriptionController.text,
                   id: 0,
                   goal: double.parse(goalController.text),
                   balance: double.parse(balController.text),
-                  startDate: start_date,
-                  endDate: end_date,
+                  startDate: startDate,
+                  endDate: endDate,
                 );
                 if (widget.savingData != null) {
                   a.id = widget.savingData!.id;

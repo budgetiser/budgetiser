@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class BudgetItem extends StatelessWidget {
-  BudgetItem({
+  const BudgetItem({
     Key? key,
     required this.budgetData,
   }) : super(key: key);
-  Budget budgetData;
+  final Budget budgetData;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +54,8 @@ class BudgetItem extends StatelessWidget {
                           : (budgetData.startDate.compareTo(DateTime.now()) >= 0
                               ? Row(
                                   children: [
-                                    Text("starts in: " +
-                                        budgetData.startDate
-                                            .difference(DateTime.now())
-                                            .inDays
-                                            .toString()),
+                                    Text(
+                                        "starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}"),
                                     const Icon(Icons.arrow_forward)
                                   ],
                                 )
@@ -110,27 +107,22 @@ class BudgetItem extends StatelessWidget {
     if (DateTime.now().compareTo(start) < 0) {
       return Row(
         children: [
-          Text("starting in: " +
-              start.difference(DateTime.now()).inDays.toString()),
+          Text("starting in: ${start.difference(DateTime.now()).inDays}"),
           const Icon(Icons.arrow_forward)
         ],
       );
     } else if (DateTime.now().compareTo(end) > 0) {
       return Row(
         children: [
-          Text("ended before: " +
-              DateTime.now().difference(end).inDays.toString()),
+          Text("ended before: ${DateTime.now().difference(end).inDays}"),
           const Icon(Icons.arrow_back)
         ],
       );
     } else {
       return Row(
         children: [
-          Text("days left: " +
-              (budgetData.calculateCurrentInterval()['end']!)
-                  .difference(DateTime.now())
-                  .inDays
-                  .toString()),
+          Text(
+              "days left: ${(budgetData.calculateCurrentInterval()['end']!).difference(DateTime.now()).inDays}"),
           const Icon(Icons.repeat)
         ],
       );

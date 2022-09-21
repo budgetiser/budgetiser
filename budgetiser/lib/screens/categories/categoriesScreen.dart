@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/categories/categoryForm.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/categoryItem.dart';
+import 'package:budgetiser/shared/widgets/items/categoryItem.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetiser/drawer.dart';
 
@@ -25,16 +25,17 @@ class CategoriesScreen extends StatelessWidget {
         stream: DatabaseHelper.instance.allCategoryStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<TransactionCategory> _categories = snapshot.data!.toList();
-            _categories.sort((a, b) => a.name.compareTo(b.name));
+            List<TransactionCategory> categoryList = snapshot.data!.toList();
+            categoryList.sort((a, b) => a.name.compareTo(b.name));
             return ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: _categories.length,
+              itemCount: categoryList.length,
               itemBuilder: (BuildContext context, int index) {
                 return CategoryItem(
-                  categoryData: _categories[index],
+                  categoryData: categoryList[index],
                 );
               },
+              padding: const EdgeInsets.only(bottom: 80),
             );
           } else if (snapshot.hasError) {
             return const Text("Oops!");
@@ -46,8 +47,8 @@ class CategoriesScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => CategoryForm()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const CategoryForm()));
         },
         tooltip: 'New category',
         backgroundColor: Theme.of(context).colorScheme.primary,

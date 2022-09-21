@@ -6,11 +6,11 @@ import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class CategoryForm extends StatefulWidget {
-  CategoryForm({
+  const CategoryForm({
     Key? key,
     this.categoryData,
   }) : super(key: key);
-  TransactionCategory? categoryData;
+  final TransactionCategory? categoryData;
 
   @override
   State<CategoryForm> createState() => _CategoryFormState();
@@ -20,8 +20,8 @@ class _CategoryFormState extends State<CategoryForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Colors.blue;
-  IconData _icon = Icons.blur_on;
+  Color? _color;
+  IconData? _icon;
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _CategoryFormState extends State<CategoryForm> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: IconPicker(
-                                  initialColor: _color,
+                                  color: _color ?? Colors.blue,
                                   initialIcon: _icon,
                                   onIconChangedCallback: (icondata) {
                                     setState(() {
@@ -87,6 +87,7 @@ class _CategoryFormState extends State<CategoryForm> {
                                     if (data == null || data == '') {
                                       return "Please enter a valid name";
                                     }
+                                    return null;
                                   },
                                   decoration: const InputDecoration(
                                     labelText: "Category title",
@@ -138,9 +139,11 @@ class _CategoryFormState extends State<CategoryForm> {
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
                         title: "Attention",
-                        description: "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
+                        description:
+                            "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance.deleteCategory(widget.categoryData!.id);
+                          DatabaseHelper.instance
+                              .deleteCategory(widget.categoryData!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },
@@ -166,8 +169,8 @@ class _CategoryFormState extends State<CategoryForm> {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
                     name: nameController.text,
-                    icon: _icon,
-                    color: _color,
+                    icon: _icon ?? Icons.blur_on,
+                    color: _color ?? Colors.blue,
                     description: descriptionController.text,
                     isHidden: false,
                     id: 0);

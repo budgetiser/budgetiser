@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/balanceText.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/balanceText.dart';
 import 'package:flutter/material.dart';
 
 /// TransactionItem widget
@@ -15,14 +13,14 @@ import 'package:flutter/material.dart';
 /// - a SingleTransaction
 /// - a RecurringTransaction
 class TransactionItem extends StatelessWidget {
-  TransactionItem({
+  const TransactionItem({
     Key? key,
     this.singleTransactionData,
     this.recurringTransactionData,
   }) : super(key: key);
 
-  SingleTransaction? singleTransactionData;
-  RecurringTransaction? recurringTransactionData;
+  final SingleTransaction? singleTransactionData;
+  final RecurringTransaction? recurringTransactionData;
 
   @override
   Widget build(BuildContext context) {

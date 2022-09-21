@@ -10,8 +10,8 @@ import 'package:budgetiser/shared/widgets/recurringForm.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
-  BudgetForm({Key? key, this.budgetData}) : super(key: key);
-  Budget? budgetData;
+  const BudgetForm({Key? key, this.budgetData}) : super(key: key);
+  final Budget? budgetData;
 
   @override
   State<BudgetForm> createState() => _BudgetFormState();
@@ -28,8 +28,11 @@ class _BudgetFormState extends State<BudgetForm> {
     startDate: DateTime.now(),
   );
   List<TransactionCategory> budgetCategories = [];
-  IconData _icon = Icons.blur_on;
-  Color _color = Colors.blue;
+  IconData? _icon;
+  Color? _color;
+
+  // scrollController for the recurring form to scroll to the bottom
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -47,7 +50,7 @@ class _BudgetFormState extends State<BudgetForm> {
           intervalType: widget.budgetData!.intervalType,
           intervalUnit: widget.budgetData!.intervalUnit,
           intervalAmount: widget.budgetData!.intervalAmount,
-          repetitionAmount: widget.budgetData!.intervalRepititions,
+          repetitionAmount: widget.budgetData!.intervalRepetitions,
           isRecurring: true,
         );
       }
@@ -75,6 +78,7 @@ class _BudgetFormState extends State<BudgetForm> {
         child: Container(
           alignment: Alignment.topCenter,
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -84,8 +88,8 @@ class _BudgetFormState extends State<BudgetForm> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: IconPicker(
-                          initialColor: _color,
-                          initialIcon: _icon,
+                          color: _color ?? Colors.blue,
+                          initialIcon: _icon ?? Icons.blur_on,
                           onIconChangedCallback: (icondata) {
                             setState(() {
                               _icon = icondata;
@@ -171,6 +175,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   ),
                   const Divider(),
                   RecurringForm(
+                    scrollController: _scrollController,
                     onRecurringDataChangedCallback: (data) {
                       setState(() {
                         recurringData = data;
@@ -228,8 +233,8 @@ class _BudgetFormState extends State<BudgetForm> {
               if (_formKey.currentState!.validate()) {
                 Budget a = Budget(
                   name: nameController.text,
-                  icon: _icon,
-                  color: _color,
+                  icon: _icon ?? Icons.blur_on,
+                  color: _color ?? Colors.blue,
                   description: descriptionController.text,
                   id: 0,
                   limit: double.parse(limitController.text),
@@ -241,7 +246,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   intervalType: recurringData.intervalType,
                   intervalUnit: recurringData.intervalUnit,
                   intervalAmount: recurringData.intervalAmount,
-                  intervalRepititions: recurringData.repetitionAmount,
+                  intervalRepetitions: recurringData.repetitionAmount,
                 );
                 if (widget.budgetData != null) {
                   a.id = widget.budgetData!.id;

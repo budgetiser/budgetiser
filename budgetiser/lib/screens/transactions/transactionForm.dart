@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurringData.dart';
 import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
@@ -20,15 +21,17 @@ import 'package:flutter/material.dart';
 /// - a SingleTransaction
 /// - a RecurringTransaction
 class TransactionForm extends StatefulWidget {
-  TransactionForm({
+  const TransactionForm({
     Key? key,
     this.initialSingleTransactionData,
     this.initialRecurringTransactionData,
     this.initialNegative,
+    this.initialSelectedAccount,
   }) : super(key: key);
-  SingleTransaction? initialSingleTransactionData;
-  RecurringTransaction? initialRecurringTransactionData;
-  bool? initialNegative;
+  final SingleTransaction? initialSingleTransactionData;
+  final RecurringTransaction? initialRecurringTransactionData;
+  final bool? initialNegative;
+  final Account? initialSelectedAccount;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
@@ -51,6 +54,9 @@ class _TransactionFormState extends State<TransactionForm> {
 
   final _formKey = GlobalKey<FormState>();
 
+  // for the recurring form to scroll to the bottom
+  ScrollController listScrollController = ScrollController();
+
   @override
   void initState() {
     if (widget.initialNegative == true) {
@@ -67,6 +73,11 @@ class _TransactionFormState extends State<TransactionForm> {
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
           widget.initialSingleTransactionData!.description;
+
+      recurringData = RecurringData(
+        isRecurring: false,
+        startDate: widget.initialSingleTransactionData!.date,
+      );
     }
     if (widget.initialRecurringTransactionData != null) {
       hasInitalData = true;
@@ -91,20 +102,27 @@ class _TransactionFormState extends State<TransactionForm> {
             widget.initialRecurringTransactionData!.repetitionAmount,
       );
     }
+    if (widget.initialSelectedAccount != null) {
+      selectedAccount = widget.initialSelectedAccount;
+    }
 
     super.initState();
   }
 
   setAccount(Account a) {
-    setState(() {
-      selectedAccount = a;
-    });
+    if (mounted) {
+      setState(() {
+        selectedAccount = a;
+      });
+    }
   }
 
   setAccount2(Account a) {
-    setState(() {
-      selectedAccount2 = a;
-    });
+    if (mounted) {
+      setState(() {
+        selectedAccount2 = a;
+      });
+    }
   }
 
   @override
@@ -118,10 +136,11 @@ class _TransactionFormState extends State<TransactionForm> {
       body: Container(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
+          controller: listScrollController,
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
                 child: Form(
                   key: _formKey,
                   child: Container(
@@ -175,61 +194,73 @@ class _TransactionFormState extends State<TransactionForm> {
                             ],
                           ),
                           children: [
-                            Column(
-                              children: [
-                                SelectAccount(
-                                    initialAccount: selectedAccount,
-                                    callback: setAccount),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: hasAccount2,
-                                      onChanged: (bool? newValue) {
-                                        setState(() {
-                                          hasAccount2 = newValue!;
-                                        });
-                                        if (hasAccount2) {
-                                          DatabaseHelper
-                                              .instance.allAccountsStream
-                                              .listen((event) {
-                                            setState(() {
-                                              selectedAccount2 = event.first;
-                                            });
-                                          });
-                                        } else {
-                                          selectedAccount2 = null;
-                                        }
-                                      },
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Column(
+                                children: [
+                                  SelectAccount(
+                                      initialAccount: selectedAccount,
+                                      callback: setAccount),
+                                  const SizedBox(height: 8),
+                                  InkWell(
+                                    customBorder: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    const Text("transfer to another account"),
-                                  ],
-                                ),
-                                if (hasAccount2)
-                                  Row(
-                                    children: [
-                                      const Text("to "),
-                                      SelectAccount(
-                                        initialAccount: selectedAccount2,
-                                        callback: setAccount2,
-                                      ),
-                                    ],
+                                    onTap: () {
+                                      _onAccount2checkboxClicked();
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Checkbox(
+                                          value: hasAccount2,
+                                          onChanged: (bool? newValue) {
+                                            _onAccount2checkboxClicked();
+                                          },
+                                        ),
+                                        const Text(
+                                            "transfer to another account"),
+                                      ],
+                                    ),
                                   ),
-                                const SizedBox(height: 8),
-                              ],
+                                  if (hasAccount2)
+                                    Row(
+                                      children: [
+                                        const Text("to "),
+                                        Flexible(
+                                          child: SelectAccount(
+                                            initialAccount: selectedAccount2,
+                                            callback: setAccount2,
+                                            blackListAccountId:
+                                                selectedAccount?.id,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  const SizedBox(height: 8),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("   Category: "),
-                            SelectCategory(
-                                initialCategory: selectedCategory,
-                                callback: (TransactionCategory c) {
-                                  setState(() {
-                                    selectedCategory = c;
-                                  });
-                                }),
+                            Flexible(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: SelectCategory(
+                                  initialCategory: selectedCategory,
+                                  callback: (TransactionCategory c) {
+                                    setState(() {
+                                      if (mounted) {
+                                        selectedCategory = c;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         Padding(
@@ -293,13 +324,27 @@ class _TransactionFormState extends State<TransactionForm> {
                                 "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
                           ),
                         RecurringForm(
+                          scrollController: listScrollController,
                           onRecurringDataChangedCallback: (data) {
                             setState(() {
                               recurringData = data;
                             });
                           },
                           initialRecurringData: recurringData,
-                        )
+                        ),
+                        if (recurringData.isRecurring)
+                          Column(children: [
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                DatabaseHelper.instance
+                                    .createSingleTransactionFromRecurringTransaction(
+                                        _currentRecurringTransaction());
+                              },
+                              child: const Text(
+                                  "Add Single Transaction from this"),
+                            ),
+                          ]),
                       ],
                     ),
                   ),
@@ -312,6 +357,7 @@ class _TransactionFormState extends State<TransactionForm> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // Cancel/ Delete button
           FloatingActionButton(
             heroTag: 'cancel',
             backgroundColor: Colors.red,
@@ -353,17 +399,34 @@ class _TransactionFormState extends State<TransactionForm> {
           const SizedBox(
             width: 5,
           ),
+          // Save button
           FloatingActionButton.extended(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
                   if (recurringData.isRecurring) {
-                    DatabaseHelper.instance.updateRecurringTransaction(
-                        _currentRecurringTransaction());
+                    if (widget.initialRecurringTransactionData != null) {
+                      DatabaseHelper.instance.updateRecurringTransaction(
+                          _currentRecurringTransaction());
+                    } else {
+                      DatabaseHelper.instance.deleteSingleTransactionById(
+                          widget.initialSingleTransactionData!.id);
+                      DatabaseHelper.instance.createRecurringTransaction(
+                          _currentRecurringTransaction());
+                    }
                   } else {
-                    DatabaseHelper.instance
-                        .updateSingleTransaction(_currentSingleTransaction());
+                    // isRecurring is false
+                    if (widget.initialSingleTransactionData != null) {
+                      DatabaseHelper.instance
+                          .updateSingleTransaction(_currentSingleTransaction());
+                    } else {
+                      DatabaseHelper.instance.deleteRecurringTransactionById(
+                          widget.initialRecurringTransactionData!.id);
+                      DatabaseHelper.instance
+                          .createSingleTransaction(_currentSingleTransaction());
+                    }
                   }
+                  Navigator.of(context).pop();
                 } else {
                   if (recurringData.isRecurring) {
                     DatabaseHelper.instance.createRecurringTransaction(
@@ -372,8 +435,12 @@ class _TransactionFormState extends State<TransactionForm> {
                     DatabaseHelper.instance
                         .createSingleTransaction(_currentSingleTransaction());
                   }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionsScreen(),
+                    ),
+                  );
                 }
-                Navigator.of(context).pop();
               }
             },
             label: const Text("Save"),
@@ -433,5 +500,14 @@ class _TransactionFormState extends State<TransactionForm> {
     }
 
     return transaction;
+  }
+
+  void _onAccount2checkboxClicked() {
+    setState(() {
+      hasAccount2 = !hasAccount2;
+      if (!hasAccount2) {
+        selectedAccount2 = null;
+      }
+    });
   }
 }

@@ -22,8 +22,8 @@ class _AccountFormState extends State<AccountForm> {
   var balanceController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Colors.blue;
-  IconData _icon = Icons.blur_on;
+  Color? _color;
+  IconData? _icon;
 
   @override
   void initState() {
@@ -80,7 +80,7 @@ class _AccountFormState extends State<AccountForm> {
                                       });
                                     },
                                     initialIcon: _icon,
-                                    initialColor: _color,
+                                    color: _color ?? Colors.blue,
                                   )),
                               Flexible(
                                 child: TextFormField(
@@ -212,8 +212,8 @@ class _AccountFormState extends State<AccountForm> {
             if (_formKey.currentState!.validate()) {
               Account a = Account(
                   name: nameController.text,
-                  icon: _icon,
-                  color: _color,
+                  icon: _icon ?? Icons.blur_on,
+                  color: _color ?? Colors.blue,
                   balance: double.parse(balanceController.text),
                   description: descriptionController.text,
                   id: 0);

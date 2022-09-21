@@ -2,10 +2,12 @@ import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
 import 'package:flutter/material.dart';
 
-import '../tempData/tempData.dart';
-
 class CategoryPicker extends StatefulWidget {
-  CategoryPicker({Key? key, required this.onCategoryPickedCallback, this.initialCategories}) : super(key: key);
+  const CategoryPicker({
+    Key? key,
+    required this.onCategoryPickedCallback,
+    this.initialCategories,
+  }) : super(key: key);
 
   @override
   State<CategoryPicker> createState() => _CategoryPickerState();
@@ -20,7 +22,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
 
   @override
   void initState() {
-    if(widget.initialCategories != null){
+    if (widget.initialCategories != null) {
       _selected = widget.initialCategories!;
     }
     DatabaseHelper.instance.pushGetAllCategoriesStream();
@@ -28,7 +30,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     scrollController.dispose();
     super.dispose();
   }
@@ -36,11 +38,12 @@ class _CategoryPickerState extends State<CategoryPicker> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 225,
       child: InkWell(
           borderRadius: BorderRadius.circular(15),
           child: Scrollbar(
             controller: scrollController,
-            isAlwaysShown: true,
+            thumbVisibility: true,
             radius: const Radius.elliptical(10, 20),
             child: ListView.builder(
               controller: scrollController,
@@ -52,59 +55,70 @@ class _CategoryPickerState extends State<CategoryPicker> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            DatabaseHelper.instance.pushGetAllCategoriesStream();
+                            DatabaseHelper.instance
+                                .pushGetAllCategoriesStream();
                             return AlertDialog(
                               title: const Text('Select categories'),
                               content: SizedBox(
                                 width: double.maxFinite,
                                 child: StreamBuilder<List<TransactionCategory>>(
-                                  stream: DatabaseHelper.instance.allCategoryStream,
+                                  stream:
+                                      DatabaseHelper.instance.allCategoryStream,
                                   builder: (context, snapshot) {
-                                    if(snapshot.hasData){
+                                    if (snapshot.hasData) {
                                       return ListView.builder(
-                                          itemBuilder: (context, j) {
-                                            return StatefulBuilder(
-                                                builder: (context, _setState) =>
-                                                    CheckboxListTile(
-                                                      title: Row(
-                                                        children: [
-                                                          Icon(
-                                                            snapshot.data![j].icon,
-                                                            color: snapshot.data![j].color,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 8,
-                                                          ),
-                                                          Flexible(
-                                                            child: Text(
-                                                              snapshot.data![j].name,
-                                                              overflow:
-                                                                  TextOverflow.ellipsis,
-                                                              maxLines: 1,
-                                                              style: TextStyle(
-                                                                color:
-                                                                snapshot.data![j].color,
-                                                              ),
+                                        itemBuilder: (context, j) {
+                                          return StatefulBuilder(
+                                              builder: (context,
+                                                      localSetState) =>
+                                                  CheckboxListTile(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          snapshot
+                                                              .data![j].icon,
+                                                          color: snapshot
+                                                              .data![j].color,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 8,
+                                                        ),
+                                                        Flexible(
+                                                          child: Text(
+                                                            snapshot
+                                                                .data![j].name,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 1,
+                                                            style: TextStyle(
+                                                              color: snapshot
+                                                                  .data![j]
+                                                                  .color,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                      value: _selected.contains(snapshot.data![j]),
-                                                      onChanged: (bool? value) {
-                                                        _setState(() {
-                                                          if (value == true) {
-                                                            _selected
-                                                                .add(snapshot.data![j]);
-                                                          } else {
-                                                            _selected.remove(snapshot.data![j]);
-                                                          }
-                                                        });
-                                                      },
-                                                    ));
-                                          },
-                                          itemCount: snapshot.data!.length,
-                                        );
-                                    }else if (snapshot.hasError) {
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    value: _selected.contains(
+                                                        snapshot.data![j]),
+                                                    onChanged: (bool? value) {
+                                                      localSetState(() {
+                                                        if (value == true) {
+                                                          _selected.add(snapshot
+                                                              .data![j]);
+                                                        } else {
+                                                          _selected.remove(
+                                                              snapshot
+                                                                  .data![j]);
+                                                        }
+                                                      });
+                                                    },
+                                                  ));
+                                        },
+                                        itemCount: snapshot.data!.length,
+                                      );
+                                    } else if (snapshot.hasError) {
                                       return const Text("Oops!");
                                     }
                                     return const Center(
@@ -119,7 +133,8 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                   child: const Text('Close'),
                                   onPressed: () {
                                     setState(() {
-                                      widget.onCategoryPickedCallback(_selected);
+                                      widget
+                                          .onCategoryPickedCallback(_selected);
                                     });
                                     Navigator.of(context)
                                         .pop(); //dismiss the color picker
@@ -162,7 +177,6 @@ class _CategoryPickerState extends State<CategoryPicker> {
               itemCount: (_selected.length) + 1,
             ),
           )),
-      height: 225,
     );
   }
 }

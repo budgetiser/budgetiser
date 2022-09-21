@@ -1,5 +1,4 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -50,7 +49,7 @@ Widget createDrawer(BuildContext context) {
                   color: Colors.redAccent,
                 ),
           ),
-          leading: Icon(
+          leading: const Icon(
             Icons.logout,
             color: Colors.redAccent,
           ),

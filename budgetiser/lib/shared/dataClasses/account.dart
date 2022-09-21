@@ -24,4 +24,9 @@ class Account {
         'balance': balance,
         'description': description,
       };
+
+  @override
+  String toString() {
+    return 'Account{id: $id, name: $name, icon: $icon, color: $color, balance: $balance, description: $description}';
+  }
 }

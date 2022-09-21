@@ -18,12 +18,12 @@ class TransactionCategory {
   });
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'icon': icon.codePoint,
-    'color': color.value,
-    'description': description,
-    'is_hidden': isHidden,
-  };
+        'name': name,
+        'icon': icon.codePoint,
+        'color': color.value,
+        'description': description,
+        'is_hidden': isHidden,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -33,13 +33,13 @@ class TransactionCategory {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is TransactionCategory
-      && id == other.id
-      && name == other.name
-      && icon == other.icon
-      && color == other.color
-      && description == other.description
-      && isHidden == other.isHidden;
+    return other is TransactionCategory &&
+        id == other.id &&
+        name == other.name &&
+        icon == other.icon &&
+        color == other.color &&
+        description == other.description &&
+        isHidden == other.isHidden;
   }
 
   @override

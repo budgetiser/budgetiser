@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'homeScreen.dart';
 
 class CreateDatabaseScreen extends StatefulWidget {
-  CreateDatabaseScreen({Key? key}) : super(key: key);
+  const CreateDatabaseScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateDatabaseScreen> createState() => _CreateDatabaseScreenState();
@@ -127,6 +127,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                       int verify = await DatabaseHelper.instance
                           .createDatabase(_passcodeController.text);
                       if (verify == 1) {
+                        if (!mounted) return;
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

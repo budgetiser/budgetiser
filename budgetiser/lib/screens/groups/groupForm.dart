@@ -8,20 +8,20 @@ import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {
-  GroupForm({Key? key, this.initialGroup}) : super(key: key);
+  const GroupForm({Key? key, this.initialGroup}) : super(key: key);
 
-  Group? initialGroup;
+  final Group? initialGroup;
 
   @override
   State<GroupForm> createState() => _GroupFormState();
 }
 
 class _GroupFormState extends State<GroupForm> {
-  var nameController = new TextEditingController();
-  var descriptionController = new TextEditingController();
+  var nameController = TextEditingController();
+  var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Colors.blue;
-  IconData _icon = Icons.blur_on;
+  Color? _color;
+  IconData? _icon;
   List<TransactionCategory> _categories = [];
 
   @override
@@ -69,8 +69,8 @@ class _GroupFormState extends State<GroupForm> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: IconPicker(
-                            initialColor: _color,
-                            initialIcon: _icon,
+                            color: _color ?? Colors.blue,
+                            initialIcon: _icon ?? Icons.blur_on,
                             onIconChangedCallback: (icondata) {
                               setState(() {
                                 _icon = icondata;
@@ -85,6 +85,7 @@ class _GroupFormState extends State<GroupForm> {
                               if (data == null || data == '') {
                                 return "Please enter a valid name";
                               }
+                              return null;
                             },
                             decoration: const InputDecoration(
                               labelText: "Group title",
@@ -174,8 +175,8 @@ class _GroupFormState extends State<GroupForm> {
               if (_formKey.currentState!.validate()) {
                 Group a = Group(
                     name: nameController.text,
-                    icon: _icon,
-                    color: _color,
+                    icon: _icon ?? Icons.blur_on,
+                    color: _color ?? Colors.blue,
                     description: descriptionController.text,
                     id: 0,
                     transactionCategories: _categories);

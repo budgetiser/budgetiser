@@ -1,8 +1,8 @@
 import 'package:budgetiser/screens/account/accountForm.dart';
 import 'package:budgetiser/screens/transactions/transactionForm.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/widgets/accountItem/accountItemTitle.dart';
-import 'package:budgetiser/shared/widgets/balanceText.dart';
+import 'package:budgetiser/shared/widgets/items/accountItem/accountItemTitle.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/balanceText.dart';
 import 'package:flutter/material.dart';
 
 class AccountItem extends StatelessWidget {
@@ -52,7 +52,9 @@ class AccountItem extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => TransactionForm()),
+                                  builder: (context) => TransactionForm(
+                                    initialSelectedAccount: accountData,
+                                  )),
                             );
                           },
                           child: const Icon(
@@ -66,6 +68,7 @@ class AccountItem extends StatelessWidget {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => TransactionForm(
+                                  initialSelectedAccount: accountData,
                                   initialNegative: true,
                                 ),
                               ),

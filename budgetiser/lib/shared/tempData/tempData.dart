@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
@@ -256,8 +258,8 @@ List<Budget> TMP_DATA_budgetList = [
     color: Colors.red,
     description: "",
     balance: 0.0,
-    intervalRepititions: 30,
-    endDate: DateTime(2020, 10, 1).add(Duration(days: 30 * 30)),
+    intervalRepetitions: 30,
+    endDate: DateTime(2020, 10, 1).add(const Duration(days: 30 * 30)),
     startDate: DateTime(2020, 10, 1),
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
@@ -275,8 +277,8 @@ List<Budget> TMP_DATA_budgetList = [
     color: Colors.blue,
     description: "",
     balance: 0.0,
-    intervalRepititions: 3,
-    endDate: DateTime(2020, 01, 1).add(Duration(days: 3 * 365)),
+    intervalRepetitions: 3,
+    endDate: DateTime(2020, 01, 1).add(const Duration(days: 3 * 365)),
     startDate: DateTime(2020, 01, 01),
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
@@ -296,8 +298,8 @@ List<Budget> TMP_DATA_budgetList = [
     color: Colors.green,
     description: "",
     balance: 0.0,
-    intervalRepititions: 5,
-    endDate: DateTime(2022, 10, 2).add(Duration(days: 3 * 5)),
+    intervalRepetitions: 5,
+    endDate: DateTime(2022, 10, 2).add(const Duration(days: 3 * 5)),
     startDate: DateTime(2022, 10, 2),
     intervalAmount: 3,
     intervalUnit: IntervalUnit.day,
@@ -329,7 +331,7 @@ List<Budget> TMP_DATA_budgetList = [
     balance: 0,
     endDate: DateTime(2021, 01, 2),
     startDate: DateTime(2020, 10, 2),
-    intervalRepititions: 3,
+    intervalRepetitions: 3,
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
     intervalType: IntervalType.fixedInterval,
