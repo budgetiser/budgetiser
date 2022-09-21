@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/balanceText.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
 class SimpleTextStat extends StatelessWidget {

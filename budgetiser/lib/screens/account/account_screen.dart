@@ -1,8 +1,8 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/account/accountForm.dart';
+import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/shared/widgets/items/accountItem/accountItem.dart';
+import 'package:budgetiser/shared/widgets/items/accountItem/account_item.dart';
 import 'package:flutter/material.dart';
 
 class AccountScreen extends StatefulWidget {

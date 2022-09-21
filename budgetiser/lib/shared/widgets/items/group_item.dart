@@ -1,4 +1,4 @@
-import 'package:budgetiser/screens/groups/groupForm.dart';
+import 'package:budgetiser/screens/groups/group_form.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:flutter/material.dart';
 

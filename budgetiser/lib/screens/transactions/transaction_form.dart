@@ -1,14 +1,14 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
+import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
-import 'package:budgetiser/shared/dataClasses/singleTransaction.dart';
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/picker/selectAccount.dart';
-import 'package:budgetiser/shared/picker/selectCategory.dart';
-import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
-import 'package:budgetiser/shared/widgets/recurringForm.dart';
+import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
+import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
+import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/select_account.dart';
+import 'package:budgetiser/shared/picker/select_category.dart';
+import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/recurring_form.dart';
 import 'package:flutter/material.dart';
 
 /// a screen that allows the user to add a transaction

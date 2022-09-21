@@ -1,8 +1,8 @@
 import 'package:budgetiser/screens/stats/simple_text_stat.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/picker/selectAccount.dart';
-import 'package:budgetiser/shared/picker/selectCategory.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/select_account.dart';
+import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetiser/drawer.dart';
 

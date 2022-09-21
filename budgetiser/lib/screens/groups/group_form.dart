@@ -1,10 +1,10 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
-import 'package:budgetiser/shared/picker/categoryPicker.dart';
-import 'package:budgetiser/shared/picker/colorpicker.dart';
-import 'package:budgetiser/shared/picker/selectIcon.dart';
-import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/category_picker.dart';
+import 'package:budgetiser/shared/picker/color_picker.dart';
+import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {

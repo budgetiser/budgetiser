@@ -1,9 +1,9 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
-import 'package:budgetiser/shared/picker/colorpicker.dart';
-import 'package:budgetiser/shared/picker/datePicker.dart';
-import 'package:budgetiser/shared/picker/selectIcon.dart';
-import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
+import 'package:budgetiser/shared/picker/color_picker.dart';
+import 'package:budgetiser/shared/picker/date_picker.dart';
+import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
 class SavingForm extends StatefulWidget {
