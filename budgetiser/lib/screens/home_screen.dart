@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/transactions/transactionForm.dart';
+import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/shared/widgets/confirmationDialog.dart';
+import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

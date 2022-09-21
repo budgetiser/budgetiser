@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:budgetiser/routes.dart';
-import 'package:budgetiser/shared/services/settingsStream.dart';
-import 'package:budgetiser/screens/createDBScreen.dart';
-import 'package:budgetiser/screens/homeScreen.dart';
+import 'package:budgetiser/shared/services/settings_stream.dart';
+import 'package:budgetiser/screens/create_db_screen.dart';
+import 'package:budgetiser/screens/home_screen.dart';
 import 'package:budgetiser/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

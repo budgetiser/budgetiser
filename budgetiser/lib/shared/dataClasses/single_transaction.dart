@@ -1,6 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/recurringTransaction.dart';
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 
 class SingleTransaction {
   int id;

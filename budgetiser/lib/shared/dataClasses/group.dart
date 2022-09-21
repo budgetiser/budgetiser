@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
 
 class Group {
@@ -19,9 +19,9 @@ class Group {
   });
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'icon': icon.codePoint,
-    'color': color.value,
-    'description': description,
-  };
+        'name': name,
+        'icon': icon.codePoint,
+        'color': color.value,
+        'description': description,
+      };
 }

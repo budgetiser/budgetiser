@@ -1,5 +1,5 @@
-import 'package:budgetiser/shared/dataClasses/recurringData.dart';
-import 'package:budgetiser/shared/picker/datePicker.dart';
+import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
+import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:flutter/material.dart';
 
 class RecurringForm extends StatefulWidget {

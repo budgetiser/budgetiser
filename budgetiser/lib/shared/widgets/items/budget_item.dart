@@ -1,15 +1,14 @@
-import 'package:budgetiser/screens/plans/savingForm.dart';
-import 'package:budgetiser/shared/dataClasses/savings.dart';
+import 'package:budgetiser/screens/plans/budget_form.dart';
+import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class SavingItem extends StatelessWidget {
-  const SavingItem({
+class BudgetItem extends StatelessWidget {
+  const BudgetItem({
     Key? key,
-    required this.savingData,
+    required this.budgetData,
   }) : super(key: key);
-
-  final Savings savingData;
+  final Budget budgetData;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +17,8 @@ class SavingItem extends StatelessWidget {
         InkWell(
           onTap: () => {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SavingForm(
-                      savingData: savingData,
+                builder: (context) => BudgetForm(
+                      budgetData: budgetData,
                     ))),
           },
           child: Container(
@@ -40,27 +39,38 @@ class SavingItem extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            savingData.icon,
-                            color: savingData.color,
+                            budgetData.icon,
+                            color: budgetData.color,
                           ),
                           const SizedBox(
                             width: 8,
                           ),
-                          Text(savingData.name),
+                          Text(budgetData.name),
                         ],
                       ),
-                      Text(
-                          "days left: ${(savingData.endDate).difference(DateTime.now()).inDays}")
+                      budgetData.isRecurring
+                          ? _getTimeInfos(
+                              budgetData.startDate, budgetData.endDate!)
+                          : (budgetData.startDate.compareTo(DateTime.now()) >= 0
+                              ? Row(
+                                  children: [
+                                    Text(
+                                        "starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}"),
+                                    const Icon(Icons.arrow_forward)
+                                  ],
+                                )
+                              : Container()),
                     ]),
                 Row(
                   children: [
                     Expanded(
                       child: LinearPercentIndicator(
                         lineHeight: 15.0,
-                        percent: (savingData.balance / savingData.goal),
+                        percent: getPercentInterval(
+                            budgetData.balance, budgetData.limit),
                         backgroundColor: Colors.white,
                         linearGradient: LinearGradient(
-                            colors: createGradient(savingData.color)),
+                            colors: createGradient(budgetData.color)),
                         clipLinearGradient: true,
                       ),
                     ),
@@ -69,8 +79,15 @@ class SavingItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(savingData.balance.toString()),
-                    Text(savingData.goal.toString()),
+                    Text(
+                      budgetData.balance.toString(),
+                      style: TextStyle(
+                        color: budgetData.balance > budgetData.limit
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                    ),
+                    Text(budgetData.limit.toString()),
                   ],
                 ),
               ],
@@ -84,6 +101,32 @@ class SavingItem extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _getTimeInfos(DateTime start, DateTime end) {
+    if (DateTime.now().compareTo(start) < 0) {
+      return Row(
+        children: [
+          Text("starting in: ${start.difference(DateTime.now()).inDays}"),
+          const Icon(Icons.arrow_forward)
+        ],
+      );
+    } else if (DateTime.now().compareTo(end) > 0) {
+      return Row(
+        children: [
+          Text("ended before: ${DateTime.now().difference(end).inDays}"),
+          const Icon(Icons.arrow_back)
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Text(
+              "days left: ${(budgetData.calculateCurrentInterval()['end']!).difference(DateTime.now()).inDays}"),
+          const Icon(Icons.repeat)
+        ],
+      );
+    }
   }
 
   List<Color> createGradient(Color baseColor) {
@@ -103,5 +146,15 @@ class SavingItem extends StatelessWidget {
     gradient.add(
         Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
     return gradient;
+  }
+
+  double getPercentInterval(double value, double base) {
+    if (value >= base) {
+      return 1.00;
+    } else if (value <= 0) {
+      return 0.00;
+    } else {
+      return value / base;
+    }
   }
 }

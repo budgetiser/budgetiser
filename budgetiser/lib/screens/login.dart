@@ -1,5 +1,5 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/homeScreen.dart';
+import 'package:budgetiser/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/account/accountForm.dart';
+import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/accountTextWithIcon.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

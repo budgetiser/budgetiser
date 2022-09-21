@@ -1,5 +1,5 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/shared/dataClasses/transactionCategory.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
 
 class CategoryPicker extends StatefulWidget {

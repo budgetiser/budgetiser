@@ -1,11 +1,11 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/screens/plans/budgetForm.dart';
-import 'package:budgetiser/screens/plans/savingForm.dart';
+import 'package:budgetiser/screens/plans/budget_form.dart';
+import 'package:budgetiser/screens/plans/saving_form.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
-import 'package:budgetiser/shared/widgets/items/budgetItem.dart';
-import 'package:budgetiser/shared/widgets/items/savingItem.dart';
+import 'package:budgetiser/shared/widgets/items/budget_item.dart';
+import 'package:budgetiser/shared/widgets/items/saving_item.dart';
 import 'package:flutter/material.dart';
 
 class Plans extends StatefulWidget {

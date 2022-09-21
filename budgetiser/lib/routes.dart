@@ -1,13 +1,13 @@
-import 'package:budgetiser/screens/categories/categoriesScreen.dart';
-import 'package:budgetiser/screens/groups/groupsScreen.dart';
+import 'package:budgetiser/screens/categories/categories_screen.dart';
+import 'package:budgetiser/screens/groups/groups_screen.dart';
 import 'package:budgetiser/screens/help.dart';
 import 'package:budgetiser/screens/plans/plans.dart';
-import 'package:budgetiser/screens/settingsScreen.dart';
+import 'package:budgetiser/screens/settings_screen.dart';
 import 'package:budgetiser/screens/stats/stats.dart';
-import 'package:budgetiser/screens/transactions/transactionsScreen.dart';
+import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 
-import 'screens/account/accountScreen.dart';
-import 'screens/homeScreen.dart';
+import 'screens/account/account_screen.dart';
+import 'screens/home_screen.dart';
 
 //named lower case and also needs to be defined in beginning of class as: static String routeID = ''
 var routes = {
