@@ -89,7 +89,7 @@ class _BudgetFormState extends State<BudgetForm> {
                         padding: const EdgeInsets.all(8.0),
                         child: IconPicker(
                           color: _color ?? Colors.blue,
-                          initialIcon: _icon,
+                          initialIcon: _icon ?? Icons.blur_on,
                           onIconChangedCallback: (icondata) {
                             setState(() {
                               _icon = icondata;
