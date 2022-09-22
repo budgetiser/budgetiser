@@ -1,10 +1,13 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
+import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+// enum currencySymbol { dollar, pound, euro, yen, rupee, bitcoin, ethereum }
 
 class SettingsScreen extends StatefulWidget {
   static String routeID = 'settings';
@@ -18,6 +21,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _selectedDarkModeValue;
+  String _selectedCurrency = '€';
 
   @override
   void initState() {
@@ -27,9 +31,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void asyncSetStateFromPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+    final awaitedCurrency = await SettingsCurrencyHandler().getCurrency();
     setState(() {
-      _selectedDarkModeValue = prefs.getString('key-themeMode');
-      _selectedDarkModeValue ??= 'system'; // default value
+      _selectedDarkModeValue = prefs.getString('key-themeMode') ?? 'system';
+      _selectedCurrency = awaitedCurrency;
     });
   }
 
@@ -141,8 +146,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
+            ListTile(
+              title: const Text('Change Currency'),
+              subtitle: const Text('No effect on values',
+                  style: TextStyle(fontSize: 14.0)),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SimpleDialog(
+                      elevation: 0,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text('Select Currency'),
+                        ],
+                      ),
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 25,
+                            vertical: 10,
+                          ),
+                          child: Text("Has no effect on values",
+                              style: TextStyle(fontSize: 16.0)),
+                        ),
+                        currencyRadioItem(context, currencySymbol: "€"),
+                        currencyRadioItem(context, currencySymbol: "\$"),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  ListTile currencyRadioItem(BuildContext context,
+      {required String currencySymbol}) {
+    return ListTile(
+      title: Text(currencySymbol),
+      visualDensity: VisualDensity.compact,
+      leading: Radio(
+        value: currencySymbol,
+        groupValue: _selectedCurrency,
+        onChanged: (value) {
+          setState(() {
+            _selectedCurrency = value.toString();
+          });
+          SettingsCurrencyHandler().setCurrency(value.toString());
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
