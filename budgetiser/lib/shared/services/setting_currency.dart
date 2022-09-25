@@ -8,13 +8,11 @@ class SettingsCurrencyHandler {
   Future<String> getCurrency() async {
     final prefs = await SharedPreferences.getInstance();
     String currency = prefs.getString('key-currency') ?? defaultCurrency;
-    print("getCurrency: $currency");
     return currency;
   }
 
   Future<void> setCurrency(String currency) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('key-currency', currency);
-    print("set to $currency");
   }
 }
