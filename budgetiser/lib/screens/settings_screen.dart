@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             ListTile(
-              title: const Text('Change Currency'),
+              title: Text('Change Currency: $_selectedCurrency'),
               subtitle: const Text('No effect on values',
                   style: TextStyle(fontSize: 14.0)),
               onTap: () async {
@@ -173,6 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         currencyRadioItem(context, currencySymbol: "€"),
                         currencyRadioItem(context, currencySymbol: "\$"),
+                        currencyRadioItem(context, currencySymbol: "£"),
                       ],
                     );
                   },
