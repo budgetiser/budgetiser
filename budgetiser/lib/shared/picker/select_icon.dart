@@ -21,7 +21,6 @@ class IconPicker extends StatefulWidget {
 class _IconPickerState extends State<IconPicker> {
   IconData _currentIcon = Icons.blur_on;
   String? _searchString;
-  List<IconData>? _filteredIcons;
 
   @override
   Widget build(BuildContext context) {
