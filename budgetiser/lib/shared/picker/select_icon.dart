@@ -169,7 +169,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.sports_cricket,
     },
     {
-      'name': 'Sports Esports controller',
+      'name': 'Sports Esports controller game',
       'icon': Icons.sports_esports,
     },
     {
@@ -571,6 +571,34 @@ class _IconPickerState extends State<IconPicker> {
     {
       'name': 'cloud',
       'icon': Icons.cloud,
+    },
+    {
+      'name': 'code arrow',
+      'icon': Icons.code,
+    },
+    {
+      'name': 'collections image photo',
+      'icon': Icons.collections,
+    },
+    {
+      'name': 'collections_bookmark',
+      'icon': Icons.collections_bookmark,
+    },
+    {
+      'name': 'computer work laptop',
+      'icon': Icons.computer,
+    },
+    {
+      'name': 'delete bin trash',
+      'icon': Icons.delete,
+    },
+    {
+      'name': 'description',
+      'icon': Icons.description,
+    },
+    {
+      'name': 'desktop_mac pc',
+      'icon': Icons.desktop_mac,
     },
   ];
 }
