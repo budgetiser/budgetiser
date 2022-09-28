@@ -121,7 +121,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.music_note,
     },
     {
-      'name': 'bakery ',
+      'name': 'bakery food',
       'icon': Icons.bakery_dining,
     },
     {
@@ -169,7 +169,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.sports_cricket,
     },
     {
-      'name': 'Sports Esports',
+      'name': 'Sports Esports controller',
       'icon': Icons.sports_esports,
     },
     {
@@ -189,19 +189,19 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.sports_hockey,
     },
     {
-      'name': 'access_alarm',
+      'name': 'alarm clock',
       'icon': Icons.access_alarm,
     },
     {
-      'name': 'ac_unit',
+      'name': 'ac_unit snow',
       'icon': Icons.ac_unit,
     },
     {
-      'name': 'access_time',
+      'name': 'time clock',
       'icon': Icons.access_time,
     },
     {
-      'name': 'accessibility',
+      'name': 'accessibility human',
       'icon': Icons.accessibility,
     },
     {
@@ -209,7 +209,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.accessible,
     },
     {
-      'name': 'account_balance',
+      'name': 'account_balance bank',
       'icon': Icons.account_balance,
     },
     {
@@ -217,7 +217,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.account_balance_wallet,
     },
     {
-      'name': 'account_box',
+      'name': 'account_box user',
       'icon': Icons.account_box,
     },
     {
@@ -225,11 +225,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.adb,
     },
     {
-      'name': 'airline_seat_individual_suite',
+      'name': 'airline_seat_individual_suite bed sleep',
       'icon': Icons.airline_seat_individual_suite,
     },
     {
-      'name': 'airport_shuttle',
+      'name': 'airport_shuttle bus',
       'icon': Icons.airport_shuttle,
     },
     {
@@ -257,11 +257,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.attach_money,
     },
     {
-      'name': 'audiotrack',
+      'name': 'audiotrack music',
       'icon': Icons.audiotrack,
     },
     {
-      'name': 'cake',
+      'name': 'cake food',
       'icon': Icons.cake,
     },
     {
@@ -301,31 +301,31 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.directions_boat,
     },
     {
-      'name': 'directions_transit',
+      'name': 'directions_transit train',
       'icon': Icons.directions_transit,
     },
     {
-      'name': 'ev_station',
+      'name': 'ev_station car',
       'icon': Icons.ev_station,
     },
     {
-      'name': 'favorite',
+      'name': 'favorite heart',
       'icon': Icons.favorite,
     },
     {
-      'name': 'fitness_center',
+      'name': 'fitness_center sport',
       'icon': Icons.fitness_center,
     },
     {
-      'name': 'flight_takeoff',
+      'name': 'flight_takeoff airplane',
       'icon': Icons.flight_takeoff,
     },
     {
-      'name': 'free_breakfast',
+      'name': 'free_breakfast coffee tea',
       'icon': Icons.free_breakfast,
     },
     {
-      'name': 'gavel',
+      'name': 'gavel hammer',
       'icon': Icons.gavel,
     },
     {
@@ -333,15 +333,15 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.golf_course,
     },
     {
-      'name': 'group',
+      'name': 'group people',
       'icon': Icons.group,
     },
     {
-      'name': 'headset_mic',
+      'name': 'headset_mic microphone music',
       'icon': Icons.headset_mic,
     },
     {
-      'name': 'healing',
+      'name': 'healing medical doctor',
       'icon': Icons.healing,
     },
     {
@@ -349,11 +349,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.hot_tub,
     },
     {
-      'name': 'import_export',
+      'name': 'import_export arrow',
       'icon': Icons.import_export,
     },
     {
-      'name': 'local_gas_station',
+      'name': 'local_gas_station car',
       'icon': Icons.local_gas_station,
     },
     {
@@ -361,7 +361,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.local_florist,
     },
     {
-      'name': 'local_bar',
+      'name': 'local_bar drink alcohol',
       'icon': Icons.local_bar,
     },
     {
@@ -369,15 +369,15 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.local_convenience_store,
     },
     {
-      'name': 'local_dining',
+      'name': 'local_dining food',
       'icon': Icons.local_dining,
     },
     {
-      'name': 'local_grocery_store',
+      'name': 'local_grocery_store food',
       'icon': Icons.local_grocery_store,
     },
     {
-      'name': 'motorcycle',
+      'name': 'motorcycle bike',
       'icon': Icons.motorcycle,
     },
     {
@@ -389,11 +389,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.movie,
     },
     {
-      'name': 'pets',
+      'name': 'pets dog cat animal',
       'icon': Icons.pets,
     },
     {
-      'name': 'pool',
+      'name': 'pool swim',
       'icon': Icons.pool,
     },
     {
@@ -401,11 +401,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.redeem,
     },
     {
-      'name': 'public',
+      'name': 'public world globe',
       'icon': Icons.public,
     },
     {
-      'name': 'restaurant',
+      'name': 'restaurant food',
       'icon': Icons.restaurant,
     },
     {
@@ -413,11 +413,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.router,
     },
     {
-      'name': 'speaker',
+      'name': 'speaker music audio',
       'icon': Icons.speaker,
     },
     {
-      'name': 'star',
+      'name': 'star favorite',
       'icon': Icons.star,
     },
     {
@@ -433,7 +433,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.surround_sound,
     },
     {
-      'name': 'swap_calls',
+      'name': 'swap_calls arrow',
       'icon': Icons.swap_calls,
     },
     {
@@ -461,15 +461,15 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.toys,
     },
     {
-      'name': 'videogame_asset',
+      'name': 'videogame_asset game controller',
       'icon': Icons.videogame_asset,
     },
     {
-      'name': 'videocam',
+      'name': 'videocam camera',
       'icon': Icons.videocam,
     },
     {
-      'name': 'watch',
+      'name': 'watch clock time smartwatch',
       'icon': Icons.watch,
     },
     {
@@ -489,11 +489,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.add,
     },
     {
-      'name': 'add_a_photo',
+      'name': 'add_a_photo camera',
       'icon': Icons.add_a_photo,
     },
     {
-      'name': 'location_city',
+      'name': 'location_city building house',
       'icon': Icons.location_city,
     },
     {
@@ -517,15 +517,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.airplay,
     },
     {
-      'name': 'airport_shuttle',
-      'icon': Icons.airport_shuttle,
-    },
-    {
       'name': 'album',
       'icon': Icons.album,
     },
     {
-      'name': 'all_inclusive',
+      'name': 'all_inclusive infinite',
       'icon': Icons.all_inclusive,
     },
     {
@@ -553,11 +549,11 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.art_track,
     },
     {
-      'name': 'home',
+      'name': 'home house building',
       'icon': Icons.home,
     },
     {
-      'name': 'paid',
+      'name': 'paid account money',
       'icon': Icons.paid,
     },
     {
@@ -569,7 +565,7 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.savings,
     },
     {
-      'name': 'hiking',
+      'name': 'hiking sport',
       'icon': Icons.hiking,
     },
     {
