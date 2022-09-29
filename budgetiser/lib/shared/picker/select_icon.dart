@@ -67,7 +67,8 @@ class _IconPickerState extends State<IconPicker> {
   Widget getIcons() {
     List<IconData> filteredIcons = [];
     for (var element in _fullIconList) {
-      if (element["name"].toLowerCase().contains(_searchString ?? "")) {
+      if (element["name"].contains(
+          _searchString != null ? _searchString!.toLowerCase() : "")) {
         filteredIcons.add(element["icon"]);
       }
     }
@@ -104,11 +105,11 @@ class _IconPickerState extends State<IconPicker> {
 
   final List<Map<String, dynamic>> _fullIconList = [
     {
-      'name': 'Home',
+      'name': 'home',
       'icon': Icons.home,
     },
     {
-      'name': 'Shopping cart',
+      'name': 'shopping cart',
       'icon': Icons.shopping_cart,
     },
     {
@@ -152,39 +153,39 @@ class _IconPickerState extends State<IconPicker> {
       'icon': Icons.garage,
     },
     {
-      'name': 'Sports',
+      'name': 'sports',
       'icon': Icons.sports,
     },
     {
-      'name': 'Sports Baseball',
+      'name': 'sports Baseball',
       'icon': Icons.sports_baseball,
     },
     {
-      'name': 'Sports Basketball',
+      'name': 'sports Basketball',
       'icon': Icons.sports_basketball,
     },
     {
-      'name': 'Sports Cricket',
+      'name': 'sports Cricket',
       'icon': Icons.sports_cricket,
     },
     {
-      'name': 'Sports Esports controller game',
+      'name': 'sports esports controller game',
       'icon': Icons.sports_esports,
     },
     {
-      'name': 'Sports Football',
+      'name': 'sports football',
       'icon': Icons.sports_football,
     },
     {
-      'name': 'Sports Golf',
+      'name': 'sports golf',
       'icon': Icons.sports_golf,
     },
     {
-      'name': 'Sports Handball',
+      'name': 'sports handball',
       'icon': Icons.sports_handball,
     },
     {
-      'name': 'Sports Hockey',
+      'name': 'sports hockey',
       'icon': Icons.sports_hockey,
     },
     {
