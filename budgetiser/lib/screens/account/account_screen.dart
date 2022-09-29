@@ -53,6 +53,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 builder: (BuildContext context) {
                   return SimpleDialog(
                     title: const Text('Sort by'),
+                    elevation: 0,
                     alignment: Alignment.topRight,
                     children: <Widget>[
                       SimpleDialogOption(
