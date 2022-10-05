@@ -30,6 +30,6 @@ class SingleTransaction {
         'value': value,
         'description': description,
         'category_id': category.id,
-        'date': date.toString().substring(0, 10)
+        'date': date.toString().substring(0, 19)
       };
 }
