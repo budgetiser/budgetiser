@@ -42,6 +42,8 @@ Widget createDrawer(BuildContext context) {
         const Divider(thickness: 2),
         singleDrawerItem(context, Icons.question_mark, 'Help', 'help'),
         singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
+        singleDrawerItem(context, Icons.list_alt, 'Notes', 'notes123'),
+        // ListTile for the logout button
         ListTile(
           title: Text(
             'Exit',
