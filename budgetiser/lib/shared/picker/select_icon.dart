@@ -24,10 +24,7 @@ class _IconPickerState extends State<IconPicker> {
 
   @override
   Widget build(BuildContext context) {
-    _currentIcon = widget.initialIcon ??
-        _fullIconList.elementAt(Random().nextInt(_fullIconList.length))["icon"];
 
-    Future(_executeAfterBuild);
     return SizedBox(
       child: InkWell(
         onTap: () {
@@ -96,11 +93,6 @@ class _IconPickerState extends State<IconPicker> {
         }),
       ),
     );
-  }
-
-  /// executes after build is done by being called in a Future() from the build() method
-  Future<void> _executeAfterBuild() async {
-    widget.onIconChangedCallback(_currentIcon);
   }
 
   final List<Map<String, dynamic>> _fullIconList = [

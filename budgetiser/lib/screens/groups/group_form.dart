@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
@@ -20,7 +22,8 @@ class _GroupFormState extends State<GroupForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color? _color;
+  Color _color = Color.fromRGBO(
+      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
   IconData? _icon;
   List<TransactionCategory> _categories = [];
 
