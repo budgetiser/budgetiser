@@ -19,12 +19,12 @@ class IconPicker extends StatefulWidget {
 }
 
 class _IconPickerState extends State<IconPicker> {
-  IconData _currentIcon = Icons.blur_on;
+  IconData? _currentIcon;
   String? _searchString;
 
   @override
   Widget build(BuildContext context) {
-
+    _currentIcon = widget.initialIcon ?? Icons.blur_on;
     return SizedBox(
       child: InkWell(
         onTap: () {
