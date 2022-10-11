@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
@@ -22,7 +24,8 @@ class _AccountFormState extends State<AccountForm> {
   var balanceController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color? _color;
+  Color _color = Color.fromRGBO(
+      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
   IconData? _icon;
 
   @override

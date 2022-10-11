@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
@@ -21,7 +23,8 @@ class _SavingFormState extends State<SavingForm> {
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   IconData? _icon;
-  Color? _color;
+  Color _color = Color.fromRGBO(
+      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 30));
 
