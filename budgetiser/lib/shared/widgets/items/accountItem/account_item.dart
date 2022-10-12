@@ -15,6 +15,7 @@ class AccountItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
     return Column(
       children: [
         InkWell(
@@ -30,10 +31,6 @@ class AccountItem extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
             width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              // color: Theme.of(context).colorScheme.secondary,
-            ),
             height: 90,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -57,10 +54,10 @@ class AccountItem extends StatelessWidget {
                                       )),
                             );
                           },
-                          child: const Icon(
+                          child: Icon(
                             Icons.arrow_upward,
                             size: 35,
-                            color: Colors.green,
+                            color: themeData.hintColor,
                           ),
                         ),
                         InkWell(
@@ -74,10 +71,10 @@ class AccountItem extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Icon(
+                          child: Icon(
                             Icons.arrow_downward,
                             size: 35,
-                            color: Colors.red,
+                            color: themeData.hintColor,
                           ),
                         ),
                       ],

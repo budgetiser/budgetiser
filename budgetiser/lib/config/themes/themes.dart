@@ -32,7 +32,6 @@ class MyThemes {
     toggleableActiveColor: LIGHT_PRIMARY,
   );
 
-
   static const Color DARK_PRIMARY = Color.fromARGB(255, 50, 130, 184);
   static const Color DARK_CLICKABLE = Color.fromARGB(255, 50, 130, 184);
   static const Color DARK_SECONDARY = Color.fromARGB(255, 15, 76, 117);
@@ -47,9 +46,12 @@ class MyThemes {
       tertiary: DARK_TERTIARY,
     ),
 
+    // hintColor used in input fields and clickable icons
+    hintColor: DARK_CLICKABLE,
+
     appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(
-          color: DARK_CLICKABLE
+        color: DARK_CLICKABLE,
       ),
       color: DARK_BACKGROUND,
       elevation: 0,
