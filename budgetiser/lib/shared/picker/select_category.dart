@@ -83,8 +83,6 @@ class _SelectCategoryState extends State<SelectCategory> {
 
     return Row(
       children: [
-        const Text("Category:"),
-        const SizedBox(width: 8),
         Expanded(
           child: DropdownButton<TransactionCategory>(
             isExpanded: true,
