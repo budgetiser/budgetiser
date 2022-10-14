@@ -127,230 +127,247 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData _themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: hasInitalData
             ? const Text("Edit Transaction")
             : const Text("New Transaction"),
       ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          controller: listScrollController,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-                child: Form(
-                  key: _formKey,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+      body: SingleChildScrollView(
+        controller: listScrollController,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // dead space
+                    SizedBox(
+                      height: 200,
+                      child: selectedAccount2 != null
+                          ? _visualizeTwoAccountTransaction()
+                          : _visualizeOneAccountTransaction(),
                     ),
-                    child: Column(
-                      children: [
-                        // dead space
-                        const SizedBox(height: 200),
-                        // value input
-                        TextFormField(
-                          controller: valueController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: "Value",
-                            border: OutlineInputBorder(),
+                    // value input
+                    TextFormField(
+                      controller: valueController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: "Value",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a value';
+                        }
+                        try {
+                          double.parse(value);
+                        } catch (e) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                    ),
+                    // title input
+                    const SizedBox(height: 20),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a title';
+                              }
+                              return null;
+                            },
+                            controller: titleController,
+                            // initialValue: widget.initialName,
+                            decoration: const InputDecoration(
+                              labelText: "Title",
+                              border: OutlineInputBorder(),
+                            ),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a value';
-                            }
-                            try {
-                              double.parse(value);
-                            } catch (e) {
-                              return 'Please enter a valid number';
-                            }
-                            return null;
-                          },
                         ),
-                        // title input
-                        const SizedBox(height: 20),
-                        Row(
-                          children: <Widget>[
-                            Flexible(
-                              child: TextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a title';
-                                  }
-                                  return null;
-                                },
-                                controller: titleController,
-                                // initialValue: widget.initialName,
-                                decoration: const InputDecoration(
-                                  labelText: "Title",
-                                  border: OutlineInputBorder(),
+                      ],
+                    ),
+                    // account picker
+                    const SizedBox(height: 20),
+                    Container(
+                      // color: Color.fromARGB(255, 67, 67, 67),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Color.fromARGB(255, 59, 59, 59),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                              child: Container(
+                                width: double.infinity,
+                                child: Text(
+                                  "Account",
+                                  textAlign: TextAlign.left,
+                                  style: _themeData.inputDecorationTheme
+                                              .labelStyle !=
+                                          null
+                                      ? _themeData
+                                          .inputDecorationTheme.labelStyle!
+                                          .copyWith(fontSize: 16)
+                                      : const TextStyle(fontSize: 16),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        // account picker
-                        ExpansionTile(
-                          backgroundColor: Color.fromARGB(255, 58, 58, 58),
-                          initiallyExpanded: true,
-                          title: Row(
-                            children: [
-                              const Text(
-                                "Account ",
+                            SelectAccount(
+                                initialAccount: selectedAccount,
+                                callback: setAccount),
+                            InkWell(
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              if (selectedAccount != null)
-                                Icon(
-                                  selectedAccount!.icon,
-                                  color: selectedAccount!.color,
-                                ),
-                              if (selectedAccount2 != null)
-                                Row(
-                                  children: [
-                                    const Text(" to "),
-                                    Icon(
-                                      selectedAccount2!.icon,
-                                      color: selectedAccount2!.color,
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
+                              onTap: () {
+                                _onAccount2checkboxClicked();
+                              },
+                              child: Row(
                                 children: [
-                                  SelectAccount(
-                                      initialAccount: selectedAccount,
-                                      callback: setAccount),
-                                  const SizedBox(height: 8),
-                                  InkWell(
-                                    customBorder: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    onTap: () {
+                                  Checkbox(
+                                    value: hasAccount2,
+                                    onChanged: (bool? newValue) {
                                       _onAccount2checkboxClicked();
                                     },
-                                    child: Row(
-                                      children: [
-                                        Checkbox(
-                                          value: hasAccount2,
-                                          onChanged: (bool? newValue) {
-                                            _onAccount2checkboxClicked();
-                                          },
-                                        ),
-                                        const Text(
-                                            "transfer to another account"),
-                                      ],
-                                    ),
                                   ),
-                                  if (hasAccount2)
-                                    Row(
-                                      children: [
-                                        const Text("to "),
-                                        Flexible(
-                                          child: SelectAccount(
-                                            initialAccount: selectedAccount2,
-                                            callback: setAccount2,
-                                            blackListAccountId:
-                                                selectedAccount?.id,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  const SizedBox(height: 8),
+                                  const Text("transfer to another account"),
                                 ],
                               ),
                             ),
+                            if (hasAccount2)
+                              Row(
+                                children: [
+                                  const Text("to "),
+                                  Flexible(
+                                    child: SelectAccount(
+                                      initialAccount: selectedAccount2,
+                                      callback: setAccount2,
+                                      blackListAccountId: selectedAccount?.id,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            const SizedBox(height: 8),
                           ],
                         ),
-                        // category picker
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: SelectCategory(
-                            initialCategory: selectedCategory,
-                            callback: (TransactionCategory c) {
-                              setState(() {
-                                if (mounted) {
-                                  selectedCategory = c;
-                                }
-                              });
-                            },
-                          ),
-                        ),
-                        // notes input
-                        ExpansionTile(
-                          title: const Text("Notes"),
+                      ),
+                    ),
+                    // category picker
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Color.fromARGB(255, 59, 59, 59),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                        child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: TextFormField(
-                                controller: descriptionController,
-                                maxLines: 5,
-                                decoration: const InputDecoration(
-                                  labelText: "Notes",
-                                  border: OutlineInputBorder(),
-                                ),
+                            Container(
+                              width: double.infinity,
+                              child: Text(
+                                "Category",
+                                textAlign: TextAlign.left,
+                                style: _themeData
+                                            .inputDecorationTheme.labelStyle !=
+                                        null
+                                    ? _themeData
+                                        .inputDecorationTheme.labelStyle!
+                                        .copyWith(fontSize: 16)
+                                    : const TextStyle(fontSize: 16),
                               ),
+                            ),
+                            SelectCategory(
+                              initialCategory: selectedCategory,
+                              callback: (TransactionCategory c) {
+                                setState(() {
+                                  if (mounted) {
+                                    selectedCategory = c;
+                                  }
+                                });
+                              },
                             ),
                           ],
                         ),
-                        // const Divider(),
-                        // if (widget.initialSingleTransactionData != null &&
-                        //     widget.initialSingleTransactionData!
-                        //             .recurringTransaction !=
-                        //         null)
-                        //   InkWell(
-                        //     onTap: () {
-                        //       Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //           builder: (context) => TransactionForm(
-                        //             initialRecurringTransactionData: widget
-                        //                 .initialSingleTransactionData!
-                        //                 .recurringTransaction,
-                        //           ),
-                        //         ),
-                        //       );
-                        //     },
-                        //     child: Text(
-                        //         "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
-                        //   ),
-                        // RecurringForm(
-                        //   scrollController: listScrollController,
-                        //   onRecurringDataChangedCallback: (data) {
-                        //     setState(() {
-                        //       recurringData = data;
-                        //     });
-                        //   },
-                        //   initialRecurringData: recurringData,
-                        // ),
-                        // if (recurringData.isRecurring)
-                        //   Column(children: [
-                        //     const SizedBox(height: 16),
-                        //     ElevatedButton(
-                        //       onPressed: () {
-                        //         DatabaseHelper.instance
-                        //             .createSingleTransactionFromRecurringTransaction(
-                        //                 _currentRecurringTransaction());
-                        //       },
-                        //       child: const Text(
-                        //           "Add Single Transaction from this"),
-                        //     ),
-                        //   ]),
+                      ),
+                    ),
+                    // notes input
+                    const SizedBox(height: 20),
+                    ExpansionTile(
+                      title: const Text("Notes"),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: TextFormField(
+                            controller: descriptionController,
+                            maxLines: 5,
+                            decoration: const InputDecoration(
+                              labelText: "Notes",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
+                    // const Divider(),
+                    // if (widget.initialSingleTransactionData != null &&
+                    //     widget.initialSingleTransactionData!
+                    //             .recurringTransaction !=
+                    //         null)
+                    //   InkWell(
+                    //     onTap: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => TransactionForm(
+                    //             initialRecurringTransactionData: widget
+                    //                 .initialSingleTransactionData!
+                    //                 .recurringTransaction,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //     child: Text(
+                    //         "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
+                    //   ),
+                    // RecurringForm(
+                    //   scrollController: listScrollController,
+                    //   onRecurringDataChangedCallback: (data) {
+                    //     setState(() {
+                    //       recurringData = data;
+                    //     });
+                    //   },
+                    //   initialRecurringData: recurringData,
+                    // ),
+                    // if (recurringData.isRecurring)
+                    //   Column(children: [
+                    //     const SizedBox(height: 16),
+                    //     ElevatedButton(
+                    //       onPressed: () {
+                    //         DatabaseHelper.instance
+                    //             .createSingleTransactionFromRecurringTransaction(
+                    //                 _currentRecurringTransaction());
+                    //       },
+                    //       child: const Text(
+                    //           "Add Single Transaction from this"),
+                    //     ),
+                    //   ]),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: Row(
@@ -395,6 +412,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 ? const Icon(Icons.delete_outline)
                 : const Icon(Icons.close),
           ),
+          // between cancel and save button
           const SizedBox(
             width: 5,
           ),
@@ -447,6 +465,39 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _visualizeTwoAccountTransaction() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Icon(selectedAccount!.icon),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(selectedCategory!.icon),
+            Icon(Icons.arrow_right_alt, size: 60),
+          ],
+        ),
+        Icon(selectedAccount2!.icon),
+      ],
+    );
+  }
+
+  Widget _visualizeOneAccountTransaction() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Icon(selectedAccount!.icon),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(selectedCategory!.icon),
+            Icon(Icons.arrow_right_alt, size: 60),
+          ],
+        ),
+      ],
     );
   }
 
