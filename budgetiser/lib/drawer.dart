@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/logo_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,9 +23,18 @@ Widget createDrawer(BuildContext context) {
                 Positioned(
                   bottom: 12.0,
                   left: 16.0,
-                  child: Text(
-                    "Budgetiser",
-                    style: Theme.of(context).textTheme.headline1,
+                  child: Row(
+                    children: [
+                      Icon(
+                        LogoIcon.budgetiser_icon,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      Text(
+                        " Budgetiser",
+                        style: Theme.of(context).textTheme.headline1,
+                      ),
+                    ],
                   ),
                 )
               ],
