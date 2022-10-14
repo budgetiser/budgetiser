@@ -10,6 +10,6 @@ class LogoIcon {
   static const _kFontFam = 'LogoIcon';
   static const String? _kFontPkg = null;
 
-  static const IconData budgetiser_icon =
+  static const IconData budgetiserIcon =
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -26,7 +26,7 @@ Widget createDrawer(BuildContext context) {
                   child: Row(
                     children: [
                       Icon(
-                        LogoIcon.budgetiser_icon,
+                        LogoIcon.budgetiserIcon,
                         color: Colors.white,
                         size: 40,
                       ),
