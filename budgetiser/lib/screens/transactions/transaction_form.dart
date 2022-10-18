@@ -9,6 +9,7 @@ import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/recurring_form.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
 /// a screen that allows the user to add a transaction
@@ -195,32 +196,29 @@ class _TransactionFormState extends State<TransactionForm> {
                       ],
                     ),
                     // account picker
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     Container(
                       // color: Color.fromARGB(255, 67, 67, 67),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        color: Color.fromARGB(255, 59, 59, 59),
+                        // color: Color.fromARGB(255, 59, 59, 59),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                              child: Container(
-                                width: double.infinity,
-                                child: Text(
-                                  "Account",
-                                  textAlign: TextAlign.left,
-                                  style: _themeData.inputDecorationTheme
-                                              .labelStyle !=
-                                          null
-                                      ? _themeData
-                                          .inputDecorationTheme.labelStyle!
-                                          .copyWith(fontSize: 16)
-                                      : const TextStyle(fontSize: 16),
-                                ),
+                            Container(
+                              width: double.infinity,
+                              child: Text(
+                                "Account",
+                                textAlign: TextAlign.left,
+                                style: _themeData
+                                            .inputDecorationTheme.labelStyle !=
+                                        null
+                                    ? _themeData
+                                        .inputDecorationTheme.labelStyle!
+                                        .copyWith(fontSize: 16)
+                                    : const TextStyle(fontSize: 16),
                               ),
                             ),
                             SelectAccount(
@@ -264,14 +262,14 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                     ),
                     // category picker
-                    const SizedBox(height: 20),
+                    // const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: Color.fromARGB(255, 59, 59, 59),
+                        // color: Color.fromARGB(255, 59, 59, 59),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                        padding: const EdgeInsets.fromLTRB(10, 8, 10, 0),
                         child: Column(
                           children: [
                             Container(
@@ -303,13 +301,15 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                     ),
                     // notes input
-                    const SizedBox(height: 20),
-                    ExpansionTile(
-                      title: const Text("Notes"),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: TextFormField(
+                    const SizedBox(height: 8),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        dividerColor: Colors.transparent,
+                      ),
+                      child: ExpansionTile(
+                        title: const Text("Notes"),
+                        children: [
+                          TextFormField(
                             controller: descriptionController,
                             maxLines: 5,
                             decoration: const InputDecoration(
@@ -317,8 +317,8 @@ class _TransactionFormState extends State<TransactionForm> {
                               border: OutlineInputBorder(),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     // const Divider(),
                     // if (widget.initialSingleTransactionData != null &&
@@ -472,15 +472,35 @@ class _TransactionFormState extends State<TransactionForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Icon(selectedAccount!.icon),
+        Icon(
+          selectedAccount != null ? selectedAccount!.icon : Icons.blur_linear,
+          color:
+              selectedAccount != null ? selectedAccount!.color : Colors.black,
+        ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(selectedCategory!.icon),
+            Icon(
+              selectedCategory != null
+                  ? selectedCategory!.icon
+                  : Icons.blur_linear,
+              color: selectedCategory != null
+                  ? selectedCategory!.color
+                  : Colors.black,
+            ),
             Icon(Icons.arrow_right_alt, size: 60),
+            if (double.tryParse(valueController.text) != null)
+              BalanceText(
+                double.parse(valueController.text),
+                hasPrefix: false,
+              ),
           ],
         ),
-        Icon(selectedAccount2!.icon),
+        Icon(
+          selectedAccount2 != null ? selectedAccount2!.icon : Icons.blur_linear,
+          color:
+              selectedAccount2 != null ? selectedAccount2!.color : Colors.black,
+        ),
       ],
     );
   }
@@ -489,11 +509,22 @@ class _TransactionFormState extends State<TransactionForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Icon(selectedAccount!.icon),
+        Icon(
+            selectedAccount != null ? selectedAccount!.icon : Icons.blur_linear,
+            color: selectedAccount != null
+                ? selectedAccount!.color
+                : Colors.black),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(selectedCategory!.icon),
+            Icon(
+              selectedCategory != null
+                  ? selectedCategory!.icon
+                  : Icons.blur_linear,
+              color: selectedCategory != null
+                  ? selectedCategory!.color
+                  : Colors.black,
+            ),
             Icon(Icons.arrow_right_alt, size: 60),
           ],
         ),
