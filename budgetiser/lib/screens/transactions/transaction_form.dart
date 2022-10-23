@@ -166,7 +166,9 @@ class _TransactionFormState extends State<TransactionForm> {
                           return 'Please enter a value';
                         }
                         try {
-                          double.parse(value);
+                          if (double.parse(value) < 0 && hasAccount2) {
+                            return 'Only positive values with two accounts';
+                          }
                         } catch (e) {
                           return 'Please enter a valid number';
                         }
@@ -175,194 +177,124 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                     // title input
                     const SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a title';
-                              }
-                              return null;
-                            },
-                            controller: titleController,
-                            // initialValue: widget.initialName,
-                            decoration: const InputDecoration(
-                              labelText: "Title",
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ],
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                      controller: titleController,
+                      // initialValue: widget.initialName,
+                      decoration: const InputDecoration(
+                        labelText: "Title",
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                     // account picker
                     const SizedBox(height: 16),
-                    Container(
-                      // color: Color.fromARGB(255, 67, 67, 67),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        // color: Color.fromARGB(255, 59, 59, 59),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                "Account",
-                                textAlign: TextAlign.left,
-                                style: _themeData
-                                            .inputDecorationTheme.labelStyle !=
-                                        null
-                                    ? _themeData
-                                        .inputDecorationTheme.labelStyle!
-                                        .copyWith(fontSize: 16)
-                                    : const TextStyle(fontSize: 16),
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            child: Text(
+                              "Account",
+                              textAlign: TextAlign.left,
+                              style: _themeData
+                                          .inputDecorationTheme.labelStyle !=
+                                      null
+                                  ? _themeData.inputDecorationTheme.labelStyle!
+                                      .copyWith(fontSize: 16)
+                                  : const TextStyle(fontSize: 16),
                             ),
-                            SelectAccount(
-                                initialAccount: selectedAccount,
-                                callback: setAccount),
-                            InkWell(
-                              customBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              onTap: () {
-                                _onAccount2checkboxClicked();
-                              },
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: hasAccount2,
-                                    onChanged: (bool? newValue) {
-                                      _onAccount2checkboxClicked();
-                                    },
-                                  ),
-                                  const Text("transfer to another account"),
-                                ],
-                              ),
+                          ),
+                          SelectAccount(
+                              initialAccount: selectedAccount,
+                              callback: setAccount),
+                          InkWell(
+                            customBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            if (hasAccount2)
-                              Row(
-                                children: [
-                                  const Text("to "),
-                                  Flexible(
-                                    child: SelectAccount(
-                                      initialAccount: selectedAccount2,
-                                      callback: setAccount2,
-                                      blackListAccountId: selectedAccount?.id,
-                                    ),
+                            onTap: () {
+                              _onAccount2checkboxClicked();
+                            },
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: hasAccount2,
+                                  onChanged: (bool? newValue) {
+                                    _onAccount2checkboxClicked();
+                                  },
+                                ),
+                                const Text("transfer to another account"),
+                              ],
+                            ),
+                          ),
+                          if (hasAccount2)
+                            Row(
+                              children: [
+                                const Text("to "),
+                                Flexible(
+                                  child: SelectAccount(
+                                    initialAccount: selectedAccount2,
+                                    callback: setAccount2,
+                                    blackListAccountId: selectedAccount?.id,
                                   ),
-                                ],
-                              ),
-                            const SizedBox(height: 8),
-                          ],
-                        ),
+                                ),
+                              ],
+                            ),
+                        ],
                       ),
                     ),
                     // category picker
-                    // const SizedBox(height: 20),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        // color: Color.fromARGB(255, 59, 59, 59),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 8, 10, 0),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                "Category",
-                                textAlign: TextAlign.left,
-                                style: _themeData
-                                            .inputDecorationTheme.labelStyle !=
-                                        null
-                                    ? _themeData
-                                        .inputDecorationTheme.labelStyle!
-                                        .copyWith(fontSize: 16)
-                                    : const TextStyle(fontSize: 16),
-                              ),
-                            ),
-                            SelectCategory(
-                              initialCategory: selectedCategory,
-                              callback: (TransactionCategory c) {
-                                setState(() {
-                                  if (mounted) {
-                                    selectedCategory = c;
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // notes input
-                    const SizedBox(height: 8),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        dividerColor: Colors.transparent,
-                      ),
-                      child: ExpansionTile(
-                        title: const Text("Notes"),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 0),
+                      child: Column(
                         children: [
-                          TextFormField(
-                            controller: descriptionController,
-                            maxLines: 5,
-                            decoration: const InputDecoration(
-                              labelText: "Notes",
-                              border: OutlineInputBorder(),
+                          Container(
+                            width: double.infinity,
+                            child: Text(
+                              "Category",
+                              textAlign: TextAlign.left,
+                              style: _themeData
+                                          .inputDecorationTheme.labelStyle !=
+                                      null
+                                  ? _themeData.inputDecorationTheme.labelStyle!
+                                      .copyWith(fontSize: 16)
+                                  : const TextStyle(fontSize: 16),
                             ),
+                          ),
+                          SelectCategory(
+                            initialCategory: selectedCategory,
+                            callback: (TransactionCategory c) {
+                              setState(() {
+                                if (mounted) {
+                                  selectedCategory = c;
+                                }
+                              });
+                            },
                           ),
                         ],
                       ),
                     ),
-                    // const Divider(),
-                    // if (widget.initialSingleTransactionData != null &&
-                    //     widget.initialSingleTransactionData!
-                    //             .recurringTransaction !=
-                    //         null)
-                    //   InkWell(
-                    //     onTap: () {
-                    //       Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => TransactionForm(
-                    //             initialRecurringTransactionData: widget
-                    //                 .initialSingleTransactionData!
-                    //                 .recurringTransaction,
-                    //           ),
-                    //         ),
-                    //       );
-                    //     },
-                    //     child: Text(
-                    //         "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
-                    //   ),
-                    // RecurringForm(
-                    //   scrollController: listScrollController,
-                    //   onRecurringDataChangedCallback: (data) {
-                    //     setState(() {
-                    //       recurringData = data;
-                    //     });
-                    //   },
-                    //   initialRecurringData: recurringData,
-                    // ),
-                    // if (recurringData.isRecurring)
-                    //   Column(children: [
-                    //     const SizedBox(height: 16),
-                    //     ElevatedButton(
-                    //       onPressed: () {
-                    //         DatabaseHelper.instance
-                    //             .createSingleTransactionFromRecurringTransaction(
-                    //                 _currentRecurringTransaction());
-                    //       },
-                    //       child: const Text(
-                    //           "Add Single Transaction from this"),
-                    //     ),
-                    //   ]),
+                    // notes input
+                    const SizedBox(height: 16),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        dividerColor: Colors.transparent,
+                      ),
+                      child: TextFormField(
+                        controller: descriptionController,
+                        maxLines: 5,
+                        decoration: const InputDecoration(
+                          labelText: "Notes",
+                          alignLabelWithHint: true,
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
