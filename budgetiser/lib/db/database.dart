@@ -17,7 +17,6 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 
-part 'sql_part.dart';
 part 'account_part.dart';
 part 'stat_part.dart';
 part 'single_transaction_part.dart';
@@ -25,6 +24,7 @@ part 'recurring_transaction_part.dart';
 part 'category_part.dart';
 part 'savings_part.dart';
 part 'budget_part.dart';
+part 'sql_part.dart';
 part 'group_part.dart';
 
 class DatabaseHelper {
