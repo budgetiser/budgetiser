@@ -21,7 +21,11 @@ class _DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     if (widget.initialDate != null) {
-      dateController.text = widget.initialDate.toString().substring(0, 10);
+      if (isSameDay(widget.initialDate!, DateTime.now())) {
+        dateController.text = "Today";
+      } else {
+        dateController.text = widget.initialDate.toString().substring(0, 10);
+      }
     }
     super.initState();
   }
@@ -53,7 +57,11 @@ class _DatePickerState extends State<DatePicker> {
                   lastDate: DateTime(2100));
               if (date != null) {
                 setState(() {
-                  dateController.text = date.toString().substring(0, 10);
+                  if (isSameDay(date, DateTime.now())) {
+                    dateController.text = "Today";
+                  } else {
+                    dateController.text = date.toString().substring(0, 10);
+                  }
                   widget.onDateChangedCallback(date);
                 });
               }
@@ -62,5 +70,12 @@ class _DatePickerState extends State<DatePicker> {
         ),
       ],
     );
+  }
+
+  /// Returns true if the two dates are on the same day ignoring the time.
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

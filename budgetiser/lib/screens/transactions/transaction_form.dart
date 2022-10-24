@@ -5,10 +5,10 @@ import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
-import 'package:budgetiser/shared/widgets/recurring_form.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
@@ -39,13 +39,10 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  RecurringData recurringData = RecurringData(
-    isRecurring: false,
-    startDate: DateTime.now(),
-  );
   Account? selectedAccount;
   Account? selectedAccount2;
   TransactionCategory? selectedCategory;
+  DateTime transactionDate = DateTime.now();
   bool hasAccount2 = false;
   bool hasInitalData = false;
 
@@ -57,6 +54,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
+
+  RecurringData recurringData = RecurringData(
+    startDate: DateTime.now(),
+    isRecurring: false,
+  );
 
   @override
   void initState() {
@@ -75,10 +77,7 @@ class _TransactionFormState extends State<TransactionForm> {
       descriptionController.text =
           widget.initialSingleTransactionData!.description;
 
-      recurringData = RecurringData(
-        isRecurring: false,
-        startDate: widget.initialSingleTransactionData!.date,
-      );
+      transactionDate = widget.initialSingleTransactionData!.date;
     }
     if (widget.initialRecurringTransactionData != null) {
       hasInitalData = true;
@@ -92,7 +91,8 @@ class _TransactionFormState extends State<TransactionForm> {
       descriptionController.text =
           widget.initialRecurringTransactionData!.description;
 
-      recurringData = RecurringData(
+      RecurringData recurringData = RecurringData(
+        // deprecated
         isRecurring: true,
         startDate: widget.initialRecurringTransactionData!.startDate,
         intervalType: widget.initialRecurringTransactionData!.intervalType,
@@ -152,28 +152,46 @@ class _TransactionFormState extends State<TransactionForm> {
                           ? _visualizeTwoAccountTransaction()
                           : _visualizeOneAccountTransaction(),
                     ),
-                    // value input
-                    TextFormField(
-                      controller: valueController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: "Value",
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a value';
-                        }
-                        try {
-                          if (double.parse(value) < 0 && hasAccount2) {
-                            return 'Only positive values with two accounts';
-                          }
-                        } catch (e) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
+                    // value & date input
+                    Row(
+                      children: [
+                        Flexible(
+                          child: TextFormField(
+                            controller: valueController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            decoration: const InputDecoration(
+                              labelText: "Value",
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a value';
+                              }
+                              try {
+                                if (double.parse(value) < 0 && hasAccount2) {
+                                  return 'Only positive values with two accounts';
+                                }
+                              } catch (e) {
+                                return 'Please enter a valid number';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: DatePicker(
+                            label: "Date",
+                            initialDate: transactionDate,
+                            onDateChangedCallback: (date) {
+                              setState(() {
+                                transactionDate = date;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     // title input
                     const SizedBox(height: 20),
@@ -320,7 +338,8 @@ class _TransactionFormState extends State<TransactionForm> {
                         description:
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
-                          if (recurringData.isRecurring) {
+                          if (false) {
+                            //only single transactions
                             DatabaseHelper.instance
                                 .deleteRecurringTransactionById(
                                     widget.initialRecurringTransactionData!.id);
@@ -353,7 +372,7 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
-                  if (recurringData.isRecurring) {
+                  if (false) {
                     if (widget.initialRecurringTransactionData != null) {
                       DatabaseHelper.instance.updateRecurringTransaction(
                           _currentRecurringTransaction());
@@ -377,7 +396,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   }
                   Navigator.of(context).pop();
                 } else {
-                  if (recurringData.isRecurring) {
+                  if (false) {
                     DatabaseHelper.instance.createRecurringTransaction(
                         _currentRecurringTransaction());
                   } else {
@@ -474,7 +493,7 @@ class _TransactionFormState extends State<TransactionForm> {
       account: selectedAccount!,
       account2: selectedAccount2,
       description: descriptionController.text,
-      date: recurringData.startDate,
+      date: transactionDate,
     );
 
     if (widget.initialSingleTransactionData != null) {
