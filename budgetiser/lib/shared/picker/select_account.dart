@@ -108,27 +108,31 @@ class _SelectAccountState extends State<SelectAccount> {
       });
     }
 
-    return DropdownButton<Account>(
-      isExpanded: true,
-      value: _selectedAccount,
-      elevation: 16,
-      onChanged: (Account? newValue) async {
-        setState(() {
-          widget.callback(newValue!);
-          _selectedAccount = newValue;
-        });
-        if (newValue != null) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setInt(keySelectedAccount, newValue.id);
-        }
-      },
-      items:
-          filteredAccounts?.map<DropdownMenuItem<Account>>((Account account) {
-        return DropdownMenuItem<Account>(
-          value: account,
-          child: AccountTextWithIcon(account),
-        );
-      }).toList(),
+    return ButtonTheme(
+      alignedDropdown: true,
+      child: DropdownButton<Account>(
+        isExpanded: true,
+        value: _selectedAccount,
+        borderRadius: BorderRadius.circular(10),
+        elevation: 1,
+        onChanged: (Account? newValue) async {
+          setState(() {
+            widget.callback(newValue!);
+            _selectedAccount = newValue;
+          });
+          if (newValue != null) {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setInt(keySelectedAccount, newValue.id);
+          }
+        },
+        items:
+            filteredAccounts?.map<DropdownMenuItem<Account>>((Account account) {
+          return DropdownMenuItem<Account>(
+            value: account,
+            child: AccountTextWithIcon(account),
+          );
+        }).toList(),
+      ),
     );
   }
 }

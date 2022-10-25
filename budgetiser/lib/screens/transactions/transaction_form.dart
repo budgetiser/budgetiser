@@ -275,7 +275,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                     // category picker
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 0),
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                       child: Column(
                         children: [
                           Container(
