@@ -50,14 +50,9 @@ class _BalanceTextState extends State<BalanceText> {
         prefix = "- ";
       }
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Text(
-          "${prefix}${widget.balance.abs().toStringAsFixed(2)} $currency",
-          style: textStyle,
-        ),
-      ],
+    return Text(
+      "${prefix}${widget.balance.abs().toStringAsFixed(2)} $currency",
+      style: textStyle,
     );
   }
 }

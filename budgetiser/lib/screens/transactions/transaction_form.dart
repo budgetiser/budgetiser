@@ -145,13 +145,14 @@ class _TransactionFormState extends State<TransactionForm> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    // dead space
+                    // dead space for visualization
                     SizedBox(
-                      height: 200,
+                      height: 180,
                       child: selectedAccount2 != null
                           ? _visualizeTwoAccountTransaction()
                           : _visualizeOneAccountTransaction(),
                     ),
+                    const SizedBox(height: 16),
                     // value & date input
                     Row(
                       children: [
@@ -164,6 +165,10 @@ class _TransactionFormState extends State<TransactionForm> {
                               labelText: "Value",
                               border: OutlineInputBorder(),
                             ),
+                            onChanged: (value) {
+                              // to update the visualization
+                              setState(() {});
+                            },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a value';
@@ -420,66 +425,76 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   Widget _visualizeTwoAccountTransaction() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    if (selectedAccount == null ||
+        selectedAccount2 == null ||
+        selectedCategory == null) {
+      return const SizedBox();
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          selectedAccount != null ? selectedAccount!.icon : Icons.blur_linear,
-          color:
-              selectedAccount != null ? selectedAccount!.color : Colors.black,
+          selectedCategory!.icon,
+          color: selectedCategory!.color,
+          size: 40,
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(
-              selectedCategory != null
-                  ? selectedCategory!.icon
-                  : Icons.blur_linear,
-              color: selectedCategory != null
-                  ? selectedCategory!.color
-                  : Colors.black,
+              selectedAccount!.icon,
+              color: selectedAccount!.color,
+              size: 40,
             ),
             Icon(Icons.arrow_right_alt, size: 60),
-            if (double.tryParse(valueController.text) != null)
-              BalanceText(
-                double.parse(valueController.text),
-                hasPrefix: false,
-              ),
+            Icon(
+              selectedAccount2!.icon,
+              color: selectedAccount2!.color,
+              size: 40,
+            ),
           ],
         ),
-        Icon(
-          selectedAccount2 != null ? selectedAccount2!.icon : Icons.blur_linear,
-          color:
-              selectedAccount2 != null ? selectedAccount2!.color : Colors.black,
-        ),
+        if (double.tryParse(valueController.text) != null)
+          BalanceText(
+            double.parse(valueController.text),
+            hasPrefix: false,
+          ),
       ],
     );
   }
 
   Widget _visualizeOneAccountTransaction() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Icon(
-            selectedAccount != null ? selectedAccount!.icon : Icons.blur_linear,
-            color: selectedAccount != null
-                ? selectedAccount!.color
-                : Colors.black),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              selectedCategory != null
-                  ? selectedCategory!.icon
-                  : Icons.blur_linear,
-              color: selectedCategory != null
-                  ? selectedCategory!.color
-                  : Colors.black,
+    if (selectedAccount == null || selectedCategory == null) {
+      return const SizedBox();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                selectedAccount!.icon,
+                color: selectedAccount!.color,
+                size: 40,
+              ),
+              Icon(Icons.arrow_right_alt, size: 60),
+              Icon(
+                selectedCategory!.icon,
+                color: selectedCategory!.color,
+                size: 40,
+              ),
+            ],
+          ),
+          if (double.tryParse(valueController.text) != null)
+            BalanceText(
+              double.parse(valueController.text),
+              hasPrefix: false,
             ),
-            Icon(Icons.arrow_right_alt, size: 60),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 
