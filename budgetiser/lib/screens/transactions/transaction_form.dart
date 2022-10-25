@@ -485,16 +485,16 @@ class _TransactionFormState extends State<TransactionForm> {
                 size: 40,
               ),
               (double.tryParse(valueController.text) != null &&
-                      double.parse(valueController.text) < 0)
-                  ? Icon(Icons.arrow_right_alt, size: 60)
-                  : Transform.rotate(
+                      double.parse(valueController.text) >= 0)
+                  ? Transform.rotate(
                       // rotate by pi to flip the arrow
                       angle: 3.14,
                       child: Icon(
                         Icons.arrow_right_alt,
                         size: 60,
                       ),
-                    ),
+                    )
+                  : Icon(Icons.arrow_right_alt, size: 60),
               Icon(
                 selectedCategory!.icon,
                 color: selectedCategory!.color,
