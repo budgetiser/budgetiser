@@ -166,6 +166,8 @@ class _TransactionFormState extends State<TransactionForm> {
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) {
+                              // _formKey.currentState!.validate();
+
                               // to update the visualization
                               setState(() {});
                             },
@@ -433,11 +435,6 @@ class _TransactionFormState extends State<TransactionForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          selectedCategory!.icon,
-          color: selectedCategory!.color,
-          size: 40,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -448,13 +445,20 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             Icon(Icons.arrow_right_alt, size: 60),
             Icon(
+              selectedCategory!.icon,
+              color: selectedCategory!.color,
+              size: 40,
+            ),
+            Icon(Icons.arrow_right_alt, size: 60),
+            Icon(
               selectedAccount2!.icon,
               color: selectedAccount2!.color,
               size: 40,
             ),
           ],
         ),
-        if (double.tryParse(valueController.text) != null)
+        if (double.tryParse(valueController.text) != null &&
+            double.parse(valueController.text) >= 0)
           BalanceText(
             double.parse(valueController.text),
             hasPrefix: false,
@@ -480,7 +484,17 @@ class _TransactionFormState extends State<TransactionForm> {
                 color: selectedAccount!.color,
                 size: 40,
               ),
-              Icon(Icons.arrow_right_alt, size: 60),
+              (double.tryParse(valueController.text) != null &&
+                      double.parse(valueController.text) < 0)
+                  ? Icon(Icons.arrow_right_alt, size: 60)
+                  : Transform.rotate(
+                      // rotate by pi to flip the arrow
+                      angle: 3.14,
+                      child: Icon(
+                        Icons.arrow_right_alt,
+                        size: 60,
+                      ),
+                    ),
               Icon(
                 selectedCategory!.icon,
                 color: selectedCategory!.color,
