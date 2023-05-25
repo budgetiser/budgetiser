@@ -5,10 +5,11 @@ import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
-import 'package:budgetiser/shared/widgets/recurring_form.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
 /// a screen that allows the user to add a transaction
@@ -38,13 +39,10 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  RecurringData recurringData = RecurringData(
-    isRecurring: false,
-    startDate: DateTime.now(),
-  );
   Account? selectedAccount;
   Account? selectedAccount2;
   TransactionCategory? selectedCategory;
+  DateTime transactionDate = DateTime.now();
   bool hasAccount2 = false;
   bool hasInitalData = false;
 
@@ -56,6 +54,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
+
+  RecurringData recurringData = RecurringData(
+    startDate: DateTime.now(),
+    isRecurring: false,
+  );
 
   @override
   void initState() {
@@ -74,10 +77,7 @@ class _TransactionFormState extends State<TransactionForm> {
       descriptionController.text =
           widget.initialSingleTransactionData!.description;
 
-      recurringData = RecurringData(
-        isRecurring: false,
-        startDate: widget.initialSingleTransactionData!.date,
-      );
+      transactionDate = widget.initialSingleTransactionData!.date;
     }
     if (widget.initialRecurringTransactionData != null) {
       hasInitalData = true;
@@ -91,7 +91,8 @@ class _TransactionFormState extends State<TransactionForm> {
       descriptionController.text =
           widget.initialRecurringTransactionData!.description;
 
-      recurringData = RecurringData(
+      RecurringData recurringData = RecurringData(
+        // deprecated
         isRecurring: true,
         startDate: widget.initialRecurringTransactionData!.startDate,
         intervalType: widget.initialRecurringTransactionData!.intervalType,
@@ -127,144 +128,35 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData _themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: hasInitalData
             ? const Text("Edit Transaction")
             : const Text("New Transaction"),
       ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          controller: listScrollController,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-                child: Form(
-                  key: _formKey,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+      body: SingleChildScrollView(
+        controller: listScrollController,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // dead space for visualization
+                    SizedBox(
+                      height: 180,
+                      child: selectedAccount2 != null
+                          ? _visualizeTwoAccountTransaction()
+                          : _visualizeOneAccountTransaction(),
                     ),
-                    child: Column(
+                    const SizedBox(height: 16),
+                    // value & date input
+                    Row(
                       children: [
-                        Row(
-                          children: <Widget>[
-                            Flexible(
-                              child: TextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter a title';
-                                  }
-                                  return null;
-                                },
-                                controller: titleController,
-                                // initialValue: widget.initialName,
-                                decoration: const InputDecoration(
-                                  labelText: "Title",
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ExpansionTile(
-                          initiallyExpanded: true,
-                          title: Row(
-                            children: [
-                              const Text(
-                                "Account ",
-                              ),
-                              if (selectedAccount != null)
-                                Icon(
-                                  selectedAccount!.icon,
-                                  color: selectedAccount!.color,
-                                ),
-                              if (selectedAccount2 != null)
-                                Row(
-                                  children: [
-                                    const Text(" to "),
-                                    Icon(
-                                      selectedAccount2!.icon,
-                                      color: selectedAccount2!.color,
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
-                                children: [
-                                  SelectAccount(
-                                      initialAccount: selectedAccount,
-                                      callback: setAccount),
-                                  const SizedBox(height: 8),
-                                  InkWell(
-                                    customBorder: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    onTap: () {
-                                      _onAccount2checkboxClicked();
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Checkbox(
-                                          value: hasAccount2,
-                                          onChanged: (bool? newValue) {
-                                            _onAccount2checkboxClicked();
-                                          },
-                                        ),
-                                        const Text(
-                                            "transfer to another account"),
-                                      ],
-                                    ),
-                                  ),
-                                  if (hasAccount2)
-                                    Row(
-                                      children: [
-                                        const Text("to "),
-                                        Flexible(
-                                          child: SelectAccount(
-                                            initialAccount: selectedAccount2,
-                                            callback: setAccount2,
-                                            blackListAccountId:
-                                                selectedAccount?.id,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  const SizedBox(height: 8),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: SelectCategory(
-                                  initialCategory: selectedCategory,
-                                  callback: (TransactionCategory c) {
-                                    setState(() {
-                                      if (mounted) {
-                                        selectedCategory = c;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
+                        Flexible(
                           child: TextFormField(
                             controller: valueController,
                             keyboardType: const TextInputType.numberWithOptions(
@@ -273,12 +165,20 @@ class _TransactionFormState extends State<TransactionForm> {
                               labelText: "Value",
                               border: OutlineInputBorder(),
                             ),
+                            onChanged: (value) {
+                              // _formKey.currentState!.validate();
+
+                              // to update the visualization
+                              setState(() {});
+                            },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a value';
                               }
                               try {
-                                double.parse(value);
+                                if (double.parse(value) < 0 && hasAccount2) {
+                                  return 'Only positive values with two accounts';
+                                }
                               } catch (e) {
                                 return 'Please enter a valid number';
                               }
@@ -286,72 +186,145 @@ class _TransactionFormState extends State<TransactionForm> {
                             },
                           ),
                         ),
-                        ExpansionTile(
-                          title: const Text("Notes"),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: TextFormField(
-                                controller: descriptionController,
-                                maxLines: 5,
-                                decoration: const InputDecoration(
-                                  labelText: "Notes",
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        if (widget.initialSingleTransactionData != null &&
-                            widget.initialSingleTransactionData!
-                                    .recurringTransaction !=
-                                null)
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TransactionForm(
-                                    initialRecurringTransactionData: widget
-                                        .initialSingleTransactionData!
-                                        .recurringTransaction,
-                                  ),
-                                ),
-                              );
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: DatePicker(
+                            label: "Date",
+                            initialDate: transactionDate,
+                            onDateChangedCallback: (date) {
+                              setState(() {
+                                transactionDate = date;
+                              });
                             },
-                            child: Text(
-                                "From Recurring Transaction '${widget.initialSingleTransactionData!.recurringTransaction!.title}'"),
                           ),
-                        RecurringForm(
-                          scrollController: listScrollController,
-                          onRecurringDataChangedCallback: (data) {
-                            setState(() {
-                              recurringData = data;
-                            });
-                          },
-                          initialRecurringData: recurringData,
                         ),
-                        if (recurringData.isRecurring)
-                          Column(children: [
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                DatabaseHelper.instance
-                                    .createSingleTransactionFromRecurringTransaction(
-                                        _currentRecurringTransaction());
-                              },
-                              child: const Text(
-                                  "Add Single Transaction from this"),
-                            ),
-                          ]),
                       ],
                     ),
-                  ),
+                    // title input
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                      controller: titleController,
+                      // initialValue: widget.initialName,
+                      decoration: const InputDecoration(
+                        labelText: "Title",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    // account picker
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            child: Text(
+                              "Account",
+                              textAlign: TextAlign.left,
+                              style: _themeData
+                                          .inputDecorationTheme.labelStyle !=
+                                      null
+                                  ? _themeData.inputDecorationTheme.labelStyle!
+                                      .copyWith(fontSize: 16)
+                                  : const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          SelectAccount(
+                              initialAccount: selectedAccount,
+                              callback: setAccount),
+                          InkWell(
+                            customBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            onTap: () {
+                              _onAccount2checkboxClicked();
+                            },
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: hasAccount2,
+                                  onChanged: (bool? newValue) {
+                                    _onAccount2checkboxClicked();
+                                  },
+                                ),
+                                const Text("transfer to another account"),
+                              ],
+                            ),
+                          ),
+                          if (hasAccount2)
+                            Row(
+                              children: [
+                                const Text("to "),
+                                Flexible(
+                                  child: SelectAccount(
+                                    initialAccount: selectedAccount2,
+                                    callback: setAccount2,
+                                    blackListAccountId: selectedAccount?.id,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                    // category picker
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            child: Text(
+                              "Category",
+                              textAlign: TextAlign.left,
+                              style: _themeData
+                                          .inputDecorationTheme.labelStyle !=
+                                      null
+                                  ? _themeData.inputDecorationTheme.labelStyle!
+                                      .copyWith(fontSize: 16)
+                                  : const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          SelectCategory(
+                            initialCategory: selectedCategory,
+                            callback: (TransactionCategory c) {
+                              setState(() {
+                                if (mounted) {
+                                  selectedCategory = c;
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    // notes input
+                    const SizedBox(height: 16),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        dividerColor: Colors.transparent,
+                      ),
+                      child: TextFormField(
+                        controller: descriptionController,
+                        maxLines: 5,
+                        decoration: const InputDecoration(
+                          labelText: "Notes",
+                          alignLabelWithHint: true,
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: Row(
@@ -372,7 +345,8 @@ class _TransactionFormState extends State<TransactionForm> {
                         description:
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
-                          if (recurringData.isRecurring) {
+                          if (false) {
+                            //only single transactions
                             DatabaseHelper.instance
                                 .deleteRecurringTransactionById(
                                     widget.initialRecurringTransactionData!.id);
@@ -396,6 +370,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 ? const Icon(Icons.delete_outline)
                 : const Icon(Icons.close),
           ),
+          // between cancel and save button
           const SizedBox(
             width: 5,
           ),
@@ -404,7 +379,7 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
-                  if (recurringData.isRecurring) {
+                  if (false) {
                     if (widget.initialRecurringTransactionData != null) {
                       DatabaseHelper.instance.updateRecurringTransaction(
                           _currentRecurringTransaction());
@@ -428,7 +403,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   }
                   Navigator.of(context).pop();
                 } else {
-                  if (recurringData.isRecurring) {
+                  if (false) {
                     DatabaseHelper.instance.createRecurringTransaction(
                         _currentRecurringTransaction());
                   } else {
@@ -451,6 +426,92 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
+  Widget _visualizeTwoAccountTransaction() {
+    if (selectedAccount == null ||
+        selectedAccount2 == null ||
+        selectedCategory == null) {
+      return const SizedBox();
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(
+              selectedAccount!.icon,
+              color: selectedAccount!.color,
+              size: 40,
+            ),
+            Icon(Icons.arrow_right_alt, size: 60),
+            Icon(
+              selectedCategory!.icon,
+              color: selectedCategory!.color,
+              size: 40,
+            ),
+            Icon(Icons.arrow_right_alt, size: 60),
+            Icon(
+              selectedAccount2!.icon,
+              color: selectedAccount2!.color,
+              size: 40,
+            ),
+          ],
+        ),
+        if (double.tryParse(valueController.text) != null &&
+            double.parse(valueController.text) >= 0)
+          BalanceText(
+            double.parse(valueController.text),
+            hasPrefix: false,
+          ),
+      ],
+    );
+  }
+
+  Widget _visualizeOneAccountTransaction() {
+    if (selectedAccount == null || selectedCategory == null) {
+      return const SizedBox();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                selectedAccount!.icon,
+                color: selectedAccount!.color,
+                size: 40,
+              ),
+              (double.tryParse(valueController.text) != null &&
+                      double.parse(valueController.text) >= 0)
+                  ? Transform.rotate(
+                      // rotate by pi to flip the arrow
+                      angle: 3.14,
+                      child: Icon(
+                        Icons.arrow_right_alt,
+                        size: 60,
+                      ),
+                    )
+                  : Icon(Icons.arrow_right_alt, size: 60),
+              Icon(
+                selectedCategory!.icon,
+                color: selectedCategory!.color,
+                size: 40,
+              ),
+            ],
+          ),
+          if (double.tryParse(valueController.text) != null)
+            BalanceText(
+              double.parse(valueController.text),
+              hasPrefix: false,
+            ),
+        ],
+      ),
+    );
+  }
+
   SingleTransaction _currentSingleTransaction() {
     SingleTransaction transaction;
     transaction = SingleTransaction(
@@ -461,7 +522,7 @@ class _TransactionFormState extends State<TransactionForm> {
       account: selectedAccount!,
       account2: selectedAccount2,
       description: descriptionController.text,
-      date: recurringData.startDate,
+      date: transactionDate,
     );
 
     if (widget.initialSingleTransactionData != null) {

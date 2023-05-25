@@ -2,9 +2,14 @@ import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:flutter/material.dart';
 
 class BalanceText extends StatefulWidget {
-  const BalanceText(this.balance, {Key? key}) : super(key: key);
+  BalanceText(
+    this.balance, {
+    this.hasPrefix = true,
+    Key? key,
+  }) : super(key: key);
 
   final double balance;
+  bool hasPrefix;
 
   @override
   State<BalanceText> createState() => _BalanceTextState();
@@ -28,25 +33,26 @@ class _BalanceTextState extends State<BalanceText> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (widget.balance >= 0) ...[
-          Text(
-            "+ ${widget.balance.toStringAsFixed(2)} $currency",
-            style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                  color: const Color.fromARGB(239, 29, 129, 37),
-                ),
-          ),
-        ] else ...[
-          Text(
-            "- ${(0 - widget.balance).toStringAsFixed(2)} $currency",
-            style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                  color: const Color.fromARGB(255, 174, 74, 99),
-                ),
-          ),
-        ]
-      ],
+    TextStyle textStyle = Theme.of(context).textTheme.bodyText2!;
+    String prefix = "";
+    if (widget.balance >= 0) {
+      textStyle = textStyle.copyWith(
+        color: const Color.fromARGB(239, 29, 129, 37),
+      );
+      if (widget.hasPrefix) {
+        prefix = "+ ";
+      }
+    } else {
+      textStyle = textStyle.copyWith(
+        color: const Color.fromARGB(255, 174, 74, 99),
+      );
+      if (widget.hasPrefix) {
+        prefix = "- ";
+      }
+    }
+    return Text(
+      "${prefix}${widget.balance.abs().toStringAsFixed(2)} $currency",
+      style: textStyle,
     );
   }
 }

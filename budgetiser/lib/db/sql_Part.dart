@@ -1,6 +1,6 @@
 part of "database.dart";
 
-extension DatabaseExtension on DatabaseHelper {
+extension DatabaseExtensionSQL on DatabaseHelper {
   _onCreate(Database db, int version) async {
     if (kDebugMode) {
       print("creating database");

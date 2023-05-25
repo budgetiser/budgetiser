@@ -69,6 +69,7 @@ class MyThemes {
 
     inputDecorationTheme: const InputDecorationTheme(
       errorStyle: TextStyle(fontSize: 18),
+      labelStyle: TextStyle(color: Color.fromARGB(255, 164, 168, 171)),
     ),
 
     textTheme: const TextTheme(
