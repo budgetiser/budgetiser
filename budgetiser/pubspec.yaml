@@ -35,14 +35,14 @@ dependencies:
   flutter_markdown: ^0.6.9+1
   #sqflite:
   provider: ^6.0.2
-  jiffy: ^5.0.0
+  jiffy: ^6.2.1
   shared_preferences: ^2.0.13
   path: ^1.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter_icons:
   android: true

@@ -78,31 +78,42 @@ class Budget {
             Duration untilFirstPointOfTime = Duration(
                 days: intervalAmount! - startDate.day >= 0
                     ? intervalAmount! - startDate.day
-                    : Jiffy(startDate).daysInMonth -
+                    : Jiffy.parseFromDateTime(startDate).daysInMonth -
                         startDate.day +
                         intervalAmount!);
             DateTime a = startDate.add(untilFirstPointOfTime);
-            a = Jiffy(a).add(months: intervalRepetitions! - 1 - i).dateTime;
+            a = Jiffy.parseFromDateTime(a)
+                .add(months: intervalRepetitions! - 1 - i)
+                .dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
-              startInterval =
-                  Jiffy(a).add(months: intervalRepetitions! - 2 - i).dateTime;
+              startInterval = Jiffy.parseFromDateTime(a)
+                  .add(months: intervalRepetitions! - 2 - i)
+                  .dateTime;
             }
             break;
           case IntervalUnit.year:
             Duration untilFirstPointOfTime = Duration(
-              days: (intervalAmount! - Jiffy(startDate).dayOfYear >= 0)
-                  ? intervalAmount! - Jiffy(startDate).dayOfYear
-                  : ((Jiffy(startDate).isLeapYear == true) ? 366 : 365) -
-                      Jiffy(startDate).dayOfYear +
+              days: (intervalAmount! -
+                          Jiffy.parseFromDateTime(startDate).dayOfYear >=
+                      0)
+                  ? intervalAmount! -
+                      Jiffy.parseFromDateTime(startDate).dayOfYear
+                  : ((Jiffy.parseFromDateTime(startDate).isLeapYear == true)
+                          ? 366
+                          : 365) -
+                      Jiffy.parseFromDateTime(startDate).dayOfYear +
                       intervalAmount!,
             );
             DateTime a = startDate.add(untilFirstPointOfTime);
-            a = Jiffy(a).add(years: intervalRepetitions! - 1 - i).dateTime;
+            a = Jiffy.parseFromDateTime(a)
+                .add(years: intervalRepetitions! - 1 - i)
+                .dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
-              startInterval =
-                  Jiffy(a).add(years: intervalRepetitions! - 2 - i).dateTime;
+              startInterval = Jiffy.parseFromDateTime(a)
+                  .add(years: intervalRepetitions! - 2 - i)
+                  .dateTime;
             }
             break;
           default:
@@ -129,12 +140,12 @@ class Budget {
             }
             break;
           case IntervalUnit.month:
-            DateTime a = Jiffy(startDate)
+            DateTime a = Jiffy.parseFromDateTime(startDate)
                 .add(months: intervalAmount! * (intervalRepetitions! - i))
                 .dateTime;
             if (a.compareTo(DateTime.now()) > 0) {
               endInterval = a;
-              startInterval = Jiffy(startDate)
+              startInterval = Jiffy.parseFromDateTime(startDate)
                   .add(months: intervalAmount! * (intervalRepetitions! - i - 1))
                   .dateTime;
             }

@@ -125,7 +125,7 @@ class TransactionItem extends StatelessWidget {
                       children: [
                         Text(
                           "${date.day}.${date.month}.${date.year}",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const SizedBox(width: 10),
                         if (isRecurring)
@@ -143,7 +143,7 @@ class TransactionItem extends StatelessWidget {
                         textWidthBasis: TextWidthBasis.parent,
                         style: Theme.of(context)
                             .textTheme
-                            .bodyText1
+                            .bodyLarge
                             ?.merge(const TextStyle(fontSize: 18)),
                       ),
                     ),

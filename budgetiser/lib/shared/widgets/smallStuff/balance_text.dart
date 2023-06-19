@@ -33,7 +33,7 @@ class _BalanceTextState extends State<BalanceText> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.bodyText2!;
+    TextStyle textStyle = Theme.of(context).textTheme.bodyMedium!;
     String prefix = "";
     if (widget.balance >= 0) {
       textStyle = textStyle.copyWith(

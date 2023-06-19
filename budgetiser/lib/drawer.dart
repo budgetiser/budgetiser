@@ -32,7 +32,7 @@ Widget createDrawer(BuildContext context) {
                       ),
                       Text(
                         " Budgetiser",
-                        style: Theme.of(context).textTheme.headline1,
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
                   ),
@@ -57,7 +57,7 @@ Widget createDrawer(BuildContext context) {
         ListTile(
           title: Text(
             'Exit',
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.redAccent,
                 ),
           ),
@@ -80,7 +80,7 @@ Widget singleDrawerItem(
   return ListTile(
     title: Text(
       title,
-      style: Theme.of(context).textTheme.subtitle1,
+      style: Theme.of(context).textTheme.titleMedium,
     ),
     leading: Icon(icon),
     onTap: () {

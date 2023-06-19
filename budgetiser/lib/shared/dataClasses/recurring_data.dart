@@ -56,24 +56,30 @@ class RecurringData {
           Duration untilFirstPointOfTime = Duration(
               days: intervalAmount! - startDate.day >= 0
                   ? intervalAmount! - startDate.day
-                  : Jiffy(startDate).daysInMonth -
+                  : Jiffy.parseFromDateTime(startDate).daysInMonth -
                       startDate.day +
                       intervalAmount!);
           DateTime enddate = startDate.add(untilFirstPointOfTime);
-          calculatedEndDate =
-              Jiffy(enddate).add(months: repetitionAmount! - 1).dateTime;
+          calculatedEndDate = Jiffy.parseFromDateTime(enddate)
+              .add(months: repetitionAmount! - 1)
+              .dateTime;
           break;
         case IntervalUnit.year:
           Duration untilFirstPointOfTime = Duration(
-            days: (intervalAmount! - Jiffy(startDate).dayOfYear >= 0)
-                ? intervalAmount! - Jiffy(startDate).dayOfYear
-                : ((Jiffy(startDate).isLeapYear == true) ? 366 : 365) -
-                    Jiffy(startDate).dayOfYear +
+            days: (intervalAmount! -
+                        Jiffy.parseFromDateTime(startDate).dayOfYear >=
+                    0)
+                ? intervalAmount! - Jiffy.parseFromDateTime(startDate).dayOfYear
+                : ((Jiffy.parseFromDateTime(startDate).isLeapYear == true)
+                        ? 366
+                        : 365) -
+                    Jiffy.parseFromDateTime(startDate).dayOfYear +
                     intervalAmount!,
           );
           DateTime enddate = startDate.add(untilFirstPointOfTime);
-          calculatedEndDate =
-              Jiffy(enddate).add(years: repetitionAmount! - 1).dateTime;
+          calculatedEndDate = Jiffy.parseFromDateTime(enddate)
+              .add(years: repetitionAmount! - 1)
+              .dateTime;
           break;
         default:
           throw Exception('Error in _calculateEndDate: Unknown interval unit');
@@ -89,7 +95,7 @@ class RecurringData {
               .add(Duration(days: intervalAmount! * repetitionAmount! * 7));
           break;
         case IntervalUnit.month:
-          calculatedEndDate = Jiffy(startDate)
+          calculatedEndDate = Jiffy.parseFromDateTime(startDate)
               .add(months: intervalAmount! * repetitionAmount!)
               .dateTime;
           break;

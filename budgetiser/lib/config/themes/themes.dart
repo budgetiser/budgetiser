@@ -6,30 +6,50 @@ class MyThemes {
   static const Color LIGHT_TERTIARY = Color.fromARGB(255, 27, 38, 44);
 
   static final lightTheme = ThemeData(
-    backgroundColor: Colors.white,
-    colorScheme: const ColorScheme.light(
-      primary: LIGHT_PRIMARY,
-      secondary: LIGHT_SECONDARY,
-      tertiary: LIGHT_TERTIARY,
-    ),
     scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
     textTheme: const TextTheme(
-      caption: TextStyle(
+      bodySmall: TextStyle(
           color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
-      headline1: TextStyle(
+      displayLarge: TextStyle(
         fontSize: 40,
         fontWeight: FontWeight.bold,
       ),
-      headline2: TextStyle(fontSize: 30), // for headline inside a screen
-      bodyText2: TextStyle(fontSize: 20), // normal text
-      subtitle1: TextStyle(fontSize: 20), // for the drawer items
+      displayMedium: TextStyle(fontSize: 30), // for headline inside a screen
+      bodyMedium: TextStyle(fontSize: 20), // normal text
+      titleMedium: TextStyle(fontSize: 20), // for the drawer items
     ),
     primaryColor: const Color.fromRGBO(0, 0, 0, 1),
     dividerTheme: const DividerThemeData(
       thickness: 1.5,
       color: Color.fromARGB(59, 0, 0, 0),
-    ),
-    toggleableActiveColor: LIGHT_PRIMARY,
+    ), checkboxTheme: CheckboxThemeData(
+ fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
+ return null;
+ }),
+ ), radioTheme: RadioThemeData(
+ fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
+ return null;
+ }),
+ ), switchTheme: SwitchThemeData(
+ thumbColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
+ return null;
+ }),
+ trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
+ return null;
+ }),
+ ), colorScheme: const ColorScheme.light(
+      primary: LIGHT_PRIMARY,
+      secondary: LIGHT_SECONDARY,
+      tertiary: LIGHT_TERTIARY,
+    ).copyWith(background: Colors.white),
   );
 
   static const Color DARK_PRIMARY = Color.fromARGB(255, 50, 130, 184);
@@ -73,19 +93,19 @@ class MyThemes {
     ),
 
     textTheme: const TextTheme(
-      caption: TextStyle(
+      bodySmall: TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
           fontSize: 25,
           fontWeight: FontWeight.bold),
-      headline1: TextStyle(
+      displayLarge: TextStyle(
           // for the drawer "budgetiser" title
           fontSize: 40,
           fontWeight: FontWeight.bold,
           color: Color.fromARGB(255, 255, 255, 255)),
-      headline2: TextStyle(fontSize: 30), // for headline inside a screen
-      bodyText2: TextStyle(fontSize: 20), // normal text
-      subtitle1: TextStyle(fontSize: 20), // for the drawer items
-      bodyText1: TextStyle(fontSize: 20, color: Colors.grey), // ??
+      displayMedium: TextStyle(fontSize: 30), // for headline inside a screen
+      bodyMedium: TextStyle(fontSize: 20), // normal text
+      titleMedium: TextStyle(fontSize: 20), // for the drawer items
+      bodyLarge: TextStyle(fontSize: 20, color: Colors.grey), // ??
     ),
 
     dividerTheme: const DividerThemeData(
@@ -93,11 +113,31 @@ class MyThemes {
       color: Color.fromARGB(50, 255, 255, 255),
     ),
 
-    //Checkboxes, Radios, ...
-    toggleableActiveColor: DARK_CLICKABLE,
-
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: DARK_PRIMARY,
-    ),
+    ), checkboxTheme: CheckboxThemeData(
+ fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
+ return null;
+ }),
+ ), radioTheme: RadioThemeData(
+ fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
+ return null;
+ }),
+ ), switchTheme: SwitchThemeData(
+ thumbColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
+ return null;
+ }),
+ trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+ if (states.contains(MaterialState.disabled)) { return null; }
+ if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
+ return null;
+ }),
+ ),
   );
 }
