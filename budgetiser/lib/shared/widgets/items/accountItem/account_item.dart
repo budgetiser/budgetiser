@@ -87,7 +87,7 @@ class AccountItem extends StatelessWidget {
                     Flexible(
                       child: Text(
                         accountData.description,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.bodyLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

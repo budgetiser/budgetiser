@@ -64,7 +64,7 @@ class CategoryItem extends StatelessWidget {
                                       categoryData.name,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2
+                                          .bodyMedium
                                           ?.copyWith(
                                             color: categoryData.color,
                                           ),

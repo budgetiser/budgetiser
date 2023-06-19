@@ -24,7 +24,7 @@ class SimpleTextStat extends StatelessWidget {
         children: [
           Text(
             'Simple Stats for all Transactions',
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           FutureBuilder(
             future: DatabaseHelper.instance.getSpending(account!, category!),
@@ -35,7 +35,7 @@ class SimpleTextStat extends StatelessWidget {
                   children: [
                     Text(
                       'Balance :',
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     BalanceText(snapshot.data as double),
                   ],
@@ -59,11 +59,11 @@ class SimpleTextStat extends StatelessWidget {
                   children: [
                     Text(
                       'Amount of Transactions:',
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text(
                       '${snapshot.data}',
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ],
                 );
