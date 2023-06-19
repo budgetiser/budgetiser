@@ -43,5 +43,5 @@ class TransactionCategory {
   }
 
   @override
-  int get hashCode => hashValues(id, name, icon, color, description, isHidden);
+  int get hashCode => Object.hash(id, name, icon, color, description, isHidden);
 }

@@ -15,7 +15,6 @@ class AccountItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return Column(
       children: [
         InkWell(
@@ -54,7 +53,7 @@ class AccountItem extends StatelessWidget {
                                       )),
                             );
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.arrow_upward,
                             size: 35,
                             color: Colors.green,
@@ -71,7 +70,7 @@ class AccountItem extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.arrow_downward,
                             size: 35,
                             color: Colors.red,

@@ -83,7 +83,7 @@ class _AccountFormState extends State<AccountForm> {
                                       });
                                     },
                                     initialIcon: _icon,
-                                    color: _color ?? Colors.blue,
+                                    color: _color,
                                   )),
                               Flexible(
                                 child: TextFormField(
@@ -216,7 +216,7 @@ class _AccountFormState extends State<AccountForm> {
               Account a = Account(
                   name: nameController.text,
                   icon: _icon ?? Icons.blur_on,
-                  color: _color ?? Colors.blue,
+                  color: _color,
                   balance: double.parse(balanceController.text),
                   description: descriptionController.text,
                   id: 0);

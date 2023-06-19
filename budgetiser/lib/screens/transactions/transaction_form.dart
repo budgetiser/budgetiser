@@ -90,18 +90,6 @@ class _TransactionFormState extends State<TransactionForm> {
       selectedAccount2 = widget.initialRecurringTransactionData!.account2;
       descriptionController.text =
           widget.initialRecurringTransactionData!.description;
-
-      RecurringData recurringData = RecurringData(
-        // deprecated
-        isRecurring: true,
-        startDate: widget.initialRecurringTransactionData!.startDate,
-        intervalType: widget.initialRecurringTransactionData!.intervalType,
-        intervalUnit: (widget.initialRecurringTransactionData)!.intervalUnit,
-        intervalAmount: widget.initialRecurringTransactionData!.intervalAmount,
-        endDate: widget.initialRecurringTransactionData!.endDate,
-        repetitionAmount:
-            widget.initialRecurringTransactionData!.repetitionAmount,
-      );
     }
     if (widget.initialSelectedAccount != null) {
       selectedAccount = widget.initialSelectedAccount;
@@ -128,7 +116,7 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _themeData = Theme.of(context);
+    ThemeData themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: hasInitalData
@@ -222,15 +210,15 @@ class _TransactionFormState extends State<TransactionForm> {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: double.infinity,
                             child: Text(
                               "Account",
                               textAlign: TextAlign.left,
-                              style: _themeData
+                              style: themeData
                                           .inputDecorationTheme.labelStyle !=
                                       null
-                                  ? _themeData.inputDecorationTheme.labelStyle!
+                                  ? themeData.inputDecorationTheme.labelStyle!
                                       .copyWith(fontSize: 16)
                                   : const TextStyle(fontSize: 16),
                             ),
@@ -278,15 +266,15 @@ class _TransactionFormState extends State<TransactionForm> {
                       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: double.infinity,
                             child: Text(
                               "Category",
                               textAlign: TextAlign.left,
-                              style: _themeData
+                              style: themeData
                                           .inputDecorationTheme.labelStyle !=
                                       null
-                                  ? _themeData.inputDecorationTheme.labelStyle!
+                                  ? themeData.inputDecorationTheme.labelStyle!
                                       .copyWith(fontSize: 16)
                                   : const TextStyle(fontSize: 16),
                             ),
@@ -345,15 +333,8 @@ class _TransactionFormState extends State<TransactionForm> {
                         description:
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
-                          if (false) {
-                            //only single transactions
-                            DatabaseHelper.instance
-                                .deleteRecurringTransactionById(
-                                    widget.initialRecurringTransactionData!.id);
-                          } else {
-                            DatabaseHelper.instance.deleteSingleTransactionById(
-                                widget.initialSingleTransactionData!.id);
-                          }
+                          DatabaseHelper.instance.deleteSingleTransactionById(
+                              widget.initialSingleTransactionData!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },
@@ -379,37 +360,20 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
-                  if (false) {
-                    if (widget.initialRecurringTransactionData != null) {
-                      DatabaseHelper.instance.updateRecurringTransaction(
-                          _currentRecurringTransaction());
-                    } else {
-                      DatabaseHelper.instance.deleteSingleTransactionById(
-                          widget.initialSingleTransactionData!.id);
-                      DatabaseHelper.instance.createRecurringTransaction(
-                          _currentRecurringTransaction());
-                    }
+                  // isRecurring is false
+                  if (widget.initialSingleTransactionData != null) {
+                    DatabaseHelper.instance
+                        .updateSingleTransaction(_currentSingleTransaction());
                   } else {
-                    // isRecurring is false
-                    if (widget.initialSingleTransactionData != null) {
-                      DatabaseHelper.instance
-                          .updateSingleTransaction(_currentSingleTransaction());
-                    } else {
-                      DatabaseHelper.instance.deleteRecurringTransactionById(
-                          widget.initialRecurringTransactionData!.id);
-                      DatabaseHelper.instance
-                          .createSingleTransaction(_currentSingleTransaction());
-                    }
-                  }
-                  Navigator.of(context).pop();
-                } else {
-                  if (false) {
-                    DatabaseHelper.instance.createRecurringTransaction(
-                        _currentRecurringTransaction());
-                  } else {
+                    DatabaseHelper.instance.deleteRecurringTransactionById(
+                        widget.initialRecurringTransactionData!.id);
                     DatabaseHelper.instance
                         .createSingleTransaction(_currentSingleTransaction());
                   }
+                  Navigator.of(context).pop();
+                } else {
+                  DatabaseHelper.instance
+                      .createSingleTransaction(_currentSingleTransaction());
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const TransactionsScreen(),
@@ -443,13 +407,13 @@ class _TransactionFormState extends State<TransactionForm> {
               color: selectedAccount!.color,
               size: 40,
             ),
-            Icon(Icons.arrow_right_alt, size: 60),
+            const Icon(Icons.arrow_right_alt, size: 60),
             Icon(
               selectedCategory!.icon,
               color: selectedCategory!.color,
               size: 40,
             ),
-            Icon(Icons.arrow_right_alt, size: 60),
+            const Icon(Icons.arrow_right_alt, size: 60),
             Icon(
               selectedAccount2!.icon,
               color: selectedAccount2!.color,
@@ -489,12 +453,12 @@ class _TransactionFormState extends State<TransactionForm> {
                   ? Transform.rotate(
                       // rotate by pi to flip the arrow
                       angle: 3.14,
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_right_alt,
                         size: 60,
                       ),
                     )
-                  : Icon(Icons.arrow_right_alt, size: 60),
+                  : const Icon(Icons.arrow_right_alt, size: 60),
               Icon(
                 selectedCategory!.icon,
                 color: selectedCategory!.color,
@@ -523,34 +487,6 @@ class _TransactionFormState extends State<TransactionForm> {
       account2: selectedAccount2,
       description: descriptionController.text,
       date: transactionDate,
-    );
-
-    if (widget.initialSingleTransactionData != null) {
-      transaction.id = widget.initialSingleTransactionData!.id;
-    }
-    if (widget.initialRecurringTransactionData != null) {
-      transaction.id = widget.initialRecurringTransactionData!.id;
-    }
-
-    return transaction;
-  }
-
-  RecurringTransaction _currentRecurringTransaction() {
-    RecurringTransaction transaction;
-    transaction = RecurringTransaction(
-      id: 0,
-      title: titleController.text,
-      value: double.parse(valueController.text),
-      category: selectedCategory!,
-      account: selectedAccount!,
-      account2: selectedAccount2,
-      description: descriptionController.text,
-      startDate: recurringData.startDate,
-      endDate: recurringData.endDate!,
-      intervalType: recurringData.intervalType!,
-      intervalAmount: recurringData.intervalAmount!,
-      intervalUnit: recurringData.intervalUnit!,
-      repetitionAmount: recurringData.repetitionAmount!,
     );
 
     if (widget.initialSingleTransactionData != null) {

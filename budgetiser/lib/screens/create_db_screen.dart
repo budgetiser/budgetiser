@@ -147,13 +147,13 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
               const SizedBox(
                 height: 130,
               ),
-              Padding(
-                padding: const EdgeInsets.only(
+              const Padding(
+                padding: EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Icon(Icons.info),
                     SizedBox(
                       width: 5,

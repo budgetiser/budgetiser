@@ -22,30 +22,54 @@ class MyThemes {
     dividerTheme: const DividerThemeData(
       thickness: 1.5,
       color: Color.fromARGB(59, 0, 0, 0),
-    ), checkboxTheme: CheckboxThemeData(
- fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
- return null;
- }),
- ), radioTheme: RadioThemeData(
- fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
- return null;
- }),
- ), switchTheme: SwitchThemeData(
- thumbColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
- return null;
- }),
- trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return LIGHT_PRIMARY; }
- return null;
- }),
- ), colorScheme: const ColorScheme.light(
+    ),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return LIGHT_PRIMARY;
+        }
+        return null;
+      }),
+    ),
+    radioTheme: RadioThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return LIGHT_PRIMARY;
+        }
+        return null;
+      }),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return LIGHT_PRIMARY;
+        }
+        return null;
+      }),
+      trackColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return LIGHT_PRIMARY;
+        }
+        return null;
+      }),
+    ),
+    colorScheme: const ColorScheme.light(
       primary: LIGHT_PRIMARY,
       secondary: LIGHT_SECONDARY,
       tertiary: LIGHT_TERTIARY,
@@ -83,7 +107,7 @@ class MyThemes {
       ),
     ),
 
-    drawerTheme: DrawerThemeData(
+    drawerTheme: const DrawerThemeData(
       backgroundColor: DARK_BACKGROUND,
     ),
 
@@ -115,29 +139,52 @@ class MyThemes {
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: DARK_PRIMARY,
-    ), checkboxTheme: CheckboxThemeData(
- fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
- return null;
- }),
- ), radioTheme: RadioThemeData(
- fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
- return null;
- }),
- ), switchTheme: SwitchThemeData(
- thumbColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
- return null;
- }),
- trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
- if (states.contains(MaterialState.disabled)) { return null; }
- if (states.contains(MaterialState.selected)) { return DARK_CLICKABLE; }
- return null;
- }),
- ),
+    ),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return DARK_CLICKABLE;
+        }
+        return null;
+      }),
+    ),
+    radioTheme: RadioThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return DARK_CLICKABLE;
+        }
+        return null;
+      }),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return DARK_CLICKABLE;
+        }
+        return null;
+      }),
+      trackColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return DARK_CLICKABLE;
+        }
+        return null;
+      }),
+    ),
   );
 }

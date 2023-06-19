@@ -80,7 +80,7 @@ class _SavingFormState extends State<SavingForm> {
                             });
                           },
                           initialIcon: _icon,
-                          color: _color ?? Colors.blue,
+                          color: _color,
                         ),
                       ),
                       Flexible(
@@ -249,7 +249,7 @@ class _SavingFormState extends State<SavingForm> {
                 Savings a = Savings(
                   name: nameController.text,
                   icon: _icon ?? Icons.blur_on,
-                  color: _color ?? Colors.blue,
+                  color: _color,
                   description: descriptionController.text,
                   id: 0,
                   goal: double.parse(goalController.text),
