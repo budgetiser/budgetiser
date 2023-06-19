@@ -57,7 +57,7 @@ class AccountItem extends StatelessWidget {
                           child: Icon(
                             Icons.arrow_upward,
                             size: 35,
-                            color: themeData.hintColor,
+                            color: Colors.green,
                           ),
                         ),
                         InkWell(
@@ -74,7 +74,7 @@ class AccountItem extends StatelessWidget {
                           child: Icon(
                             Icons.arrow_downward,
                             size: 35,
-                            color: themeData.hintColor,
+                            color: Colors.red,
                           ),
                         ),
                       ],
