@@ -27,7 +27,9 @@ jobs:
         # import keystore from secrets
         echo $KEYSTORE_BASE64 | base64 -di > $RUNNER_TEMP/my_production.keystore
     - name: Restore packages
-      run: flutter pub get
+      run: |
+        cd budgetiser
+        flutter pub get
     - name: Build Android App Bundle
       run: flutter build appbundle --release
     - name: Sign Android App Bundle
