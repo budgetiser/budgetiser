@@ -48,8 +48,7 @@ android {
 
     buildTypes {
         release {
-            // signingConfig null
-            signingConfig signingConfigs.debug
+            signingConfig null
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'),
                     'proguard-rules.pro'
