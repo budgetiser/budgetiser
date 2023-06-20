@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -133,6 +134,79 @@ class DatabaseHelper {
     final String path = '${await getDatabasesPath()}/$databaseName';
     final file = File("/storage/emulated/0/Download/$databaseName");
     file.copy(path);
+  }
+
+  exportAsJson() async {
+    String fullJSONstring = "";
+
+    allAccountsStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
+      fullJSONstring += '{"Accounts": ${jsonList.toString()},';
+    });
+    pushGetAllAccountsStream();
+    await allAccountsStream.isEmpty;
+
+    allBudgetsStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toMap())).toList();
+      fullJSONstring += '"Budgets": ${jsonList.toString()},';
+    });
+    pushGetAllBudgetsStream();
+    await allBudgetsStream.first;
+
+    allCategoryStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
+      fullJSONstring += '"Category": ${jsonList.toString()},';
+    });
+    pushGetAllCategoriesStream();
+    await allCategoryStream.first;
+
+    allGroupsStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toMap())).toList();
+      fullJSONstring += '"Groups": ${jsonList.toString()},';
+    });
+    pushGetAllGroupsStream();
+    await allGroupsStream.first;
+
+    allRecurringTransactionStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toMap())).toList();
+      fullJSONstring += '"RecurringTransaction": ${jsonList.toString()},';
+    });
+    pushGetAllRecurringTransactionsStream();
+    await allRecurringTransactionStream.first;
+
+    allSavingsStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toMap())).toList();
+      fullJSONstring += '"Savings": ${jsonList.toString()},';
+    });
+    pushGetAllSavingsStream();
+    await allSavingsStream.first;
+
+    allTransactionStream.listen((event) {
+      List<String> jsonList =
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
+      fullJSONstring += '"transactions": ${jsonList.toString()}}';
+    });
+    pushGetAllTransactionsStream();
+    await allTransactionStream.first;
+
+    saveJsonToFile(fullJSONstring);
+  }
+
+  void saveJsonToFile(String jsonString) async {
+    // final directory = await getApplicationDocumentsDirectory();
+    // final file = File('${directory.path}/players.json');
+    final file = File('/storage/emulated/0/Download/budgetiser.json');
+    await file.writeAsString("", mode: FileMode.write);
+    await file.writeAsString(jsonString, mode: FileMode.append);
+    if (kDebugMode) {
+      print("saved");
+    }
   }
 
   /*

@@ -24,4 +24,6 @@ class Group {
         'color': color.value,
         'description': description,
       };
+
+  Map<String, dynamic> toJsonMap() => toMap().putIfAbsent("id", () => id);
 }

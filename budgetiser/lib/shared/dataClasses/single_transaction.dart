@@ -32,4 +32,12 @@ class SingleTransaction {
         'category_id': category.id,
         'date': date.toString().substring(0, 19)
       };
+
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    m['account'] = account.id;
+    m['account2'] = account2 != null ? account2!.id : null;
+    return m;
+  }
 }

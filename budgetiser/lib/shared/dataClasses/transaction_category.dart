@@ -25,6 +25,12 @@ class TransactionCategory {
         'is_hidden': isHidden,
       };
 
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    return m;
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {

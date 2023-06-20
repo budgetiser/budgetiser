@@ -25,6 +25,12 @@ class Account {
         'description': description,
       };
 
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    return m;
+  }
+
   @override
   String toString() {
     return 'Account{id: $id, name: $name, icon: $icon, color: $color, balance: $balance, description: $description}';

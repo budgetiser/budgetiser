@@ -45,4 +45,6 @@ class RecurringTransaction {
         'interval_amount': intervalAmount,
         'repetition_amount': repetitionAmount,
       };
+
+  Map<String, dynamic> toJsonMap() => toMap().putIfAbsent("id", () => id);
 }
