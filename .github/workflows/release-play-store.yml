@@ -34,17 +34,17 @@ jobs:
       run: |
         flutter build appbundle --release --no-tree-shake-icons
     - name: Sign Android App Bundle
-      run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar budgetiser/build/app/outputs/bundle/release/app-release-signed.aab budgetiser/build/app/outputs/bundle/release/app-release.aab upload
+      run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar build/app/outputs/bundle/release/app-release-signed.aab build/app/outputs/bundle/release/app-release.aab upload
     - name: Publish Android Artifacts
       uses: actions/upload-artifact@v1
       with:
         name: release-aab
-        path: budgetiser/build/app/outputs/bundle/release/app-release.aab
+        path: build/app/outputs/bundle/release/app-release.aab
     - name: Publish Android Artifacts
       uses: actions/upload-artifact@v1
       with:
         name: release-aab-signed
-        path: budgetiser/build/app/outputs/bundle/release/app-release-signed.aab
+        path: build/app/outputs/bundle/release/app-release-signed.aab
 
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
@@ -61,5 +61,5 @@ jobs:
         SUPPLY_JSON_KEY_DATA: ${{secrets.GOOGLE_SERVICE_ACCOUNT_KEY}}
       run: |
         bundle exec fastlane run supply \
-        aab:budgetiser/build/app/outputs/bundle/release/app-release-signed.aab \
+        aab:build/app/outputs/bundle/release/app-release-signed.aab \
         track:internal
