@@ -135,8 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       description:
                           "Are you sure? This will potentially override existing budgetiser.json file in the Download folder!", //TODO:
                       onSubmitCallback: () async {
-                        var json = await DatabaseHelper.instance.exportAsJson();
-                        print(json);
+                        await DatabaseHelper.instance.exportAsJson();
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
