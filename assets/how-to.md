@@ -2,15 +2,11 @@
 
 Click on the top left Corner to see the Navigation pane for every key Feature:
 
-![Alt text](images/drawer.png)
-
 ## Transaction
 
 ## Account
 
 Example Account-overview:
-
-![](images/accounts.png)
 
 You can directly see your different accounts with the respective balance. With the two arrows you can make a new transaction for the account.
 
