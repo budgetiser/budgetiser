@@ -137,65 +137,57 @@ class DatabaseHelper {
   }
 
   exportAsJson() async {
-    String fullJSONstring = "";
+    var fullJSON = {};
 
     allAccountsStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '{"Accounts": ${jsonList.toString()},';
+      fullJSON["Accounts"] =
+          event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllAccountsStream();
     await allAccountsStream.isEmpty;
 
     allBudgetsStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '"Budgets": ${jsonList.toString()},';
+      fullJSON["Budgets"] =
+          event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllBudgetsStream();
     await allBudgetsStream.first;
 
     allCategoryStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '"Category": ${jsonList.toString()},';
+      fullJSON["Categories"] =
+          event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllCategoriesStream();
     await allCategoryStream.first;
 
     allGroupsStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '"Groups": ${jsonList.toString()},';
+      fullJSON["Groups"] = event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllGroupsStream();
     await allGroupsStream.first;
 
     allRecurringTransactionStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '"RecurringTransaction": ${jsonList.toString()},';
+      fullJSON["RecurringTransactions"] =
+          event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllRecurringTransactionsStream();
     await allRecurringTransactionStream.first;
 
     allSavingsStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '"Savings": ${jsonList.toString()},';
+      fullJSON["Savings"] =
+          event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllSavingsStream();
     await allSavingsStream.first;
 
     allTransactionStream.listen((event) {
-      List<String> jsonList =
-          event.map((element) => jsonEncode(element.toJsonMap())).toList();
-      fullJSONstring += '"transactions": ${jsonList.toString()}}';
+      fullJSON["Transactions"] =
+          event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllTransactionsStream();
     await allTransactionStream.first;
 
-    saveJsonToFile(fullJSONstring);
+    saveJsonToFile(jsonEncode(fullJSON));
   }
 
   void saveJsonToFile(String jsonString) async {
