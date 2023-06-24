@@ -91,7 +91,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: IconPicker(
-                          color: _color ?? Colors.blue,
+                          color: _color,
                           initialIcon: _icon ?? Icons.blur_on,
                           onIconChangedCallback: (icondata) {
                             setState(() {
@@ -237,7 +237,7 @@ class _BudgetFormState extends State<BudgetForm> {
                 Budget a = Budget(
                   name: nameController.text,
                   icon: _icon ?? Icons.blur_on,
-                  color: _color ?? Colors.blue,
+                  color: _color,
                   description: descriptionController.text,
                   id: 0,
                   limit: double.parse(limitController.text),

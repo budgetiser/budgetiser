@@ -2,14 +2,14 @@ import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:flutter/material.dart';
 
 class BalanceText extends StatefulWidget {
-  BalanceText(
+  const BalanceText(
     this.balance, {
     this.hasPrefix = true,
     Key? key,
   }) : super(key: key);
 
   final double balance;
-  bool hasPrefix;
+  final bool hasPrefix;
 
   @override
   State<BalanceText> createState() => _BalanceTextState();
@@ -51,7 +51,7 @@ class _BalanceTextState extends State<BalanceText> {
       }
     }
     return Text(
-      "${prefix}${widget.balance.abs().toStringAsFixed(2)} $currency",
+      "$prefix${widget.balance.abs().toStringAsFixed(2)} $currency",
       style: textStyle,
     );
   }

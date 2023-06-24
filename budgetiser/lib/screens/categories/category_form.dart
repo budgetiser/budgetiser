@@ -74,7 +74,7 @@ class _CategoryFormState extends State<CategoryForm> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: IconPicker(
-                                  color: _color ?? Colors.blue,
+                                  color: _color,
                                   initialIcon: _icon,
                                   onIconChangedCallback: (icondata) {
                                     setState(() {
@@ -173,7 +173,7 @@ class _CategoryFormState extends State<CategoryForm> {
                 TransactionCategory a = TransactionCategory(
                     name: nameController.text,
                     icon: _icon ?? Icons.blur_on,
-                    color: _color ?? Colors.blue,
+                    color: _color,
                     description: descriptionController.text,
                     isHidden: false,
                     id: 0);

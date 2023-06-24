@@ -25,7 +25,7 @@ Widget createDrawer(BuildContext context) {
                   left: 16.0,
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         LogoIcon.budgetiserIcon,
                         color: Colors.white,
                         size: 40,

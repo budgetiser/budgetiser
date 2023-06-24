@@ -156,9 +156,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   builder: (BuildContext context) {
                     return SimpleDialog(
                       elevation: 0,
-                      title: Row(
+                      title: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text('Select Currency'),
                         ],
                       ),
