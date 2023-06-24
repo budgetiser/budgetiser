@@ -54,9 +54,13 @@ class Budget {
         'end_date': isRecurring ? endDate.toString().substring(0, 10) : null,
       };
 
-  Map<String, dynamic> toJsonMap() => toMap().putIfAbsent("id", () => id);
-  // .putIfAbsent("transactionCategories",
-  // () => transactionCategories.map((e) => e.id));
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    m['transactionCategories'] =
+        transactionCategories.map((element) => element.id).toList();
+    return m;
+  }
 
   Map<String, DateTime> calculateCurrentInterval() {
     if (!isRecurring) return {};

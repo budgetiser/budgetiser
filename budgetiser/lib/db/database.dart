@@ -149,7 +149,7 @@ class DatabaseHelper {
 
     allBudgetsStream.listen((event) {
       List<String> jsonList =
-          event.map((element) => jsonEncode(element.toMap())).toList();
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
       fullJSONstring += '"Budgets": ${jsonList.toString()},';
     });
     pushGetAllBudgetsStream();
@@ -165,7 +165,7 @@ class DatabaseHelper {
 
     allGroupsStream.listen((event) {
       List<String> jsonList =
-          event.map((element) => jsonEncode(element.toMap())).toList();
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
       fullJSONstring += '"Groups": ${jsonList.toString()},';
     });
     pushGetAllGroupsStream();
@@ -173,7 +173,7 @@ class DatabaseHelper {
 
     allRecurringTransactionStream.listen((event) {
       List<String> jsonList =
-          event.map((element) => jsonEncode(element.toMap())).toList();
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
       fullJSONstring += '"RecurringTransaction": ${jsonList.toString()},';
     });
     pushGetAllRecurringTransactionsStream();
@@ -181,7 +181,7 @@ class DatabaseHelper {
 
     allSavingsStream.listen((event) {
       List<String> jsonList =
-          event.map((element) => jsonEncode(element.toMap())).toList();
+          event.map((element) => jsonEncode(element.toJsonMap())).toList();
       fullJSONstring += '"Savings": ${jsonList.toString()},';
     });
     pushGetAllSavingsStream();

@@ -46,5 +46,11 @@ class RecurringTransaction {
         'repetition_amount': repetitionAmount,
       };
 
-  Map<String, dynamic> toJsonMap() => toMap().putIfAbsent("id", () => id);
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    m['account'] = account.id;
+    m['account2'] = account2?.id;
+    return m;
+  }
 }

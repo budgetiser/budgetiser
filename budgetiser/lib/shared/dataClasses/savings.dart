@@ -34,5 +34,9 @@ class Savings {
         'description': description,
       };
 
-  Map<String, dynamic> toJsonMap() => toMap().putIfAbsent("id", () => id);
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    return m;
+  }
 }
