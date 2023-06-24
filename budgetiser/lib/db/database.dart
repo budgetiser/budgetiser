@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'account_part.dart';
 part 'stat_part.dart';
@@ -123,16 +125,85 @@ class DatabaseHelper {
 
   /// Exports the database to a file in the Download folder.
   exportDB() async {
-    final String path = '${await getDatabasesPath()}/$databaseName';
-    final file = File(path);
-    file.copy("/storage/emulated/0/Download/$databaseName");
+    final File db = File('${await getDatabasesPath()}/$databaseName');
+    final fileContent = await db.readAsBytes();
+
+    final externalDirectory =
+        await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    final newFile = File('${externalDirectory?.first.path}/budgetiser.db');
+    await newFile.writeAsBytes(fileContent);
   }
 
   /// Imports the database from a file in the Download folder. Overwrites the current database.
   importDB() async {
-    final String path = '${await getDatabasesPath()}/$databaseName';
-    final file = File("/storage/emulated/0/Download/$databaseName");
-    file.copy(path);
+    final externalDirectory =
+        await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    final externalFile = File('${externalDirectory?.first.path}/budgetiser.db');
+    final fileContent = await externalFile.readAsBytes();
+
+    final db = File('${await getDatabasesPath()}/$databaseName');
+    await db.writeAsBytes(fileContent);
+  }
+
+  exportAsJson() async {
+    var fullJSON = {};
+
+    allAccountsStream.listen((event) {
+      fullJSON["Accounts"] =
+          event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllAccountsStream();
+    await allAccountsStream.isEmpty;
+
+    allBudgetsStream.listen((event) {
+      fullJSON["Budgets"] =
+          event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllBudgetsStream();
+    await allBudgetsStream.first;
+
+    allCategoryStream.listen((event) {
+      fullJSON["Categories"] =
+          event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllCategoriesStream();
+    await allCategoryStream.first;
+
+    allGroupsStream.listen((event) {
+      fullJSON["Groups"] = event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllGroupsStream();
+    await allGroupsStream.first;
+
+    allRecurringTransactionStream.listen((event) {
+      fullJSON["RecurringTransactions"] =
+          event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllRecurringTransactionsStream();
+    await allRecurringTransactionStream.first;
+
+    allSavingsStream.listen((event) {
+      fullJSON["Savings"] =
+          event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllSavingsStream();
+    await allSavingsStream.first;
+
+    allTransactionStream.listen((event) {
+      fullJSON["Transactions"] =
+          event.map((element) => element.toJsonMap()).toList();
+    });
+    pushGetAllTransactionsStream();
+    await allTransactionStream.first;
+
+    saveJsonToJsonFile(jsonEncode(fullJSON));
+  }
+
+  void saveJsonToJsonFile(String jsonString) async {
+    final directory =
+        await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    final file = File('${directory?.first.path}/budgetiser.json');
+    await file.writeAsString(jsonString, mode: FileMode.write);
   }
 
   /*

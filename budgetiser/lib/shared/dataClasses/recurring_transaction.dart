@@ -45,4 +45,12 @@ class RecurringTransaction {
         'interval_amount': intervalAmount,
         'repetition_amount': repetitionAmount,
       };
+
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    m['account'] = account.id;
+    m['account2'] = account2?.id;
+    return m;
+  }
 }

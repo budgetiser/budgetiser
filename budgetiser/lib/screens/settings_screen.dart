@@ -123,6 +123,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             ListTile(
+              title: const Text('Export Database (JSON)'),
+              subtitle: const Text('Into Downloads',
+                  style: TextStyle(fontSize: 14.0)),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: "Attention",
+                      description:
+                          "Are you sure? This will potentially override existing budgetiser.json file in the Download folder!", //TODO:
+                      onSubmitCallback: () async {
+                        await DatabaseHelper.instance.exportAsJson();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+            ListTile(
               title: const Text('Import Database'),
               subtitle: const Text('From Downloads',
                   style: TextStyle(fontSize: 14.0)),

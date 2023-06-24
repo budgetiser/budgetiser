@@ -24,4 +24,12 @@ class Group {
         'color': color.value,
         'description': description,
       };
+
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    m['transactionCategories'] =
+        transactionCategories.map((element) => element.id).toList();
+    return m;
+  }
 }

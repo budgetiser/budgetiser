@@ -24,13 +24,19 @@ class Savings {
   });
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'icon': icon.codePoint,
-    'color': color.value,
-    'balance': balance,
-    'start_date': startDate.toString().substring(0, 10),
-    'end_date': endDate.toString().substring(0, 10),
-    'goal': goal,
-    'description': description,
-  };
+        'name': name,
+        'icon': icon.codePoint,
+        'color': color.value,
+        'balance': balance,
+        'start_date': startDate.toString().substring(0, 10),
+        'end_date': endDate.toString().substring(0, 10),
+        'goal': goal,
+        'description': description,
+      };
+
+  Map<String, dynamic> toJsonMap() {
+    var m = toMap();
+    m['id'] = id;
+    return m;
+  }
 }
