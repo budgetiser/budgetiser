@@ -1,10 +1,10 @@
-name: Build
+name: test-build
 
 on:
-  workflow_dispatch:
-  push:
-    branches: 
+  pull_request:
+    branches:    
       - '*'
+
 
 jobs:
   build:
@@ -37,13 +37,4 @@ jobs:
         flutter build appbundle --release --no-tree-shake-icons
     - name: Sign Android App Bundle
       run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar budgetiser/build/app/outputs/bundle/release/app-release-signed.aab budgetiser/build/app/outputs/bundle/release/app-release.aab upload
-    - name: Publish Android Artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: release-aab
-        path: budgetiser/build/app/outputs/bundle/release/app-release.aab
-    - name: Publish Android Artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: release-aab-signed
-        path: budgetiser/build/app/outputs/bundle/release/app-release-signed.aab
+
