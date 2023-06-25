@@ -35,10 +35,14 @@ class _IconPickerState extends State<IconPicker> {
                     elevation: 0,
                     children: [
                       TextField(
-                        decoration: const InputDecoration(
-                          hintText: "Search",
-                          prefixIcon: Icon(Icons.search),
-                        ),
+                        decoration: InputDecoration(
+                            hintText: "Search",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                            hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary)),
                         onChanged: (String value) {
                           setState(() {
                             _searchString = value;
