@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
@@ -53,6 +52,7 @@ class _IconPickerState extends State<IconPicker> {
               });
         },
         child: Icon(
+          size: 48,
           _currentIcon,
           color: widget.color,
         ),
