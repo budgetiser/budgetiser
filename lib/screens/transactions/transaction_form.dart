@@ -144,6 +144,24 @@ class _TransactionFormState extends State<TransactionForm> {
                     // value & date input
                     Row(
                       children: [
+                        IconButton(
+                          icon: Icon(valueController.text.startsWith("-")
+                              ? Icons.add
+                              : Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              valueController.text.startsWith("-")
+                                  ? valueController.text =
+                                      valueController.text.substring(1)
+                                  : valueController.text =
+                                      "-${valueController.text}";
+                            });
+                          },
+                          color: valueController.text.startsWith("-")
+                              ? Colors.green
+                              : Colors.red,
+                          iconSize: 30,
+                        ),
                         Flexible(
                           child: TextFormField(
                             controller: valueController,
