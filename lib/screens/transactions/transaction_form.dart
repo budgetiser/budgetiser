@@ -354,11 +354,10 @@ class _TransactionFormState extends State<TransactionForm> {
                 } else {
                   DatabaseHelper.instance
                       .createSingleTransaction(_currentSingleTransaction());
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const TransactionsScreen(),
-                    ),
-                  );
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const TransactionsScreen()),
+                      (Route<dynamic> route) => false);
                 }
               }
             },
