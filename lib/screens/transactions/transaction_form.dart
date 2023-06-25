@@ -44,7 +44,7 @@ class _TransactionFormState extends State<TransactionForm> {
   TransactionCategory? selectedCategory;
   DateTime transactionDate = DateTime.now();
   bool hasAccount2 = false;
-  bool hasInitalData = false;
+  bool hasInitialData = false;
 
   var titleController = TextEditingController();
   var valueController = TextEditingController();
@@ -66,7 +66,7 @@ class _TransactionFormState extends State<TransactionForm> {
       valueController.text = "-";
     }
     if (widget.initialSingleTransactionData != null) {
-      hasInitalData = true;
+      hasInitialData = true;
       titleController.text = widget.initialSingleTransactionData!.title;
       valueController.text =
           widget.initialSingleTransactionData!.value.toString();
@@ -80,7 +80,7 @@ class _TransactionFormState extends State<TransactionForm> {
       transactionDate = widget.initialSingleTransactionData!.date;
     }
     if (widget.initialRecurringTransactionData != null) {
-      hasInitalData = true;
+      hasInitialData = true;
       titleController.text = widget.initialRecurringTransactionData!.title;
       valueController.text =
           widget.initialRecurringTransactionData!.value.toString();
@@ -119,7 +119,7 @@ class _TransactionFormState extends State<TransactionForm> {
     ThemeData themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: hasInitalData
+        title: hasInitialData
             ? const Text("Edit Transaction")
             : const Text("New Transaction"),
       ),
@@ -324,7 +324,7 @@ class _TransactionFormState extends State<TransactionForm> {
             backgroundColor: Colors.red,
             mini: true,
             onPressed: () {
-              if (hasInitalData) {
+              if (hasInitialData) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -347,7 +347,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 Navigator.of(context).pop();
               }
             },
-            child: hasInitalData
+            child: hasInitialData
                 ? const Icon(Icons.delete_outline)
                 : const Icon(Icons.close),
           ),
@@ -359,7 +359,7 @@ class _TransactionFormState extends State<TransactionForm> {
           FloatingActionButton.extended(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                if (hasInitalData) {
+                if (hasInitialData) {
                   // isRecurring is false
                   if (widget.initialSingleTransactionData != null) {
                     DatabaseHelper.instance
