@@ -51,6 +51,7 @@ class _TransactionFormState extends State<TransactionForm> {
   var descriptionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final _formValueKey = GlobalKey<FormFieldState>();
 
   // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
@@ -143,6 +144,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     const SizedBox(height: 16),
                     // value & date input
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
                           icon: Icon(valueController.text.startsWith("-")
@@ -156,14 +158,17 @@ class _TransactionFormState extends State<TransactionForm> {
                                   : valueController.text =
                                       "-${valueController.text}";
                             });
+                            _formValueKey.currentState!.validate();
                           },
                           color: valueController.text.startsWith("-")
                               ? Colors.green
                               : Colors.red,
-                          iconSize: 30,
+                          splashRadius: 24,
+                          iconSize: 48,
                         ),
                         Flexible(
                           child: TextFormField(
+                            key: _formValueKey,
                             controller: valueController,
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
@@ -524,5 +529,6 @@ class _TransactionFormState extends State<TransactionForm> {
         selectedAccount2 = null;
       }
     });
+    _formValueKey.currentState!.validate();
   }
 }
