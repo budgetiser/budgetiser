@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
@@ -383,11 +382,7 @@ class _TransactionFormState extends State<TransactionForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Icon(
-              selectedAccount!.icon,
-              color: selectedAccount!.color,
-              size: 40,
-            ),
+            clickableAccountIcon(selectedAccount!),
             const Icon(Icons.arrow_right_alt, size: 60),
             Icon(
               selectedCategory!.icon,
@@ -395,11 +390,7 @@ class _TransactionFormState extends State<TransactionForm> {
               size: 40,
             ),
             const Icon(Icons.arrow_right_alt, size: 60),
-            Icon(
-              selectedAccount2!.icon,
-              color: selectedAccount2!.color,
-              size: 40,
-            ),
+            clickableAccountIcon(selectedAccount2!),
           ],
         ),
         if (double.tryParse(valueController.text) != null &&
@@ -424,11 +415,7 @@ class _TransactionFormState extends State<TransactionForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(
-                selectedAccount!.icon,
-                color: selectedAccount!.color,
-                size: 40,
-              ),
+              clickableAccountIcon(selectedAccount!),
               (double.tryParse(valueController.text) != null &&
                       double.parse(valueController.text) >= 0)
                   ? Transform.rotate(
@@ -453,6 +440,26 @@ class _TransactionFormState extends State<TransactionForm> {
               hasPrefix: false,
             ),
         ],
+      ),
+    );
+  }
+
+  InkWell clickableAccountIcon(Account account) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(5),
+      splashColor: Colors.white10,
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => AccountForm(
+                      initialAccount: account,
+                    )));
+      },
+      child: Icon(
+        account.icon,
+        color: account.color,
+        size: 40,
       ),
     );
   }
