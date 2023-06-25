@@ -14,10 +14,10 @@ class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
   const TransactionsScreen({
     Key? key,
-    this.initalAccountFilterName,
+    this.initialAccountFilterName,
   }) : super(key: key);
 
-  final String? initalAccountFilterName;
+  final String? initialAccountFilterName;
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -44,8 +44,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     DatabaseHelper.instance.pushGetAllAccountsStream();
     DatabaseHelper.instance.pushGetAllCategoriesStream();
 
-    if (widget.initalAccountFilterName != null) {
-      _currentFilterAccountName = widget.initalAccountFilterName!;
+    if (widget.initialAccountFilterName != null) {
+      _currentFilterAccountName = widget.initialAccountFilterName!;
     }
     super.initState();
   }
