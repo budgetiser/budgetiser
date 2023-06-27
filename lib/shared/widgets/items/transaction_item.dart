@@ -34,6 +34,7 @@ class TransactionItem extends StatelessWidget {
     bool isRecurring;
 
     if (recurringTransactionData != null) {
+      // TODO: remove
       title = recurringTransactionData!.title;
       description = recurringTransactionData!.description;
       value = recurringTransactionData!.value;
@@ -64,7 +65,6 @@ class TransactionItem extends StatelessWidget {
                 builder: (context) => TransactionForm(
                   // always one of these will be null
                   initialSingleTransactionData: singleTransactionData,
-                  initialRecurringTransactionData: recurringTransactionData,
                 ),
               ),
             )

@@ -1,8 +1,8 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
@@ -16,7 +16,8 @@ import 'package:flutter/material.dart';
 /// or edit an existing one
 ///
 /// attributes:
-/// * [initialNegative] - if true, the transaction has a "-"" prefilled
+/// * [initialBalance] - set initial balance
+/// * TODO:
 ///
 /// ONE of the following can be passed in:
 /// - a SingleTransaction
@@ -25,13 +26,11 @@ class TransactionForm extends StatefulWidget {
   const TransactionForm({
     Key? key,
     this.initialSingleTransactionData,
-    this.initialRecurringTransactionData,
-    this.initialNegative,
+    this.initialBalance,
     this.initialSelectedAccount,
   }) : super(key: key);
   final SingleTransaction? initialSingleTransactionData;
-  final RecurringTransaction? initialRecurringTransactionData;
-  final bool? initialNegative;
+  final String? initialBalance;
   final Account? initialSelectedAccount;
 
   @override
@@ -62,8 +61,8 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   void initState() {
-    if (widget.initialNegative == true) {
-      valueController.text = "-";
+    if (widget.initialBalance != null) {
+      valueController.text = widget.initialBalance!;
     }
     if (widget.initialSingleTransactionData != null) {
       hasInitalData = true;
@@ -78,18 +77,6 @@ class _TransactionFormState extends State<TransactionForm> {
           widget.initialSingleTransactionData!.description;
 
       transactionDate = widget.initialSingleTransactionData!.date;
-    }
-    if (widget.initialRecurringTransactionData != null) {
-      hasInitalData = true;
-      titleController.text = widget.initialRecurringTransactionData!.title;
-      valueController.text =
-          widget.initialRecurringTransactionData!.value.toString();
-      selectedAccount = widget.initialRecurringTransactionData!.account;
-      selectedCategory = widget.initialRecurringTransactionData!.category;
-      hasAccount2 = widget.initialRecurringTransactionData!.account2 != null;
-      selectedAccount2 = widget.initialRecurringTransactionData!.account2;
-      descriptionController.text =
-          widget.initialRecurringTransactionData!.description;
     }
     if (widget.initialSelectedAccount != null) {
       selectedAccount = widget.initialSelectedAccount;
@@ -360,25 +347,17 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitalData) {
-                  // isRecurring is false
-                  if (widget.initialSingleTransactionData != null) {
-                    DatabaseHelper.instance
-                        .updateSingleTransaction(_currentSingleTransaction());
-                  } else {
-                    DatabaseHelper.instance.deleteRecurringTransactionById(
-                        widget.initialRecurringTransactionData!.id);
-                    DatabaseHelper.instance
-                        .createSingleTransaction(_currentSingleTransaction());
-                  }
+                  DatabaseHelper.instance
+                      .updateSingleTransaction(_currentSingleTransaction());
+
                   Navigator.of(context).pop();
                 } else {
                   DatabaseHelper.instance
                       .createSingleTransaction(_currentSingleTransaction());
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const TransactionsScreen(),
-                    ),
-                  );
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const TransactionsScreen()),
+                      (Route<dynamic> route) => false);
                 }
               }
             },
@@ -402,11 +381,7 @@ class _TransactionFormState extends State<TransactionForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Icon(
-              selectedAccount!.icon,
-              color: selectedAccount!.color,
-              size: 40,
-            ),
+            clickableAccountIcon(selectedAccount!),
             const Icon(Icons.arrow_right_alt, size: 60),
             Icon(
               selectedCategory!.icon,
@@ -414,11 +389,7 @@ class _TransactionFormState extends State<TransactionForm> {
               size: 40,
             ),
             const Icon(Icons.arrow_right_alt, size: 60),
-            Icon(
-              selectedAccount2!.icon,
-              color: selectedAccount2!.color,
-              size: 40,
-            ),
+            clickableAccountIcon(selectedAccount2!),
           ],
         ),
         if (double.tryParse(valueController.text) != null &&
@@ -443,11 +414,7 @@ class _TransactionFormState extends State<TransactionForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(
-                selectedAccount!.icon,
-                color: selectedAccount!.color,
-                size: 40,
-              ),
+              clickableAccountIcon(selectedAccount!),
               (double.tryParse(valueController.text) != null &&
                       double.parse(valueController.text) >= 0)
                   ? Transform.rotate(
@@ -476,6 +443,26 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
+  InkWell clickableAccountIcon(Account account) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(5),
+      splashColor: Colors.white10,
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => AccountForm(
+                      initialAccount: account,
+                    )));
+      },
+      child: Icon(
+        account.icon,
+        color: account.color,
+        size: 40,
+      ),
+    );
+  }
+
   SingleTransaction _currentSingleTransaction() {
     SingleTransaction transaction;
     transaction = SingleTransaction(
@@ -491,9 +478,6 @@ class _TransactionFormState extends State<TransactionForm> {
 
     if (widget.initialSingleTransactionData != null) {
       transaction.id = widget.initialSingleTransactionData!.id;
-    }
-    if (widget.initialRecurringTransactionData != null) {
-      transaction.id = widget.initialRecurringTransactionData!.id;
     }
 
     return transaction;
