@@ -60,114 +60,108 @@ class _AccountFormState extends State<AccountForm> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: IconPicker(
-                                    onIconChangedCallback: (icondata) {
-                                      setState(() {
-                                        _icon = icondata;
-                                      });
-                                    },
-                                    initialIcon: _icon,
-                                    color: _color,
-                                  )),
-                              Flexible(
-                                child: TextFormField(
-                                  controller: nameController,
-                                  // initialValue: widget.initialName,
-                                  decoration: const InputDecoration(
-                                    labelText: "Account Name",
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Colorpicker(
-                            initialSelectedColor: _color,
-                            onColorChangedCallback: (color) {
-                              setState(() {
-                                _color = color;
-                              });
-                            },
-                          ),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(top: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: IconPicker(
+                                onIconChangedCallback: (iconData) {
+                                  setState(() {
+                                    _icon = iconData;
+                                  });
+                                },
+                                initialIcon: _icon,
+                                color: _color,
+                              )),
+                          Flexible(
                             child: TextFormField(
-                              controller: balanceController,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
+                              controller: nameController,
                               decoration: const InputDecoration(
-                                labelText: "Balance",
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (data) {
-                                if (data!.isEmpty) {
-                                  return "Please enter a balance";
-                                }
-                                try {
-                                  double.parse(data);
-                                } catch (e) {
-                                  return "Please enter a valid number";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: TextFormField(
-                              controller: descriptionController,
-                              keyboardType: TextInputType.multiline,
-                              decoration: const InputDecoration(
-                                labelText: "Description",
+                                labelText: "Account Name",
                                 border: OutlineInputBorder(),
                               ),
                             ),
                           ),
-                          if (widget.initialAccount != null)
-                            Column(
-                              children: [
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                FloatingActionButton.extended(
-                                  onPressed: (() {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => TransactionsScreen(
-                                        initalAccountFilterName:
-                                            nameController.text,
-                                      ),
-                                    ));
-                                  }),
-                                  label: const Text("View all transactions"),
-                                  heroTag: "viewTransactions",
-                                ),
-                              ],
-                            ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 20),
+                      ColorPicker(
+                        initialSelectedColor: _color,
+                        onColorChangedCallback: (color) {
+                          setState(() {
+                            _color = color;
+                          });
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: TextFormField(
+                          controller: balanceController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: const InputDecoration(
+                            labelText: "Balance",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (data) {
+                            if (data!.isEmpty) {
+                              return "Please enter a balance";
+                            }
+                            try {
+                              double.parse(data);
+                            } catch (e) {
+                              return "Please enter a valid number";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: TextFormField(
+                          controller: descriptionController,
+                          keyboardType: TextInputType.multiline,
+                          decoration: const InputDecoration(
+                            labelText: "Description",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      if (widget.initialAccount != null)
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            FloatingActionButton.extended(
+                              onPressed: (() {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => TransactionsScreen(
+                                    initialAccountFilterName:
+                                        nameController.text,
+                                  ),
+                                ));
+                              }),
+                              label: const Text("View all transactions"),
+                              heroTag: "viewTransactions",
+                            ),
+                          ],
+                        ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),

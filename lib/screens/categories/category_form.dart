@@ -100,7 +100,7 @@ class _CategoryFormState extends State<CategoryForm> {
                               ),
                             ],
                           ),
-                          Colorpicker(
+                          ColorPicker(
                               initialSelectedColor: _color,
                               onColorChangedCallback: (color) {
                                 setState(() {
