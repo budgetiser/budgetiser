@@ -40,8 +40,6 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       Map<String, dynamic> mapItem) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
     Account account = await _getOneAccount(mapItem['account1_id']);
-    RecurringTransaction? recurringTransaction =
-        await _getRecurringTransactionFromSingeId(mapItem['id']);
     return SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -53,7 +51,6 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
           ? null
           : await _getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
-      recurringTransaction: recurringTransaction,
     );
   }
 
@@ -145,11 +142,6 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     await db.delete(
       'singleTransaction',
       where: 'id = ?',
-      whereArgs: [transaction.id],
-    );
-    await db.delete(
-      'singleToRecurringTransaction',
-      where: 'single_transaction_id = ?',
       whereArgs: [transaction.id],
     );
     await db.delete(

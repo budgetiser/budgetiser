@@ -4,7 +4,6 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
@@ -340,36 +339,5 @@ List<Budget> TMP_DATA_budgetList = [
     transactionCategories: [
       TMP_DATA_categoryList[6],
     ],
-  ),
-];
-
-List<RecurringTransaction> TMP_DATA_recurringTransactionList = [
-  RecurringTransaction(
-    id: 1,
-    title: "paycheck",
-    value: 27000,
-    description: "paycheck",
-    category: TMP_DATA_categoryList[7],
-    account: TMP_DATA_accountList[2],
-    startDate: DateTime(2020, 10, 01),
-    endDate: DateTime(2023, 10, 1),
-    intervalAmount: 3,
-    intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    repetitionAmount: 3,
-  ),
-  RecurringTransaction(
-    id: 2,
-    title: "rent",
-    value: -670,
-    description: "",
-    category: TMP_DATA_categoryList[4],
-    account: TMP_DATA_accountList[2],
-    startDate: DateTime(2020, 05, 30),
-    endDate: DateTime(2023, 05, 30),
-    intervalAmount: 1,
-    intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    repetitionAmount: 36,
   ),
 ];

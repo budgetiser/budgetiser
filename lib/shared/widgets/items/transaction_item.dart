@@ -1,26 +1,18 @@
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
-/// TransactionItem widget
-/// - displays a transaction
-///
-/// ONE of the following NEEDS to be passed in:
-/// - a SingleTransaction
-/// - a RecurringTransaction
+/// Displays a transaction as widget
 class TransactionItem extends StatelessWidget {
   const TransactionItem({
     Key? key,
-    this.singleTransactionData,
-    this.recurringTransactionData,
+    required this.singleTransactionData,
   }) : super(key: key);
 
-  final SingleTransaction? singleTransactionData;
-  final RecurringTransaction? recurringTransactionData;
+  final SingleTransaction singleTransactionData;
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +23,14 @@ class TransactionItem extends StatelessWidget {
     Account account;
     Account? account2;
     DateTime date;
-    bool isRecurring;
 
-    if (recurringTransactionData != null) {
-      // TODO: remove
-      title = recurringTransactionData!.title;
-      description = recurringTransactionData!.description;
-      value = recurringTransactionData!.value;
-      category = recurringTransactionData!.category;
-      account = recurringTransactionData!.account;
-      account2 = recurringTransactionData!.account2;
-      date = recurringTransactionData!.startDate;
-      isRecurring = true;
-    } else if (singleTransactionData != null) {
-      title = singleTransactionData!.title;
-      description = singleTransactionData!.description;
-      value = singleTransactionData!.value;
-      category = singleTransactionData!.category;
-      account = singleTransactionData!.account;
-      account2 = singleTransactionData!.account2;
-      date = singleTransactionData!.date;
-      isRecurring = singleTransactionData!.recurringTransaction != null;
-    } else {
-      throw Exception('TransactionItem: No transaction data provided');
-    }
+    title = singleTransactionData.title;
+    description = singleTransactionData.description;
+    value = singleTransactionData.value;
+    category = singleTransactionData.category;
+    account = singleTransactionData.account;
+    account2 = singleTransactionData.account2;
+    date = singleTransactionData.date;
 
     return Column(
       children: [
@@ -80,6 +56,7 @@ class TransactionItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
+                  //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(title),
@@ -121,20 +98,11 @@ class TransactionItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          "${date.day}.${date.month}.${date.year}",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        const SizedBox(width: 10),
-                        if (isRecurring)
-                          Icon(
-                            Icons.repeat,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                      ],
+                    Text(
+                      "${date.day}.${date.month}.${date.year}",
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         description,
