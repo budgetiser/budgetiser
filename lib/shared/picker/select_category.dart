@@ -5,6 +5,9 @@ import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dar
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Category selector dropdown
+///
+/// TODO: validate form when no category is available
 class SelectCategory extends StatefulWidget {
   const SelectCategory({
     Key? key,
@@ -68,15 +71,14 @@ class _SelectCategoryState extends State<SelectCategory> {
     // if no categories yet, return a link to add a category
     if (_categories == null || _categories!.isEmpty) {
       return Center(
-        child: InkWell(
-          onTap: () {
+        child: FloatingActionButton.extended(
+          heroTag: null,
+          onPressed: () {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const CategoryForm()));
           },
-          child: const Text(
-            "No category found\nClick here to add one",
-            textAlign: TextAlign.center,
-          ),
+          label: const Text("Create category"),
+          extendedTextStyle: const TextStyle(fontSize: 18),
         ),
       );
     }
