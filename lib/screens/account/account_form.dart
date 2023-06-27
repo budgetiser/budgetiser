@@ -94,39 +94,6 @@ class _AccountFormState extends State<AccountForm> {
                               ),
                             ),
                           ),
-                          if (widget.initialAccount !=
-                              null) // actions for existing accounts
-                            Column(
-                              children: [
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                FloatingActionButton.extended(
-                                  onPressed: (() {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => TransactionsScreen(
-                                        initialAccountFilterName:
-                                            nameController.text,
-                                      ),
-                                    ));
-                                  }),
-                                  label: const Text("View all transactions"),
-                                  heroTag: "viewTransactions",
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                FloatingActionButton.extended(
-                                  onPressed: (() {
-                                    showBalanceDialog(context);
-                                  }),
-                                  label: const Text(
-                                      "Set balance with transaction"),
-                                  heroTag: "setBalanceWithTransaction",
-                                ),
-                              ],
-                            ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -189,6 +156,16 @@ class _AccountFormState extends State<AccountForm> {
                               }),
                               label: const Text("View all transactions"),
                               heroTag: "viewTransactions",
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            FloatingActionButton.extended(
+                              onPressed: (() {
+                                showBalanceDialog(context);
+                              }),
+                              label: const Text("Set balance with transaction"),
+                              heroTag: "setBalanceWithTransaction",
                             ),
                           ],
                         ),
@@ -273,6 +250,7 @@ class _AccountFormState extends State<AccountForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("Set balance"),
+            elevation: 0,
             content: Form(
               key: formKey,
               child: TextFormField(
