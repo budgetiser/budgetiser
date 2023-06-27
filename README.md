@@ -2,7 +2,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/budgetiser/budgetiser/badge)](https://www.codefactor.io/repository/github/budgetiser/budgetiser)
 ![workflow](https://github.com/budgetiser/budgetiser/actions/workflows/build-signed-bundle.yml/badge.svg)
-![Static Badge](https://img.shields.io/badge/100%25-local-1)
+![100%local](https://img.shields.io/badge/100%25-local-1)
 
 
 Your personal, open source Finance Tracker.
