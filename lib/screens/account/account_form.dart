@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
@@ -93,6 +94,39 @@ class _AccountFormState extends State<AccountForm> {
                               ),
                             ),
                           ),
+                          if (widget.initialAccount !=
+                              null) // actions for existing accounts
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                FloatingActionButton.extended(
+                                  onPressed: (() {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => TransactionsScreen(
+                                        initialAccountFilterName:
+                                            nameController.text,
+                                      ),
+                                    ));
+                                  }),
+                                  label: const Text("View all transactions"),
+                                  heroTag: "viewTransactions",
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                FloatingActionButton.extended(
+                                  onPressed: (() {
+                                    showBalanceDialog(context);
+                                  }),
+                                  label: const Text(
+                                      "Set balance with transaction"),
+                                  heroTag: "setBalanceWithTransaction",
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -229,5 +263,58 @@ class _AccountFormState extends State<AccountForm> {
         ),
       ]),
     );
+  }
+
+  Future showBalanceDialog(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    var inputController = TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Set balance"),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: inputController,
+                textAlign: TextAlign.center,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter number';
+                  }
+
+                  return null;
+                },
+              ),
+            ),
+            actions: <Widget>[
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                backgroundColor: Colors.red,
+                mini: true,
+                child: const Icon(Icons.close),
+              ),
+              FloatingActionButton.extended(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => TransactionForm(
+                                initialBalance: (double.parse(
+                                            inputController.text) -
+                                        double.parse(balanceController.text))
+                                    .toStringAsFixed(2))));
+                  }
+                },
+                label: const Text("Set"),
+                icon: const Icon(Icons.check),
+              ),
+            ],
+          );
+        });
   }
 }
