@@ -135,8 +135,8 @@ class _TransactionFormState extends State<TransactionForm> {
                       children: [
                         IconButton(
                           icon: Icon(valueController.text.startsWith("-")
-                              ? Icons.add
-                              : Icons.remove),
+                              ? Icons.remove
+                              : Icons.add),
                           onPressed: () {
                             setState(() {
                               valueController.text.startsWith("-")
@@ -148,8 +148,8 @@ class _TransactionFormState extends State<TransactionForm> {
                             _formValueKey.currentState!.validate();
                           },
                           color: valueController.text.startsWith("-")
-                              ? Colors.green
-                              : Colors.red,
+                              ? const Color.fromARGB(255, 174, 74, 99)
+                              : const Color.fromARGB(239, 29, 129, 37),
                           splashRadius: 24,
                           iconSize: 48,
                         ),
@@ -164,21 +164,21 @@ class _TransactionFormState extends State<TransactionForm> {
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) {
-                              // _formKey.currentState!.validate();
+                              _formValueKey.currentState!.validate();
 
                               // to update the visualization
                               setState(() {});
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter a value';
+                                return 'Enter a value';
                               }
                               try {
                                 if (double.parse(value) < 0 && hasAccount2) {
                                   return 'Only positive values with two accounts';
                                 }
                               } catch (e) {
-                                return 'Please enter a valid number';
+                                return 'Enter a valid number';
                               }
                               return null;
                             },
