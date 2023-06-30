@@ -9,6 +9,7 @@ import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/recurring_form.dart';
+import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
@@ -76,14 +77,15 @@ class _BudgetFormState extends State<BudgetForm> {
             ? const Text("Edit Budget")
             : const Text("New Budget"),
       ),
-      body: Form(
-        key: _formKey,
-        child: Container(
-          alignment: Alignment.topCenter,
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
+      body: ScrollViewWithDeadSpace(
+        deadSpaceContent: const Text(""),
+        deadSpaceSize: 150,
+        child: Form(
+          key: _formKey,
+          child: Container(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 children: [
                   Row(
@@ -93,9 +95,9 @@ class _BudgetFormState extends State<BudgetForm> {
                         child: IconPicker(
                           color: _color,
                           initialIcon: _icon ?? Icons.blur_on,
-                          onIconChangedCallback: (icondata) {
+                          onIconChangedCallback: (iconData) {
                             setState(() {
-                              _icon = icondata;
+                              _icon = iconData;
                             });
                           },
                         ),
@@ -124,47 +126,43 @@ class _BudgetFormState extends State<BudgetForm> {
                           _color = color;
                         });
                       }),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: TextFormField(
-                            controller: balanceController,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            decoration: const InputDecoration(
-                              labelText: "Balance",
-                              border: OutlineInputBorder(),
-                            ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: TextFormField(
+                          controller: balanceController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: const InputDecoration(
+                            labelText: "Balance",
+                            border: OutlineInputBorder(),
                           ),
                         ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Flexible(
-                          child: TextFormField(
-                            controller: limitController,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            decoration: const InputDecoration(
-                              labelText: "Limit",
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0),
-                    child: TextFormField(
-                      controller: descriptionController,
-                      keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        labelText: "Description",
-                        border: OutlineInputBorder(),
                       ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Flexible(
+                        child: TextFormField(
+                          controller: limitController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: const InputDecoration(
+                            labelText: "Limit",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                      labelText: "Description",
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   const Divider(),
