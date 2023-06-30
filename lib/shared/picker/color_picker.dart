@@ -23,7 +23,7 @@ class _ColorPickerState extends State<ColorPicker> {
     return Padding(
       padding: widget.noPadding
           ? const EdgeInsets.all(0)
-          : const EdgeInsets.only(top: 16, bottom: 24),
+          : const EdgeInsets.only(top: 16, bottom: 20),
       child: InkWell(
         onTap: () {
           showDialog(
