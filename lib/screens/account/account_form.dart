@@ -75,11 +75,12 @@ class _AccountFormState extends State<AccountForm> {
                       Row(
                         children: <Widget>[
                           Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               child: IconPicker(
-                                onIconChangedCallback: (icondata) {
+                                onIconChangedCallback: (iconData) {
                                   setState(() {
-                                    _icon = icondata;
+                                    _icon = iconData;
                                   });
                                 },
                                 initialIcon: _icon,
@@ -88,7 +89,6 @@ class _AccountFormState extends State<AccountForm> {
                           Flexible(
                             child: TextFormField(
                               controller: nameController,
-                              // initialValue: widget.initialName,
                               decoration: const InputDecoration(
                                 labelText: "Account Name",
                                 border: OutlineInputBorder(),
@@ -97,8 +97,8 @@ class _AccountFormState extends State<AccountForm> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      Colorpicker(
+                      const SizedBox(height: 20),
+                      ColorPicker(
                         initialSelectedColor: _color,
                         onColorChangedCallback: (color) {
                           setState(() {
@@ -140,8 +140,7 @@ class _AccountFormState extends State<AccountForm> {
                           ),
                         ),
                       ),
-                      if (widget.initialAccount !=
-                          null) // actions for existing accounts
+                      if (widget.initialAccount != null)
                         Column(
                           children: [
                             const SizedBox(
@@ -252,6 +251,7 @@ class _AccountFormState extends State<AccountForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("Set balance"),
+            elevation: 0,
             content: Form(
               key: formKey,
               child: TextFormField(

@@ -93,7 +93,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     ],
                   ),
                   const SizedBox(height: 8), //TODO: colorpicker top padding
-                  Colorpicker(
+                  ColorPicker(
                       initialSelectedColor: _color,
                       onColorChangedCallback: (color) {
                         setState(() {

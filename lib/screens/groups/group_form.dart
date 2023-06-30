@@ -93,7 +93,7 @@ class _GroupFormState extends State<GroupForm> {
                   ),
                 ],
               ),
-              Colorpicker(
+              ColorPicker(
                 initialSelectedColor: _color,
                 onColorChangedCallback: (color) {
                   setState(() {

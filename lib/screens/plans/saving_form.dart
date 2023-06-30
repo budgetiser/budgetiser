@@ -69,6 +69,126 @@ class _SavingFormState extends State<SavingForm> {
               const SizedBox(height: 8),
               Row(
                 children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconPicker(
+                          onIconChangedCallback: (newIcon) {
+                            setState(() {
+                              _icon = newIcon;
+                            });
+                          },
+                          initialIcon: _icon,
+                          color: _color,
+                        ),
+                      ),
+                      Flexible(
+                          child: TextFormField(
+                        controller: nameController,
+                        validator: (data) {
+                          if (data == null || data == '') {
+                            return "Please enter a valid name";
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          labelText: "Name",
+                          border: OutlineInputBorder(),
+                        ),
+                      ))
+                    ],
+                  ),
+                  ColorPicker(
+                    initialSelectedColor: _color,
+                    onColorChangedCallback: (color) {
+                      setState(() {
+                        _color = color;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Flexible(
+                          child: TextFormField(
+                        validator: (data) {
+                          if (data!.isEmpty) {
+                            return "Please enter a balance";
+                          }
+                          try {
+                            double.parse(data);
+                          } catch (e) {
+                            return "Please enter a valid number";
+                          }
+                          return null;
+                        },
+                        controller: balController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        decoration: const InputDecoration(
+                          labelText: "Start",
+                          border: OutlineInputBorder(),
+                        ),
+                      )),
+                      Flexible(
+                          child: TextFormField(
+                        controller: goalController,
+                        validator: (data) {
+                          if (data!.isEmpty) {
+                            return "Please enter a balance";
+                          }
+                          try {
+                            double a = double.parse(data);
+                            if (a <= double.parse(balController.text)) {
+                              return "Goal must be higher than value";
+                            }
+                          } catch (e) {
+                            return "Please enter a valid number";
+                          }
+                          return null;
+                        },
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        decoration: const InputDecoration(
+                          labelText: "Goal",
+                          border: OutlineInputBorder(),
+                        ),
+                      ))
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Flexible(
+                          child: DatePicker(
+                        label: 'Start',
+                        initialDate: (widget.savingData != null)
+                            ? widget.savingData!.startDate
+                            : DateTime.now(),
+                        onDateChangedCallback: (date) {
+                          setState(() {
+                            startDate = date;
+                          });
+                        },
+                      )),
+                      Flexible(
+                          child: DatePicker(
+                        label: 'End',
+                        initialDate: (widget.savingData != null)
+                            ? widget.savingData!.endDate
+                            : DateTime.now().add(const Duration(days: 30)),
+                        onDateChangedCallback: (date) {
+                          setState(() {
+                            endDate = date;
+                          });
+                        },
+                      ))
+                    ],
+                  ),
+                  const Divider(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: IconPicker(
@@ -97,7 +217,7 @@ class _SavingFormState extends State<SavingForm> {
                   ))
                 ],
               ),
-              Colorpicker(
+              ColorPicker(
                 initialSelectedColor: _color,
                 onColorChangedCallback: (color) {
                   setState(() {

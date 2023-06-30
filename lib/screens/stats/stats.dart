@@ -54,6 +54,7 @@ class _StatsState extends State<Stats> {
                 ),
               ],
             ),
+            const SizedBox(height: 16),
             SelectCategory(
               initialCategory: _selectedCategory,
               callback: setCategory,
