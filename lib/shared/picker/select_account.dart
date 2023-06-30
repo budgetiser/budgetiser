@@ -5,6 +5,9 @@ import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Account selector dropdown
+///
+/// TODO: validate form when no account is available
 class SelectAccount extends StatefulWidget {
   const SelectAccount({
     Key? key,
@@ -21,7 +24,7 @@ class SelectAccount extends StatefulWidget {
 }
 
 class _SelectAccountState extends State<SelectAccount> {
-  List<Account>? _accounts;
+  List<Account>? _accounts = [];
   Account? _selectedAccount;
   final String keySelectedAccount = "key-last-selected-account";
 
@@ -73,24 +76,27 @@ class _SelectAccountState extends State<SelectAccount> {
   Widget build(BuildContext context) {
     var filteredAccounts =
         _accounts?.where((element) => element.id != widget.blackListAccountId);
-    String errorText = "No accounts found\nClick here to add one";
-    if (filteredAccounts != null && filteredAccounts.isEmpty) {
-      errorText = "You need a 2nd account\nClick here to add one";
+    String errorText = "Create account";
+    if (filteredAccounts != null &&
+        filteredAccounts.isEmpty &&
+        _accounts!.isNotEmpty) {
+      errorText = "Create 2nd account";
     }
 
-    if (_accounts == null ||
-        _accounts!.isEmpty ||
+    if (_accounts == null) {
+      return Container();
+    }
+    if (_accounts!.isEmpty ||
         filteredAccounts != null && filteredAccounts.isEmpty) {
       return Center(
-        child: InkWell(
-          onTap: () {
+        child: FloatingActionButton.extended(
+          heroTag: null,
+          onPressed: () {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const AccountForm()));
           },
-          child: Text(
-            errorText,
-            textAlign: TextAlign.center,
-          ),
+          label: Text(errorText),
+          extendedTextStyle: const TextStyle(fontSize: 18),
         ),
       );
     }

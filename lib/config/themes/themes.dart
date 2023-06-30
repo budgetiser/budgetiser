@@ -79,7 +79,7 @@ class MyThemes {
   static const Color DARK_PRIMARY = Color.fromARGB(255, 50, 130, 184);
   static const Color DARK_CLICKABLE = Color.fromARGB(255, 50, 130, 184);
   static const Color DARK_SECONDARY = Color.fromARGB(255, 15, 76, 117);
-  static const Color DARK_TERTIARY = Color.fromARGB(255, 187, 225, 250);
+  static const Color DARK_TERTIARY = Color.fromARGB(255, 255, 255, 255);
   static const Color DARK_BACKGROUND = Color.fromARGB(255, 27, 38, 44);
 
   static final darkTheme = ThemeData(
@@ -113,7 +113,7 @@ class MyThemes {
 
     inputDecorationTheme: const InputDecorationTheme(
       errorStyle: TextStyle(fontSize: 18),
-      labelStyle: TextStyle(color: Color.fromARGB(255, 164, 168, 171)),
+      labelStyle: TextStyle(color: Color.fromARGB(255, 195, 195, 195)),
     ),
 
     textTheme: const TextTheme(

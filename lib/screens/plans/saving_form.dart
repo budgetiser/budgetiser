@@ -99,7 +99,7 @@ class _SavingFormState extends State<SavingForm> {
                       ))
                     ],
                   ),
-                  Colorpicker(
+                  ColorPicker(
                     initialSelectedColor: _color,
                     onColorChangedCallback: (color) {
                       setState(() {
