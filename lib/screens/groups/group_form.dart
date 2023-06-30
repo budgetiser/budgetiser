@@ -56,25 +56,23 @@ class _GroupFormState extends State<GroupForm> {
             : const Text("New Group"),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: const Text(""),
+        deadSpaceContent: Container(),
         deadSpaceSize: 150,
         child: Form(
           key: _formKey,
           child: Column(
             children: [
+              // icon and name
               Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconPicker(
-                      color: _color,
-                      initialIcon: _icon ?? Icons.blur_on,
-                      onIconChangedCallback: (iconData) {
-                        setState(() {
-                          _icon = iconData;
-                        });
-                      },
-                    ),
+                children: [
+                  IconPicker(
+                    color: _color,
+                    initialIcon: _icon ?? Icons.blur_on,
+                    onIconChangedCallback: (iconData) {
+                      setState(() {
+                        _icon = iconData;
+                      });
+                    },
                   ),
                   Flexible(
                     child: TextFormField(
@@ -101,18 +99,15 @@ class _GroupFormState extends State<GroupForm> {
                   });
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: TextFormField(
-                  controller: descriptionController,
-                  keyboardType: TextInputType.multiline,
-                  decoration: const InputDecoration(
-                    labelText: "Description",
-                    border: OutlineInputBorder(),
-                  ),
+              TextFormField(
+                controller: descriptionController,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
                 ),
               ),
-              const Divider(),
+              const Divider(height: 32),
               CategoryPicker(
                 initialCategories: _categories,
                 onCategoryPickedCallback: (data) {
@@ -121,7 +116,7 @@ class _GroupFormState extends State<GroupForm> {
                   });
                 },
               ),
-              const Divider(),
+              const Divider(height: 32),
             ],
           ),
         ),
@@ -161,9 +156,7 @@ class _GroupFormState extends State<GroupForm> {
                 ? const Icon(Icons.delete_outline)
                 : const Icon(Icons.close),
           ),
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           FloatingActionButton.extended(
             heroTag: 'save',
             onPressed: () {

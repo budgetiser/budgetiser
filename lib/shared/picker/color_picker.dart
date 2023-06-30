@@ -6,10 +6,12 @@ class ColorPicker extends StatefulWidget {
     Key? key,
     required this.initialSelectedColor,
     required this.onColorChangedCallback,
+    this.noPadding = false,
   }) : super(key: key);
 
   final Color initialSelectedColor;
   final Function(Color) onColorChangedCallback;
+  final bool noPadding;
 
   @override
   State<ColorPicker> createState() => _ColorPickerState();
@@ -18,9 +20,13 @@ class ColorPicker extends StatefulWidget {
 class _ColorPickerState extends State<ColorPicker> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
+    return Padding(
+      padding: widget.noPadding
+          ? const EdgeInsets.all(0)
+          : const EdgeInsets.only(top: 16, bottom: 24),
+      child: InkWell(
+        onTap: () {
+          showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -43,14 +49,16 @@ class _ColorPickerState extends State<ColorPicker> {
                   ),
                 ],
               );
-            });
-      },
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        height: 48,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: widget.initialSelectedColor,
+            },
+          );
+        },
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          height: 48,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: widget.initialSelectedColor,
+          ),
         ),
       ),
     );

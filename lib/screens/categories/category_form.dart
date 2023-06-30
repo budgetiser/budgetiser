@@ -54,65 +54,57 @@ class _CategoryFormState extends State<CategoryForm> {
             : const Text("New Category"),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: const Text(""),
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconPicker(
-                          color: _color,
-                          initialIcon: _icon,
-                          onIconChangedCallback: (iconData) {
-                            setState(() {
-                              _icon = iconData;
-                            });
-                          },
-                        ),
-                      ),
-                      Flexible(
-                        child: TextFormField(
-                          controller: nameController,
-                          validator: (data) {
-                            if (data == null || data == '') {
-                              return "Please enter a valid name";
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            labelText: "Category title",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                    ],
+        deadSpaceContent: Container(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // icon and name
+              Row(
+                children: <Widget>[
+                  IconPicker(
+                    color: _color,
+                    initialIcon: _icon,
+                    onIconChangedCallback: (iconData) {
+                      setState(() {
+                        _icon = iconData;
+                      });
+                    },
                   ),
-                  const SizedBox(height: 8), //TODO: colorpicker top padding
-                  ColorPicker(
-                      initialSelectedColor: _color,
-                      onColorChangedCallback: (color) {
-                        setState(() {
-                          _color = color;
-                        });
-                      }),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: descriptionController,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      labelText: "Description",
-                      border: OutlineInputBorder(),
+                  Flexible(
+                    child: TextFormField(
+                      controller: nameController,
+                      validator: (data) {
+                        if (data == null || data == '') {
+                          return "Please enter a valid name";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Category title",
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
                 ],
               ),
-            )
-          ],
+              ColorPicker(
+                  initialSelectedColor: _color,
+                  onColorChangedCallback: (color) {
+                    setState(() {
+                      _color = color;
+                    });
+                  }),
+              TextFormField(
+                controller: descriptionController,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Row(

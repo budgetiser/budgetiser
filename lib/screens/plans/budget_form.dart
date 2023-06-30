@@ -78,115 +78,105 @@ class _BudgetFormState extends State<BudgetForm> {
             : const Text("New Budget"),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: const Text(""),
+        deadSpaceContent: Container(),
         deadSpaceSize: 150,
         child: Form(
           key: _formKey,
-          child: Container(
-            alignment: Alignment.topCenter,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconPicker(
-                          color: _color,
-                          initialIcon: _icon ?? Icons.blur_on,
-                          onIconChangedCallback: (iconData) {
-                            setState(() {
-                              _icon = iconData;
-                            });
-                          },
-                        ),
-                      ),
-                      Flexible(
-                        child: TextFormField(
-                          controller: nameController,
-                          validator: (data) {
-                            if (data == null || data == '') {
-                              return "Please enter a valid name";
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            labelText: "Budget title",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                    ],
+          child: Column(
+            children: [
+              Row(
+                children: <Widget>[
+                  IconPicker(
+                    color: _color,
+                    initialIcon: _icon ?? Icons.blur_on,
+                    onIconChangedCallback: (iconData) {
+                      setState(() {
+                        _icon = iconData;
+                      });
+                    },
                   ),
-                  ColorPicker(
-                      initialSelectedColor: _color,
-                      onColorChangedCallback: (color) {
-                        setState(() {
-                          _color = color;
-                        });
-                      }),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: TextFormField(
-                          controller: balanceController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: "Balance",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
+                  Flexible(
+                    child: TextFormField(
+                      controller: nameController,
+                      validator: (data) {
+                        if (data == null || data == '') {
+                          return "Please enter a valid name";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Budget title",
+                        border: OutlineInputBorder(),
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Flexible(
-                        child: TextFormField(
-                          controller: limitController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: "Limit",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: descriptionController,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      labelText: "Description",
-                      border: OutlineInputBorder(),
                     ),
-                  ),
-                  const Divider(),
-                  CategoryPicker(
-                    initialCategories: budgetCategories,
-                    onCategoryPickedCallback: (data) {
-                      setState(() {
-                        budgetCategories = data;
-                      });
-                    },
-                  ),
-                  const Divider(),
-                  RecurringForm(
-                    scrollController: _scrollController,
-                    onRecurringDataChangedCallback: (data) {
-                      setState(() {
-                        recurringData = data;
-                      });
-                    },
-                    initialRecurringData: recurringData,
                   ),
                 ],
               ),
-            ),
+              ColorPicker(
+                  initialSelectedColor: _color,
+                  onColorChangedCallback: (color) {
+                    setState(() {
+                      _color = color;
+                    });
+                  }),
+              Row(
+                children: [
+                  Flexible(
+                    child: TextFormField(
+                      controller: balanceController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: "Balance",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                      controller: limitController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: "Limit",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: descriptionController,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const Divider(height: 32),
+              CategoryPicker(
+                initialCategories: budgetCategories,
+                onCategoryPickedCallback: (data) {
+                  setState(() {
+                    budgetCategories = data;
+                  });
+                },
+              ),
+              const Divider(height: 32),
+              RecurringForm(
+                scrollController: _scrollController,
+                onRecurringDataChangedCallback: (data) {
+                  setState(() {
+                    recurringData = data;
+                  });
+                },
+                initialRecurringData: recurringData,
+              ),
+            ],
           ),
         ),
       ),
@@ -225,9 +215,7 @@ class _BudgetFormState extends State<BudgetForm> {
                 ? const Icon(Icons.delete_outline)
                 : const Icon(Icons.close),
           ),
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           FloatingActionButton.extended(
             heroTag: 'save',
             onPressed: () {
