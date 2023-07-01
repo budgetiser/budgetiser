@@ -50,6 +50,7 @@ class _TransactionFormState extends State<TransactionForm> {
   var descriptionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final _formValueKey = GlobalKey<FormFieldState>();
 
   // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
@@ -130,9 +131,31 @@ class _TransactionFormState extends State<TransactionForm> {
                     const SizedBox(height: 16),
                     // value & date input
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        IconButton(
+                          icon: Icon(valueController.text.startsWith("-")
+                              ? Icons.remove
+                              : Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              valueController.text.startsWith("-")
+                                  ? valueController.text =
+                                      valueController.text.substring(1)
+                                  : valueController.text =
+                                      "-${valueController.text}";
+                            });
+                            _formValueKey.currentState!.validate();
+                          },
+                          color: valueController.text.startsWith("-")
+                              ? const Color.fromARGB(255, 174, 74, 99)
+                              : const Color.fromARGB(239, 29, 129, 37),
+                          splashRadius: 24,
+                          iconSize: 48,
+                        ),
                         Flexible(
                           child: TextFormField(
+                            key: _formValueKey,
                             controller: valueController,
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
@@ -141,21 +164,21 @@ class _TransactionFormState extends State<TransactionForm> {
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) {
-                              // _formKey.currentState!.validate();
+                              _formValueKey.currentState!.validate();
 
                               // to update the visualization
                               setState(() {});
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter a value';
+                                return 'Enter a value';
                               }
                               try {
                                 if (double.parse(value) < 0 && hasAccount2) {
                                   return 'Only positive values with two accounts';
                                 }
                               } catch (e) {
-                                return 'Please enter a valid number';
+                                return 'Enter a valid number';
                               }
                               return null;
                             },
@@ -490,5 +513,6 @@ class _TransactionFormState extends State<TransactionForm> {
         selectedAccount2 = null;
       }
     });
+    _formValueKey.currentState!.validate();
   }
 }
