@@ -12,16 +12,14 @@ import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
-/// a screen that allows the user to add a transaction
+/// A screen that allows the user to add a transaction
 /// or edit an existing one
 ///
 /// attributes:
-/// * [initialBalance] - set initial balance
-/// * TODO:
-///
-/// ONE of the following can be passed in:
-/// - a SingleTransaction
-/// - a RecurringTransaction
+/// * optional [SingleTransaction] - edit this transaction
+/// * optional [initialBalance] - set initial balance
+/// * optional [SingleTransaction] - set initial selected account
+
 class TransactionForm extends StatefulWidget {
   const TransactionForm({
     Key? key,
