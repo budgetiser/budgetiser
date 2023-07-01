@@ -23,7 +23,8 @@ class _IconPickerState extends State<IconPicker> {
   @override
   Widget build(BuildContext context) {
     _currentIcon = widget.initialIcon ?? Icons.blur_on;
-    return SizedBox(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: InkWell(
         onTap: () {
           _searchString = null;
