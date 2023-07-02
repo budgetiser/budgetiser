@@ -18,14 +18,7 @@ class Stats extends StatefulWidget {
 enum PagesEnum { simpleText }
 
 class _StatsState extends State<Stats> {
-  TransactionCategory? _selectedCategory;
   Account? _selectedAccount;
-
-  setCategory(TransactionCategory category) {
-    setState(() {
-      _selectedCategory = category;
-    });
-  }
 
   setAccount(Account account) {
     setState(() {
@@ -56,15 +49,9 @@ class _StatsState extends State<Stats> {
             ],
           ),
           const SizedBox(height: 16),
-          SelectCategory(
-            initialCategory: _selectedCategory,
-            callback: setCategory,
-          ),
-          const Divider(),
-          if (_selectedAccount != null && _selectedCategory != null)
+          if (_selectedAccount != null)
           LineChartTest(
-            account: _selectedAccount,
-            category: _selectedCategory,
+            account: _selectedAccount
           ),
         ],
       )

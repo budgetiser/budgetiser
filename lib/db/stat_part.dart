@@ -20,4 +20,88 @@ extension DatabaseExtensionStat on DatabaseHelper {
         [account.id, transactionCategory.id]);
     return maps[0]['count'];
   }
+
+  /// Get current balance of account
+  Future<double> getCurrentAccountBalance(
+      Account account) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        '''SELECT balance 
+        FROM account
+        WHERE account.id = ?''',
+        [account.id]);
+    return maps[0]["balance"];
+  }
+
+  /// Get Account Balances in date range
+  Future<List<Map<String, dynamic>>> getAccountBalancesAtTime(
+      Account account, DateTime start, DateTime end) async {
+    final db = await database;
+    final startString = start.toIso8601String();
+    final endString = end.toIso8601String();
+
+    final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
+        '''SELECT balance 
+        FROM account
+        WHERE account.id = ?''',
+        [account.id]);
+    double balance = balanceMaps[0]["balance"];
+    double startBalance = balance;
+    double endBalance = balance;
+
+    final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
+        '''SELECT SUM(value) as value, date 
+        FROM singleTransaction, singleTransactionToAccount 
+        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
+        AND account1_id = ?
+        AND singleTransaction.date >= ?
+        GROUP BY date
+        ORDER BY singleTransaction.date DESC''',
+        [account.id, startString]);
+    List<Map<String, dynamic>> result = [];
+    for (var element in transactionMaps) {
+      if (endString.compareTo(element["date"]) <= 0){
+        balance = balance - element["value"];
+        endBalance = balance;
+      }else {
+        startBalance = balance;
+        result.add({
+          "value": double.parse((balance).toStringAsFixed(1)),
+          "date": element["date"]
+        });
+        balance = balance - element["value"];
+      }
+    }
+    if(endString.compareTo(transactionMaps.first["date"]) != 0){
+      result.add({
+        "value": double.parse((endBalance).toStringAsFixed(1)),
+        "date": endString
+      });
+    }
+    if(startString.compareTo(transactionMaps.last["date"]) != 0){
+      result.add({
+        "value": double.parse((startBalance).toStringAsFixed(1)),
+        "date": startString
+      });
+    }
+    return result;
+  }
+
+  /// Get all transactions in a category and account
+  Future<List<Map<String, dynamic>>> getTransactions(
+      Account account, TransactionCategory transactionCategory, DateTime start, DateTime end) async {
+    final db = await database;
+    final startString = start.toIso8601String();
+    final endString = end.toIso8601String();
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        '''SELECT value, date 
+        FROM singleTransaction, singleTransactionToAccount 
+        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
+        AND account1_id = ? and category_id = ?
+        AND singleTransaction.date >= ?
+        AND singleTransaction.date <= ?
+        ORDER BY singleTransaction.date''',
+        [account.id, transactionCategory.id, startString, endString]);
+    return maps;
+  }
 }

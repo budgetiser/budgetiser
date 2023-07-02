@@ -7,11 +7,9 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 class LineChartTest extends StatefulWidget {
   const LineChartTest({
     Key? key,
-    this.category,
     this.account,
   }) : super(key: key);
   final Account? account;
-  final TransactionCategory? category;
   @override
   State<LineChartTest> createState() => _LineChartTestState();
 }
@@ -31,14 +29,17 @@ class _LineChartTestState extends State<LineChartTest>{
     );
     Widget text;
     switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
+      case 1:
+        text = const Text('1', style: style);
         break;
-      case 5:
-        text = const Text('JUN', style: style);
+      case 10:
+        text = const Text('10', style: style);
         break;
-      case 8:
-        text = const Text('SEP', style: style);
+      case 20:
+        text = const Text('20', style: style);
+        break;
+      case 30:
+        text = const Text('30', style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -56,36 +57,28 @@ class _LineChartTestState extends State<LineChartTest>{
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
+    String text = "";
+    if (value.toInt() % 250 == 0){
+      text = value.toInt().toString();
     }
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          FutureBuilder(
-            future: DatabaseHelper.instance.getSpending(widget.account!, widget.category!),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return LineChart(
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: DatabaseHelper.instance.getAccountBalancesAtTime(widget.account!, DateTime(2022, 10, 1), DateTime(2022, 10, 31)),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<Map<String, dynamic>> temp = snapshot.data!;
+              if(snapshot.data!.isEmpty){
+                return Text("No data");
+              }
+              temp.sort((a, b) => a['value'].compareTo(b['value']));
+              return LineChart(
                   LineChartData(
                     gridData: FlGridData(
                       show: true,
@@ -135,21 +128,17 @@ class _LineChartTestState extends State<LineChartTest>{
                       border: Border.all(color: const Color(0xff37434d)),
                     ),
                     minX: 0,
-                    maxX: 11,
-                    minY: 0,
-                    maxY: 6,
+                    maxX: 32,
+                    minY: temp.first["value"] > 0 ? temp.first["value"]-temp.first["value"]*0.05 : temp.first["value"]*1.05,
+                    maxY: temp.last["value"] > 0 ? temp.last["value"]*1.05 : temp.last["value"]-temp.last["value"]*0.05,
                     lineBarsData: [
                       LineChartBarData(
-                        spots: const [
-                          FlSpot(0, 3),
-                          FlSpot(2.6, 2),
-                          FlSpot(4.9, 5),
-                          FlSpot(6.8, 3.1),
-                          FlSpot(8, 4),
-                          FlSpot(9.5, 3),
-                          FlSpot(11, 4),
-                        ],
-                        isCurved: true,
+                        spots: List.generate(snapshot.data!.length, (index) {
+                          double day = DateTime.parse(snapshot.data?[index]["date"]).day.toDouble();
+                          double value = snapshot.data?[index]["value"].toDouble();
+                          return FlSpot(day, value);
+                        }),
+                        isCurved: false,
                         gradient: LinearGradient(
                           colors: gradientColors,
                         ),
@@ -169,20 +158,19 @@ class _LineChartTestState extends State<LineChartTest>{
                       ),
                     ],
                   )
-                );
-              }
-              else if (snapshot.hasError) {
-                throw snapshot.error!;
-              }
-              else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )
-        ]
+              );
+            }
+            else if (snapshot.hasError) {
+              throw snapshot.error!;
+            }
+            else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       )
-    );
+      );
   }
 }
