@@ -186,14 +186,6 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     final List<Map<String, dynamic>> dateList = await db.rawQuery(
       'Select distinct date from SingleTransaction',
     );
-    // Set<String> distinctMonths = {};
-    // for (var item in dateList) {
-    //   DateTime dateTime = DateTime.parse(item['date']);
-    //   String yearMonth = '${dateTime.year}-${dateTime.month}';
-    //   distinctMonths.add(yearMonth);
-    // }
-    // distinctMonths.toList().sort();
-    // datetimes.add(DateTime.now());
 
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
@@ -209,7 +201,6 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     return sorted;
   }
 
-  /// TODO: filter by account/accountID and not nameString
   Future<List<SingleTransaction>> getFilteredTransactionsByMonth({
     required DateTime inMonth,
     Account? account,
