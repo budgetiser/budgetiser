@@ -262,13 +262,16 @@ class _AccountFormState extends State<AccountForm> {
                   if (formKey.currentState!.validate()) {
                     Navigator.pop(context);
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => TransactionForm(
-                                initialBalance: (double.parse(
-                                            inputController.text) -
-                                        double.parse(balanceController.text))
-                                    .toStringAsFixed(2))));
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => TransactionForm(
+                          initialBalance: (double.parse(inputController.text) -
+                                  double.parse(balanceController.text))
+                              .toStringAsFixed(2),
+                          initialSelectedAccount: widget.initialAccount,
+                        ),
+                      ),
+                    );
                   }
                 },
                 label: const Text("Set"),
