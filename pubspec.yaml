@@ -40,6 +40,9 @@ dependencies:
   path: ^1.8.1
   path_provider: ^2.0.15
 
+  # MIT License
+  fl_chart: ^0.63.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

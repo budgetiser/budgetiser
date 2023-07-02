@@ -1,3 +1,4 @@
+import 'package:budgetiser/screens/stats/lineChart.dart';
 import 'package:budgetiser/screens/stats/simple_text_stat.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
@@ -42,32 +43,31 @@ class _StatsState extends State<Stats> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          children: [
-            Row(
-              children: [
-                const Text("Account: "),
-                Expanded(
-                  child: SelectAccount(
-                    initialAccount: _selectedAccount,
-                    callback: setAccount,
-                  ),
+        children: [
+          Row(
+            children: [
+              const Text("Account: "),
+              Expanded(
+                child: SelectAccount(
+                  initialAccount: _selectedAccount,
+                  callback: setAccount,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SelectCategory(
-              initialCategory: _selectedCategory,
-              callback: setCategory,
-            ),
-            const Divider(),
-            if (_selectedAccount != null && _selectedCategory != null)
-              SimpleTextStat(
-                account: _selectedAccount,
-                category: _selectedCategory,
               ),
-          ],
-        ),
-      ),
-    );
+            ],
+          ),
+          const SizedBox(height: 16),
+          SelectCategory(
+            initialCategory: _selectedCategory,
+            callback: setCategory,
+          ),
+          const Divider(),
+          if (_selectedAccount != null && _selectedCategory != null)
+          LineChartTest(
+            account: _selectedAccount,
+            category: _selectedCategory,
+          ),
+        ],
+      )
+    ));
   }
 }
