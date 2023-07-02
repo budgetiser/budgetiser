@@ -29,7 +29,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   void initState() {
-    DatabaseHelper.instance.pushGetAllTransactionsStream();
+    DatabaseHelper.instance.allTransactionStream.listen((event) {
+      updateMonthsFuture();
+    });
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       _accountList = event;
     });
@@ -50,6 +52,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   final GlobalKey _futureBuilderKey = GlobalKey();
+  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
 
   Account? _currentFilterAccount;
   TransactionCategory? _currentFilterCategory;
@@ -151,7 +154,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       drawer: createDrawer(context),
       body: FutureBuilder<List<DateTime>>(
-        future: DatabaseHelper.instance.getAllMonths(),
+        future: monthsFuture,
         key: _futureBuilderKey,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -171,9 +174,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
+  void updateMonthsFuture() async {
+    if (mounted) {
+      setState(() {
+        monthsFuture = DatabaseHelper.instance.getAllMonths();
+      });
+    }
+  }
+
   SingleChildScrollView _screenContent(AsyncSnapshot<List<DateTime>> snapshot) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+      padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         children: [
           for (DateTime monthYear in snapshot.data!)
@@ -184,15 +195,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   category: _currentFilterCategory),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  bool isCurrentMonth =
+                      DateTime.now().month == monthYear.month &&
+                          DateTime.now().year == monthYear.year;
                   return ExpansionTile(
                     backgroundColor: Theme.of(context).dividerTheme.color,
                     collapsedBackgroundColor:
                         Theme.of(context).dividerTheme.color,
+                    onExpansionChanged: (value) => updateMonthsFuture(),
+                    initiallyExpanded: isCurrentMonth,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (DateTime.now().month == monthYear.month &&
-                            DateTime.now().year == monthYear.year)
+                        if (isCurrentMonth)
                           const Text("Current Month")
                         else
                           Text(

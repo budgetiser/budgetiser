@@ -181,6 +181,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     throw Exception('Error in getOneTransaction');
   }
 
+  /// returns all months containing a transaction as the first of the month
   Future<List<DateTime>> getAllMonths() async {
     final db = await database;
     final List<Map<String, dynamic>> dateList = await db.rawQuery(

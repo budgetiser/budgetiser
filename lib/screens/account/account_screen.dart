@@ -114,15 +114,14 @@ class _AccountScreenState extends State<AccountScreen> {
           if (snapshot.hasData) {
             snapshot.data!.sort(sortFunction);
             return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
               itemCount: snapshot.data!.length,
+              physics: const ClampingScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 80),
               itemBuilder: (BuildContext context, int index) {
                 return AccountItem(
                   accountData: snapshot.data![index],
                 );
               },
-              padding: const EdgeInsets.only(bottom: 80),
             );
           } else if (snapshot.hasError) {
             return const Text("Oops!");
