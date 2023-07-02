@@ -37,4 +37,9 @@ class SingleTransaction {
     m['account2'] = account2 != null ? account2!.id : null;
     return m;
   }
+
+  @override
+  String toString() {
+    return "Account: ${toMap()}";
+  }
 }

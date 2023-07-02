@@ -13,10 +13,10 @@ class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
   const TransactionsScreen({
     Key? key,
-    this.initialAccountFilterName,
+    // this.initialAccountFilterName,
   }) : super(key: key);
 
-  final String? initialAccountFilterName;
+  // final String? initialAccountFilterName;
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -37,40 +37,40 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     DatabaseHelper.instance.pushGetAllAccountsStream();
     DatabaseHelper.instance.pushGetAllCategoriesStream();
 
-    if (widget.initialAccountFilterName != null) {
-      _currentFilterAccountName = widget.initialAccountFilterName!;
-    }
+    // if (widget.initialAccountFilterName != null) {
+    //   _currentFilterAccount = widget.initialAccountFilterName!;
+    // }
 
     super.initState();
   }
 
-  String _currentFilterAccountName = "";
-  String _currentFilterCategoryName = "";
+  Account? _currentFilterAccount;
+  TransactionCategory? _currentFilterCategory;
 
   List<Account> _accountList = <Account>[];
   List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   // Function to filter all transactions by account and category
-  bool _filterFunction(SingleTransaction transaction) {
-    if (_currentFilterAccountName == "") {
-      if (_currentFilterCategoryName == "") {
-        return true;
-      } else {
-        return transaction.category.name == _currentFilterCategoryName;
-      }
-    } else {
-      if (_currentFilterCategoryName == "") {
-        return transaction.account.name == _currentFilterAccountName ||
-            (transaction.account2 != null &&
-                transaction.account2!.name == _currentFilterAccountName);
-      } else {
-        return (transaction.account.name == _currentFilterAccountName ||
-                (transaction.account2 != null &&
-                    transaction.account2!.name == _currentFilterAccountName)) &&
-            transaction.category.name == _currentFilterCategoryName;
-      }
-    }
-  }
+  // bool _filterFunction(SingleTransaction transaction) {
+  //   if (_currentFilterAccount == "") {
+  //     if (_currentFilterCategory == "") {
+  //       return true;
+  //     } else {
+  //       return transaction.category.name == _currentFilterCategory;
+  //     }
+  //   } else {
+  //     if (_currentFilterCategory == "") {
+  //       return transaction.account.name == _currentFilterAccount ||
+  //           (transaction.account2 != null &&
+  //               transaction.account2!.name == _currentFilterAccount);
+  //     } else {
+  //       return (transaction.account.name == _currentFilterAccount ||
+  //               (transaction.account2 != null &&
+  //                   transaction.account2!.name == _currentFilterAccount)) &&
+  //           transaction.category.name == _currentFilterCategory;
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -91,13 +91,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       children: [
                         const Text('Filter'),
                         ElevatedButton(
-                          onPressed: (_currentFilterAccountName == "" &&
-                                  _currentFilterCategoryName == "")
+                          onPressed: (_currentFilterAccount == "" &&
+                                  _currentFilterCategory == "")
                               ? null
                               : () {
                                   setState(() {
-                                    _currentFilterAccountName = "";
-                                    _currentFilterCategoryName = "";
+                                    _currentFilterAccount = null;
+                                    _currentFilterCategory = null;
                                   });
                                   Navigator.pop(context);
                                 },
@@ -105,7 +105,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                       ],
                     ),
-                    alignment: Alignment.topRight,
                     children: [
                       const Padding(
                         padding: EdgeInsets.symmetric(
@@ -117,19 +116,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ListTile(
                         title: const Text("All Accounts"),
                         visualDensity: VisualDensity.compact,
-                        leading: Radio(
-                          value: "",
-                          groupValue: _currentFilterAccountName,
+                        leading: Radio<Account?>(
+                          value: null,
+                          groupValue: _currentFilterAccount,
                           onChanged: (value) {
                             setState(() {
-                              _currentFilterAccountName = value.toString();
+                              _currentFilterAccount = value;
                             });
                             Navigator.of(context).pop();
                           },
                         ),
                       ),
                       for (var account in _accountList)
-                        _filterListTile(account),
+                        _accountFilterListTile(account),
                       const Divider(
                         indent: 25,
                       ),
@@ -143,19 +142,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ListTile(
                         title: const Text("All Categories"),
                         visualDensity: VisualDensity.compact,
-                        leading: Radio(
-                          value: "",
-                          groupValue: _currentFilterCategoryName,
+                        leading: Radio<TransactionCategory?>(
+                          value: null,
+                          groupValue: _currentFilterCategory,
                           onChanged: (value) {
                             setState(() {
-                              _currentFilterCategoryName = value.toString();
+                              _currentFilterCategory = value;
                             });
                             Navigator.of(context).pop();
                           },
                         ),
                       ),
                       for (var category in _categoryList)
-                        _filterListTile(category),
+                        _categoryFilterListTile(category),
                     ],
                   );
                 },
@@ -166,39 +165,57 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         title: Text(title),
       ),
       drawer: createDrawer(context),
-      body: StreamBuilder<List<SingleTransaction>>(
-        stream: DatabaseHelper.instance.allTransactionStream,
+      body: FutureBuilder<List<DateTime>>(
+        future: DatabaseHelper.instance.getAllMonths(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var filteredList = snapshot.data!.where(_filterFunction).toList();
-            return FutureBuilder<List<DateTime>>(
-                future: DatabaseHelper.instance.getAllMonths(),
-                builder: (context, snapshot) {
-                  print(snapshot);
-                  print(snapshot.data);
-                  if (snapshot.hasData) {
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          for (DateTime monthYear in snapshot.data!)
-                            ExpansionTile(
-                              title: Text(
-                                  "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  for (DateTime monthYear in snapshot.data!)
+                    FutureBuilder<List<SingleTransaction>>(
+                      future: DatabaseHelper.instance
+                          .getFilteredTransactionsByMonth(
+                              inMonth: monthYear,
+                              account: _currentFilterAccount,
+                              category: _currentFilterCategory),
+                      builder: (context, snapshot) {
+                        print("===");
+                        if (snapshot.hasData) {
+                          print("data");
+                          print(snapshot.data!);
+                          return ExpansionTile(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                TransactionItem(
-                                  singleTransactionData: filteredList[0],
-                                ),
+                                Text(
+                                    "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
+                                Text(snapshot.data!.length.toString()),
                               ],
                             ),
-                        ],
-                      ),
-                    );
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                });
-          } else if (snapshot.hasError) {
-            return const Text("Oops!");
+                            children: [
+                              SizedBox(
+                                height: 400,
+                                child: ListView.builder(
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    return TransactionItem(
+                                      singleTransactionData:
+                                          snapshot.data![index],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    ),
+                ],
+              ),
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },
@@ -214,27 +231,33 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  ListTile _filterListTile(element) {
-    if (element is! Account && element is! TransactionCategory) {
-      throw Exception("Unknown element passed to _filterListTile");
-    }
+  ListTile _accountFilterListTile(Account element) {
     return ListTile(
-      title: element is Account
-          ? AccountTextWithIcon(element)
-          : CategoryTextWithIcon(element),
+      title: AccountTextWithIcon(element),
       visualDensity: VisualDensity.compact,
-      leading: Radio(
-        value: element.name.toString(),
-        groupValue: (element is Account)
-            ? _currentFilterAccountName
-            : _currentFilterCategoryName,
+      leading: Radio<Account>(
+        value: element,
+        groupValue: _currentFilterAccount,
         onChanged: (value) {
           setState(() {
-            if (element is Account) {
-              _currentFilterAccountName = value.toString();
-            } else {
-              _currentFilterCategoryName = value.toString();
-            }
+            _currentFilterAccount = value;
+          });
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
+  ListTile _categoryFilterListTile(TransactionCategory element) {
+    return ListTile(
+      title: CategoryTextWithIcon(element),
+      visualDensity: VisualDensity.compact,
+      leading: Radio<TransactionCategory>(
+        value: element,
+        groupValue: _currentFilterCategory,
+        onChanged: (value) {
+          setState(() {
+            _currentFilterCategory = value;
           });
           Navigator.of(context).pop();
         },

@@ -209,19 +209,22 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     return sorted;
   }
 
-  Future<List<SingleTransaction>> getTransactionsInMonth(
-      DateTime monthAsDate) async {
+  /// TODO: filter by account/accountID and not nameString
+  Future<List<SingleTransaction>> getFilteredTransactionsByMonth({
+    required DateTime inMonth,
+    Account? account,
+    TransactionCategory? category,
+  }) async {
     final db = await database;
 
-    // final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-    // 'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');
-
-    List<Map<String, dynamic>> mapSingle = await db.query(
-      'singleTransaction',
-      where: 'date LIKE ?',
-      whereArgs: [
-        '${monthAsDate.year}-${monthAsDate.month.toString().padLeft(2, '0')}%'
-      ],
+    List<Map<String, dynamic>> mapSingle = await db.rawQuery(
+      '''Select distinct * from singleTransaction, singleTransactionToAccount 
+      where singleTransaction.id = singleTransactionToAccount.transaction_id 
+      and date LIKE ?
+      ${account != null ? "and (singleTransactionToAccount.account1_id = ${account.id} or singleTransactionToAccount.account2_id = ${account.id})" : ""}
+      ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
+      ''',
+      ['${inMonth.year}-${inMonth.month.toString().padLeft(2, '0')}%'],
     );
 
     List<SingleTransaction> transactions = [];

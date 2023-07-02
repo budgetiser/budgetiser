@@ -137,8 +137,8 @@ class _AccountFormState extends State<AccountForm> {
                       onPressed: (() {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => TransactionsScreen(
-                            initialAccountFilterName: nameController.text,
-                          ),
+                              // initialAccountFilterName: nameController.text, TODO:
+                              ),
                         ));
                       }),
                       label: const Text("View all transactions"),
