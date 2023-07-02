@@ -5,6 +5,7 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
 
 class CategoryForm extends StatefulWidget {
@@ -52,79 +53,57 @@ class _CategoryFormState extends State<CategoryForm> {
             ? const Text("Edit Category")
             : const Text("New Category"),
       ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: IconPicker(
-                                  color: _color,
-                                  initialIcon: _icon,
-                                  onIconChangedCallback: (icondata) {
-                                    setState(() {
-                                      _icon = icondata;
-                                    });
-                                  },
-                                ),
-                              ),
-                              Flexible(
-                                child: TextFormField(
-                                  controller: nameController,
-                                  validator: (data) {
-                                    if (data == null || data == '') {
-                                      return "Please enter a valid name";
-                                    }
-                                    return null;
-                                  },
-                                  decoration: const InputDecoration(
-                                    labelText: "Category title",
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Colorpicker(
-                              initialSelectedColor: _color,
-                              onColorChangedCallback: (color) {
-                                setState(() {
-                                  _color = color;
-                                });
-                              }),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: TextFormField(
-                              controller: descriptionController,
-                              keyboardType: TextInputType.multiline,
-                              decoration: const InputDecoration(
-                                labelText: "Description",
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ],
+      body: ScrollViewWithDeadSpace(
+        deadSpaceContent: Container(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // icon and name
+              Row(
+                children: <Widget>[
+                  IconPicker(
+                    color: _color,
+                    initialIcon: _icon,
+                    onIconChangedCallback: (iconData) {
+                      setState(() {
+                        _icon = iconData;
+                      });
+                    },
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                      controller: nameController,
+                      validator: (data) {
+                        if (data == null || data == '') {
+                          return "Please enter a valid name";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Category title",
+                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
+                ],
+              ),
+              ColorPicker(
+                  initialSelectedColor: _color,
+                  onColorChangedCallback: (color) {
+                    setState(() {
+                      _color = color;
+                    });
+                  }),
+              TextFormField(
+                controller: descriptionController,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
           ),
         ),
       ),

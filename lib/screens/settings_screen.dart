@@ -30,10 +30,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void asyncSetStateFromPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
+    final preferences = await SharedPreferences.getInstance();
     final awaitedCurrency = await SettingsCurrencyHandler().getCurrency();
     setState(() {
-      _selectedDarkModeValue = prefs.getString('key-themeMode') ?? 'system';
+      _selectedDarkModeValue =
+          preferences.getString('key-themeMode') ?? 'system';
       _selectedCurrency = awaitedCurrency;
     });
   }
@@ -133,7 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     return ConfirmationDialog(
                       title: "Attention",
                       description:
-                          "Are you sure? This will potentially override existing budgetiser.json file in the Download folder!", //TODO:
+                          "Are you sure? This will potentially override existing budgetiser.json file in the App folder!",
                       onSubmitCallback: () async {
                         await DatabaseHelper.instance.exportAsJson();
                         Navigator.of(context).pop();

@@ -7,7 +7,6 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
@@ -22,7 +21,6 @@ import 'package:path_provider/path_provider.dart';
 part 'account_part.dart';
 part 'stat_part.dart';
 part 'single_transaction_part.dart';
-part 'recurring_transaction_part.dart';
 part 'category_part.dart';
 part 'savings_part.dart';
 part 'budget_part.dart';
@@ -41,9 +39,9 @@ class DatabaseHelper {
       _database ??= await initializeDatabase();
 
   Future<int> login(String passCode) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('encrypted')) {
-      prefs.setBool('encrypted', false);
+    final preferences = await SharedPreferences.getInstance();
+    if (!preferences.containsKey('encrypted')) {
+      preferences.setBool('encrypted', false);
     }
     _passcode = passCode;
     _database = await initializeDatabase();
@@ -51,8 +49,8 @@ class DatabaseHelper {
   }
 
   Future<int> createDatabase(String passCode) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool('encrypted', passCode != '' ? true : false);
+    final preferences = await SharedPreferences.getInstance();
+    preferences.setBool('encrypted', passCode != '' ? true : false);
     _passcode = passCode;
     _database = await initializeDatabase();
     return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
@@ -78,9 +76,6 @@ class DatabaseHelper {
     for (var category in TMP_DATA_categoryList) {
       await createCategory(category);
     }
-    for (var recurringTransaction in TMP_DATA_recurringTransactionList) {
-      await createRecurringTransaction(recurringTransaction);
-    }
     for (var transaction in TMP_DATA_transactionList) {
       await createSingleTransaction(transaction);
     }
@@ -99,13 +94,13 @@ class DatabaseHelper {
   }
 
   initializeDatabase() async {
-    final prefs = await SharedPreferences.getInstance();
+    final preferences = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
         version: 1,
-        password: prefs.getBool('encrypted')! ? _passcode : null,
+        password: preferences.getBool('encrypted')! ? _passcode : null,
         onCreate: _onCreate,
         onUpgrade: (db, oldVersion, newVersion) async {
           _dropTables(db);
@@ -175,13 +170,6 @@ class DatabaseHelper {
     pushGetAllGroupsStream();
     await allGroupsStream.first;
 
-    allRecurringTransactionStream.listen((event) {
-      fullJSON["RecurringTransactions"] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllRecurringTransactionsStream();
-    await allRecurringTransactionStream.first;
-
     allSavingsStream.listen((event) {
       fullJSON["Savings"] =
           event.map((element) => element.toJsonMap()).toList();
@@ -216,10 +204,6 @@ class DatabaseHelper {
       _allTransactionStreamController =
       StreamController<List<SingleTransaction>>.broadcast();
 
-  final StreamController<List<RecurringTransaction>>
-      _allRecurringTransactionStreamController =
-      StreamController<List<RecurringTransaction>>.broadcast();
-
   final StreamController<List<TransactionCategory>>
       _allCategoryStreamController =
       StreamController<List<TransactionCategory>>.broadcast();
@@ -233,44 +217,9 @@ class DatabaseHelper {
   final StreamController<List<Group>> _allGroupsStreamController =
       StreamController<List<Group>>.broadcast();
 
-  /*
-  * Single and Recurring Transaction
-  */
-
-  ///create a single transaction from a recurring transaction
-  Future<int> createSingleTransactionFromRecurringTransaction(
-      RecurringTransaction recurringTransaction) async {
-    final db = await database;
-
-    SingleTransaction singleTransaction = SingleTransaction(
-      id: 0, // id will be overwritten by the database
-      title: recurringTransaction.title,
-      value: recurringTransaction.value,
-      description: recurringTransaction.description,
-      category: recurringTransaction.category,
-      account: recurringTransaction.account,
-      account2: recurringTransaction.account2,
-      date: DateTime.now(),
-    );
-
-    int singleTransactionId = await createSingleTransaction(singleTransaction);
-
-    await db.insert(
-      'singleToRecurringTransaction',
-      {
-        'single_transaction_id': singleTransactionId,
-        'recurring_transaction_id': recurringTransaction.id,
-      },
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
-
-    return singleTransactionId;
-  }
-
   void dispose() {
     _allAccountsStreamController.close();
     _allTransactionStreamController.close();
-    _allRecurringTransactionStreamController.close();
     _allCategoryStreamController.close();
     _allSavingsStreamController.close();
     _allBudgetsStreamController.close();

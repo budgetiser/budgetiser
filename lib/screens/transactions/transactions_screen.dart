@@ -1,7 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
@@ -14,27 +13,21 @@ class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
   const TransactionsScreen({
     Key? key,
-    this.initalAccountFilterName,
+    this.initialAccountFilterName,
   }) : super(key: key);
 
-  final String? initalAccountFilterName;
+  final String? initialAccountFilterName;
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
 
-enum Pages { singleTransactions, recurringTransactions }
-
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  final PageController _pageController = PageController(
-    initialPage: Pages.singleTransactions.index,
-  );
   String title = "Transactions";
 
   @override
   void initState() {
     DatabaseHelper.instance.pushGetAllTransactionsStream();
-    DatabaseHelper.instance.pushGetAllRecurringTransactionsStream();
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       _accountList = event;
     });
@@ -44,16 +37,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     DatabaseHelper.instance.pushGetAllAccountsStream();
     DatabaseHelper.instance.pushGetAllCategoriesStream();
 
-    if (widget.initalAccountFilterName != null) {
-      _currentFilterAccountName = widget.initalAccountFilterName!;
+    if (widget.initialAccountFilterName != null) {
+      _currentFilterAccountName = widget.initialAccountFilterName!;
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   String _currentFilterAccountName = "";
@@ -63,14 +50,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   // Function to filter all transactions by account and category
-  bool _filterFunction(transaction) {
-    if (transaction is SingleTransaction ||
-        transaction is RecurringTransaction) {
-      transaction = transaction;
-    } else {
-      throw Exception("Unknown transaction type passed to filterFunction");
-    }
-
+  bool _filterFunction(SingleTransaction transaction) {
     if (_currentFilterAccountName == "") {
       if (_currentFilterCategoryName == "") {
         return true;
@@ -185,66 +165,27 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         title: Text(title),
       ),
       drawer: createDrawer(context),
-      body: PageView(
-        onPageChanged: (int page) {
-          setState(() {
-            if (page == Pages.singleTransactions.index) {
-              // title = "Budgets";
-              DatabaseHelper.instance.pushGetAllTransactionsStream();
-            } else if (page == Pages.recurringTransactions.index) {
-              // title = "Savings";
-              DatabaseHelper.instance.pushGetAllRecurringTransactionsStream();
-            }
-          });
+      body: StreamBuilder<List<SingleTransaction>>(
+        stream: DatabaseHelper.instance.allTransactionStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var filteredList = snapshot.data!.where(_filterFunction).toList();
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: filteredList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TransactionItem(
+                  singleTransactionData: filteredList[index],
+                );
+              },
+              padding: const EdgeInsets.only(bottom: 80),
+            );
+          } else if (snapshot.hasError) {
+            return const Text("Oops!");
+          }
+          return const Center(child: CircularProgressIndicator());
         },
-        children: [
-          StreamBuilder<List<SingleTransaction>>(
-            stream: DatabaseHelper.instance.allTransactionStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                var filteredList =
-                    snapshot.data!.where(_filterFunction).toList();
-                return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: filteredList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return TransactionItem(
-                      singleTransactionData: filteredList[index],
-                    );
-                  },
-                  padding: const EdgeInsets.only(bottom: 80),
-                );
-              } else if (snapshot.hasError) {
-                return const Text("Oops!");
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
-          StreamBuilder<List<RecurringTransaction>>(
-            stream: DatabaseHelper.instance.allRecurringTransactionStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                var filteredList =
-                    snapshot.data!.where(_filterFunction).toList();
-                return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: filteredList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return TransactionItem(
-                      recurringTransactionData: filteredList[index],
-                    );
-                  },
-                  padding: const EdgeInsets.only(bottom: 80),
-                );
-              } else if (snapshot.hasError) {
-                return const Text("Oops!");
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

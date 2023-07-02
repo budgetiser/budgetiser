@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class Colorpicker extends StatefulWidget {
-  const Colorpicker({
+class ColorPicker extends StatefulWidget {
+  const ColorPicker({
     Key? key,
     required this.initialSelectedColor,
     required this.onColorChangedCallback,
+    this.noPadding = false,
   }) : super(key: key);
 
   final Color initialSelectedColor;
   final Function(Color) onColorChangedCallback;
+  final bool noPadding;
 
   @override
-  State<Colorpicker> createState() => _ColorpickerState();
+  State<ColorPicker> createState() => _ColorPickerState();
 }
 
-class _ColorpickerState extends State<Colorpicker> {
-
+class _ColorPickerState extends State<ColorPicker> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
+    return Padding(
+      padding: widget.noPadding
+          ? const EdgeInsets.all(0)
+          : const EdgeInsets.only(top: 16, bottom: 20),
+      child: InkWell(
+        onTap: () {
+          showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -44,15 +49,16 @@ class _ColorpickerState extends State<Colorpicker> {
                   ),
                 ],
               );
-            });
-      },
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        height: 30,
-        margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: widget.initialSelectedColor,
+            },
+          );
+        },
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          height: 48,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: widget.initialSelectedColor,
+          ),
         ),
       ),
     );

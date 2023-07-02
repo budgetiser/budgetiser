@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
@@ -24,7 +23,8 @@ class _IconPickerState extends State<IconPicker> {
   @override
   Widget build(BuildContext context) {
     _currentIcon = widget.initialIcon ?? Icons.blur_on;
-    return SizedBox(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: InkWell(
         onTap: () {
           _searchString = null;
@@ -36,10 +36,14 @@ class _IconPickerState extends State<IconPicker> {
                     elevation: 0,
                     children: [
                       TextField(
-                        decoration: const InputDecoration(
-                          hintText: "Search",
-                          prefixIcon: Icon(Icons.search),
-                        ),
+                        decoration: InputDecoration(
+                            hintText: "Search",
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                            hintStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary)),
                         onChanged: (String value) {
                           setState(() {
                             _searchString = value;
@@ -53,6 +57,7 @@ class _IconPickerState extends State<IconPicker> {
               });
         },
         child: Icon(
+          size: 48,
           _currentIcon,
           color: widget.color,
         ),
