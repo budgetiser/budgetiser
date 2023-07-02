@@ -72,13 +72,13 @@ extension DatabaseExtensionStat on DatabaseHelper {
         balance = balance - element["value"];
       }
     }
-    if(endString.compareTo(transactionMaps.first["date"]) != 0){
+    if(transactionMaps.isNotEmpty && endString.compareTo(transactionMaps.first["date"]) != 0){
       result.add({
         "value": double.parse((endBalance).toStringAsFixed(1)),
         "date": endString
       });
     }
-    if(startString.compareTo(transactionMaps.last["date"]) != 0){
+    if(transactionMaps.isNotEmpty && startString.compareTo(transactionMaps.last["date"]) != 0){
       result.add({
         "value": double.parse((startBalance).toStringAsFixed(1)),
         "date": startString
