@@ -73,7 +73,7 @@ extension DatabaseExtensionStat on DatabaseHelper {
       }
     }
     if(transactionMaps.isNotEmpty && endString.compareTo(transactionMaps.first["date"]) != 0){
-      result.add({
+      result.insert(0, {
         "value": double.parse((endBalance).toStringAsFixed(1)),
         "date": endString
       });
