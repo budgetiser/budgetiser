@@ -39,7 +39,6 @@ class TransactionItem extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => TransactionForm(
-                  // always one of these will be null
                   initialSingleTransactionData: singleTransactionData,
                 ),
               ),
@@ -102,17 +101,19 @@ class TransactionItem extends StatelessWidget {
                       "${date.day}.${date.month}.${date.year}",
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    const SizedBox(width: 10),
                     Expanded(
-                      child: Text(
-                        description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        textWidthBasis: TextWidthBasis.parent,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.merge(const TextStyle(fontSize: 18)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          textWidthBasis: TextWidthBasis.parent,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.merge(const TextStyle(fontSize: 18)),
+                        ),
                       ),
                     ),
                     BalanceText(value),
@@ -121,11 +122,6 @@ class TransactionItem extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        const Divider(
-          thickness: 1,
-          indent: 10,
-          endIndent: 10,
         ),
       ],
     );

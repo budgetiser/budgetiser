@@ -40,6 +40,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     if (widget.initialAccountFilterName != null) {
       _currentFilterAccountName = widget.initialAccountFilterName!;
     }
+
     super.initState();
   }
 
@@ -170,17 +171,32 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var filteredList = snapshot.data!.where(_filterFunction).toList();
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: filteredList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return TransactionItem(
-                  singleTransactionData: filteredList[index],
-                );
-              },
-              padding: const EdgeInsets.only(bottom: 80),
-            );
+            return FutureBuilder<List<DateTime>>(
+                future: DatabaseHelper.instance.getAllMonths(),
+                builder: (context, snapshot) {
+                  print(snapshot);
+                  print(snapshot.data);
+                  if (snapshot.hasData) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          for (DateTime monthYear in snapshot.data!)
+                            ExpansionTile(
+                              title: Text(
+                                  "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
+                              children: [
+                                TransactionItem(
+                                  singleTransactionData: filteredList[0],
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                });
           } else if (snapshot.hasError) {
             return const Text("Oops!");
           }

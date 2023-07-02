@@ -180,4 +180,59 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     }
     throw Exception('Error in getOneTransaction');
   }
+
+  Future<List<DateTime>> getAllMonths() async {
+    final db = await database;
+    final List<Map<String, dynamic>> dateList = await db.rawQuery(
+      'Select distinct date from SingleTransaction',
+    );
+    // Set<String> distinctMonths = {};
+    // for (var item in dateList) {
+    //   DateTime dateTime = DateTime.parse(item['date']);
+    //   String yearMonth = '${dateTime.year}-${dateTime.month}';
+    //   distinctMonths.add(yearMonth);
+    // }
+    // distinctMonths.toList().sort();
+    // datetimes.add(DateTime.now());
+
+    Set<DateTime> distinctMonths = {};
+    for (var item in dateList) {
+      DateTime dateTime = DateTime.parse(item['date']);
+      distinctMonths.add(DateTime.parse(
+          '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-01'));
+    }
+
+    List<DateTime> sorted = distinctMonths.toList()
+      ..sort(
+        (a, b) => b.compareTo(a), // reverse sort
+      );
+    return sorted;
+  }
+
+  Future<List<SingleTransaction>> getTransactionsInMonth(
+      DateTime monthAsDate) async {
+    final db = await database;
+
+    // final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
+    // 'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');
+
+    List<Map<String, dynamic>> mapSingle = await db.query(
+      'singleTransaction',
+      where: 'date LIKE ?',
+      whereArgs: [
+        '${monthAsDate.year}-${monthAsDate.month.toString().padLeft(2, '0')}%'
+      ],
+    );
+
+    List<SingleTransaction> transactions = [];
+    for (int i = 0; i < mapSingle.length; i++) {
+      transactions.add(await _mapToSingleTransaction(mapSingle[i]));
+    }
+
+    transactions.sort((a, b) {
+      return b.date.compareTo(a.date);
+    });
+
+    return transactions;
+  }
 }
