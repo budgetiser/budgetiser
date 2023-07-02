@@ -185,6 +185,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ExpansionTile(
+                    backgroundColor: Theme.of(context).dividerTheme.color,
+                    collapsedBackgroundColor:
+                        Theme.of(context).dividerTheme.color,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -198,9 +201,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ],
                     ),
                     children: [
-                      SizedBox(
-                        height: 400,
+                      Container(
+                        color: Theme.of(context).scaffoldBackgroundColor,
                         child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return TransactionItem(
