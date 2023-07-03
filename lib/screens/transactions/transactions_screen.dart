@@ -198,6 +198,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   bool isCurrentMonth =
                       DateTime.now().month == monthYear.month &&
                           DateTime.now().year == monthYear.year;
+                  if (snapshot.data!.isEmpty) return Container();
                   return ExpansionTile(
                     backgroundColor: Theme.of(context).dividerTheme.color,
                     collapsedBackgroundColor:
