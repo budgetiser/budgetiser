@@ -7,9 +7,13 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 class LineChartTest extends StatefulWidget {
   const LineChartTest({
     Key? key,
-    this.account,
+    required this.accounts,
+    required this.startDate,
+    required this.endDate,
   }) : super(key: key);
-  final Account? account;
+  final List<Account> accounts;
+  final DateTime startDate;
+  final DateTime endDate;
   @override
   State<LineChartTest> createState() => _LineChartTestState();
 }
@@ -58,10 +62,38 @@ class _LineChartTestState extends State<LineChartTest>{
       fontSize: 15,
     );
     String text = "";
-    if (value.toInt() % 250 == 0){
+    if (value.toInt() % 2500 == 0){
       text = value.toInt().toString();
     }
     return Text(text, style: style, textAlign: TextAlign.left);
+  }
+
+  LineChartBarData lineChartBarData(Account acc, data) {
+    return LineChartBarData(
+      spots: List.generate(data.length, (index) {
+        double day = DateTime.parse(data[index]["date"]).day.toDouble();
+        double value = data[index]["value"].toDouble();
+        return FlSpot(day, value);
+      }),
+      isCurved: false,
+      gradient: LinearGradient(
+        colors: gradientColors,
+      ),
+      barWidth: 5,
+      isStrokeCapRound: true,
+      dotData: const FlDotData(
+        show: false,
+      ),
+      color: acc.color,
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          colors: gradientColors
+              .map((color) => color.withOpacity(0.3))
+              .toList(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -69,31 +101,32 @@ class _LineChartTestState extends State<LineChartTest>{
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: DatabaseHelper.instance.getAccountBalancesAtTime(widget.account!, DateTime(2022, 10, 1), DateTime(2022, 10, 31)),
+        child: FutureBuilder<Map<Account, List<Map<String, dynamic>>>>(
+          future: DatabaseHelper.instance.getAccountBalancesAtTime(widget.accounts, widget.startDate, widget.endDate),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              List<Map<String, dynamic>> temp = snapshot.data!;
+              //List<Map<String, dynamic>> temp = snapshot.data![widget.account]!;
               if(snapshot.data!.isEmpty){
                 return Text("No data");
               }
-              temp.sort((a, b) => a['value'].compareTo(b['value']));
+              //temp.sort((a, b) => a['value'].compareTo(b['value']));
+              int spread = 1000;
               return LineChart(
                   LineChartData(
                     gridData: FlGridData(
                       show: true,
                       drawVerticalLine: true,
-                      horizontalInterval: 1,
-                      verticalInterval: 1,
+                      horizontalInterval: spread/4,
+                      verticalInterval: 10,
                       getDrawingHorizontalLine: (value) {
                         return const FlLine(
-                          color: Colors.black,
+                          color: Colors.grey,
                           strokeWidth: 1,
                         );
                       },
                       getDrawingVerticalLine: (value) {
                         return const FlLine(
-                          color: Colors.black,
+                          color: Colors.grey,
                           strokeWidth: 1,
                         );
                       },
@@ -124,39 +157,14 @@ class _LineChartTestState extends State<LineChartTest>{
                       ),
                     ),
                     borderData: FlBorderData(
-                      show: true,
+                      show: false,
                       border: Border.all(color: const Color(0xff37434d)),
                     ),
-                    minX: 0,
-                    maxX: 32,
-                    minY: temp.first["value"] > 0 ? temp.first["value"]-temp.first["value"]*0.05 : temp.first["value"]*1.05,
-                    maxY: temp.last["value"] > 0 ? temp.last["value"]*1.05 : temp.last["value"]-temp.last["value"]*0.05,
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: List.generate(snapshot.data!.length, (index) {
-                          double day = DateTime.parse(snapshot.data?[index]["date"]).day.toDouble();
-                          double value = snapshot.data?[index]["value"].toDouble();
-                          return FlSpot(day, value);
-                        }),
-                        isCurved: false,
-                        gradient: LinearGradient(
-                          colors: gradientColors,
-                        ),
-                        barWidth: 5,
-                        isStrokeCapRound: true,
-                        dotData: const FlDotData(
-                          show: false,
-                        ),
-                        belowBarData: BarAreaData(
-                          show: true,
-                          gradient: LinearGradient(
-                            colors: gradientColors
-                                .map((color) => color.withOpacity(0.3))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    ],
+                    minX: 1,
+                    maxX: 31,
+                    minY: -2500,//temp.first["value"] > 0 ? temp.first["value"]-temp.first["value"]*0.05 : temp.first["value"]*1.05,
+                    maxY: 5000,//temp.last["value"] > 0 ? temp.last["value"]*1.05 : temp.last["value"]-temp.last["value"]*0.05,
+                    lineBarsData: snapshot.data!.entries.map( (entry) => lineChartBarData(entry.key, entry.value)).toList(),
                   )
               );
             }

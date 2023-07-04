@@ -2,6 +2,8 @@ import 'package:budgetiser/screens/stats/lineChart.dart';
 import 'package:budgetiser/screens/stats/simple_text_stat.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/account_picker.dart';
+import 'package:budgetiser/shared/picker/monthPicker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +20,12 @@ class Stats extends StatefulWidget {
 enum PagesEnum { simpleText }
 
 class _StatsState extends State<Stats> {
-  Account? _selectedAccount;
+  List<Account>? _selectedAccounts;
+  DateTime startDate = DateTime.now();
 
-  setAccount(Account account) {
+  setAccount(List<Account> accounts) {
     setState(() {
-      _selectedAccount = account;
+      _selectedAccounts = accounts;
     });
   }
 
@@ -37,21 +40,31 @@ class _StatsState extends State<Stats> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
         children: [
+          MonthPicker(onDateChangedCallback: (DateTime time) => {
+            setState(() {
+              startDate = time;
+            })
+          }),
           Row(
             children: [
-              const Text("Account: "),
               Expanded(
-                child: SelectAccount(
-                  initialAccount: _selectedAccount,
-                  callback: setAccount,
+                child: AccountPicker(
+                  initialAccounts: _selectedAccounts,
+                  onAccountPickedCallback: (List<Account> accounts) {
+                    setState(() {
+                      _selectedAccounts = accounts;
+                    });
+                  },
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          if (_selectedAccount != null)
+          if (_selectedAccounts != null)
           LineChartTest(
-            account: _selectedAccount
+            accounts: _selectedAccounts!,
+            startDate: DateTime(startDate.year, startDate.month, 1),
+            endDate: DateTime(startDate.year, startDate.month+1, 0),
           ),
         ],
       )

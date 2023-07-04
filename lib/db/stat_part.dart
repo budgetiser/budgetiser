@@ -34,56 +34,62 @@ extension DatabaseExtensionStat on DatabaseHelper {
   }
 
   /// Get Account Balances in date range
-  Future<List<Map<String, dynamic>>> getAccountBalancesAtTime(
-      Account account, DateTime start, DateTime end) async {
+  Future<Map<Account, List<Map<String, dynamic>>>> getAccountBalancesAtTime(
+      List<Account> accounts, DateTime start, DateTime end) async {
     final db = await database;
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
-
-    final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
-        '''SELECT balance 
+    Map<Account, List<Map<String, dynamic>>> result = {};
+    accounts.forEach((account) async {
+      final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
+          '''SELECT balance 
         FROM account
         WHERE account.id = ?''',
-        [account.id]);
-    double balance = balanceMaps[0]["balance"];
-    double startBalance = balance;
-    double endBalance = balance;
+          [account.id]);
+      double balance = balanceMaps[0]["balance"];
+      double startBalance = balance;
+      double endBalance = balance;
 
-    final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
-        '''SELECT SUM(value) as value, date 
+      final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
+          '''SELECT SUM(value) as value, date 
         FROM singleTransaction, singleTransactionToAccount 
         WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
         AND account1_id = ?
         AND singleTransaction.date >= ?
         GROUP BY date
         ORDER BY singleTransaction.date DESC''',
-        [account.id, startString]);
-    List<Map<String, dynamic>> result = [];
-    for (var element in transactionMaps) {
-      if (endString.compareTo(element["date"]) <= 0){
-        balance = balance - element["value"];
-        endBalance = balance;
-      }else {
-        startBalance = balance;
-        result.add({
-          "value": double.parse((balance).toStringAsFixed(1)),
-          "date": element["date"]
-        });
-        balance = balance - element["value"];
+          [account.id, startString]);
+      List<Map<String, dynamic>> temp = [];
+      for (var element in transactionMaps) {
+        if (endString.compareTo(element["date"]) <= 0){
+          balance = balance - element["value"];
+          endBalance = balance;
+        }else {
+          temp.add({
+            "value": double.parse((balance).toStringAsFixed(1)),
+            "date": element["date"]
+          });
+          balance = balance - element["value"];
+          startBalance = balance;
+        }
       }
-    }
-    if(transactionMaps.isNotEmpty && endString.compareTo(transactionMaps.first["date"]) != 0){
-      result.insert(0, {
-        "value": double.parse((endBalance).toStringAsFixed(1)),
-        "date": endString
-      });
-    }
-    if(transactionMaps.isNotEmpty && startString.compareTo(transactionMaps.last["date"]) != 0){
-      result.add({
-        "value": double.parse((startBalance).toStringAsFixed(1)),
-        "date": startString
-      });
-    }
+      if(temp.isNotEmpty && endString.compareTo(transactionMaps.first["date"]) != 0){
+        temp.insert(0, {
+          "value": double.parse((endBalance).toStringAsFixed(1)),
+          "date": endString
+        });
+      }
+      if(temp.isNotEmpty && startString.compareTo(transactionMaps.last["date"]) != 0){
+        temp.add({
+          "value": double.parse((startBalance).toStringAsFixed(1)),
+          "date": startString
+        });
+      }
+      if (temp.isNotEmpty){
+        result[account] = temp;
+      }
+    });
+    print(result);
     return result;
   }
 
