@@ -121,23 +121,27 @@ class _TransactionFormState extends State<TransactionForm> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: Icon(valueController.text.startsWith("-")
-                        ? Icons.remove
-                        : Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        valueController.text.startsWith("-")
-                            ? valueController.text =
-                                valueController.text.substring(1)
-                            : valueController.text = "-${valueController.text}";
-                      });
-                    },
-                    color: valueController.text.startsWith("-")
-                        ? const Color.fromARGB(255, 174, 74, 99)
-                        : const Color.fromARGB(239, 29, 129, 37),
-                    splashRadius: 24,
-                    iconSize: 48,
+                  SizedBox(
+                    height: 70,
+                    child: IconButton(
+                      icon: Icon(valueController.text.startsWith("-")
+                          ? Icons.remove
+                          : Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          valueController.text.startsWith("-")
+                              ? valueController.text =
+                                  valueController.text.substring(1)
+                              : valueController.text =
+                                  "-${valueController.text}";
+                        });
+                      },
+                      color: valueController.text.startsWith("-")
+                          ? const Color.fromARGB(255, 174, 74, 99)
+                          : const Color.fromARGB(239, 29, 129, 37),
+                      splashRadius: 24,
+                      iconSize: 48,
+                    ),
                   ),
                   Flexible(
                     child: TextFormField(
