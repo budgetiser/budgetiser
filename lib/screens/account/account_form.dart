@@ -63,6 +63,7 @@ class _AccountFormState extends State<AccountForm> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // icon and name
               Row(
@@ -129,11 +130,26 @@ class _AccountFormState extends State<AccountForm> {
               // account action buttons
               if (widget.initialAccount != null)
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const SizedBox(
                       height: 16,
                     ),
                     FloatingActionButton.extended(
+                      label: const Text("Set balance with transaction"),
+                      icon: const Icon(Icons.keyboard_tab_rounded),
+                      heroTag: "setBalanceWithTransaction",
+                      onPressed: (() {
+                        showBalanceDialog(context);
+                      }),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    FloatingActionButton.extended(
+                      label: const Text("View all transactions"),
+                      icon: const Icon(Icons.list),
+                      heroTag: "viewTransactions",
                       onPressed: (() {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => TransactionsScreen(
@@ -141,18 +157,6 @@ class _AccountFormState extends State<AccountForm> {
                           ),
                         ));
                       }),
-                      label: const Text("View all transactions"),
-                      heroTag: "viewTransactions",
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    FloatingActionButton.extended(
-                      onPressed: (() {
-                        showBalanceDialog(context);
-                      }),
-                      label: const Text("Set balance with transaction"),
-                      heroTag: "setBalanceWithTransaction",
                     ),
                   ],
                 ),
