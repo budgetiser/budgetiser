@@ -131,16 +131,5 @@ class MyThemes {
       thickness: 1.5,
       color: Color.fromARGB(50, 255, 255, 255),
     ),
-    listTileTheme: const ListTileThemeData(
-      // TODO
-      textColor: DARK_TERTIARY,
-      subtitleTextStyle: TextStyle(
-        color: DARK_GRAY_TEXT,
-      ),
-    ),
-    // button
-
-    // listTileTheme: ListTileThemeData
-    // listTileStyle: ListTileStyle(),
   );
 }

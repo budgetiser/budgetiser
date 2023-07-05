@@ -65,10 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: const Text('Appearance'),
               subtitle: const Text(
                 'Choose your light or dark theme',
-                style: TextStyle(fontSize: 14.0),
               ),
-              // style: ListTileStyle.list,
-              // style: ,
               onTap: () {
                 showDialog(
                   context: context,
@@ -106,8 +103,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: const Text('Export Database'),
-              subtitle: const Text('Into Downloads',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'Into android/data',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -130,8 +128,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: const Text('Export Database (JSON)'),
-              subtitle: const Text('Into Downloads',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'Into android/data',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -154,8 +153,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: const Text('Import Database'),
-              subtitle: const Text('From Downloads',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'From android/data',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -163,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     return ConfirmationDialog(
                       title: "Attention",
                       description:
-                          "Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in the Downloads folder!",
+                          "Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!",
                       onSubmitCallback: () {
                         DatabaseHelper.instance.importDB();
                         Navigator.of(context).pop();
@@ -178,8 +178,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: Text('Change Currency: $_selectedCurrency'),
-              subtitle: const Text('No effect on values',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'No effect on values',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -197,8 +198,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             horizontal: 25,
                             vertical: 10,
                           ),
-                          child: Text("Has no effect on values",
-                              style: TextStyle(fontSize: 16.0)),
+                          child: Text(
+                            "Has no effect on values",
+                            style: TextStyle(fontSize: 16.0),
+                          ),
                         ),
                         currencyRadioItem(context, currencySymbol: "€"),
                         currencyRadioItem(context, currencySymbol: "\$"),
