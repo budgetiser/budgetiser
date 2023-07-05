@@ -36,7 +36,6 @@ class NotesScreen extends StatelessWidget {
                         },
                       ),
                     ],
-                    elevation: 0,
                   );
                 },
               );
@@ -61,12 +60,12 @@ class NotesScreen extends StatelessWidget {
   }
 
   onInit() async {
-    final prefs = await SharedPreferences.getInstance();
-    valueController.text = prefs.getString('key-notes') ?? '';
+    final preferences = await SharedPreferences.getInstance();
+    valueController.text = preferences.getString('key-notes') ?? '';
   }
 
   onChanged(String string) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('key-notes', string);
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString('key-notes', string);
   }
 }
