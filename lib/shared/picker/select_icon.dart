@@ -33,7 +33,6 @@ class _IconPickerState extends State<IconPicker> {
               builder: (BuildContext context) {
                 return StatefulBuilder(builder: (context, setState) {
                   return SimpleDialog(
-                    elevation: 0,
                     children: [
                       TextField(
                         decoration: InputDecoration(

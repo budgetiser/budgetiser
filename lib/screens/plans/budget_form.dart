@@ -112,7 +112,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   ),
                 ],
               ),
-              ColorPicker(
+              ColorPickerWidget(
                   initialSelectedColor: _color,
                   onColorChangedCallback: (color) {
                     setState(() {

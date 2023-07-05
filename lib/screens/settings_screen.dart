@@ -63,36 +63,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: <Widget>[
             ListTile(
               title: const Text('Appearance'),
-              subtitle: const Text('Choose your light or dark theme',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'Choose your light or dark theme',
+                style: TextStyle(fontSize: 14.0),
+              ),
+              // style: ListTileStyle.list,
+              // style: ,
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      elevation: 0,
                       title: const Text('Appearance'),
                       children: [
-                        Column(children: <Widget>[
-                          RadioListTile<String>(
-                            title: const Text('system'),
-                            value: "system",
-                            groupValue: _selectedDarkModeValue,
-                            onChanged: setAppearance,
-                          ),
-                          RadioListTile<String>(
-                            title: const Text('light'),
-                            value: "light",
-                            groupValue: _selectedDarkModeValue,
-                            onChanged: setAppearance,
-                          ),
-                          RadioListTile<String>(
-                            title: const Text('dark'),
-                            value: "dark",
-                            groupValue: _selectedDarkModeValue,
-                            onChanged: setAppearance,
-                          ),
-                        ]),
+                        Column(
+                          children: <Widget>[
+                            RadioListTile<String>(
+                              title: const Text('system'),
+                              value: "system",
+                              groupValue: _selectedDarkModeValue,
+                              onChanged: setAppearance,
+                            ),
+                            RadioListTile<String>(
+                              title: const Text('light'),
+                              value: "light",
+                              groupValue: _selectedDarkModeValue,
+                              onChanged: setAppearance,
+                            ),
+                            RadioListTile<String>(
+                              title: const Text('dark'),
+                              value: "dark",
+                              groupValue: _selectedDarkModeValue,
+                              onChanged: setAppearance,
+                            ),
+                          ],
+                        ),
                       ],
                     );
                   },
@@ -135,8 +140,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Attention",
                       description:
                           "Are you sure? This will potentially override existing budgetiser.json file in the App folder!",
-                      onSubmitCallback: () async {
-                        await DatabaseHelper.instance.exportAsJson();
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.exportAsJson();
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
@@ -180,7 +185,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      elevation: 0,
                       title: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

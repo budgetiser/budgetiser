@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class ColorPicker extends StatefulWidget {
-  const ColorPicker({
+class ColorPickerWidget extends StatefulWidget {
+  const ColorPickerWidget({
     Key? key,
     required this.initialSelectedColor,
     required this.onColorChangedCallback,
@@ -14,10 +14,12 @@ class ColorPicker extends StatefulWidget {
   final bool noPadding;
 
   @override
-  State<ColorPicker> createState() => _ColorPickerState();
+  State<ColorPickerWidget> createState() => _ColorPickerWidgetState();
 }
 
-class _ColorPickerState extends State<ColorPicker> {
+class _ColorPickerWidgetState extends State<ColorPickerWidget> {
+  ScrollController listScrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,11 +34,16 @@ class _ColorPickerState extends State<ColorPicker> {
               return AlertDialog(
                 title: const Text('Pick a color!'),
                 content: SingleChildScrollView(
-                  child: MaterialPicker(
+                  controller: listScrollController,
+                  child: ColorPicker(
                     pickerColor: widget.initialSelectedColor,
+                    hexInputBar: true,
+                    labelTypes: const [],
+                    paletteType: PaletteType.hueWheel,
+                    enableAlpha: false,
+                    pickerAreaHeightPercent: 1,
                     onColorChanged: (Color newColor) {
                       widget.onColorChangedCallback(newColor);
-                      Navigator.of(context).pop();
                     },
                   ),
                 ),
@@ -44,7 +51,7 @@ class _ColorPickerState extends State<ColorPicker> {
                   ElevatedButton(
                     child: const Text('Close'),
                     onPressed: () {
-                      Navigator.of(context).pop(); //dismiss the color picker
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],
