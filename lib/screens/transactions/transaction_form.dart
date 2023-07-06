@@ -150,7 +150,6 @@ class _TransactionFormState extends State<TransactionForm> {
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         labelText: "Value",
-                        border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
                         // _formKey.currentState!.validate();
@@ -200,7 +199,6 @@ class _TransactionFormState extends State<TransactionForm> {
                 // initialValue: widget.initialName,
                 decoration: const InputDecoration(
                   labelText: "Title",
-                  border: OutlineInputBorder(),
                 ),
               ),
               // account picker
@@ -299,7 +297,6 @@ class _TransactionFormState extends State<TransactionForm> {
                   decoration: const InputDecoration(
                     labelText: "Notes",
                     alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
                   ),
                 ),
               ),

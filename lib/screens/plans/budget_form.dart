@@ -106,7 +106,6 @@ class _BudgetFormState extends State<BudgetForm> {
                       },
                       decoration: const InputDecoration(
                         labelText: "Budget title",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -128,7 +127,6 @@ class _BudgetFormState extends State<BudgetForm> {
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         labelText: "Balance",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -142,7 +140,6 @@ class _BudgetFormState extends State<BudgetForm> {
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
                         labelText: "Limit",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -154,7 +151,6 @@ class _BudgetFormState extends State<BudgetForm> {
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
                 ),
               ),
               const Divider(height: 32),

@@ -49,9 +49,6 @@ class NotesScreen extends StatelessWidget {
         child: TextFormField(
           controller: valueController,
           maxLines: double.maxFinite.toInt(),
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-          ),
           autofocus: true,
           onChanged: onChanged,
         ),

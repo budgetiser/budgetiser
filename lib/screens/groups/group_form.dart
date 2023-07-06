@@ -85,7 +85,6 @@ class _GroupFormState extends State<GroupForm> {
                       },
                       decoration: const InputDecoration(
                         labelText: "Group title",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -104,7 +103,6 @@ class _GroupFormState extends State<GroupForm> {
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
                 ),
               ),
               const Divider(height: 32),
