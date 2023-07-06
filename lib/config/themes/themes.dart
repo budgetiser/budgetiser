@@ -115,8 +115,6 @@ class MyThemes {
       labelStyle: TextStyle(color: DARK_GRAY_TEXT),
     ),
     textTheme: const TextTheme(
-      bodySmall: TextStyle(
-          color: DARK_TERTIARY, fontSize: 25, fontWeight: FontWeight.bold),
       displayLarge: TextStyle(
           // for the drawer "budgetiser" title
           fontSize: 40,
@@ -125,11 +123,23 @@ class MyThemes {
       displayMedium: TextStyle(fontSize: 30), // for headline inside a screen
       bodyMedium: TextStyle(fontSize: 20), // normal text
       titleMedium: TextStyle(fontSize: 20), // for the drawer items
-      bodyLarge: TextStyle(fontSize: 20, color: Colors.grey), // ??
+      bodyLarge: TextStyle(fontSize: 20), // Settings titles
     ),
     dividerTheme: const DividerThemeData(
       thickness: 1.5,
       color: Color.fromARGB(50, 255, 255, 255),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(
+          const Color.fromARGB(255, 47, 47, 47),
+        ),
+      ),
+    ),
+    listTileTheme: const ListTileThemeData(
+      subtitleTextStyle: TextStyle(
+        fontSize: 15,
+      ),
     ),
   );
 }
