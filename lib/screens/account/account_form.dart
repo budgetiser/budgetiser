@@ -82,7 +82,6 @@ class _AccountFormState extends State<AccountForm> {
                       controller: nameController,
                       decoration: const InputDecoration(
                         labelText: "Account Name",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -102,7 +101,6 @@ class _AccountFormState extends State<AccountForm> {
                     const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(
                   labelText: "Balance",
-                  border: OutlineInputBorder(),
                 ),
                 validator: (data) {
                   if (data!.isEmpty) {
@@ -123,7 +121,6 @@ class _AccountFormState extends State<AccountForm> {
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
                     labelText: "Description",
-                    border: OutlineInputBorder(),
                   ),
                 ),
               ),

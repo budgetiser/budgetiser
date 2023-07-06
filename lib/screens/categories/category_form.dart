@@ -82,7 +82,6 @@ class _CategoryFormState extends State<CategoryForm> {
                       },
                       decoration: const InputDecoration(
                         labelText: "Category title",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -100,7 +99,6 @@ class _CategoryFormState extends State<CategoryForm> {
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
                 ),
               ),
             ],

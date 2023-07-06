@@ -43,9 +43,9 @@ class LoginScreen extends StatelessWidget {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Passcode',
-                      hintText: 'Enter secure passcode'),
+                    labelText: 'Passcode',
+                    hintText: 'Enter secure passcode',
+                  ),
                 ),
               ),
               const SizedBox(
