@@ -81,11 +81,13 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                       ),
                     ),
                     actions: <Widget>[
-                      ElevatedButton(
-                        child: const Text('Close'),
+                      FloatingActionButton.extended(
+                        heroTag: 'close',
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
+                        label: const Text("Close"),
+                        icon: const Icon(Icons.cancel),
                       ),
                     ],
                   );
