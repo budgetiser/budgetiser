@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -20,6 +21,12 @@ class ColorPickerWidget extends StatefulWidget {
 class _ColorPickerWidgetState extends State<ColorPickerWidget> {
   ScrollController listScrollController = ScrollController();
 
+  int segmentedControlGroupValue = 0;
+  final Map<int, Widget> myTabs = const <int, Widget>{
+    0: Text("Simple"),
+    1: Text("Advanced")
+  };
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,30 +38,58 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Pick a color!'),
-                content: SingleChildScrollView(
-                  controller: listScrollController,
-                  child: ColorPicker(
-                    pickerColor: widget.initialSelectedColor,
-                    hexInputBar: true,
-                    labelTypes: const [],
-                    paletteType: PaletteType.hueWheel,
-                    enableAlpha: false,
-                    pickerAreaHeightPercent: 1,
-                    onColorChanged: (Color newColor) {
-                      widget.onColorChangedCallback(newColor);
-                    },
-                  ),
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    child: const Text('Close'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return AlertDialog(
+                    title: const Text('Pick a color!'),
+                    content: SingleChildScrollView(
+                      controller: listScrollController,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CupertinoSlidingSegmentedControl<int>(
+                              groupValue: segmentedControlGroupValue,
+                              children: myTabs,
+                              onValueChanged: (i) {
+                                setState(() {
+                                  segmentedControlGroupValue = i!;
+                                });
+                              }),
+                          if (segmentedControlGroupValue == 1)
+                            ColorPicker(
+                              pickerColor: widget.initialSelectedColor,
+                              hexInputBar: true,
+                              labelTypes: const [],
+                              paletteType: PaletteType.hueWheel,
+                              enableAlpha: false,
+                              pickerAreaHeightPercent: 1,
+                              onColorChanged: (Color newColor) {
+                                widget.onColorChangedCallback(newColor);
+                              },
+                            ),
+                          if (segmentedControlGroupValue == 0)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: BlockPicker(
+                                pickerColor: widget.initialSelectedColor,
+                                onColorChanged: (Color newColor) {
+                                  widget.onColorChangedCallback(newColor);
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: const Text('Close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
             },
           );
