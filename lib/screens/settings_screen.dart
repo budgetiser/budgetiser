@@ -63,36 +63,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: <Widget>[
             ListTile(
               title: const Text('Appearance'),
-              subtitle: const Text('Choose your light or dark theme',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'Choose your light or dark theme',
+              ),
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      elevation: 0,
                       title: const Text('Appearance'),
                       children: [
-                        Column(children: <Widget>[
-                          RadioListTile<String>(
-                            title: const Text('system'),
-                            value: "system",
-                            groupValue: _selectedDarkModeValue,
-                            onChanged: setAppearance,
-                          ),
-                          RadioListTile<String>(
-                            title: const Text('light'),
-                            value: "light",
-                            groupValue: _selectedDarkModeValue,
-                            onChanged: setAppearance,
-                          ),
-                          RadioListTile<String>(
-                            title: const Text('dark'),
-                            value: "dark",
-                            groupValue: _selectedDarkModeValue,
-                            onChanged: setAppearance,
-                          ),
-                        ]),
+                        Column(
+                          children: <Widget>[
+                            RadioListTile<String>(
+                              title: const Text('system'),
+                              value: "system",
+                              groupValue: _selectedDarkModeValue,
+                              onChanged: setAppearance,
+                            ),
+                            RadioListTile<String>(
+                              title: const Text('light'),
+                              value: "light",
+                              groupValue: _selectedDarkModeValue,
+                              onChanged: setAppearance,
+                            ),
+                            RadioListTile<String>(
+                              title: const Text('dark'),
+                              value: "dark",
+                              groupValue: _selectedDarkModeValue,
+                              onChanged: setAppearance,
+                            ),
+                          ],
+                        ),
                       ],
                     );
                   },
@@ -101,8 +103,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: const Text('Export Database'),
-              subtitle: const Text('Into Downloads',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'Into android/data',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -125,8 +128,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: const Text('Export Database (JSON)'),
-              subtitle: const Text('Into Downloads',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'Into android/data',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -135,8 +139,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Attention",
                       description:
                           "Are you sure? This will potentially override existing budgetiser.json file in the App folder!",
-                      onSubmitCallback: () async {
-                        await DatabaseHelper.instance.exportAsJson();
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.exportAsJson();
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
@@ -149,8 +153,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: const Text('Import Database'),
-              subtitle: const Text('From Downloads',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'From android/data',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
@@ -158,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     return ConfirmationDialog(
                       title: "Attention",
                       description:
-                          "Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in the Downloads folder!",
+                          "Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!",
                       onSubmitCallback: () {
                         DatabaseHelper.instance.importDB();
                         Navigator.of(context).pop();
@@ -173,14 +178,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ListTile(
               title: Text('Change Currency: $_selectedCurrency'),
-              subtitle: const Text('No effect on values',
-                  style: TextStyle(fontSize: 14.0)),
+              subtitle: const Text(
+                'No effect on values',
+              ),
               onTap: () async {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      elevation: 0,
                       title: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -193,8 +198,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             horizontal: 25,
                             vertical: 10,
                           ),
-                          child: Text("Has no effect on values",
-                              style: TextStyle(fontSize: 16.0)),
+                          child: Text(
+                            "Has no effect on values",
+                            style: TextStyle(fontSize: 16.0),
+                          ),
                         ),
                         currencyRadioItem(context, currencySymbol: "€"),
                         currencyRadioItem(context, currencySymbol: "\$"),
