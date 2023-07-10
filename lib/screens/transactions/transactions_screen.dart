@@ -72,7 +72,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return SimpleDialog(
-                    elevation: 0,
                     contentPadding: const EdgeInsets.only(right: 25),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

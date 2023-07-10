@@ -82,13 +82,12 @@ class _CategoryFormState extends State<CategoryForm> {
                       },
                       decoration: const InputDecoration(
                         labelText: "Category title",
-                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
                 ],
               ),
-              ColorPicker(
+              ColorPickerWidget(
                   initialSelectedColor: _color,
                   onColorChangedCallback: (color) {
                     setState(() {
@@ -100,7 +99,6 @@ class _CategoryFormState extends State<CategoryForm> {
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
                 ),
               ),
             ],
