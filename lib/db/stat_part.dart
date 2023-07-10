@@ -89,7 +89,6 @@ extension DatabaseExtensionStat on DatabaseHelper {
         result[account] = temp;
       }
     });
-    print(result);
     return result;
   }
 

@@ -49,7 +49,6 @@ class _StatsState extends State<Stats> {
             children: [
               Expanded(
                 child: AccountPicker(
-                  initialAccounts: _selectedAccounts,
                   onAccountPickedCallback: (List<Account> accounts) {
                     setState(() {
                       _selectedAccounts = accounts;
