@@ -1,0 +1,63 @@
+name: internal
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - internal-testtrack
+
+jobs:
+  build:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup of JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+
+      - name: Setup Flutter Environment
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Create Java Upload-Keystore
+        env:
+          KEYSTORE_BASE64: ${{secrets.KEYSTORE_BASE64}}
+        run: |
+          # import keystore from secrets
+          echo $KEYSTORE_BASE64 | base64 -di > $RUNNER_TEMP/my_production.keystore
+
+      - name: Restore Flutter-Packages
+        run: |
+          flutter pub get
+
+      - name: Build Android App Bundle (release)
+        run: |
+          flutter build appbundle --release --no-tree-shake-icons
+
+      - name: Sign Android App Bundle
+        run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar build/app/outputs/bundle/release/app-release-signed.aab build/app/outputs/bundle/release/app-release.aab upload
+
+      - name: Export AAB (local)
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Export signed AAB (local)
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-aab-signed
+          path: build/app/outputs/bundle/release/app-release-signed.aab
+
+      - name: Publish to Google Play (internal)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{secrets.GOOGLE_SERVICE_ACCOUNT_KEY}}
+          packageName: de.budgetiser.budgetiser
+          releaseFiles: build/app/outputs/bundle/release/app-release-signed.aab
+          track: internal
+          status: completed
