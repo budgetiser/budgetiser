@@ -110,7 +110,6 @@ class RecurringData {
 
   int calculateNeededRepetitions() {
     // TODO: not finished and buggy
-    print('NO');
     if (isRecurring) {
       if (intervalType == IntervalType.fixedPointOfTime) {
         switch (intervalUnit) {

@@ -67,6 +67,7 @@ class _IconPickerState extends State<IconPicker> {
   Widget getIcons() {
     List<IconData> filteredIcons = [];
     for (Map<String, dynamic> element in _fullIconList) {
+      // ignore: avoid_dynamic_calls
       if (element['name'].contains(
           _searchString != null ? _searchString!.toLowerCase() : '')) {
         filteredIcons.add(element['icon']);

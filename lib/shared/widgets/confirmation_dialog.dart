@@ -27,12 +27,14 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
         TextButton(
           child: const Text('Cancel'),
           onPressed: () {
+            // ignore: avoid_dynamic_calls
             widget.onCancelCallback();
           },
         ),
         TextButton(
           child: const Text('Submit'),
           onPressed: () {
+            // ignore: avoid_dynamic_calls
             widget.onSubmitCallback();
           },
         )
