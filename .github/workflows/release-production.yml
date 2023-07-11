@@ -53,6 +53,15 @@ jobs:
         name: release-aab-signed
         path: build/app/outputs/bundle/release/app-release-signed.aab
 
+    - name: Publish to Google Play (internal)
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{secrets.GOOGLE_SERVICE_ACCOUNT_KEY}}
+        packageName: de.budgetiser.budgetiser
+        releaseFiles: build/app/outputs/bundle/release/app-release-signed.aab
+        track: internal
+        status: completed
+
     - name: Publish to Google Play (production)
       uses: r0adkll/upload-google-play@v1
       with:
