@@ -9,7 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: 'Checkout (develop)'
+        uses: actions/checkout@v2
+        with:
+          ref: 'develop'
+
       - name: Setup of JDK
         uses: actions/setup-java@v1
         with:
