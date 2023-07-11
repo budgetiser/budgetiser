@@ -69,6 +69,7 @@ class _PlansState extends State<Plans> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Budget> budgetList = snapshot.data!.toList();
+                // ignore: cascade_invocations
                 budgetList.sort((a, b) => a.compareTo(b));
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -93,6 +94,7 @@ class _PlansState extends State<Plans> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Savings> savingsList = snapshot.data!.toList();
+                // ignore: cascade_invocations
                 savingsList.sort((a, b) => a.name.compareTo(b.name));
                 return ListView.builder(
                   scrollDirection: Axis.vertical,

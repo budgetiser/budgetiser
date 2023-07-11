@@ -26,6 +26,7 @@ class CategoriesScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<TransactionCategory> categoryList = snapshot.data!.toList();
+            // ignore: cascade_invocations
             categoryList.sort((a, b) => a.name.compareTo(b.name));
             return ListView.builder(
               scrollDirection: Axis.vertical,
