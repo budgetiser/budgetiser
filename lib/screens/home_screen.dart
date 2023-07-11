@@ -25,17 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TransactionForm()));
-              },
-              label: const Text("new Transaction"),
-              icon: const Icon(
-                Icons.add,
-              ),
-              heroTag: "newTransaction",
-            ),
             const SizedBox(
               height: 80,
             ),
@@ -65,9 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
               heroTag: "resetDB",
               backgroundColor: Colors.red,
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 12),
             FloatingActionButton.extended(
               onPressed: () async {
                 showDialog(
@@ -96,25 +83,19 @@ class _HomeScreenState extends State<HomeScreen> {
               heroTag: "fillDB",
               backgroundColor: Colors.red,
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            FloatingActionButton.extended(
-              onPressed: () async {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("DB reset and filled with TMP data"),
-                  ),
-                );
-              },
-              label: const Text("test"),
-              icon: const Icon(
-                Icons.refresh,
-              ),
-              heroTag: "test",
-            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const TransactionForm()));
+        },
+        label: const Text("new Transaction"),
+        icon: const Icon(
+          Icons.add,
+        ),
+        heroTag: "newTransaction",
       ),
       drawer: createDrawer(context),
     );
