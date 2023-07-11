@@ -13,32 +13,36 @@ Widget createDrawer(BuildContext context) {
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-            margin: EdgeInsets.zero,
-            padding: EdgeInsets.zero,
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  bottom: 12.0,
-                  left: 16.0,
-                  child: Row(
-                    children: [
-                      const Icon(
+          margin: EdgeInsets.zero,
+          padding: EdgeInsets.zero,
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+          ),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                bottom: 12.0,
+                left: 16.0,
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: Icon(
                         LogoIcon.budgetiserIcon,
                         color: Colors.white,
-                        size: 40,
+                        size: 50,
                       ),
-                      Text(
-                        " Budgetiser",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )),
+                    ),
+                    const SizedBox(width: 8),
+                    // TODO: Bug: Text clips with big system font size
+                    Text("Budgetiser",
+                        style: Theme.of(context).textTheme.displayLarge),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
         singleDrawerItem(context, Icons.home, 'Home', 'home'),
         singleDrawerItem(context, Icons.attach_money, 'Plans', 'plans'),
         singleDrawerItem(context, Icons.account_balance, 'Account', 'account'),
