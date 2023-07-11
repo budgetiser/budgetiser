@@ -27,15 +27,26 @@ class CategoriesScreen extends StatelessWidget {
           if (snapshot.hasData) {
             List<TransactionCategory> categoryList = snapshot.data!.toList();
             categoryList.sort((a, b) => a.name.compareTo(b.name));
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: categoryList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CategoryItem(
-                  categoryData: categoryList[index],
-                );
-              },
-              padding: const EdgeInsets.only(bottom: 80),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: categoryList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      CategoryItem(
+                        categoryData: categoryList[index],
+                      ),
+                      const Divider(
+                        indent: 8,
+                        endIndent: 8,
+                      )
+                    ],
+                  );
+                },
+                padding: const EdgeInsets.only(bottom: 80),
+              ),
             );
           } else if (snapshot.hasError) {
             return const Text("Oops!");

@@ -13,80 +13,45 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (categoryData.isHidden) {
-      return Container(
-        height: 0,
-      );
+      return Container(); // isHidden not yet used
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              //color: Colors.red,
+    return SizedBox(
+      width: double.infinity,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CategoryForm(
+                categoryData: categoryData,
+              ),
             ),
-            height: 50,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          );
+        },
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CategoryForm(
-                              categoryData: categoryData,
-                            )));
-                  },
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    categoryData.icon,
-                                    color: categoryData.color,
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                    child: Text(
-                                      categoryData.name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            color: categoryData.color,
-                                          ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                Icon(
+                  categoryData.icon,
+                  color: categoryData.color,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  categoryData.name,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: categoryData.color,
                       ),
-                    ),
-                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
-            )),
-        const Divider(
-          indent: 15,
-          endIndent: 15,
-        )
-      ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
