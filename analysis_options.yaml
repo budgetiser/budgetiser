@@ -23,7 +23,7 @@ linter:
     # Style
     always_declare_return_types: true
     prefer_single_quotes: true
-    always_specify_types: true
+    # always_specify_types: true
     cascade_invocations: true
     package_api_docs: true
     directives_ordering: true

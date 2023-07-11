@@ -1,10 +1,10 @@
+import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/stats/simple_text_stat.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetiser/drawer.dart';
 
 class Stats extends StatefulWidget {
   static String routeID = 'stats';
@@ -20,13 +20,13 @@ class _StatsState extends State<Stats> {
   TransactionCategory? _selectedCategory;
   Account? _selectedAccount;
 
-  setCategory(TransactionCategory category) {
+  void setCategory(TransactionCategory category) {
     setState(() {
       _selectedCategory = category;
     });
   }
 
-  setAccount(Account account) {
+  void setAccount(Account account) {
     setState(() {
       _selectedAccount = account;
     });
@@ -36,7 +36,7 @@ class _StatsState extends State<Stats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stats"),
+        title: const Text('Stats'),
       ),
       drawer: createDrawer(context),
       body: Padding(
@@ -45,7 +45,7 @@ class _StatsState extends State<Stats> {
           children: [
             Row(
               children: [
-                const Text("Account: "),
+                const Text('Account: '),
                 Expanded(
                   child: SelectAccount(
                     initialAccount: _selectedAccount,

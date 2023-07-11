@@ -25,13 +25,13 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       content: Text(widget.description),
       actions: [
         TextButton(
-          child: const Text("Cancel"),
+          child: const Text('Cancel'),
           onPressed: () {
             widget.onCancelCallback();
           },
         ),
         TextButton(
-          child: const Text("Submit"),
+          child: const Text('Submit'),
           onPressed: () {
             widget.onSubmitCallback();
           },

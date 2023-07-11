@@ -54,7 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Settings",
+          'Settings',
         ),
       ),
       drawer: createDrawer(context),
@@ -77,19 +77,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           children: <Widget>[
                             RadioListTile<String>(
                               title: const Text('system'),
-                              value: "system",
+                              value: 'system',
                               groupValue: _selectedDarkModeValue,
                               onChanged: setAppearance,
                             ),
                             RadioListTile<String>(
                               title: const Text('light'),
-                              value: "light",
+                              value: 'light',
                               groupValue: _selectedDarkModeValue,
                               onChanged: setAppearance,
                             ),
                             RadioListTile<String>(
                               title: const Text('dark'),
-                              value: "dark",
+                              value: 'dark',
                               groupValue: _selectedDarkModeValue,
                               onChanged: setAppearance,
                             ),
@@ -111,9 +111,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description:
-                          "Are you sure? This will potentially override existing budgetiser.db file in the Download folder!",
+                          'Are you sure? This will potentially override existing budgetiser.db file in the Download folder!',
                       onSubmitCallback: () {
                         DatabaseHelper.instance.exportDB();
                         Navigator.of(context).pop();
@@ -136,9 +136,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description:
-                          "Are you sure? This will potentially override existing budgetiser.json file in the App folder!",
+                          'Are you sure? This will potentially override existing budgetiser.json file in the App folder!',
                       onSubmitCallback: () {
                         DatabaseHelper.instance.exportAsJson();
                         Navigator.of(context).pop();
@@ -161,9 +161,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description:
-                          "Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!",
+                          'Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!',
                       onSubmitCallback: () {
                         DatabaseHelper.instance.importDB();
                         Navigator.of(context).pop();
@@ -199,13 +199,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             vertical: 10,
                           ),
                           child: Text(
-                            "Has no effect on values",
+                            'Has no effect on values',
                             style: TextStyle(fontSize: 16.0),
                           ),
                         ),
-                        currencyRadioItem(context, currencySymbol: "€"),
-                        currencyRadioItem(context, currencySymbol: "\$"),
-                        currencyRadioItem(context, currencySymbol: "£"),
+                        currencyRadioItem(context, currencySymbol: '€'),
+                        currencyRadioItem(context, currencySymbol: '\$'),
+                        currencyRadioItem(context, currencySymbol: '£'),
                       ],
                     );
                   },

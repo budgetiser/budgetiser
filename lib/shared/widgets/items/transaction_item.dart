@@ -60,7 +60,7 @@ class TransactionItem extends StatelessWidget {
                         category.icon,
                         color: category.color,
                       ),
-                      const Text(" in "),
+                      const Text(' in '),
                       Icon(
                         account.icon,
                         color: account.color,
@@ -74,12 +74,12 @@ class TransactionItem extends StatelessWidget {
                         category.icon,
                         color: category.color,
                       ),
-                      const Text(" from "),
+                      const Text(' from '),
                       Icon(
                         account.icon,
                         color: account.color,
                       ),
-                      const Text(" to "),
+                      const Text(' to '),
                       Icon(
                         account2.icon,
                         color: account2.color,
@@ -92,7 +92,7 @@ class TransactionItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${date.day}.${date.month}.${date.year}",
+                  '${date.day}.${date.month}.${date.year}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 Expanded(

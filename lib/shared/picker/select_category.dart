@@ -25,7 +25,7 @@ class SelectCategory extends StatefulWidget {
 class _SelectCategoryState extends State<SelectCategory> {
   List<TransactionCategory>? _categories;
   TransactionCategory? selectedCategory;
-  final String keySelectedCategory = "key-last-selected-category";
+  final String keySelectedCategory = 'key-last-selected-category';
 
   @override
   void initState() {
@@ -77,7 +77,7 @@ class _SelectCategoryState extends State<SelectCategory> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const CategoryForm()));
           },
-          label: const Text("Create category"),
+          label: const Text('Create category'),
           extendedTextStyle: const TextStyle(fontSize: 18),
         ),
       );

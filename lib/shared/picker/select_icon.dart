@@ -36,7 +36,7 @@ class _IconPickerState extends State<IconPicker> {
                     children: [
                       TextField(
                         decoration: InputDecoration(
-                            hintText: "Search",
+                            hintText: 'Search',
                             prefixIcon: Icon(
                               Icons.search,
                               color: Theme.of(context).colorScheme.tertiary,
@@ -66,10 +66,10 @@ class _IconPickerState extends State<IconPicker> {
 
   Widget getIcons() {
     List<IconData> filteredIcons = [];
-    for (var element in _fullIconList) {
-      if (element["name"].contains(
-          _searchString != null ? _searchString!.toLowerCase() : "")) {
-        filteredIcons.add(element["icon"]);
+    for (Map<String, dynamic> element in _fullIconList) {
+      if (element['name'].contains(
+          _searchString != null ? _searchString!.toLowerCase() : '')) {
+        filteredIcons.add(element['icon']);
       }
     }
     return SizedBox(

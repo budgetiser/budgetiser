@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
-import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
+import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +54,8 @@ class _AccountFormState extends State<AccountForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.initialAccount != null
-            ? const Text("Edit Account")
-            : const Text("Add Account"),
+            ? const Text('Edit Account')
+            : const Text('Add Account'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
@@ -81,7 +81,7 @@ class _AccountFormState extends State<AccountForm> {
                     child: TextFormField(
                       controller: nameController,
                       decoration: const InputDecoration(
-                        labelText: "Account Name",
+                        labelText: 'Account Name',
                       ),
                     ),
                   ),
@@ -100,16 +100,16 @@ class _AccountFormState extends State<AccountForm> {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(
-                  labelText: "Balance",
+                  labelText: 'Balance',
                 ),
                 validator: (data) {
                   if (data!.isEmpty) {
-                    return "Please enter a balance";
+                    return 'Please enter a balance';
                   }
                   try {
                     double.parse(data);
                   } catch (e) {
-                    return "Please enter a valid number";
+                    return 'Please enter a valid number';
                   }
                   return null;
                 },
@@ -120,7 +120,7 @@ class _AccountFormState extends State<AccountForm> {
                   controller: descriptionController,
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
-                    labelText: "Description",
+                    labelText: 'Description',
                   ),
                 ),
               ),
@@ -133,9 +133,9 @@ class _AccountFormState extends State<AccountForm> {
                       height: 16,
                     ),
                     FloatingActionButton.extended(
-                      label: const Text("Set balance with transaction"),
+                      label: const Text('Set balance with transaction'),
                       icon: const Icon(Icons.keyboard_tab_rounded),
-                      heroTag: "setBalanceWithTransaction",
+                      heroTag: 'setBalanceWithTransaction',
                       onPressed: (() {
                         showBalanceDialog(context);
                       }),
@@ -144,9 +144,9 @@ class _AccountFormState extends State<AccountForm> {
                       height: 16,
                     ),
                     FloatingActionButton.extended(
-                      label: const Text("View all transactions"),
+                      label: const Text('View all transactions'),
                       icon: const Icon(Icons.list),
-                      heroTag: "viewTransactions",
+                      heroTag: 'viewTransactions',
                       onPressed: (() {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => TransactionsScreen(
@@ -173,7 +173,7 @@ class _AccountFormState extends State<AccountForm> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description:
                           "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
                       onSubmitCallback: () {
@@ -218,9 +218,9 @@ class _AccountFormState extends State<AccountForm> {
               Navigator.of(context).pop();
             }
           },
-          label: const Text("Save"),
+          label: const Text('Save'),
           icon: const Icon(Icons.save),
-          heroTag: "save",
+          heroTag: 'save',
         ),
       ]),
     );
@@ -233,7 +233,7 @@ class _AccountFormState extends State<AccountForm> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Set balance"),
+          title: const Text('Set balance'),
           content: Form(
             key: formKey,
             child: TextFormField(
@@ -273,7 +273,7 @@ class _AccountFormState extends State<AccountForm> {
                   );
                 }
               },
-              label: const Text("Set"),
+              label: const Text('Set'),
               icon: const Icon(Icons.check),
             ),
           ],

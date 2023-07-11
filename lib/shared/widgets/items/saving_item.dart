@@ -50,7 +50,7 @@ class SavingItem extends StatelessWidget {
                         ],
                       ),
                       Text(
-                          "days left: ${(savingData.endDate).difference(DateTime.now()).inDays}")
+                          'days left: ${(savingData.endDate).difference(DateTime.now()).inDays}')
                     ]),
                 Row(
                   children: [

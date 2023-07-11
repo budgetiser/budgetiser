@@ -31,7 +31,7 @@ Widget createDrawer(BuildContext context) {
                         size: 40,
                       ),
                       Text(
-                        " Budgetiser",
+                        ' Budgetiser',
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],

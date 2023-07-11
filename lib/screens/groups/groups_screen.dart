@@ -16,7 +16,7 @@ class GroupsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Groups",
+          'Groups',
           // style: Theme.of(context).textTheme.caption,
         ),
       ),
@@ -34,7 +34,7 @@ class GroupsScreen extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 80),
             );
           } else if (snapshot.hasError) {
-            return const Text("Oops!");
+            return const Text('Oops!');
           } else {
             return const Center(
               child: CircularProgressIndicator(),

@@ -101,7 +101,7 @@ class RecurringData {
           break;
         default:
           throw Exception(
-              "Error in _calculateEndDate(fixedInterval): Unknown interval unit");
+              'Error in _calculateEndDate(fixedInterval): Unknown interval unit');
       }
     }
     endDate = calculatedEndDate;
@@ -110,7 +110,7 @@ class RecurringData {
 
   int calculateNeededRepetitions() {
     // TODO: not finished and buggy
-    print("NO");
+    print('NO');
     if (isRecurring) {
       if (intervalType == IntervalType.fixedPointOfTime) {
         switch (intervalUnit) {

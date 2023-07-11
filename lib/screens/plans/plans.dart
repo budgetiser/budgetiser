@@ -23,8 +23,8 @@ class _PlansState extends State<Plans> {
   final PageController _pageController = PageController(
     initialPage: Pages.budgets.index,
   );
-  String title = "Budgets";
-  String buttonTooltip = "Create Budget";
+  String title = 'Budgets';
+  String buttonTooltip = 'Create Budget';
   int _currentPage = Pages.budgets.index;
 
   @override
@@ -51,13 +51,13 @@ class _PlansState extends State<Plans> {
         onPageChanged: (int page) {
           setState(() {
             if (page == Pages.budgets.index) {
-              title = "Budgets";
-              buttonTooltip = "Create Budget";
+              title = 'Budgets';
+              buttonTooltip = 'Create Budget';
               _currentPage = Pages.budgets.index;
               DatabaseHelper.instance.pushGetAllBudgetsStream();
             } else if (page == Pages.savings.index) {
-              title = "Savings";
-              buttonTooltip = "Create Saving";
+              title = 'Savings';
+              buttonTooltip = 'Create Saving';
               _currentPage = Pages.savings.index;
               DatabaseHelper.instance.pushGetAllSavingsStream();
             }
@@ -81,7 +81,7 @@ class _PlansState extends State<Plans> {
                   padding: const EdgeInsets.only(bottom: 80),
                 );
               } else if (snapshot.hasError) {
-                return const Text("Oops!");
+                return const Text('Oops!');
               }
               return const Center(
                 child: CircularProgressIndicator(),
@@ -105,7 +105,7 @@ class _PlansState extends State<Plans> {
                   padding: const EdgeInsets.only(bottom: 80),
                 );
               } else if (snapshot.hasError) {
-                return const Text("Oops!");
+                return const Text('Oops!');
               }
               return const Center(
                 child: CircularProgressIndicator(),
