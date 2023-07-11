@@ -23,6 +23,13 @@ class AboutScreen extends StatelessWidget {
               ),
               onTap: () {},
             ),
+            ListTile(
+              title: const Text('Website'),
+              subtitle: const Text(
+                'budgetiser.com',
+              ),
+              onTap: () {},
+            ),
           ],
         ),
       ),
