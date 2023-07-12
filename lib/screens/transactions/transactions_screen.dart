@@ -151,7 +151,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ],
         title: Text(title),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: FutureBuilder<List<DateTime>>(
         future: monthsFuture,
         key: _futureBuilderKey,

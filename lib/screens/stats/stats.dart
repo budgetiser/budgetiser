@@ -38,7 +38,7 @@ class _StatsState extends State<Stats> {
       appBar: AppBar(
         title: const Text("Stats"),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

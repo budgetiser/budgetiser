@@ -46,7 +46,7 @@ class _PlansState extends State<Plans> {
       appBar: AppBar(
         title: Text(title),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: PageView(
         onPageChanged: (int page) {
           setState(() {
