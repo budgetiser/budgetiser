@@ -1,9 +1,10 @@
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
+import 'package:budgetiser/shared/dataClasses/selectables.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
-class Budget {
+class Budget implements Selectable {
   int id;
   String name;
   IconData icon;

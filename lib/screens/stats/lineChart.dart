@@ -20,10 +20,9 @@ class LineChartTest extends StatefulWidget {
 
 class _LineChartTestState extends State<LineChartTest>{
 
-  List<Color> gradientColors = [
-    Colors.cyan,
-    Colors.blue,
-  ];
+  double? max;
+  double? min;
+  double? spread;
 
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
@@ -62,7 +61,7 @@ class _LineChartTestState extends State<LineChartTest>{
       fontSize: 15,
     );
     String text = "";
-    if (value.toInt() % 2500 == 0){
+    if (spread != null && value.toInt() % (spread!/4) == 0){
       text = value.toInt().toString();
     }
     return Text(text, style: style, textAlign: TextAlign.left);
@@ -76,28 +75,20 @@ class _LineChartTestState extends State<LineChartTest>{
         return FlSpot(day, value);
       }),
       isCurved: false,
-      gradient: LinearGradient(
-        colors: gradientColors,
-      ),
       barWidth: 5,
       isStrokeCapRound: true,
       dotData: const FlDotData(
         show: false,
       ),
-      color: acc.color,
-      belowBarData: BarAreaData(
-        show: true,
-        gradient: LinearGradient(
-          colors: gradientColors
-              .map((color) => color.withOpacity(0.3))
-              .toList(),
-        ),
-      ),
+      color: acc.color
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    spread = null;
+    max = null;
+    min = null;
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -105,18 +96,28 @@ class _LineChartTestState extends State<LineChartTest>{
           future: DatabaseHelper.instance.getAccountBalancesAtTime(widget.accounts, widget.startDate, widget.endDate),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              //List<Map<String, dynamic>> temp = snapshot.data![widget.account]!;
               if(snapshot.data!.isEmpty){
                 return Text("No data");
               }
-              //temp.sort((a, b) => a['value'].compareTo(b['value']));
-              int spread = 1000;
+
+              snapshot.data!.forEach((key, value) {
+                List<Map<String, dynamic>> temp = value;
+                temp.sort((a, b) => a['value'].compareTo(b['value']));
+                if(max == null || temp.last["value"] > max){
+                  max = temp.last["value"];
+                }
+                if(min == null || temp.first["value"] < min){
+                  min = temp.first["value"];
+                }
+              });
+
+              spread = (max!-min!);
               return LineChart(
                   LineChartData(
                     gridData: FlGridData(
                       show: true,
                       drawVerticalLine: true,
-                      horizontalInterval: spread/4,
+                      horizontalInterval: spread!/4,
                       verticalInterval: 10,
                       getDrawingHorizontalLine: (value) {
                         return const FlLine(
@@ -162,8 +163,8 @@ class _LineChartTestState extends State<LineChartTest>{
                     ),
                     minX: 1,
                     maxX: 31,
-                    minY: -2500,//temp.first["value"] > 0 ? temp.first["value"]-temp.first["value"]*0.05 : temp.first["value"]*1.05,
-                    maxY: 5000,//temp.last["value"] > 0 ? temp.last["value"]*1.05 : temp.last["value"]-temp.last["value"]*0.05,
+                    minY: min!-(spread!.abs()*0.1),//temp.first["value"] > 0 ? temp.first["value"]-temp.first["value"]*0.05 : temp.first["value"]*1.05,
+                    maxY: max!+(spread!.abs()*0.1),//temp.last["value"] > 0 ? temp.last["value"]*1.05 : temp.last["value"]-temp.last["value"]*0.05,
                     lineBarsData: snapshot.data!.entries.map( (entry) => lineChartBarData(entry.key, entry.value)).toList(),
                   )
               );
