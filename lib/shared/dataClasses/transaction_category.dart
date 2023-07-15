@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/dataClasses/selectables.dart';
+import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:flutter/material.dart';
 
 class TransactionCategory implements Selectable {

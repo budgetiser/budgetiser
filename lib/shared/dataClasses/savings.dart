@@ -1,7 +1,7 @@
-import 'package:budgetiser/shared/dataClasses/selectables.dart';
+import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:flutter/material.dart';
 
-class Savings implements Selectable{
+class Savings implements Selectable {
   int id;
   String name;
   IconData icon;
