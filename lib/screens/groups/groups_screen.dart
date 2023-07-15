@@ -29,7 +29,15 @@ class GroupsScreen extends StatelessWidget {
               scrollDirection: Axis.vertical,
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                return GroupItem(groupData: snapshot.data![index]);
+                return Column(
+                  children: [
+                    GroupItem(groupData: snapshot.data![index]),
+                    const Divider(
+                      indent: 15,
+                      endIndent: 15,
+                    ),
+                  ],
+                );
               },
               padding: const EdgeInsets.only(bottom: 80),
             );

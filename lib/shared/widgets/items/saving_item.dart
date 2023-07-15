@@ -1,7 +1,7 @@
 import 'package:budgetiser/screens/plans/saving_form.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/linear_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SavingItem extends StatelessWidget {
   const SavingItem({
@@ -17,10 +17,13 @@ class SavingItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => SavingForm(
-                      savingData: savingData,
-                    ))),
+                  savingData: savingData,
+                ),
+              ),
+            ),
           },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -28,16 +31,15 @@ class SavingItem extends StatelessWidget {
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              //color: Theme.of(context).colorScheme.primary,
             ),
-            height: 90,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Row(
                         children: [
                           Icon(
                             savingData.icon,
@@ -46,25 +48,27 @@ class SavingItem extends StatelessWidget {
                           const SizedBox(
                             width: 8,
                           ),
-                          Text(savingData.name),
+                          Flexible(
+                            child: Text(
+                              savingData.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
-                      Text(
-                          "days left: ${(savingData.endDate).difference(DateTime.now()).inDays}")
-                    ]),
-                Row(
-                  children: [
-                    Expanded(
-                      child: LinearPercentIndicator(
-                        lineHeight: 15.0,
-                        percent: (savingData.balance / savingData.goal),
-                        backgroundColor: Colors.white,
-                        linearGradient: LinearGradient(
-                            colors: createGradient(savingData.color)),
-                        clipLinearGradient: true,
-                      ),
                     ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "days left: ${(savingData.endDate).difference(DateTime.now()).inDays}",
+                    )
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: LinearProgressBar(
+                    percent: savingData.balance / savingData.goal,
+                    color: savingData.color,
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,24 +88,5 @@ class SavingItem extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  List<Color> createGradient(Color baseColor) {
-    List<Color> gradient = [];
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
-    return gradient;
   }
 }
