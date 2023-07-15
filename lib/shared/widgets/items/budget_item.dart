@@ -1,7 +1,7 @@
 import 'package:budgetiser/screens/plans/budget_form.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/linear_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class BudgetItem extends StatelessWidget {
   const BudgetItem({
@@ -16,10 +16,13 @@ class BudgetItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () => {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => BudgetForm(
-                      budgetData: budgetData,
-                    ))),
+                  budgetData: budgetData,
+                ),
+              ),
+            ),
           },
           child: Container(
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -27,54 +30,48 @@ class BudgetItem extends StatelessWidget {
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              //color: Theme.of(context).colorScheme.primary,
             ),
-            height: 90,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                  children: [
+                    Flexible(
+                      child: Row(
                         children: [
                           Icon(
                             budgetData.icon,
                             color: budgetData.color,
                           ),
-                          const SizedBox(
-                            width: 8,
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(budgetData.name,
+                                overflow: TextOverflow.ellipsis),
                           ),
-                          Text(budgetData.name),
                         ],
                       ),
-                      budgetData.isRecurring
-                          ? _getTimeInfos(
-                              budgetData.startDate, budgetData.endDate!)
-                          : (budgetData.startDate.compareTo(DateTime.now()) >= 0
-                              ? Row(
-                                  children: [
-                                    Text(
-                                        'starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}'),
-                                    const Icon(Icons.arrow_forward)
-                                  ],
-                                )
-                              : Container()),
-                    ]),
-                Row(
-                  children: [
-                    Expanded(
-                      child: LinearPercentIndicator(
-                        lineHeight: 15.0,
-                        percent: getPercentInterval(
-                            budgetData.balance, budgetData.limit),
-                        backgroundColor: Colors.white,
-                        linearGradient: LinearGradient(
-                            colors: createGradient(budgetData.color)),
-                        clipLinearGradient: true,
-                      ),
                     ),
+                    const SizedBox(width: 8),
+                    budgetData.isRecurring
+                        ? _getTimeInfos(
+                            budgetData.startDate, budgetData.endDate!)
+                        : (budgetData.startDate.compareTo(DateTime.now()) >= 0
+                            ? Row(
+                                children: [
+                                  Text(
+                                    "starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}",
+                                  ),
+                                  const Icon(Icons.arrow_forward)
+                                ],
+                              )
+                            : Container()),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: LinearProgressBar(
+                    percent: budgetData.balance / budgetData.limit,
+                    color: budgetData.color,
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,35 +123,6 @@ class BudgetItem extends StatelessWidget {
           const Icon(Icons.repeat)
         ],
       );
-    }
-  }
-
-  List<Color> createGradient(Color baseColor) {
-    List<Color> gradient = [];
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.4));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.5));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.6));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.7));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.8));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 0.9));
-    gradient.add(
-        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, 1.0));
-    return gradient;
-  }
-
-  double getPercentInterval(double value, double base) {
-    if (value >= base) {
-      return 1.00;
-    } else if (value <= 0) {
-      return 0.00;
-    } else {
-      return value / base;
     }
   }
 }

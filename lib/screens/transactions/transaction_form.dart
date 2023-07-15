@@ -235,7 +235,12 @@ class _TransactionFormState extends State<TransactionForm> {
                               _onAccount2checkboxClicked();
                             },
                           ),
-                          const Text('transfer to another account'),
+                          const Flexible(
+                            child: Text(
+                              "transfer to another account",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                     ),

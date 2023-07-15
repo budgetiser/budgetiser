@@ -224,6 +224,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return TransactionItem(
+                              // TODO: Bug: no splash effect. probably because of colored container
                               singleTransactionData: snapshot.data![index],
                             );
                           },

@@ -33,6 +33,7 @@ class TransactionItem extends StatelessWidget {
     date = singleTransactionData.date;
 
     return InkWell(
+      borderRadius: BorderRadius.circular(20),
       onTap: () => {
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -43,10 +44,8 @@ class TransactionItem extends StatelessWidget {
         )
       },
       child: Container(
-        margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-        height: 90,
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Row(
               //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
@@ -88,6 +87,7 @@ class TransactionItem extends StatelessWidget {
                   ),
               ],
             ),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
