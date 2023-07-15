@@ -32,14 +32,10 @@ Widget createDrawer(BuildContext context) {
                         color: Colors.white,
                         size: 40,
                       ),
-                      Text(
-                        ' Budgetiser',
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
                     ),
                     const SizedBox(width: 8),
                     // TODO: Bug: Text clips with big system font size
-                    Text("Budgetiser",
+                    Text('Budgetiser',
                         style: Theme.of(context).textTheme.displayLarge),
                   ],
                 ),
