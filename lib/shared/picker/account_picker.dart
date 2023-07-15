@@ -33,16 +33,18 @@ class _AccountPickerState extends State<AccountPicker> {
   Widget build(BuildContext context) {
     return StreamBuilder<List<Account>>(
       stream: DatabaseHelper.instance.allAccountsStream,
-      initialData: [],
+      initialData: const [],
       builder: (context, snapshot) {
         if (snapshot.data != null) {
-          return PickerContent<Account>(values: snapshot.data!,
-              heading: "Select Account",
-              callback: widget.onAccountPickedCallback
+          return PickerContent<Account>(
+            allValues: snapshot.data!,
+            heading: "Select Account",
+            callback: widget.onAccountPickedCallback,
           );
-        }else {
+        } else {
           return const CircularProgressIndicator();
         }
-    });
+      },
+    );
   }
 }

@@ -1,18 +1,16 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:flutter/material.dart';
 
-import 'package:budgetiser/db/database.dart';
-
 class PickerContent<T extends Selectable> extends StatefulWidget {
   const PickerContent({
     Key? key,
-    this.initials,
-    required this.values,
+    this.initialSelected,
+    required this.allValues,
     required this.heading,
     required this.callback,
   }) : super(key: key);
-  final List<T> values;
-  final List<T>? initials;
+  final List<T> allValues;
+  final List<T>? initialSelected;
   final String heading;
   final Function(List<T> selected) callback;
 
@@ -26,8 +24,8 @@ class _PickerContentState<T extends Selectable>
 
   @override
   void initState() {
-    if (widget.initials != null) {
-      _selectedValues = widget.initials!.cast<T>();
+    if (widget.initialSelected != null) {
+      _selectedValues = widget.initialSelected!.cast<T>();
     }
     super.initState();
   }
@@ -40,12 +38,11 @@ class _PickerContentState<T extends Selectable>
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            DatabaseHelper.instance.pushGetAllAccountsStream();
             return AlertDialog(
               title: Text(widget.heading),
               content: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
-                  if (widget.values.isEmpty) {
+                  if (widget.allValues.isEmpty) {
                     return const SizedBox(
                       width: double.maxFinite,
                       child: Text("No data!"),
@@ -58,51 +55,50 @@ class _PickerContentState<T extends Selectable>
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: widget.values.length,
+                          itemCount: widget.allValues.length,
                           itemBuilder: (context, listIDX) {
                             return CheckboxListTile(
                               title: Row(
                                 children: [
                                   Icon(
-                                    widget.values[listIDX].icon,
-                                    color: widget.values[listIDX].color,
+                                    widget.allValues[listIDX].icon,
+                                    color: widget.allValues[listIDX].color,
                                   ),
                                   const SizedBox(width: 8),
                                   Flexible(
                                     child: Text(
-                                      widget.values[listIDX].name,
+                                      widget.allValues[listIDX].name,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: TextStyle(
-                                        color: widget.values[listIDX].color,
+                                        color: widget.allValues[listIDX].color,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                               value: _selectedValues
-                                  .contains(widget.values[listIDX]),
+                                  .contains(widget.allValues[listIDX]),
                               onChanged: (bool? value) {
-                                setState(
-                                  () {
-                                    if (value == true) {
-                                      _selectedValues
-                                          .add(widget.values[listIDX]);
-                                    } else {
-                                      _selectedValues
-                                          .remove(widget.values[listIDX]);
-                                    }
-                                  },
-                                );
+                                setState(() {
+                                  if (value == true) {
+                                    _selectedValues
+                                        .add(widget.allValues[listIDX]);
+                                  } else {
+                                    _selectedValues
+                                        .remove(widget.allValues[listIDX]);
+                                  }
+                                });
                               },
                             );
                           },
                         ),
                         TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, _selectedValues);
-                            },
-                            child: const Text("Save"))
+                          onPressed: () {
+                            Navigator.pop(context, _selectedValues);
+                          },
+                          child: const Text("Save"),
+                        ),
                       ],
                     ),
                   );
@@ -114,13 +110,12 @@ class _PickerContentState<T extends Selectable>
           (value) => {
             setState(() {
               widget.callback(value ?? []);
-            })
+            }),
           },
         );
       },
       child: ListTile(
         leading: const Icon(Icons.add),
-        iconColor: Colors.white,
         title: Center(child: Text(widget.heading)),
       ),
     );
