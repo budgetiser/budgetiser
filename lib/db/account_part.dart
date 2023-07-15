@@ -56,6 +56,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
     pushGetAllAccountsStream();
   }
 
+  /// TODO: null checks
   Future<Account> _getOneAccount(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =

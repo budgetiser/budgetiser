@@ -57,9 +57,9 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Passcode',
-                      hintText: 'Enter secure passcode'),
+                    labelText: 'Passcode',
+                    hintText: 'Enter secure passcode',
+                  ),
                 ),
               ),
               Padding(
@@ -90,9 +90,9 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Repeat passcode',
-                      hintText: 'Repeat secure passcode'),
+                    labelText: 'Repeat passcode',
+                    hintText: 'Repeat secure passcode',
+                  ),
                 ),
               ),
               CheckboxListTile(

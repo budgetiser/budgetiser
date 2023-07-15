@@ -88,12 +88,11 @@ class _SavingFormState extends State<SavingForm> {
                     },
                     decoration: const InputDecoration(
                       labelText: "Name",
-                      border: OutlineInputBorder(),
                     ),
                   ))
                 ],
               ),
-              ColorPicker(
+              ColorPickerWidget(
                 initialSelectedColor: _color,
                 onColorChangedCallback: (color) {
                   setState(() {
@@ -122,7 +121,6 @@ class _SavingFormState extends State<SavingForm> {
                         const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
                       labelText: "Start",
-                      border: OutlineInputBorder(),
                     ),
                   )),
                   Flexible(
@@ -146,7 +144,6 @@ class _SavingFormState extends State<SavingForm> {
                         const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
                       labelText: "Goal",
-                      border: OutlineInputBorder(),
                     ),
                   ))
                 ],
@@ -186,7 +183,6 @@ class _SavingFormState extends State<SavingForm> {
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   labelText: "Description",
-                  border: OutlineInputBorder(),
                 ),
               ),
             ],
