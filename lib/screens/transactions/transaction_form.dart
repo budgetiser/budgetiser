@@ -237,7 +237,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           ),
                           const Flexible(
                             child: Text(
-                              "transfer to another account",
+                              'transfer to another account',
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

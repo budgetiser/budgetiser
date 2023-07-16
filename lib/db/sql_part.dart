@@ -1,6 +1,7 @@
 part of 'database.dart';
 
 extension DatabaseExtensionSQL on DatabaseHelper {
+  // ignore: always_declare_return_types
   _onCreate(Database db, int version) async {
     if (kDebugMode) {
       print('creating database');
@@ -113,6 +114,7 @@ CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
     }
   }
 
+  // ignore: always_declare_return_types
   _dropTables(Database db) async {
     await db.execute('''
           DROP TABLE IF EXISTS XXGroup;

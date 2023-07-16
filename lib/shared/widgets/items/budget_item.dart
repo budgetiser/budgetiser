@@ -58,7 +58,7 @@ class BudgetItem extends StatelessWidget {
                             ? Row(
                                 children: [
                                   Text(
-                                    "starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}",
+                                    'starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}',
                                   ),
                                   const Icon(Icons.arrow_forward)
                                 ],
