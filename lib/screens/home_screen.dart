@@ -77,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: 'Attention',
                       description: "Are you sure? This action can't be undone!",
                       onSubmitCallback: () async {
-                        DatabaseHelper.instance.resetDB();
-                        DatabaseHelper.instance.fillDBwithTMPdata();
+                        await DatabaseHelper.instance.resetDB();
+                        await DatabaseHelper.instance.fillDBwithTMPdata();
                         if (!mounted) return;
                         Navigator.of(context).pop();
                       },

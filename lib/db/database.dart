@@ -63,13 +63,13 @@ class DatabaseHelper {
     }
   }
 
-  void resetDB() async {
+  resetDB() async {
     final Database db = await database;
-    _dropTables(db);
-    _onCreate(db, 1);
+    await _dropTables(db);
+    await _onCreate(db, 1);
   }
 
-  void fillDBwithTMPdata() async {
+  fillDBwithTMPdata() async {
     for (var account in TMP_DATA_accountList) {
       await createAccount(account);
     }
@@ -93,7 +93,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<Database> initializeDatabase() async {
+  initializeDatabase() async {
     final preferences = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
     try {
@@ -115,12 +115,11 @@ class DatabaseHelper {
       if (kDebugMode) {
         print(e.toString());
       }
-      throw Error();
     }
   }
 
   /// Exports the database to a file in the Download folder.
-  void exportDB() async {
+  exportDB() async {
     final File db = File('${await getDatabasesPath()}/$databaseName');
     final fileContent = await db.readAsBytes();
 
@@ -131,7 +130,7 @@ class DatabaseHelper {
   }
 
   /// Imports the database from a file in the Download folder. Overwrites the current database.
-  void importDB() async {
+  importDB() async {
     final externalDirectory =
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
     final externalFile = File('${externalDirectory?.first.path}/budgetiser.db');
@@ -141,7 +140,7 @@ class DatabaseHelper {
     await db.writeAsBytes(fileContent);
   }
 
-  void exportAsJson() async {
+  exportAsJson() async {
     var fullJSON = {};
 
     allAccountsStream.listen((event) {
