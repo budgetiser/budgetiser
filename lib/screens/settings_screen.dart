@@ -212,6 +212,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
+            ListTile(
+              title: const Text('Reset DB'),
+              subtitle: const Text(
+                'Clear all entries',
+              ),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          'This action cannot be undone! All data will be lost.',
+                      onSubmitCallback: () async {
+                        await DatabaseHelper.instance.resetDB();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Reset and fill DB'),
+              subtitle: const Text(
+                'Clear all entries and fill with demo data',
+              ),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          'This action cannot be undone! All current data will be lost.',
+                      onSubmitCallback: () async {
+                        await DatabaseHelper.instance.resetDB();
+                        await DatabaseHelper.instance.fillDBwithTMPdata();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
