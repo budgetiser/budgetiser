@@ -33,11 +33,10 @@ class _IconPickerState extends State<IconPicker> {
               builder: (BuildContext context) {
                 return StatefulBuilder(builder: (context, setState) {
                   return SimpleDialog(
-                    elevation: 0,
                     children: [
                       TextField(
                         decoration: InputDecoration(
-                            hintText: "Search",
+                            hintText: 'Search',
                             prefixIcon: Icon(
                               Icons.search,
                               color: Theme.of(context).colorScheme.tertiary,
@@ -67,10 +66,11 @@ class _IconPickerState extends State<IconPicker> {
 
   Widget getIcons() {
     List<IconData> filteredIcons = [];
-    for (var element in _fullIconList) {
-      if (element["name"].contains(
-          _searchString != null ? _searchString!.toLowerCase() : "")) {
-        filteredIcons.add(element["icon"]);
+    for (Map<String, dynamic> element in _fullIconList) {
+      // ignore: avoid_dynamic_calls
+      if (element['name'].contains(
+          _searchString != null ? _searchString!.toLowerCase() : '')) {
+        filteredIcons.add(element['icon']);
       }
     }
     return SizedBox(

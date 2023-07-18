@@ -26,7 +26,7 @@ class SelectAccount extends StatefulWidget {
 class _SelectAccountState extends State<SelectAccount> {
   List<Account>? _accounts = [];
   Account? _selectedAccount;
-  final String keySelectedAccount = "key-last-selected-account";
+  final String keySelectedAccount = 'key-last-selected-account';
 
   @override
   void initState() {
@@ -76,11 +76,11 @@ class _SelectAccountState extends State<SelectAccount> {
   Widget build(BuildContext context) {
     var filteredAccounts =
         _accounts?.where((element) => element.id != widget.blackListAccountId);
-    String errorText = "Create account";
+    String errorText = 'Create account';
     if (filteredAccounts != null &&
         filteredAccounts.isEmpty &&
         _accounts!.isNotEmpty) {
-      errorText = "Create 2nd account";
+      errorText = 'Create 2nd account';
     }
 
     if (_accounts == null) {

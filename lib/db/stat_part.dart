@@ -1,4 +1,4 @@
-part of "database.dart";
+part of 'database.dart';
 
 extension DatabaseExtensionStat on DatabaseHelper {
   /// Get balance of all transactions in a category and account.

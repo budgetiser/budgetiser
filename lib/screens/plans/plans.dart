@@ -23,8 +23,8 @@ class _PlansState extends State<Plans> {
   final PageController _pageController = PageController(
     initialPage: Pages.budgets.index,
   );
-  String title = "Budgets";
-  String buttonTooltip = "Create Budget";
+  String title = 'Budgets';
+  String buttonTooltip = 'Create Budget';
   int _currentPage = Pages.budgets.index;
 
   @override
@@ -46,18 +46,18 @@ class _PlansState extends State<Plans> {
       appBar: AppBar(
         title: Text(title),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: PageView(
         onPageChanged: (int page) {
           setState(() {
             if (page == Pages.budgets.index) {
-              title = "Budgets";
-              buttonTooltip = "Create Budget";
+              title = 'Budgets';
+              buttonTooltip = 'Create Budget';
               _currentPage = Pages.budgets.index;
               DatabaseHelper.instance.pushGetAllBudgetsStream();
             } else if (page == Pages.savings.index) {
-              title = "Savings";
-              buttonTooltip = "Create Saving";
+              title = 'Savings';
+              buttonTooltip = 'Create Saving';
               _currentPage = Pages.savings.index;
               DatabaseHelper.instance.pushGetAllSavingsStream();
             }
@@ -69,6 +69,7 @@ class _PlansState extends State<Plans> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Budget> budgetList = snapshot.data!.toList();
+                // ignore: cascade_invocations
                 budgetList.sort((a, b) => a.compareTo(b));
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -81,7 +82,7 @@ class _PlansState extends State<Plans> {
                   padding: const EdgeInsets.only(bottom: 80),
                 );
               } else if (snapshot.hasError) {
-                return const Text("Oops!");
+                return const Text('Oops!');
               }
               return const Center(
                 child: CircularProgressIndicator(),
@@ -93,6 +94,7 @@ class _PlansState extends State<Plans> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Savings> savingsList = snapshot.data!.toList();
+                // ignore: cascade_invocations
                 savingsList.sort((a, b) => a.name.compareTo(b.name));
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -105,7 +107,7 @@ class _PlansState extends State<Plans> {
                   padding: const EdgeInsets.only(bottom: 80),
                 );
               } else if (snapshot.hasError) {
-                return const Text("Oops!");
+                return const Text('Oops!');
               }
               return const Center(
                 child: CircularProgressIndicator(),

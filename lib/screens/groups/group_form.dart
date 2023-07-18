@@ -52,8 +52,8 @@ class _GroupFormState extends State<GroupForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.initialGroup != null
-            ? const Text("Edit Group")
-            : const Text("New Group"),
+            ? const Text('Edit Group')
+            : const Text('New Group'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
@@ -79,19 +79,18 @@ class _GroupFormState extends State<GroupForm> {
                       controller: nameController,
                       validator: (data) {
                         if (data == null || data == '') {
-                          return "Please enter a valid name";
+                          return 'Please enter a valid name';
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
-                        labelText: "Group title",
-                        border: OutlineInputBorder(),
+                        labelText: 'Group title',
                       ),
                     ),
                   ),
                 ],
               ),
-              ColorPicker(
+              ColorPickerWidget(
                 initialSelectedColor: _color,
                 onColorChangedCallback: (color) {
                   setState(() {
@@ -103,8 +102,7 @@ class _GroupFormState extends State<GroupForm> {
                 controller: descriptionController,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
-                  labelText: "Description",
-                  border: OutlineInputBorder(),
+                  labelText: 'Description',
                 ),
               ),
               const Divider(height: 32),
@@ -134,7 +132,7 @@ class _GroupFormState extends State<GroupForm> {
                     context: context,
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
-                        title: "Attention",
+                        title: 'Attention',
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
@@ -177,7 +175,7 @@ class _GroupFormState extends State<GroupForm> {
                 Navigator.of(context).pop();
               }
             },
-            label: const Text("Save"),
+            label: const Text('Save'),
             icon: const Icon(Icons.check),
           ),
         ],

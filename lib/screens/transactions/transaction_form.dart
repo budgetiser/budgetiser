@@ -84,7 +84,7 @@ class _TransactionFormState extends State<TransactionForm> {
     super.initState();
   }
 
-  setAccount(Account a) {
+  void setAccount(Account a) {
     if (mounted) {
       setState(() {
         selectedAccount = a;
@@ -92,7 +92,7 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
-  setAccount2(Account a) {
+  void setAccount2(Account a) {
     if (mounted) {
       setState(() {
         selectedAccount2 = a;
@@ -106,8 +106,8 @@ class _TransactionFormState extends State<TransactionForm> {
     return Scaffold(
       appBar: AppBar(
         title: hasInitialData
-            ? const Text("Edit Transaction")
-            : const Text("New Transaction"),
+            ? const Text('Edit Transaction')
+            : const Text('New Transaction'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: selectedAccount2 != null
@@ -121,23 +121,27 @@ class _TransactionFormState extends State<TransactionForm> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: Icon(valueController.text.startsWith("-")
-                        ? Icons.remove
-                        : Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        valueController.text.startsWith("-")
-                            ? valueController.text =
-                                valueController.text.substring(1)
-                            : valueController.text = "-${valueController.text}";
-                      });
-                    },
-                    color: valueController.text.startsWith("-")
-                        ? const Color.fromARGB(255, 174, 74, 99)
-                        : const Color.fromARGB(239, 29, 129, 37),
-                    splashRadius: 24,
-                    iconSize: 48,
+                  SizedBox(
+                    height: 70,
+                    child: IconButton(
+                      icon: Icon(valueController.text.startsWith('-')
+                          ? Icons.remove
+                          : Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          valueController.text.startsWith('-')
+                              ? valueController.text =
+                                  valueController.text.substring(1)
+                              : valueController.text =
+                                  '-${valueController.text}';
+                        });
+                      },
+                      color: valueController.text.startsWith('-')
+                          ? const Color.fromARGB(255, 174, 74, 99)
+                          : const Color.fromARGB(239, 29, 129, 37),
+                      splashRadius: 24,
+                      iconSize: 48,
+                    ),
                   ),
                   Flexible(
                     child: TextFormField(
@@ -145,8 +149,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
-                        labelText: "Value",
-                        border: OutlineInputBorder(),
+                        labelText: 'Value',
                       ),
                       onChanged: (value) {
                         // _formKey.currentState!.validate();
@@ -172,7 +175,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   const SizedBox(width: 16),
                   Flexible(
                     child: DatePicker(
-                      label: "Date",
+                      label: 'Date',
                       initialDate: transactionDate,
                       onDateChangedCallback: (date) {
                         setState(() {
@@ -195,8 +198,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 controller: titleController,
                 // initialValue: widget.initialName,
                 decoration: const InputDecoration(
-                  labelText: "Title",
-                  border: OutlineInputBorder(),
+                  labelText: 'Title',
                 ),
               ),
               // account picker
@@ -208,7 +210,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Account",
+                        'Account',
                         textAlign: TextAlign.left,
                         style: themeData.inputDecorationTheme.labelStyle != null
                             ? themeData.inputDecorationTheme.labelStyle!
@@ -233,7 +235,12 @@ class _TransactionFormState extends State<TransactionForm> {
                               _onAccount2checkboxClicked();
                             },
                           ),
-                          const Text("transfer to another account"),
+                          const Flexible(
+                            child: Text(
+                              'transfer to another account',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -241,7 +248,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("to "),
+                          const Text('to '),
                           Flexible(
                             child: SelectAccount(
                               initialAccount: selectedAccount2,
@@ -262,7 +269,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        "Category",
+                        'Category',
                         textAlign: TextAlign.left,
                         style: themeData.inputDecorationTheme.labelStyle != null
                             ? themeData.inputDecorationTheme.labelStyle!
@@ -293,9 +300,8 @@ class _TransactionFormState extends State<TransactionForm> {
                   controller: descriptionController,
                   maxLines: 5,
                   decoration: const InputDecoration(
-                    labelText: "Notes",
+                    labelText: 'Notes',
                     alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -317,7 +323,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     context: context,
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
-                        title: "Attention",
+                        title: 'Attention',
                         description:
                             "Are you sure to delete this Transaction? This action can't be undone!",
                         onSubmitCallback: () {
@@ -350,19 +356,19 @@ class _TransactionFormState extends State<TransactionForm> {
                 if (hasInitialData) {
                   DatabaseHelper.instance
                       .updateSingleTransaction(_currentSingleTransaction());
-
                   Navigator.of(context).pop();
                 } else {
                   DatabaseHelper.instance
                       .createSingleTransaction(_currentSingleTransaction());
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) => const TransactionsScreen()),
+                        builder: (context) => const TransactionsScreen(),
+                      ),
                       (Route<dynamic> route) => false);
                 }
               }
             },
-            label: const Text("Save"),
+            label: const Text('Save'),
             icon: const Icon(Icons.save),
           ),
         ],

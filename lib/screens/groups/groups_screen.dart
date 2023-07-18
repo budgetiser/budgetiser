@@ -16,11 +16,11 @@ class GroupsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Groups",
+          'Groups',
           // style: Theme.of(context).textTheme.caption,
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: StreamBuilder<List<Group>>(
         stream: DatabaseHelper.instance.allGroupsStream,
         builder: (context, snapshot) {
@@ -29,12 +29,20 @@ class GroupsScreen extends StatelessWidget {
               scrollDirection: Axis.vertical,
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                return GroupItem(groupData: snapshot.data![index]);
+                return Column(
+                  children: [
+                    GroupItem(groupData: snapshot.data![index]),
+                    const Divider(
+                      indent: 15,
+                      endIndent: 15,
+                    ),
+                  ],
+                );
               },
               padding: const EdgeInsets.only(bottom: 80),
             );
           } else if (snapshot.hasError) {
-            return const Text("Oops!");
+            return const Text('Oops!');
           } else {
             return const Center(
               child: CircularProgressIndicator(),

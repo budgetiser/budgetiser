@@ -24,7 +24,7 @@ class _BalanceTextState extends State<BalanceText> {
     super.initState();
   }
 
-  awaitFunction() async {
+  void awaitFunction() async {
     final awaitedCurrency = await SettingsCurrencyHandler().getCurrency();
     setState(() {
       currency = awaitedCurrency;
@@ -34,24 +34,24 @@ class _BalanceTextState extends State<BalanceText> {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.bodyMedium!;
-    String prefix = "";
+    String prefix = '';
     if (widget.balance >= 0) {
       textStyle = textStyle.copyWith(
         color: const Color.fromARGB(239, 29, 129, 37),
       );
       if (widget.hasPrefix) {
-        prefix = "+ ";
+        prefix = '+ ';
       }
     } else {
       textStyle = textStyle.copyWith(
         color: const Color.fromARGB(255, 174, 74, 99),
       );
       if (widget.hasPrefix) {
-        prefix = "- ";
+        prefix = '- ';
       }
     }
     return Text(
-      "$prefix${widget.balance.abs().toStringAsFixed(2)} $currency",
+      '$prefix${widget.balance.abs().toStringAsFixed(2)} $currency',
       style: textStyle,
     );
   }

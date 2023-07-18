@@ -32,102 +32,90 @@ class TransactionItem extends StatelessWidget {
     account2 = singleTransactionData.account2;
     date = singleTransactionData.date;
 
-    return Column(
-      children: [
-        InkWell(
-          onTap: () => {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => TransactionForm(
-                  // always one of these will be null
-                  initialSingleTransactionData: singleTransactionData,
-                ),
-              ),
-            )
-          },
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            height: 90,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(title),
-                    if (account2 == null)
-                      Row(
-                        children: [
-                          Icon(
-                            category.icon,
-                            color: category.color,
-                          ),
-                          const Text(" in "),
-                          Icon(
-                            account.icon,
-                            color: account.color,
-                          ),
-                        ],
-                      ),
-                    if (account2 != null)
-                      Row(
-                        children: [
-                          Icon(
-                            category.icon,
-                            color: category.color,
-                          ),
-                          const Text(" from "),
-                          Icon(
-                            account.icon,
-                            color: account.color,
-                          ),
-                          const Text(" to "),
-                          Icon(
-                            account2.icon,
-                            color: account2.color,
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${date.day}.${date.month}.${date.year}",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        textWidthBasis: TextWidthBasis.parent,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.merge(const TextStyle(fontSize: 18)),
-                      ),
-                    ),
-                    BalanceText(value),
-                  ],
-                ),
-              ],
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: () => {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TransactionForm(
+              initialSingleTransactionData: singleTransactionData,
             ),
           ),
+        )
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Column(
+          children: [
+            Row(
+              //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(title),
+                if (account2 == null)
+                  Row(
+                    children: [
+                      Icon(
+                        category.icon,
+                        color: category.color,
+                      ),
+                      const Text(' in '),
+                      Icon(
+                        account.icon,
+                        color: account.color,
+                      ),
+                    ],
+                  ),
+                if (account2 != null)
+                  Row(
+                    children: [
+                      Icon(
+                        category.icon,
+                        color: category.color,
+                      ),
+                      const Text(' from '),
+                      Icon(
+                        account.icon,
+                        color: account.color,
+                      ),
+                      const Text(' to '),
+                      Icon(
+                        account2.icon,
+                        color: account2.color,
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${date.day}.${date.month}.${date.year}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      textWidthBasis: TextWidthBasis.parent,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.merge(const TextStyle(fontSize: 18)),
+                    ),
+                  ),
+                ),
+                BalanceText(value),
+              ],
+            ),
+          ],
         ),
-        const Divider(
-          thickness: 1,
-          indent: 10,
-          endIndent: 10,
-        ),
-      ],
+      ),
     );
   }
 }

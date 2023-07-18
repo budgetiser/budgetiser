@@ -15,9 +15,13 @@ class SettingsStreamClass {
 
   Stream<ThemeMode> get settingsStream => _settingsStreamController.stream;
 
+  void dispose() {
+    _settingsStreamController.close();
+  }
+
   void pushGetSettingsStream() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? currentModeString = prefs.getString('key-themeMode');
+    final preferences = await SharedPreferences.getInstance();
+    final String? currentModeString = preferences.getString('key-themeMode');
 
     ThemeMode currentThemeMode = _stringToThemeMode(currentModeString);
 
@@ -25,8 +29,8 @@ class SettingsStreamClass {
   }
 
   void setThemeModeFromString(String themeModeString) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('key-themeMode', themeModeString);
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString('key-themeMode', themeModeString);
 
     ThemeMode currentThemeMode = _stringToThemeMode(themeModeString);
 
@@ -36,13 +40,13 @@ class SettingsStreamClass {
   ThemeMode _stringToThemeMode(themeModeString) {
     ThemeMode themeMode;
     switch (themeModeString) {
-      case "system":
+      case 'system':
         themeMode = ThemeMode.system;
         break;
-      case "light":
+      case 'light':
         themeMode = ThemeMode.light;
         break;
-      case "dark":
+      case 'dark':
         themeMode = ThemeMode.dark;
         break;
       default:

@@ -50,8 +50,8 @@ class _CategoryFormState extends State<CategoryForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.categoryData != null
-            ? const Text("Edit Category")
-            : const Text("New Category"),
+            ? const Text('Edit Category')
+            : const Text('New Category'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
@@ -76,19 +76,18 @@ class _CategoryFormState extends State<CategoryForm> {
                       controller: nameController,
                       validator: (data) {
                         if (data == null || data == '') {
-                          return "Please enter a valid name";
+                          return 'Please enter a valid name';
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
-                        labelText: "Category title",
-                        border: OutlineInputBorder(),
+                        labelText: 'Category title',
                       ),
                     ),
                   ),
                 ],
               ),
-              ColorPicker(
+              ColorPickerWidget(
                   initialSelectedColor: _color,
                   onColorChangedCallback: (color) {
                     setState(() {
@@ -99,8 +98,7 @@ class _CategoryFormState extends State<CategoryForm> {
                 controller: descriptionController,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
-                  labelText: "Description",
-                  border: OutlineInputBorder(),
+                  labelText: 'Description',
                 ),
               ),
             ],
@@ -120,7 +118,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     context: context,
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
-                        title: "Attention",
+                        title: 'Attention',
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
@@ -165,7 +163,7 @@ class _CategoryFormState extends State<CategoryForm> {
                 Navigator.of(context).pop();
               }
             },
-            label: const Text("Save"),
+            label: const Text('Save'),
             icon: const Icon(Icons.check),
           ),
         ],

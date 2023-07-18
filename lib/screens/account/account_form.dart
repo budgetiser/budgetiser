@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
-import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
+import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +54,8 @@ class _AccountFormState extends State<AccountForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.initialAccount != null
-            ? const Text("Edit Account")
-            : const Text("Add Account"),
+            ? const Text('Edit Account')
+            : const Text('Add Account'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
@@ -63,6 +63,7 @@ class _AccountFormState extends State<AccountForm> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // icon and name
               Row(
@@ -80,14 +81,13 @@ class _AccountFormState extends State<AccountForm> {
                     child: TextFormField(
                       controller: nameController,
                       decoration: const InputDecoration(
-                        labelText: "Account Name",
-                        border: OutlineInputBorder(),
+                        labelText: 'Account Name',
                       ),
                     ),
                   ),
                 ],
               ),
-              ColorPicker(
+              ColorPickerWidget(
                 initialSelectedColor: _color,
                 onColorChangedCallback: (color) {
                   setState(() {
@@ -100,17 +100,16 @@ class _AccountFormState extends State<AccountForm> {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(
-                  labelText: "Balance",
-                  border: OutlineInputBorder(),
+                  labelText: 'Balance',
                 ),
                 validator: (data) {
                   if (data!.isEmpty) {
-                    return "Please enter a balance";
+                    return 'Please enter a balance';
                   }
                   try {
                     double.parse(data);
                   } catch (e) {
-                    return "Please enter a valid number";
+                    return 'Please enter a valid number';
                   }
                   return null;
                 },
@@ -121,38 +120,40 @@ class _AccountFormState extends State<AccountForm> {
                   controller: descriptionController,
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
-                    labelText: "Description",
-                    border: OutlineInputBorder(),
+                    labelText: 'Description',
                   ),
                 ),
               ),
               // account action buttons
               if (widget.initialAccount != null)
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const SizedBox(
                       height: 16,
                     ),
                     FloatingActionButton.extended(
+                      label: const Text('Set balance with transaction'),
+                      icon: const Icon(Icons.keyboard_tab_rounded),
+                      heroTag: 'setBalanceWithTransaction',
                       onPressed: (() {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => TransactionsScreen(
-                            initialAccountFilterName: nameController.text,
-                          ),
-                        ));
+                        showBalanceDialog(context);
                       }),
-                      label: const Text("View all transactions"),
-                      heroTag: "viewTransactions",
                     ),
                     const SizedBox(
                       height: 16,
                     ),
                     FloatingActionButton.extended(
+                      label: const Text('View all transactions'),
+                      icon: const Icon(Icons.list),
+                      heroTag: 'viewTransactions',
                       onPressed: (() {
-                        showBalanceDialog(context);
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => TransactionsScreen(
+                            initialAccountFilter: widget.initialAccount,
+                          ),
+                        ));
                       }),
-                      label: const Text("Set balance with transaction"),
-                      heroTag: "setBalanceWithTransaction",
                     ),
                   ],
                 ),
@@ -172,7 +173,7 @@ class _AccountFormState extends State<AccountForm> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description:
                           "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
                       onSubmitCallback: () {
@@ -217,9 +218,9 @@ class _AccountFormState extends State<AccountForm> {
               Navigator.of(context).pop();
             }
           },
-          label: const Text("Save"),
+          label: const Text('Save'),
           icon: const Icon(Icons.save),
-          heroTag: "save",
+          heroTag: 'save',
         ),
       ]),
     );
@@ -229,56 +230,55 @@ class _AccountFormState extends State<AccountForm> {
     final formKey = GlobalKey<FormState>();
     var inputController = TextEditingController();
     return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Set balance"),
-            elevation: 0,
-            content: Form(
-              key: formKey,
-              child: TextFormField(
-                controller: inputController,
-                textAlign: TextAlign.center,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Enter number';
-                  }
-
-                  return null;
-                },
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Set balance'),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: inputController,
+              textAlign: TextAlign.center,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Enter number';
+                }
+                return null;
+              },
             ),
-            actions: <Widget>[
-              FloatingActionButton(
-                onPressed: () {
+          ),
+          actions: <Widget>[
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              backgroundColor: Colors.red,
+              mini: true,
+              child: const Icon(Icons.close),
+            ),
+            FloatingActionButton.extended(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
                   Navigator.pop(context);
-                },
-                backgroundColor: Colors.red,
-                mini: true,
-                child: const Icon(Icons.close),
-              ),
-              FloatingActionButton.extended(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => TransactionForm(
-                          initialBalance: (double.parse(inputController.text) -
-                                  double.parse(balanceController.text))
-                              .toStringAsFixed(2),
-                          initialSelectedAccount: widget.initialAccount,
-                        ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => TransactionForm(
+                        initialBalance: (double.parse(inputController.text) -
+                                double.parse(balanceController.text))
+                            .toStringAsFixed(2),
+                        initialSelectedAccount: widget.initialAccount,
                       ),
-                    );
-                  }
-                },
-                label: const Text("Set"),
-                icon: const Icon(Icons.check),
-              ),
-            ],
-          );
-        });
+                    ),
+                  );
+                }
+              },
+              label: const Text('Set'),
+              icon: const Icon(Icons.check),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
