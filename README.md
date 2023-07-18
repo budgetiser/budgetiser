@@ -4,7 +4,6 @@
 ![workflow](https://github.com/budgetiser/budgetiser/actions/workflows/build-signed-bundle.yml/badge.svg)
 ![100%local](https://img.shields.io/badge/100%25-local-1)
 
-
 Your personal, open source Finance Tracker.
 
 100% offline
@@ -13,4 +12,4 @@ Your personal, open source Finance Tracker.
 
 [Website](http://budgetiser.de)
 
-see the [how-to](budgetiser/assets/how-to.md)
+see the [how-to](assets/how-to.md)

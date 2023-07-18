@@ -1,25 +1,28 @@
-# Key Concepts
-
-Click on the top left Corner to see the Navigation pane for every key Feature:
-
-## Transaction
+# Quick start
 
 ## Account
 
-Example Account-overview:
+Navigate to the account section in the drawer on the left and create your first account.
+Enter an account name and the current account balance.
+Optionally, you can customize the appearance of your account by selecting a different icon or color. This will help you visually distinguish your account from others.
 
-You can directly see your different accounts with the respective balance. With the two arrows you can make a new transaction for the account.
-
-Click on the name to edit a account. With the bottom right button you can create new Accounts.
-
-There a two types off accounts:
-
-- normal
-- saving-account
-  - imaginary account for saving up to something with start and end date and a goal for the saving amount
+![Image of an account](images/how_to/account.png)
 
 ## Category
 
-## Group
+Now create a category for your first transaction. Navigate to the category section on the left. The process is similar to the account creation.
 
-## Budget
+![Image of a category](images/how_to/category.png)
+
+## Transaction
+
+Now you are ready to create your first transaction.
+Fill in the field and use the account and category you created in the previous steps.
+
+![Image of the transaction form](images/how_to/transaction.png)
+
+Congratulations! You have successfully created your first account, category and transaction in the application. You can now start using it for managing and organizing your finances efficiently.
+
+# Im-/Export
+
+See settings.
