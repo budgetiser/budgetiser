@@ -58,7 +58,7 @@ class BudgetItem extends StatelessWidget {
                             ? Row(
                                 children: [
                                   Text(
-                                    "starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}",
+                                    'starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}',
                                   ),
                                   const Icon(Icons.arrow_forward)
                                 ],
@@ -104,14 +104,14 @@ class BudgetItem extends StatelessWidget {
     if (DateTime.now().compareTo(start) < 0) {
       return Row(
         children: [
-          Text("starting in: ${start.difference(DateTime.now()).inDays}"),
+          Text('starting in: ${start.difference(DateTime.now()).inDays}'),
           const Icon(Icons.arrow_forward)
         ],
       );
     } else if (DateTime.now().compareTo(end) > 0) {
       return Row(
         children: [
-          Text("ended before: ${DateTime.now().difference(end).inDays}"),
+          Text('ended before: ${DateTime.now().difference(end).inDays}'),
           const Icon(Icons.arrow_back)
         ],
       );

@@ -17,7 +17,7 @@ class AccountTextWithIcon extends StatelessWidget {
         color: account.color,
       ),
       Flexible(
-        child: Text(" ${account.name}", overflow: TextOverflow.ellipsis),
+        child: Text(' ${account.name}', overflow: TextOverflow.ellipsis),
       ),
     ]);
   }

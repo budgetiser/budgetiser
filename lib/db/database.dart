@@ -14,18 +14,18 @@ import 'package:budgetiser/shared/tempData/temp_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
 part 'account_part.dart';
-part 'stat_part.dart';
-part 'single_transaction_part.dart';
-part 'category_part.dart';
-part 'savings_part.dart';
 part 'budget_part.dart';
-part 'sql_part.dart';
+part 'category_part.dart';
 part 'group_part.dart';
+part 'savings_part.dart';
+part 'single_transaction_part.dart';
+part 'sql_part.dart';
+part 'stat_part.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
@@ -63,13 +63,14 @@ class DatabaseHelper {
     }
   }
 
+  // ignore: always_declare_return_types
   resetDB() async {
     final Database db = await database;
     await _dropTables(db);
     await _onCreate(db, 1);
   }
 
-  fillDBwithTMPdata() async {
+  void fillDBwithTMPdata() async {
     for (var account in TMP_DATA_accountList) {
       await createAccount(account);
     }
@@ -89,11 +90,11 @@ class DatabaseHelper {
       await createGroup(group);
     }
     if (kDebugMode) {
-      print("finished filling DB with TMP data");
+      print('finished filling DB with TMP data');
     }
   }
 
-  initializeDatabase() async {
+  Future<Database> initializeDatabase() async {
     final preferences = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
     try {
@@ -115,11 +116,12 @@ class DatabaseHelper {
       if (kDebugMode) {
         print(e.toString());
       }
+      throw Error();
     }
   }
 
   /// Exports the database to a file in the Download folder.
-  exportDB() async {
+  void exportDB() async {
     final File db = File('${await getDatabasesPath()}/$databaseName');
     final fileContent = await db.readAsBytes();
 
@@ -130,7 +132,7 @@ class DatabaseHelper {
   }
 
   /// Imports the database from a file in the Download folder. Overwrites the current database.
-  importDB() async {
+  void importDB() async {
     final externalDirectory =
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
     final externalFile = File('${externalDirectory?.first.path}/budgetiser.db');
@@ -140,45 +142,45 @@ class DatabaseHelper {
     await db.writeAsBytes(fileContent);
   }
 
-  exportAsJson() async {
+  void exportAsJson() async {
     var fullJSON = {};
 
     allAccountsStream.listen((event) {
-      fullJSON["Accounts"] =
+      fullJSON['Accounts'] =
           event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllAccountsStream();
     await allAccountsStream.isEmpty;
 
     allBudgetsStream.listen((event) {
-      fullJSON["Budgets"] =
+      fullJSON['Budgets'] =
           event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllBudgetsStream();
     await allBudgetsStream.first;
 
     allCategoryStream.listen((event) {
-      fullJSON["Categories"] =
+      fullJSON['Categories'] =
           event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllCategoriesStream();
     await allCategoryStream.first;
 
     allGroupsStream.listen((event) {
-      fullJSON["Groups"] = event.map((element) => element.toJsonMap()).toList();
+      fullJSON['Groups'] = event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllGroupsStream();
     await allGroupsStream.first;
 
     allSavingsStream.listen((event) {
-      fullJSON["Savings"] =
+      fullJSON['Savings'] =
           event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllSavingsStream();
     await allSavingsStream.first;
 
     allTransactionStream.listen((event) {
-      fullJSON["Transactions"] =
+      fullJSON['Transactions'] =
           event.map((element) => element.toJsonMap()).toList();
     });
     pushGetAllTransactionsStream();

@@ -69,7 +69,7 @@ class MyThemes {
       color: DARK_BACKGROUND,
       centerTitle: true,
       titleTextStyle: TextStyle(
-        // title text in appbar
+        // title text in app bar
         fontSize: 30,
         fontWeight: FontWeight.bold,
       ),

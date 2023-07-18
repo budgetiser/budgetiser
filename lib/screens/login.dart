@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
     // DatabaseHelper.instance.logout();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login Page"),
+        title: const Text('Login Page'),
       ),
       body: Form(
         key: _formKey,
@@ -30,16 +30,16 @@ class LoginScreen extends StatelessWidget {
                   obscureText: true,
                   validator: (data) {
                     if (data!.isEmpty) {
-                      return "Please enter a passcode";
+                      return 'Please enter a passcode';
                     }
                     try {
                       int.parse(data);
                     } catch (e) {
-                      return "Please enter a valid passcode";
+                      return 'Please enter a valid passcode';
                     }
                     return null;
                   },
-                  obscuringCharacter: "*",
+                  obscuringCharacter: '*',
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(

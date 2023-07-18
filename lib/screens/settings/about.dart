@@ -1,7 +1,7 @@
 import 'package:budgetiser/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -11,7 +11,7 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "About",
+          'About',
         ),
       ),
       drawer: createDrawer(context),
@@ -54,7 +54,7 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  _launchURL(String url) async {
+  void _launchURL(String url) async {
     final Uri urlParsed = Uri.parse(url);
     if (!await launchUrl(urlParsed, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch $urlParsed');

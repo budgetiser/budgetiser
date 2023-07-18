@@ -1,6 +1,6 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/drawer.dart';
+import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        title: const Text('Home'),
       ),
       body: Center(
         child: Column(
@@ -30,11 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const TransactionForm()));
               },
-              label: const Text("new Transaction"),
+              label: const Text('new Transaction'),
               icon: const Icon(
                 Icons.add,
               ),
-              heroTag: "newTransaction",
+              heroTag: 'newTransaction',
             ),
             const SizedBox(
               height: 80,
@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description: "Are you sure? This action can't be undone!",
                       onSubmitCallback: () {
                         DatabaseHelper.instance.resetDB();
@@ -58,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 );
               },
-              label: const Text("reset DB"),
+              label: const Text('reset DB'),
               icon: const Icon(
                 Icons.delete,
               ),
-              heroTag: "resetDB",
+              heroTag: 'resetDB',
               backgroundColor: Colors.red,
             ),
             const SizedBox(
@@ -74,11 +74,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return ConfirmationDialog(
-                      title: "Attention",
+                      title: 'Attention',
                       description: "Are you sure? This action can't be undone!",
                       onSubmitCallback: () async {
                         await DatabaseHelper.instance.resetDB();
-                        await DatabaseHelper.instance.fillDBwithTMPdata();
+                        DatabaseHelper.instance.fillDBwithTMPdata();
                         if (!mounted) return;
                         Navigator.of(context).pop();
                       },
@@ -89,11 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 );
               },
-              label: const Text("reset and fill DB"),
+              label: const Text('reset and fill DB'),
               icon: const Icon(
                 Icons.refresh,
               ),
-              heroTag: "fillDB",
+              heroTag: 'fillDB',
               backgroundColor: Colors.red,
             ),
             const SizedBox(
@@ -103,15 +103,15 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () async {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("DB reset and filled with TMP data"),
+                    content: Text('DB reset and filled with TMP data'),
                   ),
                 );
               },
-              label: const Text("test"),
+              label: const Text('test'),
               icon: const Icon(
                 Icons.refresh,
               ),
-              heroTag: "test",
+              heroTag: 'test',
             ),
           ],
         ),

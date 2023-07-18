@@ -27,13 +27,14 @@ extension DatabaseExtensionBudget on DatabaseHelper {
         transactionCategories: categoryList[i],
       );
       if (maps[i]['is_recurring'] == 1) {
-        returnBudget.endDate = DateTime.parse(maps[i]['end_date']);
-        returnBudget.intervalUnit = IntervalUnit.values
-            .firstWhere((e) => e.toString() == maps[i]['interval_unit']);
-        returnBudget.intervalType = IntervalType.values
-            .firstWhere((e) => e.toString() == maps[i]['interval_type']);
-        returnBudget.intervalAmount = maps[i]['interval_amount'];
-        returnBudget.intervalRepetitions = maps[i]['interval_repititions'];
+        returnBudget
+          ..endDate = DateTime.parse(maps[i]['end_date'])
+          ..intervalUnit = IntervalUnit.values
+              .firstWhere((e) => e.toString() == maps[i]['interval_unit'])
+          ..intervalType = IntervalType.values
+              .firstWhere((e) => e.toString() == maps[i]['interval_type'])
+          ..intervalAmount = maps[i]['interval_amount']
+          ..intervalRepetitions = maps[i]['interval_repititions'];
       }
       return returnBudget;
     }));
@@ -60,13 +61,14 @@ extension DatabaseExtensionBudget on DatabaseHelper {
       transactionCategories: categoryList[0],
     );
     if (maps[0]['is_recurring'] == 1) {
-      returnBudget.endDate = DateTime.parse(maps[0]['end_date']);
-      returnBudget.intervalUnit = IntervalUnit.values
-          .firstWhere((e) => e.toString() == maps[0]['interval_unit']);
-      returnBudget.intervalType = IntervalType.values
-          .firstWhere((e) => e.toString() == maps[0]['interval_type']);
-      returnBudget.intervalAmount = maps[0]['interval_amount'];
-      returnBudget.intervalRepetitions = maps[0]['interval_repititions'];
+      returnBudget
+        ..endDate = DateTime.parse(maps[0]['end_date'])
+        ..intervalUnit = IntervalUnit.values
+            .firstWhere((e) => e.toString() == maps[0]['interval_unit'])
+        ..intervalType = IntervalType.values
+            .firstWhere((e) => e.toString() == maps[0]['interval_type'])
+        ..intervalAmount = maps[0]['interval_amount']
+        ..intervalRepetitions = maps[0]['interval_repititions'];
     }
     return returnBudget;
   }
@@ -165,7 +167,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
     Map<String, DateTime> interval = budget.calculateCurrentInterval();
 
     if (budget.isRecurring) {
-      await db.rawUpdate("""UPDATE budget SET balance =
+      await db.rawUpdate('''UPDATE budget SET balance =
             (
               SELECT -SUM(value)
               FROM singleTransaction
@@ -177,14 +179,14 @@ extension DatabaseExtensionBudget on DatabaseHelper {
                   and ? >= singleTransaction.date
             )
         WHERE id = ?;
-    """, [
+    ''', [
         budgetID,
         interval['start'].toString().substring(0, 10),
         interval['end'].toString().substring(0, 10),
         budgetID,
       ]);
     } else {
-      await db.rawUpdate("""UPDATE budget SET balance =
+      await db.rawUpdate('''UPDATE budget SET balance =
             (
               SELECT -SUM(value)
               FROM singleTransaction
@@ -195,7 +197,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
                   and ? <= singleTransaction.date
             )
         WHERE id = ?;
-    """, [
+    ''', [
         budgetID,
         budget.startDate.toString().substring(0, 10),
         budgetID,

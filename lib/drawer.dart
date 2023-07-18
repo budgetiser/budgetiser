@@ -30,12 +30,12 @@ Widget createDrawer(BuildContext context) {
                       child: Icon(
                         LogoIcon.budgetiserIcon,
                         color: Colors.white,
-                        size: 50,
+                        size: 40,
                       ),
                     ),
                     const SizedBox(width: 8),
                     // TODO: Bug: Text clips with big system font size
-                    Text("Budgetiser",
+                    Text('Budgetiser',
                         style: Theme.of(context).textTheme.displayLarge),
                   ],
                 ),

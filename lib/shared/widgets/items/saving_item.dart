@@ -59,7 +59,7 @@ class SavingItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "days left: ${(savingData.endDate).difference(DateTime.now()).inDays}",
+                      'days left: ${(savingData.endDate).difference(DateTime.now()).inDays}',
                     )
                   ],
                 ),
