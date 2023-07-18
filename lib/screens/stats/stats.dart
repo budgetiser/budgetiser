@@ -1,9 +1,9 @@
+import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/stats/line_chart.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/account_picker.dart';
 import 'package:budgetiser/shared/picker/monthPicker.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetiser/drawer.dart';
 
 class Stats extends StatefulWidget {
   static String routeID = 'stats';
@@ -19,7 +19,7 @@ class _StatsState extends State<Stats> {
   List<Account>? _selectedAccounts;
   DateTime startDate = DateTime.now();
 
-  setAccount(List<Account> accounts) {
+  void setAccount(List<Account> accounts) {
     setState(() {
       _selectedAccounts = accounts;
     });
@@ -29,9 +29,9 @@ class _StatsState extends State<Stats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stats"),
+        title: const Text('Stats'),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

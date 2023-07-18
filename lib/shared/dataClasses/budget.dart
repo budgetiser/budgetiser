@@ -126,7 +126,7 @@ class Budget implements Selectable {
             }
             break;
           default:
-            throw Exception("Error in _calculateEndDate: unknown intervalMode");
+            throw Exception('Error in _calculateEndDate: unknown intervalMode');
         }
       } else {
         switch (intervalUnit) {
@@ -160,7 +160,7 @@ class Budget implements Selectable {
             }
             break;
           default:
-            throw Exception("Error in _calculateEndDate: unknown intervalMode");
+            throw Exception('Error in _calculateEndDate: unknown intervalMode');
         }
       }
     }

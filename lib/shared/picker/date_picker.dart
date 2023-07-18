@@ -22,7 +22,7 @@ class _DatePickerState extends State<DatePicker> {
   void initState() {
     if (widget.initialDate != null) {
       if (isSameDay(widget.initialDate!, DateTime.now())) {
-        dateController.text = "Today";
+        dateController.text = 'Today';
       } else {
         dateController.text = widget.initialDate.toString().substring(0, 10);
       }
@@ -54,7 +54,7 @@ class _DatePickerState extends State<DatePicker> {
         if (date != null) {
           setState(() {
             if (isSameDay(date, DateTime.now())) {
-              dateController.text = "Today";
+              dateController.text = 'Today';
             } else {
               dateController.text = date.toString().substring(0, 10);
             }

@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/shared/widgets/items/accountItem/account_item.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +16,7 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  String currentSort = "name";
+  String currentSort = 'name';
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _AccountScreenState extends State<AccountScreen> {
     super.initState();
   }
 
-  int sortFunction(a, b) {
+  int sortFunction(Account a, Account b) {
     switch (currentSort) {
       case 'nameReverse':
         return b.name.compareTo(a.name);
@@ -69,7 +69,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         child: Row(
                           children: [
                             const Text('Name'),
-                            (currentSort == "name")
+                            (currentSort == 'name')
                                 ? const Icon(Icons.keyboard_arrow_up)
                                 : const Icon(Icons.keyboard_arrow_down),
                           ],
@@ -79,17 +79,17 @@ class _AccountScreenState extends State<AccountScreen> {
                         onPressed: () {
                           Navigator.of(context).pop();
                           setState(() {
-                            if (currentSort == "balance") {
-                              currentSort = "balanceReverse";
+                            if (currentSort == 'balance') {
+                              currentSort = 'balanceReverse';
                             } else {
-                              currentSort = "balance";
+                              currentSort = 'balance';
                             }
                           });
                         },
                         child: Row(
                           children: [
                             const Text('Balance'),
-                            (currentSort == "balance")
+                            (currentSort == 'balance')
                                 ? const Icon(Icons.keyboard_arrow_up)
                                 : const Icon(Icons.keyboard_arrow_down),
                           ],
@@ -103,10 +103,10 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ],
         title: const Text(
-          "Accounts",
+          'Accounts',
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: StreamBuilder<List<Account>>(
         stream: DatabaseHelper.instance.allAccountsStream,
         builder: (context, snapshot) {
@@ -123,7 +123,7 @@ class _AccountScreenState extends State<AccountScreen> {
               },
             );
           } else if (snapshot.hasError) {
-            return const Text("Oops!");
+            return const Text('Oops!');
           }
           return const Center(
             child: CircularProgressIndicator(),

@@ -35,15 +35,15 @@ class _RecurringFormState extends State<RecurringForm> {
     List<DropdownMenuItem<IntervalUnit>> menuItems = [
       const DropdownMenuItem(
         value: IntervalUnit.week,
-        child: Text("of a week"),
+        child: Text('of a week'),
       ),
       const DropdownMenuItem(
         value: IntervalUnit.month,
-        child: Text("of a month"),
+        child: Text('of a month'),
       ),
       const DropdownMenuItem(
         value: IntervalUnit.year,
-        child: Text("of a year"),
+        child: Text('of a year'),
       ),
     ];
     return menuItems;
@@ -51,9 +51,9 @@ class _RecurringFormState extends State<RecurringForm> {
 
   List<DropdownMenuItem<IntervalUnit>> get dropdownItemsFixedIntervalUnit {
     List<DropdownMenuItem<IntervalUnit>> menuItems = [
-      const DropdownMenuItem(value: IntervalUnit.day, child: Text("day")),
-      const DropdownMenuItem(value: IntervalUnit.week, child: Text("week")),
-      const DropdownMenuItem(value: IntervalUnit.month, child: Text("month")),
+      const DropdownMenuItem(value: IntervalUnit.day, child: Text('day')),
+      const DropdownMenuItem(value: IntervalUnit.week, child: Text('week')),
+      const DropdownMenuItem(value: IntervalUnit.month, child: Text('month')),
     ];
     return menuItems;
   }
@@ -79,9 +79,9 @@ class _RecurringFormState extends State<RecurringForm> {
           ? widget.initialRecurringData.repetitionAmount!.toDouble()
           : _getRecurringData().calculateNeededRepetitions().toDouble();
     } else {
-      fixedIntervalAmountController.text = "1";
+      fixedIntervalAmountController.text = '1';
       fixedIntervalUnit = IntervalUnit.day;
-      fixedPointOfTimeAmountController.text = "1";
+      fixedPointOfTimeAmountController.text = '1';
       fixedPointOfTimeUnit = IntervalUnit.week;
     }
     enddate = _getRecurringData().calculateAndSetEndDate();
@@ -98,7 +98,7 @@ class _RecurringFormState extends State<RecurringForm> {
             child: Row(children: [
               Flexible(
                 child: DatePicker(
-                  label: "start",
+                  label: 'start',
                   initialDate: startDate,
                   onDateChangedCallback: (date) {
                     setState(() {
@@ -126,7 +126,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         _onRecurringCheckboxClicked();
                       },
                     ),
-                    const Text("recurring"),
+                    const Text('recurring'),
                   ],
                 ),
               ),
@@ -147,7 +147,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     groupValue: _selectedIntervalType,
                     value: IntervalType.fixedPointOfTime,
                   ),
-                  const Text("always on the: "),
+                  const Text('always on the: '),
                   SizedBox(
                     width: 40,
                     height: 30,
@@ -168,7 +168,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         if (value!.isEmpty &&
                             _selectedIntervalType ==
                                 IntervalType.fixedPointOfTime) {
-                          return "Please enter a number";
+                          return 'Please enter a number';
                         }
                         return null;
                       },
@@ -201,7 +201,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     groupValue: _selectedIntervalType,
                     value: IntervalType.fixedInterval,
                   ),
-                  const Text("every: "),
+                  const Text('every: '),
                   SizedBox(
                     width: 40,
                     height: 30,
@@ -222,7 +222,7 @@ class _RecurringFormState extends State<RecurringForm> {
                         if (value!.isEmpty &&
                             _selectedIntervalType ==
                                 IntervalType.fixedInterval) {
-                          return "Please enter a number";
+                          return 'Please enter a number';
                         }
                         return null;
                       },
@@ -246,7 +246,7 @@ class _RecurringFormState extends State<RecurringForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Repetitions: ${repetitions.toInt()}"),
+                    Text('Repetitions: ${repetitions.toInt()}'),
                     Slider(
                       value: repetitions,
                       min: 1,

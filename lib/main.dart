@@ -1,16 +1,15 @@
 import 'dart:io';
 
+import 'package:budgetiser/config/themes/themes.dart';
 import 'package:budgetiser/routes.dart';
-import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:budgetiser/screens/create_db_screen.dart';
 import 'package:budgetiser/screens/home_screen.dart';
 import 'package:budgetiser/screens/login.dart';
+import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
-import 'package:path/path.dart';
-
-import 'config/themes/themes.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -60,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                 break;
             }
           } else if (snapshot.hasError) {
-            return const Text("Oops!");
+            return const Text('Oops!');
           }
           return const Center(
             child: CircularProgressIndicator(),

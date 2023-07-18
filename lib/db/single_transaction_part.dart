@@ -1,4 +1,4 @@
-part of "database.dart";
+part of 'database.dart';
 
 extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   Sink<List<SingleTransaction>> get allTransactionSink =>
@@ -8,7 +8,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       _allTransactionStreamController.stream;
 
   void pushGetAllTransactionsStream() async {
-    Timeline.startSync("allTransactionsStream");
+    Timeline.startSync('allTransactionsStream');
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
         'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');

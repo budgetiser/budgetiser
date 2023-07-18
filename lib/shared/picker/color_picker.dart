@@ -23,8 +23,8 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
 
   int segmentedControlGroupValue = 0;
   final Map<int, Widget> myTabs = const <int, Widget>{
-    0: Text("Simple"),
-    1: Text("Advanced")
+    0: Text('Simple'),
+    1: Text('Advanced')
   };
 
   @override
@@ -86,7 +86,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        label: const Text("Close"),
+                        label: const Text('Close'),
                         icon: const Icon(Icons.cancel),
                       ),
                     ],

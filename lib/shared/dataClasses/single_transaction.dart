@@ -40,6 +40,6 @@ class SingleTransaction {
 
   @override
   String toString() {
-    return "Account: ${toMap()}";
+    return 'Account: ${toMap()}';
   }
 }
