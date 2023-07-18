@@ -9,32 +9,223 @@ import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
 
-List<Account> TMP_DATA_accountList = [
-  Account(
-    id: 1,
-    name: "Cash",
-    icon: Icons.attach_money,
-    balance: 0,
-    color: Colors.green,
-    description: "Cash in my portemonnaie",
-  ),
-  Account(
-    id: 2,
-    name: "Credit Card",
-    icon: Icons.credit_card,
-    balance: 0,
-    color: Colors.yellow,
-    description: "Not booked credit card transactions",
-  ),
-  Account(
-    id: 3,
-    name: "Giro",
-    icon: Icons.account_balance,
-    balance: 0,
-    color: Colors.redAccent,
-    description: "Default account",
-  ),
-];
+List<Account> getExampleAccounts(){
+  List<Account> accounts = [];
+  List<IconData> icons  = [Icons.wallet, Icons.credit_card, Icons.account_balance, Icons.show_chart, Icons.paypal, Icons.perm_identity];
+  List<String> names    = ["Wallet",     "Credit Card",     "Savings",             "Investment",     "PayPal",     "Students ID"];
+  List<Color> colors    = [Colors.brown, Colors.red,        Colors.green,          Colors.purple,    Colors.blue,  Colors.yellow];
+
+  for(int i = 0; i<icons.length; i++){
+    accounts.add(
+      Account(id: i, name: names[i], icon: icons[i], color: colors[i], balance: 0.0, description: "")
+    );
+  }
+
+  return accounts;
+}
+List<Account> TMP_DATA_accountList = getExampleAccounts();
+
+List<TransactionCategory> getCategoriesAndGroups(){
+  List<TransactionCategory> categories = [];
+  List<IconData> icons  = [];
+  List<String> names    = [];
+  List<Color> colors    = [];
+
+  names.add("Salary");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Business Income");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Commissions");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Investments");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Money Gifts");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Side Gigs");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Private Sellings");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Gas");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Parking");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Car Maintenance");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Public Transports");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Bike");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Workshops");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Conferences");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Courses");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Coaching");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Books");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Doctor Bills");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Hospital Bills");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Dentist");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Medical Devices");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Cinema");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Theater");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Subscriptions");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Memberships");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Hobbies");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Rent");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Property Taxes");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Home Repairs");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Gardening");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Groceries");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Take Aways");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Snacks");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Daycare");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Extracurricular Activities");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Life Insurances");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Home Insurances");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Car Insurances");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Business Insurances");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Birthday Gifts");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Holiday Gifts");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Donations");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Electricity Bill");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Water Bill");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Heat Bill");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Internet Bill");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Phone Billings");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Beauty");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Hygiene");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Grooming");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("SPA");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Clothing");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Pet Food");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Veterinary Bills");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Pet Training");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  names.add("Car Debt");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("Personal Loans");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+  names.add("House debt");
+  icons.add(Icons.cases);
+  colors.add(Colors.green);
+
+  for(int i = 0; i<icons.length; i++){
+    categories.add(
+        TransactionCategory(id: i, name: names[i], icon: icons[i], color: colors[i], description: "", isHidden: false)
+    );
+  }
+  return categories;
+}
 
 List<Group> TMP_DATA_groupList = [
   Group(
@@ -51,65 +242,7 @@ List<Group> TMP_DATA_groupList = [
   ),
 ];
 
-List<TransactionCategory> TMP_DATA_categoryList = [
-  TransactionCategory(
-      id: 1,
-      name: "Flight Tickets",
-      icon: Icons.airplane_ticket,
-      color: Colors.red,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 2,
-      name: "Car fuel",
-      icon: Icons.local_gas_station,
-      color: Colors.blue,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 3,
-      name: "Shopping",
-      icon: Icons.shopping_bag_outlined,
-      color: Colors.green,
-      description: "clothes",
-      isHidden: false),
-  TransactionCategory(
-      id: 4,
-      name: "Public transportation",
-      icon: Icons.train,
-      color: Colors.orange,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 5,
-      name: "Bills",
-      icon: Icons.receipt,
-      color: Colors.purple,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 6,
-      name: "Other",
-      icon: Icons.more,
-      color: Colors.grey,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 7,
-      name: "Sports",
-      icon: Icons.sports,
-      color: Colors.red,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 8,
-      name: "Pay check",
-      icon: Icons.payments_outlined,
-      color: Colors.green,
-      description: "all incoming",
-      isHidden: false),
-];
-
+List<TransactionCategory> TMP_DATA_categoryList = getCategoriesAndGroups();
 List<SingleTransaction> TMP_DATA_transactionList = [
   SingleTransaction(
     id: 1,
