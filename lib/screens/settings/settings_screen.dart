@@ -1,5 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
+import 'package:budgetiser/screens/settings/about.dart';
 import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
@@ -210,6 +211,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                   },
                 );
+              },
+            ),
+            ListTile(
+              title: const Text('About'),
+              subtitle: const Text(
+                'Version, Source code, ...',
+              ),
+              onTap: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const AboutScreen()));
               },
             ),
           ],
