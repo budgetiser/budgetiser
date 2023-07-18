@@ -356,14 +356,14 @@ class _TransactionFormState extends State<TransactionForm> {
                 if (hasInitialData) {
                   DatabaseHelper.instance
                       .updateSingleTransaction(_currentSingleTransaction());
-
                   Navigator.of(context).pop();
                 } else {
                   DatabaseHelper.instance
                       .createSingleTransaction(_currentSingleTransaction());
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) => const TransactionsScreen()),
+                        builder: (context) => const TransactionsScreen(),
+                      ),
                       (Route<dynamic> route) => false);
                 }
               }

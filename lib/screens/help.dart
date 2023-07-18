@@ -15,7 +15,7 @@ class HelpScreen extends StatelessWidget {
           'Help',
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: FutureBuilder(
         future: rootBundle.loadString('assets/how-to.md'),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {

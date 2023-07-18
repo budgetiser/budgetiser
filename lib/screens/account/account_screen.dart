@@ -106,7 +106,7 @@ class _AccountScreenState extends State<AccountScreen> {
           'Accounts',
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: StreamBuilder<List<Account>>(
         stream: DatabaseHelper.instance.allAccountsStream,
         builder: (context, snapshot) {

@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Home'),
       ),
+      drawer: const CreateDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      drawer: createDrawer(context),
     );
   }
 }

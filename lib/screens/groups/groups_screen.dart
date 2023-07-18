@@ -20,7 +20,7 @@ class GroupsScreen extends StatelessWidget {
           // style: Theme.of(context).textTheme.caption,
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: StreamBuilder<List<Group>>(
         stream: DatabaseHelper.instance.allGroupsStream,
         builder: (context, snapshot) {

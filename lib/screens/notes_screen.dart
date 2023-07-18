@@ -43,7 +43,7 @@ class NotesScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: TextFormField(

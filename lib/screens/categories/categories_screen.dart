@@ -20,7 +20,7 @@ class CategoriesScreen extends StatelessWidget {
           // style: Theme.of(context).textTheme.caption,
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: StreamBuilder<List<TransactionCategory>>(
         stream: DatabaseHelper.instance.allCategoryStream,
         builder: (context, snapshot) {

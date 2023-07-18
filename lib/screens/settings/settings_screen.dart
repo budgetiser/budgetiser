@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           'Settings',
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: Center(
         child: ListView(
           children: <Widget>[

@@ -14,7 +14,7 @@ class AboutScreen extends StatelessWidget {
           'About',
         ),
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: Center(
         child: ListView(
           children: <Widget>[
