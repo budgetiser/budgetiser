@@ -48,9 +48,10 @@ class AccountItem extends StatelessWidget {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) => TransactionForm(
-                                        initialSelectedAccount: accountData,
-                                      )),
+                                builder: (context) => TransactionForm(
+                                  initialSelectedAccount: accountData,
+                                ),
+                              ),
                             );
                           },
                           child: const Icon(
@@ -90,6 +91,7 @@ class AccountItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    const SizedBox(width: 8),
                     BalanceText(accountData.balance),
                   ],
                 ),
