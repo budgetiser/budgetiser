@@ -1,12 +1,12 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
-import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  String title = "Transactions";
+  String title = 'Transactions';
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   });
                                   Navigator.pop(context);
                                 },
-                          child: const Text("Reset"),
+                          child: const Text('Reset'),
                         ),
                       ],
                     ),
@@ -98,10 +98,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           horizontal: 25,
                           vertical: 10,
                         ),
-                        child: Text("By Account"),
+                        child: Text('By Account'),
                       ),
                       ListTile(
-                        title: const Text("All Accounts"),
+                        title: const Text('All Accounts'),
                         visualDensity: VisualDensity.compact,
                         leading: Radio<Account?>(
                           value: null,
@@ -124,10 +124,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           horizontal: 25,
                           vertical: 10,
                         ),
-                        child: Text("By Category"),
+                        child: Text('By Category'),
                       ),
                       ListTile(
-                        title: const Text("All Categories"),
+                        title: const Text('All Categories'),
                         visualDensity: VisualDensity.compact,
                         leading: Radio<TransactionCategory?>(
                           value: null,
@@ -208,7 +208,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (isCurrentMonth)
-                          const Text("Current Month")
+                          const Text('Current Month')
                         else
                           Text(
                               "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
@@ -224,6 +224,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return TransactionItem(
+                              // TODO: Bug: no splash effect. probably because of colored container
                               singleTransactionData: snapshot.data![index],
                             );
                           },

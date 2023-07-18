@@ -12,16 +12,16 @@ class HelpScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Help",
+          'Help',
         ),
       ),
       drawer: const CreateDrawer(),
       body: FutureBuilder(
-        future: rootBundle.loadString("assets/how-to.md"),
+        future: rootBundle.loadString('assets/how-to.md'),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasData) {
             String data = snapshot.data!
-                .replaceAll("](images/", "](resource:assets/images/");
+                .replaceAll('](images/', '](resource:assets/images/');
             return Markdown(
               data: data,
             );

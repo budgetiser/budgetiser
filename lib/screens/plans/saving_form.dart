@@ -56,8 +56,8 @@ class _SavingFormState extends State<SavingForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.savingData != null
-            ? const Text("Edit Saving")
-            : const Text("Create Saving"),
+            ? const Text('Edit Saving')
+            : const Text('Create Saving'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
@@ -82,12 +82,12 @@ class _SavingFormState extends State<SavingForm> {
                     controller: nameController,
                     validator: (data) {
                       if (data == null || data == '') {
-                        return "Please enter a valid name";
+                        return 'Please enter a valid name';
                       }
                       return null;
                     },
                     decoration: const InputDecoration(
-                      labelText: "Name",
+                      labelText: 'Name',
                     ),
                   ))
                 ],
@@ -107,12 +107,12 @@ class _SavingFormState extends State<SavingForm> {
                       child: TextFormField(
                     validator: (data) {
                       if (data!.isEmpty) {
-                        return "Please enter a balance";
+                        return 'Please enter a balance';
                       }
                       try {
                         double.parse(data);
                       } catch (e) {
-                        return "Please enter a valid number";
+                        return 'Please enter a valid number';
                       }
                       return null;
                     },
@@ -120,7 +120,7 @@ class _SavingFormState extends State<SavingForm> {
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
-                      labelText: "Start",
+                      labelText: 'Start',
                     ),
                   )),
                   Flexible(
@@ -128,22 +128,22 @@ class _SavingFormState extends State<SavingForm> {
                     controller: goalController,
                     validator: (data) {
                       if (data!.isEmpty) {
-                        return "Please enter a balance";
+                        return 'Please enter a balance';
                       }
                       try {
                         double a = double.parse(data);
                         if (a <= double.parse(balController.text)) {
-                          return "Goal must be higher than value";
+                          return 'Goal must be higher than value';
                         }
                       } catch (e) {
-                        return "Please enter a valid number";
+                        return 'Please enter a valid number';
                       }
                       return null;
                     },
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
-                      labelText: "Goal",
+                      labelText: 'Goal',
                     ),
                   ))
                 ],
@@ -182,7 +182,7 @@ class _SavingFormState extends State<SavingForm> {
                 controller: descriptionController,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
-                  labelText: "Description",
+                  labelText: 'Description',
                 ),
               ),
             ],
@@ -202,7 +202,7 @@ class _SavingFormState extends State<SavingForm> {
                     context: context,
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
-                        title: "Attention",
+                        title: 'Attention',
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
@@ -251,7 +251,7 @@ class _SavingFormState extends State<SavingForm> {
                 Navigator.of(context).pop();
               }
             },
-            label: const Text("Save"),
+            label: const Text('Save'),
             icon: const Icon(Icons.check),
           ),
         ],

@@ -25,13 +25,18 @@ class CreateDrawer extends StatelessWidget {
                   left: 16.0,
                   child: Row(
                     children: [
-                      const Icon(
-                        LogoIcon.budgetiserIcon,
-                        color: Colors.white,
-                        size: 40,
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 4),
+                        child: Icon(
+                          LogoIcon.budgetiserIcon,
+                          color: Colors.white,
+                          size: 40,
+                        ),
                       ),
+                      const SizedBox(width: 8),
+                      // TODO: Bug: Text clips with big system font size
                       Text(
-                        " Budgetiser",
+                        ' Budgetiser',
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
@@ -88,7 +93,7 @@ class CreateDrawer extends StatelessWidget {
         routeName = 'transactions';
       }
       // when pressing back in transactions  after getting pushed from home->new_transaction (and getting to home screen) routeName is "/" when reentering app
-      if (routeName == "/") {
+      if (routeName == '/') {
         routeName = 'home';
       }
     }
