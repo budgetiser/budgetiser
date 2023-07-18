@@ -39,7 +39,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   Future<SingleTransaction> _mapToSingleTransaction(
       Map<String, dynamic> mapItem) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
-    Account account = await _getOneAccount(mapItem['account1_id']);
+    Account account = await getOneAccount(mapItem['account1_id']);
     return SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -49,7 +49,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       account: account,
       account2: mapItem['account2_id'] == null
           ? null
-          : await _getOneAccount(mapItem['account2_id']),
+          : await getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
   }
@@ -63,7 +63,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    Account account = await _getOneAccount(transaction.account.id);
+    Account account = await getOneAccount(transaction.account.id);
     if (transaction.account2 == null) {
       await db.update(
         'account',
@@ -73,7 +73,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     } else {
-      Account account2 = await _getOneAccount(transaction.account2!.id);
+      Account account2 = await getOneAccount(transaction.account2!.id);
       await db.update('account',
           {'balance': _roundDouble(account.balance - transaction.value)},
           where: 'id = ?', whereArgs: [account.id]);

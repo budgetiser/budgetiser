@@ -7,6 +7,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
       _allAccountsStreamController.stream;
 
   void pushGetAllAccountsStream() async {
+    RecentlyUsed<Account>();
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('account');
 
@@ -29,6 +30,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
       account.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
+
     pushGetAllAccountsStream();
     return id;
   }
@@ -57,7 +59,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
   }
 
   /// TODO: null checks
-  Future<Account> _getOneAccount(int id) async {
+  Future<Account> getOneAccount(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('account', where: 'id = ?', whereArgs: [id]);
