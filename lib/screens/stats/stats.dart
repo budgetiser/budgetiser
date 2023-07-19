@@ -22,6 +22,7 @@ class _StatsState extends State<Stats> {
   void setAccount(List<Account> accounts) {
     setState(() {
       _selectedAccounts = accounts;
+      print('selected accounts $_selectedAccounts');
     });
   }
 
@@ -47,11 +48,7 @@ class _StatsState extends State<Stats> {
               children: [
                 Expanded(
                   child: AccountPicker(
-                    onAccountPickedCallback: (List<Account> accounts) {
-                      setState(() {
-                        _selectedAccounts = accounts;
-                      });
-                    },
+                    onAccountPickedCallback: setAccount,
                   ),
                 ),
               ],

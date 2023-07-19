@@ -1,24 +1,35 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/multi_account_picker/picker_content.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetiser/shared/dataClasses/account.dart';
 
 class AccountPicker extends StatefulWidget {
   const AccountPicker({
     Key? key,
     required this.onAccountPickedCallback,
+    // required this.initialSelected,
   }) : super(key: key);
+
+  final Function(List<Account>) onAccountPickedCallback;
+  // final List<Account> initialSelected;
 
   @override
   State<AccountPicker> createState() => _AccountPickerState();
-  final Function(List<Account>) onAccountPickedCallback;
 }
 
 class _AccountPickerState extends State<AccountPicker> {
   var scrollController = ScrollController();
+  List<Account> _allAccounts = [];
 
   @override
   void initState() {
+    DatabaseHelper.instance.allAccountsStream.listen(
+      (value) {
+        setState(() {
+          _allAccounts = value.cast();
+        });
+      },
+    );
     DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
   }
@@ -31,20 +42,10 @@ class _AccountPickerState extends State<AccountPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Account>>(
-      stream: DatabaseHelper.instance.allAccountsStream,
-      initialData: const [],
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          return PickerContent<Account>(
-            allValues: snapshot.data!,
-            heading: "Select Account",
-            callback: widget.onAccountPickedCallback,
-          );
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
+    return GeneralMultiPicker<Account>(
+      heading: 'Select Account',
+      callback: widget.onAccountPickedCallback,
+      allValues: _allAccounts,
     );
   }
 }
