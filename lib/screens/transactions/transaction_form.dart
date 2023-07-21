@@ -85,6 +85,7 @@ class _TransactionFormState extends State<TransactionForm> {
     if (widget.initialSelectedAccount != null) {
       selectedAccount = widget.initialSelectedAccount;
     }
+    updateWasValueNegative(valueController.text);
 
     super.initState();
   }
@@ -492,7 +493,8 @@ class _TransactionFormState extends State<TransactionForm> {
     transaction = SingleTransaction(
       id: 0,
       title: titleController.text.trim(),
-      value: valueParser.evaluate(valueController.text),
+      value: double.parse(
+          valueParser.evaluate(valueController.text).toStringAsFixed(2)),
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
@@ -549,6 +551,9 @@ class _TransactionFormState extends State<TransactionForm> {
           break;
       }
     });
+    // move cursor to the end
+    valueController.selection =
+        TextSelection.collapsed(offset: valueController.text.length);
   }
 
   void _onAccount2checkboxClicked() {
