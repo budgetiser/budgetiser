@@ -189,9 +189,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           for (DateTime monthYear in snapshot.data!)
             FutureBuilder<List<SingleTransaction>>(
               future: DatabaseHelper.instance.getFilteredTransactionsByMonth(
-                  inMonth: monthYear,
-                  account: _currentFilterAccount,
-                  category: _currentFilterCategory),
+                inMonth: monthYear,
+                account: _currentFilterAccount,
+                category: _currentFilterCategory,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   bool isCurrentMonth =
@@ -202,7 +203,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     backgroundColor: Theme.of(context).dividerTheme.color,
                     collapsedBackgroundColor:
                         Theme.of(context).dividerTheme.color,
-                    onExpansionChanged: (value) => updateMonthsFuture(),
                     initiallyExpanded: isCurrentMonth,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -225,7 +225,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           itemBuilder: (context, index) {
                             return TransactionItem(
                               // TODO: Bug: no splash effect. probably because of colored container
-                              singleTransactionData: snapshot.data![index],
+                              transactionData: snapshot.data![index],
                             );
                           },
                         ),
