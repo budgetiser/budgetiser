@@ -45,7 +45,7 @@ class _TransactionFormState extends State<TransactionForm> {
   bool hasInitialData = false;
 
   var titleController = TextEditingController();
-  var valueController = TextEditingController();
+  var valueController = TextEditingController(text: '-');
   var descriptionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -320,23 +320,24 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (hasInitialData) {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ConfirmationDialog(
-                        title: 'Attention',
-                        description:
-                            "Are you sure to delete this Transaction? This action can't be undone!",
-                        onSubmitCallback: () {
-                          DatabaseHelper.instance.deleteSingleTransactionById(
-                              widget.initialSingleTransactionData!.id);
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        onCancelCallback: () {
-                          Navigator.pop(context);
-                        },
-                      );
-                    });
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          "Are you sure to delete this Transaction? This action can't be undone!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.deleteSingleTransactionById(
+                            widget.initialSingleTransactionData!.id);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
               } else {
                 Navigator.of(context).pop();
               }
@@ -456,11 +457,13 @@ class _TransactionFormState extends State<TransactionForm> {
       splashColor: Colors.white10,
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => AccountForm(
-                      initialAccount: account,
-                    )));
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => AccountForm(
+              initialAccount: account,
+            ),
+          ),
+        );
       },
       child: Icon(
         account.icon,
@@ -493,7 +496,11 @@ class _TransactionFormState extends State<TransactionForm> {
   void _onAccount2checkboxClicked() {
     setState(() {
       hasAccount2 = !hasAccount2;
-      if (!hasAccount2) {
+      if (hasAccount2) {
+        valueController.text.startsWith('-')
+            ? valueController.text = valueController.text.substring(1)
+            : null;
+      } else {
         selectedAccount2 = null;
       }
     });
