@@ -356,11 +356,11 @@ class _TransactionFormState extends State<TransactionForm> {
               if (_formKey.currentState!.validate()) {
                 if (hasInitialData) {
                   DatabaseHelper.instance
-                      .updateSingleTransaction(_currentSingleTransaction());
+                      .updateSingleTransaction(_currentTransaction());
                   Navigator.of(context).pop();
                 } else {
                   DatabaseHelper.instance
-                      .createSingleTransaction(_currentSingleTransaction());
+                      .createSingleTransaction(_currentTransaction());
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) => const TransactionsScreen(),
@@ -473,16 +473,16 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  SingleTransaction _currentSingleTransaction() {
+  SingleTransaction _currentTransaction() {
     SingleTransaction transaction;
     transaction = SingleTransaction(
       id: 0,
-      title: titleController.text,
+      title: titleController.text.trim(),
       value: double.parse(valueController.text),
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
-      description: descriptionController.text,
+      description: descriptionController.text.trim(),
       date: transactionDate,
     );
 
