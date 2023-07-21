@@ -11,6 +11,7 @@ import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
+import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
 
 /// A screen that allows the user to add a transaction
@@ -36,6 +37,8 @@ class TransactionForm extends StatefulWidget {
   State<TransactionForm> createState() => _TransactionFormState();
 }
 
+enum EnumPrefix { plus, minus, other }
+
 class _TransactionFormState extends State<TransactionForm> {
   Account? selectedAccount;
   Account? selectedAccount2;
@@ -47,11 +50,13 @@ class _TransactionFormState extends State<TransactionForm> {
   var titleController = TextEditingController();
   var valueController = TextEditingController(text: '-');
   var descriptionController = TextEditingController();
+  bool wasValueNegative =
+      true; // remembering if value was negative to display the correct prefix button when value field is not valid
 
   final _formKey = GlobalKey<FormState>();
 
-  // for the recurring form to scroll to the bottom
   ScrollController listScrollController = ScrollController();
+  ExpressionParser valueParser = const ExpressionParser();
 
   RecurringData recurringData = RecurringData(
     startDate: DateTime.now(),
@@ -124,19 +129,11 @@ class _TransactionFormState extends State<TransactionForm> {
                   SizedBox(
                     height: 70,
                     child: IconButton(
-                      icon: Icon(valueController.text.startsWith('-')
-                          ? Icons.remove
-                          : Icons.add),
+                      icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
                       onPressed: () {
-                        setState(() {
-                          valueController.text.startsWith('-')
-                              ? valueController.text =
-                                  valueController.text.substring(1)
-                              : valueController.text =
-                                  '-${valueController.text}';
-                        });
+                        changePrefix(EnumPrefix.other);
                       },
-                      color: valueController.text.startsWith('-')
+                      color: wasValueNegative
                           ? const Color.fromARGB(255, 174, 74, 99)
                           : const Color.fromARGB(239, 29, 129, 37),
                       splashRadius: 24,
@@ -153,7 +150,7 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                       onChanged: (value) {
                         // _formKey.currentState!.validate();
-
+                        updateWasValueNegative(value);
                         // to update the visualization
                         setState(() {});
                       },
@@ -162,7 +159,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           return 'Please enter a value';
                         }
                         try {
-                          if (double.parse(value) < 0 && hasAccount2) {
+                          if (valueParser.evaluate(value) < 0 && hasAccount2) {
                             return 'Only positive values with two accounts';
                           }
                         } catch (e) {
@@ -377,12 +374,21 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
+  double? tryValueParse(String value) {
+    try {
+      return valueParser.evaluate(value);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Widget _visualizeTwoAccountTransaction() {
     if (selectedAccount == null ||
         selectedAccount2 == null ||
         selectedCategory == null) {
       return const SizedBox();
     }
+    double? value = tryValueParse(valueController.text);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -400,10 +406,9 @@ class _TransactionFormState extends State<TransactionForm> {
             clickableAccountIcon(selectedAccount2!),
           ],
         ),
-        if (double.tryParse(valueController.text) != null &&
-            double.parse(valueController.text) >= 0)
+        if (value != null && value >= 0)
           BalanceText(
-            double.parse(valueController.text),
+            value,
             hasPrefix: false,
           ),
       ],
@@ -414,6 +419,7 @@ class _TransactionFormState extends State<TransactionForm> {
     if (selectedAccount == null || selectedCategory == null) {
       return const SizedBox();
     }
+    double? value = tryValueParse(valueController.text);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -423,8 +429,7 @@ class _TransactionFormState extends State<TransactionForm> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               clickableAccountIcon(selectedAccount!),
-              (double.tryParse(valueController.text) != null &&
-                      double.parse(valueController.text) >= 0)
+              (value != null && value >= 0)
                   ? Transform.rotate(
                       // rotate by pi to flip the arrow
                       angle: 3.14,
@@ -441,9 +446,9 @@ class _TransactionFormState extends State<TransactionForm> {
               ),
             ],
           ),
-          if (double.tryParse(valueController.text) != null)
+          if (value != null)
             BalanceText(
-              double.parse(valueController.text),
+              value,
               hasPrefix: false,
             ),
         ],
@@ -474,15 +479,24 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   SingleTransaction _currentTransaction() {
+    String description = '';
+    if (double.tryParse(valueController.text) == null) {
+      description =
+          '${descriptionController.text.trim()}\nCalculated from: ${valueController.text.trim()}'
+              .trim();
+    } else {
+      description = descriptionController.text.trim();
+    }
+
     SingleTransaction transaction;
     transaction = SingleTransaction(
       id: 0,
       title: titleController.text.trim(),
-      value: double.parse(valueController.text),
+      value: valueParser.evaluate(valueController.text),
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
-      description: descriptionController.text.trim(),
+      description: description,
       date: transactionDate,
     );
 
@@ -493,13 +507,55 @@ class _TransactionFormState extends State<TransactionForm> {
     return transaction;
   }
 
+  void updateWasValueNegative(String newValue) {
+    if (tryValueParse(valueController.text) != null) {
+      setState(() {
+        wasValueNegative = tryValueParse(valueController.text)! < 0;
+      });
+    }
+  }
+
+  void changePrefix(EnumPrefix prefix) {
+    /// TODO: this can be improved when e.g. having multiplications
+    bool needsBrackets = double.tryParse(valueController.text) == null;
+    double? currentValue = tryValueParse(valueController.text);
+
+    setState(() {
+      switch (prefix) {
+        case EnumPrefix.other:
+          if (needsBrackets && currentValue != null) {
+            valueController.text = '-(${valueController.text})';
+          } else {
+            valueController.text.startsWith('-')
+                ? valueController.text = valueController.text.substring(1)
+                : valueController.text = '-${valueController.text}';
+          }
+          break;
+        case EnumPrefix.minus:
+          if (currentValue == null || currentValue < 0) break;
+          if (needsBrackets) {
+            valueController.text = '-(${valueController.text})';
+          } else {
+            valueController.text = '-${valueController.text}';
+          }
+          break;
+        case EnumPrefix.plus:
+          if (currentValue == null || currentValue >= 0) break;
+          if (needsBrackets) {
+            valueController.text = '-(${valueController.text})';
+          } else {
+            valueController.text = valueController.text.substring(1);
+          }
+          break;
+      }
+    });
+  }
+
   void _onAccount2checkboxClicked() {
     setState(() {
       hasAccount2 = !hasAccount2;
       if (hasAccount2) {
-        valueController.text.startsWith('-')
-            ? valueController.text = valueController.text.substring(1)
-            : null;
+        changePrefix(EnumPrefix.plus);
       } else {
         selectedAccount2 = null;
       }
