@@ -74,8 +74,8 @@ class _BudgetFormState extends State<BudgetForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.budgetData != null
-            ? const Text("Edit Budget")
-            : const Text("New Budget"),
+            ? const Text('Edit Budget')
+            : const Text('New Budget'),
       ),
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
@@ -100,12 +100,12 @@ class _BudgetFormState extends State<BudgetForm> {
                       controller: nameController,
                       validator: (data) {
                         if (data == null || data == '') {
-                          return "Please enter a valid name";
+                          return 'Please enter a valid name';
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
-                        labelText: "Budget title",
+                        labelText: 'Budget title',
                       ),
                     ),
                   ),
@@ -126,7 +126,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
-                        labelText: "Balance",
+                        labelText: 'Balance',
                       ),
                     ),
                   ),
@@ -139,7 +139,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
-                        labelText: "Limit",
+                        labelText: 'Limit',
                       ),
                     ),
                   ),
@@ -150,7 +150,7 @@ class _BudgetFormState extends State<BudgetForm> {
                 controller: descriptionController,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
-                  labelText: "Description",
+                  labelText: 'Description',
                 ),
               ),
               const Divider(height: 32),
@@ -189,7 +189,7 @@ class _BudgetFormState extends State<BudgetForm> {
                     context: context,
                     builder: (BuildContext context) {
                       return ConfirmationDialog(
-                        title: "Attention",
+                        title: 'Attention',
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
@@ -242,7 +242,7 @@ class _BudgetFormState extends State<BudgetForm> {
                 Navigator.of(context).pop();
               }
             },
-            label: const Text("Save"),
+            label: const Text('Save'),
             icon: const Icon(Icons.check),
           ),
         ],

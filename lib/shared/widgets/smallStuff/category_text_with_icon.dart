@@ -17,7 +17,7 @@ class CategoryTextWithIcon extends StatelessWidget {
         color: category.color,
       ),
       Flexible(
-        child: Text(" ${category.name}", overflow: TextOverflow.ellipsis),
+        child: Text(' ${category.name}', overflow: TextOverflow.ellipsis),
       ),
     ]);
   }

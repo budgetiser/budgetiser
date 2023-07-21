@@ -1,7 +1,6 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'home_screen.dart';
 
 class CreateDatabaseScreen extends StatefulWidget {
   const CreateDatabaseScreen({Key? key}) : super(key: key);
@@ -22,7 +21,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create Database"),
+        title: const Text('Create Database'),
       ),
       body: Form(
         key: _formKey,
@@ -43,17 +42,17 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   validator: (data) {
                     if (_noEncryption == false) {
                       if ((data!.isEmpty || data.length < 4)) {
-                        return "Passcode must have at least 4 characters";
+                        return 'Passcode must have at least 4 characters';
                       }
                       try {
                         int.parse(data);
                       } catch (e) {
-                        return "Please enter a valid passcode";
+                        return 'Please enter a valid passcode';
                       }
                     }
                     return null;
                   },
-                  obscuringCharacter: "*",
+                  obscuringCharacter: '*',
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(
@@ -73,20 +72,20 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                   validator: (data) {
                     if (_noEncryption == false) {
                       if (data!.isEmpty) {
-                        return "Please repeat the passcode";
+                        return 'Please repeat the passcode';
                       }
                       try {
                         int.parse(data);
                         return data == _passKey.currentState!.value
                             ? null
-                            : "Repeated Passcode should match passcode";
+                            : 'Repeated Passcode should match passcode';
                       } catch (e) {
-                        return "Please enter a valid passcode";
+                        return 'Please enter a valid passcode';
                       }
                     }
                     return null;
                   },
-                  obscuringCharacter: "*",
+                  obscuringCharacter: '*',
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                   decoration: const InputDecoration(
@@ -97,7 +96,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
               ),
               CheckboxListTile(
                 key: _encryptionKey,
-                title: const Text("Do not use encryption."),
+                title: const Text('Do not use encryption.'),
                 value: _noEncryption,
                 onChanged: (newValue) {
                   setState(() {
@@ -161,7 +160,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                     SizedBox(
                       width: 250,
                       child: Text(
-                        "Attention!\nIf you forget your passcode all data stored in the database will be lost!.",
+                        'Attention!\nIf you forget your passcode all data stored in the database will be lost!.',
                         style: TextStyle(color: Colors.grey),
                         overflow: TextOverflow.clip,
                       ),

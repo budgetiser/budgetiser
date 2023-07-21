@@ -1,5 +1,4 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,10 +36,9 @@ class RecentlyUsed<T> {
 
   Future<void> addItem(String item) async {
     final preferences = await SharedPreferences.getInstance();
-    final list = preferences.getStringList(key) ?? [];
-
-    // Add the new item to the beginning of the list
-    list.insert(0, item);
+    final list = preferences.getStringList(key) ?? []
+      // Add the new item to the beginning of the list
+      ..insert(0, item);
 
     // Remove the oldest item if the list exceeds the maximum number of items
     if (list.length > listLength) {

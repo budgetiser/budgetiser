@@ -1,9 +1,10 @@
-part of "database.dart";
+part of 'database.dart';
 
 extension DatabaseExtensionSQL on DatabaseHelper {
+  // ignore: always_declare_return_types
   _onCreate(Database db, int version) async {
     if (kDebugMode) {
-      print("creating database");
+      print('creating database');
     }
     await db.execute('PRAGMA foreign_keys = ON');
     await db.execute('''
@@ -109,10 +110,11 @@ CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
   FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE);
 ''');
     if (kDebugMode) {
-      print("done");
+      print('done');
     }
   }
 
+  // ignore: always_declare_return_types
   _dropTables(Database db) async {
     await db.execute('''
           DROP TABLE IF EXISTS XXGroup;

@@ -15,7 +15,7 @@ class NotesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Notes",
+          'Notes',
         ),
         actions: [
           IconButton(
@@ -43,7 +43,7 @@ class NotesScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: createDrawer(context),
+      drawer: const CreateDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: TextFormField(
@@ -56,12 +56,12 @@ class NotesScreen extends StatelessWidget {
     );
   }
 
-  onInit() async {
+  void onInit() async {
     final preferences = await SharedPreferences.getInstance();
     valueController.text = preferences.getString('key-notes') ?? '';
   }
 
-  onChanged(String string) async {
+  void onChanged(String string) async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString('key-notes', string);
   }

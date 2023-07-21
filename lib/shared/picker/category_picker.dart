@@ -119,7 +119,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                                         itemCount: snapshot.data!.length,
                                       );
                                     } else if (snapshot.hasError) {
-                                      return const Text("Oops!");
+                                      return const Text('Oops!');
                                     }
                                     return const Center(
                                       child: CircularProgressIndicator(),
@@ -147,7 +147,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                     child: const ListTile(
                       leading: Icon(Icons.add),
                       iconColor: Colors.white,
-                      title: Text("Add Category"),
+                      title: Text('Add Category'),
                     ),
                   );
                 } else if (_selected[i - 1].isHidden == false) {
@@ -169,7 +169,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                   );
                 } else {
                   return const ListTile(
-                    title: Text("hidden"),
+                    title: Text('hidden'),
                   );
                 }
               },
