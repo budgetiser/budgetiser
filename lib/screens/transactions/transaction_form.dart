@@ -163,6 +163,9 @@ class _TransactionFormState extends State<TransactionForm> {
                           if (valueParser.evaluate(value) < 0 && hasAccount2) {
                             return 'Only positive values with two accounts';
                           }
+                          if (valueParser.evaluate(value) == double.infinity || valueParser.evaluate(value) == -double.infinity) {
+                            return 'Please enter a valid number';
+                          }
                         } catch (e) {
                           return 'Please enter a valid number';
                         }
