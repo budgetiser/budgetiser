@@ -514,11 +514,14 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void updateWasValueNegative(String newValue) {
-    if (tryValueParse(valueController.text) != null) {
-      setState(() {
+    setState(() {
+      if (valueController.text == '') {
+        wasValueNegative = false;
+      }
+      if (tryValueParse(valueController.text) != null) {
         wasValueNegative = tryValueParse(valueController.text)! < 0;
-      });
-    }
+      }
+    });
   }
 
   void changePrefix(EnumPrefix prefix) {
