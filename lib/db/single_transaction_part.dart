@@ -37,7 +37,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   }
 
   Future<SingleTransaction> _mapToSingleTransaction(
-      Map<String, dynamic> mapItem) async {
+    Map<String, dynamic> mapItem,
+  ) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
     Account account = await getOneAccount(mapItem['account1_id']);
     return SingleTransaction(

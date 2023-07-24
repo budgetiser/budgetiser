@@ -16,6 +16,14 @@ class AccountItemsWidget extends StatelessWidget {
       future: recentlyUsedAccount.getList(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data!.isEmpty) {
+            return const SizedBox(
+              height: 40,
+              child: Center(
+                child: Text('no accounts used yet'),
+              ),
+            );
+          }
           return Container(
             height:
                 snapshot.data!.length * 95 + (snapshot.data!.length - 1) * 21,

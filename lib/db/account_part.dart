@@ -44,6 +44,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
       whereArgs: [accountID],
     );
     pushGetAllAccountsStream();
+    recentlyUsedAccount.removeItem(accountID.toString());
   }
 
   Future<void> updateAccount(Account account) async {
