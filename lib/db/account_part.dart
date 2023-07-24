@@ -7,7 +7,6 @@ extension DatabaseExtensionAccount on DatabaseHelper {
       _allAccountsStreamController.stream;
 
   void pushGetAllAccountsStream() async {
-    RecentlyUsed<Account>();
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('account');
 
