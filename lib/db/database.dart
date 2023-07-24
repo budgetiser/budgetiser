@@ -35,6 +35,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
   static String? _passcode;
+  final recentlyUsedAccount = RecentlyUsed<Account>();
 
   Future<Database> get database async =>
       _database ??= await initializeDatabase();

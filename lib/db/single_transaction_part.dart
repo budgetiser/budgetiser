@@ -91,6 +91,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
     pushGetAllTransactionsStream();
     pushGetAllAccountsStream();
+    recentlyUsedAccount.addItem(account.id.toString());
 
     final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
         columns: ['budget_id'],

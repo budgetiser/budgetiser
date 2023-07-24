@@ -1,5 +1,6 @@
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
+import 'package:budgetiser/shared/widgets/itemLists/account_items_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,16 +21,14 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
       ),
       drawer: const CreateDrawer(),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [],
-        ),
-      ),
+      body: AccountItemsWidget(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const TransactionForm()));
+            MaterialPageRoute(
+              builder: (context) => const TransactionForm(),
+            ),
+          );
         },
         label: const Text('new Transaction'),
         icon: const Icon(
