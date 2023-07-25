@@ -24,6 +24,7 @@ dependencies:
   path_provider: ^2.0.15
   url_launcher: ^6.1.12
   package_info_plus: ^4.0.2
+  equations: ^5.0.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
