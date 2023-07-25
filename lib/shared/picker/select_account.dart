@@ -1,13 +1,15 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Account selector dropdown
 ///
 /// TODO: validate form when no account is available
+///
+/// [blackListAccountId] account to not show in dropdown
 class SelectAccount extends StatefulWidget {
   const SelectAccount({
     Key? key,
@@ -24,44 +26,35 @@ class SelectAccount extends StatefulWidget {
 }
 
 class _SelectAccountState extends State<SelectAccount> {
-  List<Account>? _accounts = [];
+  List<Account> _accounts = [];
+  List<Account> _filteredAccounts = []; // account list with blacklist applied
   Account? _selectedAccount;
-  final String keySelectedAccount = 'key-last-selected-account';
+  final recentlyUsedAccount = RecentlyUsed<Account>();
 
   @override
   void initState() {
     DatabaseHelper.instance.allAccountsStream.listen((event) async {
-      if (event.isEmpty) {
+      _accounts = event;
+      _filteredAccounts = _accounts
+          .where((element) => element.id != widget.blackListAccountId)
+          .toList();
+
+      if (_filteredAccounts.isEmpty) {
         return;
       }
-      _accounts?.clear();
-      _accounts = (event.map((e) => e).toList());
-      var filteredAccounts = _accounts
-          ?.where((element) => element.id != widget.blackListAccountId);
-      if (filteredAccounts != null && filteredAccounts.isEmpty) {
-        return;
-      }
-      final prefs = await SharedPreferences.getInstance();
-      if (widget.initialAccount != null) {
-        try {
-          _selectedAccount = filteredAccounts?.firstWhere(
-              (element) => element.id == widget.initialAccount!.id);
-        } catch (e) {
-          prefs.remove(keySelectedAccount);
-          _selectedAccount = filteredAccounts?.first;
-        }
+      _selectedAccount = _filteredAccounts.first;
+
+      List<int> filteredIDs = _filteredAccounts.map((e) => e.id).toList();
+      if (widget.initialAccount != null &&
+          filteredIDs.contains(widget.initialAccount!.id)) {
+        _selectedAccount = _filteredAccounts
+            .firstWhere((element) => element.id == widget.initialAccount!.id);
       } else {
-        final accountId = prefs.getInt(keySelectedAccount);
-        if (accountId == null) {
-          _selectedAccount = filteredAccounts?.first;
-        } else {
-          try {
-            _selectedAccount = filteredAccounts
-                ?.firstWhere((element) => element.id == accountId);
-          } catch (e) {
-            prefs.remove(keySelectedAccount);
-            _selectedAccount = filteredAccounts?.first;
-          }
+        int? accountId =
+            await recentlyUsedAccount.getLastUsed().then((value) => value?.id);
+        if (accountId != null) {
+          _selectedAccount = _filteredAccounts
+              .firstWhere((element) => element.id == accountId);
         }
       }
       if (mounted && _selectedAccount != null) {
@@ -74,44 +67,26 @@ class _SelectAccountState extends State<SelectAccount> {
 
   @override
   Widget build(BuildContext context) {
-    var filteredAccounts =
-        _accounts?.where((element) => element.id != widget.blackListAccountId);
     String errorText = 'Create account';
-    if (filteredAccounts != null &&
-        filteredAccounts.isEmpty &&
-        _accounts!.isNotEmpty) {
+    if (_filteredAccounts.isEmpty && _accounts.isNotEmpty) {
       errorText = 'Create 2nd account';
     }
 
-    if (_accounts == null) {
-      return Container();
-    }
-    if (_accounts!.isEmpty ||
-        filteredAccounts != null && filteredAccounts.isEmpty) {
+    if (_accounts.isEmpty || _filteredAccounts.isEmpty) {
       return Center(
         child: FloatingActionButton.extended(
           heroTag: null,
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AccountForm()));
+              MaterialPageRoute(
+                builder: (context) => const AccountForm(),
+              ),
+            );
           },
           label: Text(errorText),
           extendedTextStyle: const TextStyle(fontSize: 18),
         ),
       );
-    }
-    // check if selected account is not in _accounts
-    if (_selectedAccount != null &&
-        filteredAccounts != null &&
-        !filteredAccounts.contains(_selectedAccount)) {
-      setState(() {
-        _selectedAccount = filteredAccounts.first;
-
-        // wait to not trigger rebuild before this build is finished
-        Future.delayed(Duration.zero, () async {
-          widget.callback(_selectedAccount!);
-        });
-      });
     }
 
     return ButtonTheme(
@@ -126,13 +101,10 @@ class _SelectAccountState extends State<SelectAccount> {
             widget.callback(newValue!);
             _selectedAccount = newValue;
           });
-          if (newValue != null) {
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setInt(keySelectedAccount, newValue.id);
-          }
         },
-        items:
-            filteredAccounts?.map<DropdownMenuItem<Account>>((Account account) {
+        items: _filteredAccounts.map<DropdownMenuItem<Account>>((
+          Account account,
+        ) {
           return DropdownMenuItem<Account>(
             value: account,
             child: AccountTextWithIcon(account),
