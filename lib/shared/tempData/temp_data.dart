@@ -54,7 +54,7 @@ List<Account> getExampleAccounts() {
   for (int i = 0; i < icons.length; i++) {
     accounts.add(
       Account(
-        id: i,
+        id: i + 1,
         name: names[i],
         icon: icons[i],
         color: colors[i],
@@ -69,11 +69,9 @@ List<Account> getExampleAccounts() {
 
 List<Account> TMP_DATA_accountList = getExampleAccounts();
 
-List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
-
 List<TransactionCategory> getCategoryList() {
   List<TransactionCategory> list = [];
-  int id = 0;
+  int id = 1;
   void addCategory(String name, IconData icon) {
     list.add(
       TransactionCategory(
@@ -162,6 +160,8 @@ List<TransactionCategory> getCategoryList() {
 
   return list;
 }
+
+List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
 
 List<Group> TMP_DATA_groupList = [
   Group(
