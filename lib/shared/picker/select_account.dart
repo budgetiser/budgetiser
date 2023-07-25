@@ -53,8 +53,12 @@ class _SelectAccountState extends State<SelectAccount> {
         int? accountId =
             await recentlyUsedAccount.getLastUsed().then((value) => value?.id);
         if (accountId != null) {
-          _selectedAccount = _filteredAccounts
-              .firstWhere((element) => element.id == accountId);
+          try {
+            _selectedAccount = _filteredAccounts
+                .firstWhere((element) => element.id == accountId);
+          } catch (e) {
+            // recently used not in filtered accounts (e.g. when blacklisted)
+          }
         }
       }
       if (mounted && _selectedAccount != null) {
