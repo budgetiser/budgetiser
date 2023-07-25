@@ -171,115 +171,98 @@ List<Group> TMP_DATA_groupList = [
     color: Colors.green,
     description: 'All transportation summarized',
     transactionCategories: [
-      TMP_DATA_categoryList[0],
-      TMP_DATA_categoryList[1],
-      TMP_DATA_categoryList[3],
+      TMP_DATA_categoryList[7],
+      TMP_DATA_categoryList[8],
+      TMP_DATA_categoryList[9],
+      TMP_DATA_categoryList[10],
+      TMP_DATA_categoryList[11],
     ],
   ),
 ];
 
-List<SingleTransaction> TMP_DATA_transactionList = [
-  SingleTransaction(
-    id: 1,
-    title: 'flight to aveiro',
-    value: -400.70,
-    category: TMP_DATA_categoryList[0],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 05, 12),
-    description: 'portugal internship',
-  ),
-  SingleTransaction(
-    id: 2,
-    title: 'refuel',
-    value: -120,
-    category: TMP_DATA_categoryList[1],
-    account: TMP_DATA_accountList[0],
-    date: DateTime(2022, 05, 15),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 3,
-    title: 'new clothes',
-    value: -380,
-    category: TMP_DATA_categoryList[2],
-    account: TMP_DATA_accountList[0],
-    date: DateTime(2022, 05, 07),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 4,
-    title: 'studi ticket',
-    value: -206,
-    category: TMP_DATA_categoryList[3],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 03, 01),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 5,
-    title: 'telekom',
-    value: -44.5,
-    category: TMP_DATA_categoryList[4],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 05, 01),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 6,
-    title: 'gym',
-    value: -26.5,
-    category: TMP_DATA_categoryList[6],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 05, 7),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 7,
-    title: 'cantine',
-    value: -15,
-    category: TMP_DATA_categoryList[5],
-    account: TMP_DATA_accountList[0],
-    date: DateTime(2022, 4, 30),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 8,
-    title: 'Mom & Dad',
-    value: 200,
-    category: TMP_DATA_categoryList[7],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 5, 1),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 9,
-    title: 'bosch',
-    value: 27000,
-    category: TMP_DATA_categoryList[7],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 4, 30),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 10,
-    title: 'withdrawal',
-    value: 1500,
-    category: TMP_DATA_categoryList[5],
-    account: TMP_DATA_accountList[2],
-    account2: TMP_DATA_accountList[0],
-    date: DateTime(2022, 5, 1),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 11,
-    title: 'rental car',
-    value: -480,
-    category: TMP_DATA_categoryList[5],
-    account: TMP_DATA_accountList[1],
-    date: DateTime(2022, 5, 20),
-    description: '',
-  ),
-];
+List<SingleTransaction> getTransactionList() {
+  List<SingleTransaction> list = [];
+  int id = 1;
+  void addTransaction(
+    String title,
+    double value,
+    int categoryIndex,
+    int accountIndex,
+    int daysMinus,
+    String description,
+  ) {
+    list.add(
+      SingleTransaction(
+        id: id,
+        title: title,
+        value: value,
+        category:
+            TMP_DATA_categoryList[categoryIndex % TMP_DATA_categoryList.length],
+        account:
+            TMP_DATA_accountList[accountIndex % TMP_DATA_accountList.length],
+        date: DateTime.now().subtract(
+          Duration(days: daysMinus),
+        ),
+        description: description,
+      ),
+    );
+    id++;
+  }
+
+  addTransaction('Flight to aveiro', -400.70, 0, 2, 51, 'Portugal internship');
+  addTransaction('Refuel', -120, 1, 0, 63, '');
+  addTransaction('New clothes', -380, 2, 0, 35, '');
+  addTransaction('Bus ticket', -206, 3, 2, 21, '');
+  addTransaction('Telekom', -44.5, 4, 2, 13, '');
+  addTransaction('Gym', -26.5, 6, 2, 15, '');
+  addTransaction('Cafeteria', -15, 5, 0, 8, '');
+  addTransaction('Mom & Dad', 200, 7, 2, 7, '');
+  addTransaction('Salary', 27000, 7, 2, 5, '');
+  addTransaction('Withdrawal', 1500, 5, 2, 0, '');
+  addTransaction('Rental car', -480, 5, 1, 10, '');
+  addTransaction('Flight to Paris', -600.85, 0, 1, 62, 'Vacation trip');
+  addTransaction('New Laptop', -1200, 2, 3, 10, 'Tech upgrade');
+  addTransaction('Restaurant Dinner', -80, 5, 1, 5, '');
+
+  addTransaction('Grocery Shopping', -70, 31, 0, 5, '');
+  addTransaction('Haircut', -25, 45, 2, 7, '');
+  addTransaction('Movie Tickets', -40, 22, 1, 8, '');
+  addTransaction('Pet Grooming', -35, 49, 3, 4, '');
+  addTransaction('Gift Shop', -15, 39, 0, 6, '');
+  addTransaction('Home Decor', -80, 29, 2, 9, '');
+  addTransaction('Mobile Recharge', -20, 49, 1, 3, '');
+  addTransaction('Fitness Class', -50, 37, 0, 2, '');
+  addTransaction('Tech Accessories', -60, 32, 2, 1, '');
+  addTransaction('Dinner with Friends', -90, 22, 1, 12, '');
+  addTransaction('Vacation Expenses', -300, 16, 2, 11, '');
+  addTransaction('Car Wash', -20, 8, 0, 14, '');
+  addTransaction('Home Insurance', -120, 30, 1, 15, '');
+  addTransaction('Health Checkup', -75, 17, 2, 17, '');
+  addTransaction('Online Course', -50, 14, 3, 20, '');
+  addTransaction('Business Trip', -250, 12, 1, 25, '');
+  addTransaction('Charity Donation', -30, 40, 0, 27, '');
+  addTransaction('Pet Supplies', -40, 50, 2, 30, '');
+  addTransaction('Home Repairs', -120, 28, 3, 28, '');
+  addTransaction('Coffee Shop', -15, 22, 1, 29, '');
+  addTransaction('Subscription Renewal', -10, 23, 0, 26, '');
+  addTransaction('New Phone', -500, 32, 1, 23, '');
+  addTransaction('Tax Payment', -180, 27, 2, 22, '');
+  addTransaction('Music Concert', -100, 22, 3, 18, '');
+
+  addTransaction('Electricity Bill', -85, 24, 0, 27, '');
+  addTransaction('Water Bill', -50, 25, 1, 27, '');
+  addTransaction('Heat Bill', -70, 26, 2, 26, '');
+  addTransaction('Internet Bill', -60, 28, 3, 25, '');
+  addTransaction('Phone Billings', -45, 28, 0, 24, '');
+  addTransaction('Beauty', -90, 44, 1, 23, '');
+  addTransaction('Hygiene', -30, 45, 2, 22, '');
+  addTransaction('Grooming', -20, 46, 3, 21, '');
+  addTransaction('SPA', -150, 47, 0, 20, '');
+  addTransaction('Clothing', -70, 48, 1, 19, '');
+  return list;
+}
+
+List<SingleTransaction> TMP_DATA_transactionList = getTransactionList();
 
 List<Savings> TMP_DATA_savingsList = [
   Savings(
