@@ -56,11 +56,16 @@ class RecentlyUsed<T> {
     await preferences.setStringList(key, list);
   }
 
-  void removeItem(String itemID) async {
+  Future removeItem(String itemID) async {
     await init();
     var list = preferences.getStringList(key) ?? []
       ..remove(itemID);
     await preferences.setStringList(key, list);
+  }
+
+  Future removeAllItems() async {
+    await init();
+    await preferences.remove(key);
   }
 
   Future _itemFromID(String id) async {

@@ -65,10 +65,12 @@ class DatabaseHelper {
     }
   }
 
+  /// Clear db and reset (TODO some) shared preferences
   // ignore: always_declare_return_types
   resetDB() async {
     final Database db = await database;
     await _dropTables(db);
+    await recentlyUsedAccount.removeAllItems();
     await _onCreate(db, 1);
   }
 
