@@ -36,7 +36,7 @@ class CreateDrawer extends StatelessWidget {
                       const SizedBox(width: 8),
                       // TODO: Bug: Text clips with big system font size
                       Text(
-                        ' Budgetiser',
+                        'Budgetiser',
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ],
