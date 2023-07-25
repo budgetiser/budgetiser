@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:math';
+
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
@@ -8,6 +10,19 @@ import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
+
+List<Color> _availableColors = [
+  Colors.green,
+  Colors.blue,
+  Colors.red,
+  Colors.purple,
+  Colors.orange,
+  Colors.teal,
+  Colors.indigo,
+  Colors.amber,
+  Colors.deepOrange,
+  Colors.cyan,
+];
 
 List<Account> getExampleAccounts() {
   List<Account> accounts = [];
@@ -54,213 +69,99 @@ List<Account> getExampleAccounts() {
 
 List<Account> TMP_DATA_accountList = getExampleAccounts();
 
-List<TransactionCategory> getCategoriesAndGroups() {
-  List<TransactionCategory> categories = [];
-  List<IconData> icons = [];
-  List<String> names = [];
-  List<Color> colors = [];
+List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
 
-  names.add('Salary');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Business Income');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Commissions');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Investments');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Money Gifts');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Side Gigs');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Private Sellings');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Gas');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Parking');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Car Maintenance');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Public Transports');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Bike');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Workshops');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Conferences');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Courses');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Coaching');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Books');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Doctor Bills');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Hospital Bills');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Dentist');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Medical Devices');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Cinema');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Theater');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Subscriptions');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Memberships');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Hobbies');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Rent');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Property Taxes');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Home Repairs');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Gardening');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Groceries');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Take Aways');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Snacks');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Daycare');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Extracurricular Activities');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Life Insurances');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Home Insurances');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Car Insurances');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Business Insurances');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Birthday Gifts');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Holiday Gifts');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Donations');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Electricity Bill');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Water Bill');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Heat Bill');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Internet Bill');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Phone Billings');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Beauty');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Hygiene');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Grooming');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('SPA');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Clothing');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Pet Food');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Veterinary Bills');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Pet Training');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  names.add('Car Debt');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('Personal Loans');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-  names.add('House debt');
-  icons.add(Icons.cases);
-  colors.add(Colors.green);
-
-  for (int i = 0; i < icons.length; i++) {
-    categories.add(TransactionCategory(
-        id: i,
-        name: names[i],
-        icon: icons[i],
-        color: colors[i],
+List<TransactionCategory> getCategoryList() {
+  List<TransactionCategory> list = [];
+  int id = 0;
+  void addCategory(String name, IconData icon) {
+    list.add(
+      TransactionCategory(
+        id: id,
+        name: name,
+        icon: icon,
+        color: _availableColors[Random().nextInt(_availableColors.length)],
         description: '',
-        isHidden: false));
+        isHidden: false,
+      ),
+    );
+    id++;
   }
-  return categories;
-}
 
-List<TransactionCategory> TMP_DATA_categoryList = getCategoriesAndGroups();
+  addCategory('Salary', Icons.attach_money);
+  addCategory('Business Income', Icons.business);
+  addCategory('Commissions', Icons.trending_up);
+  addCategory('Investments', Icons.trending_up);
+  addCategory('Money Gifts', Icons.card_giftcard);
+  addCategory('Side Gigs', Icons.work);
+  addCategory('Private Sellings', Icons.shopping_bag);
+
+  addCategory('Gas', Icons.local_gas_station);
+  addCategory('Parking', Icons.local_parking);
+  addCategory('Car Maintenance', Icons.car_repair);
+  addCategory('Public Transports', Icons.directions_bus);
+  addCategory('Bike', Icons.directions_bike);
+
+  addCategory('Workshops', Icons.event);
+  addCategory('Conferences', Icons.event);
+  addCategory('Courses', Icons.school);
+  addCategory('Coaching', Icons.group);
+  addCategory('Books', Icons.menu_book);
+
+  addCategory('Doctor Bills', Icons.local_hospital);
+  addCategory('Hospital Bills', Icons.local_hospital);
+  addCategory('Dentist', Icons.local_hospital);
+  addCategory('Medical Devices', Icons.medical_services);
+
+  addCategory('Cinema', Icons.local_movies);
+  addCategory('Theater', Icons.theaters);
+  addCategory('Subscriptions', Icons.subscriptions);
+  addCategory('Memberships', Icons.card_membership);
+  addCategory('Hobbies', Icons.sports_esports);
+
+  addCategory('Rent', Icons.home);
+  addCategory('Property Taxes', Icons.home);
+  addCategory('Home Repairs', Icons.home_repair_service);
+  addCategory('Gardening', Icons.spa);
+
+  addCategory('Groceries', Icons.shopping_cart);
+  addCategory('Take Aways', Icons.food_bank);
+  addCategory('Snacks', Icons.fastfood);
+
+  addCategory('Daycare', Icons.child_care);
+  addCategory('Extracurricular Activities', Icons.sports_soccer);
+
+  addCategory('Life Insurances', Icons.local_hospital);
+  addCategory('Home Insurances', Icons.home);
+  addCategory('Car Insurances', Icons.directions_car);
+  addCategory('Business Insurances', Icons.business);
+
+  addCategory('Birthday Gifts', Icons.card_giftcard);
+  addCategory('Holiday Gifts', Icons.card_giftcard);
+  addCategory('Donations', Icons.favorite);
+
+  addCategory('Electricity Bill', Icons.flash_on);
+  addCategory('Water Bill', Icons.opacity);
+  addCategory('Heat Bill', Icons.whatshot);
+  addCategory('Internet Bill', Icons.wifi);
+  addCategory('Phone Billings', Icons.phone);
+
+  addCategory('Beauty', Icons.spa);
+  addCategory('Hygiene', Icons.spa);
+  addCategory('Grooming', Icons.spa);
+  addCategory('SPA', Icons.spa);
+  addCategory('Clothing', Icons.shopping_bag);
+
+  addCategory('Pet Food', Icons.pets);
+  addCategory('Veterinary Bills', Icons.local_hospital);
+  addCategory('Pet Training', Icons.pets);
+
+  addCategory('Car Debt', Icons.credit_card);
+  addCategory('Personal Loans', Icons.credit_card);
+  addCategory('House debt', Icons.home);
+
+  return list;
+}
 
 List<Group> TMP_DATA_groupList = [
   Group(
