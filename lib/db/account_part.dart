@@ -58,11 +58,28 @@ extension DatabaseExtensionAccount on DatabaseHelper {
     pushGetAllAccountsStream();
   }
 
+  Future<void> _setAccountBalance(Account account, double newBalance) async {
+    final db = await database;
+    await db.update(
+      'account',
+      {'balance': _roundDouble(newBalance)},
+      where: 'id = ?',
+      whereArgs: [account.id],
+    );
+  }
+
   /// TODO: null checks
   Future<Account> getOneAccount(int id) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps =
-        await db.query('account', where: 'id = ?', whereArgs: [id]);
+    final List<Map<String, dynamic>> maps = await db.query(
+      'account',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isEmpty) {
+      throw ErrorDescription('account id:$id not found');
+    }
 
     return Account(
       id: maps[0]['id'],
