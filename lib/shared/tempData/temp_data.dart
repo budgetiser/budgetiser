@@ -272,9 +272,13 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.red,
     description: '',
     balance: 1728.0,
-    endDate: DateTime(2022, 10, 7),
+    endDate: DateTime.now().add(
+      const Duration(days: 50),
+    ),
     goal: 2000.0,
-    startDate: DateTime(2022, 03, 01),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 4),
+    ),
   ),
   Savings(
     id: 2,
@@ -283,9 +287,13 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.blue,
     description: '',
     balance: 0.0,
-    endDate: DateTime(2022, 08, 01),
+    endDate: DateTime.now().add(
+      const Duration(days: 32),
+    ),
     goal: 1000.0,
-    startDate: DateTime(2022, 06, 01),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 40),
+    ),
   ),
   Savings(
     id: 4,
@@ -294,9 +302,13 @@ List<Savings> TMP_DATA_savingsList = [
     color: Colors.orange,
     description: '',
     balance: 150.0,
-    endDate: DateTime(2022, 04, 2),
+    endDate: DateTime.now().add(
+      const Duration(days: 4),
+    ),
     goal: 300.0,
-    startDate: DateTime(2022, 02, 2),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 70),
+    ),
   ),
 ];
 
@@ -309,8 +321,12 @@ List<Budget> TMP_DATA_budgetList = [
     description: '',
     balance: 0.0,
     intervalRepetitions: 30,
-    endDate: DateTime(2020, 10, 1).add(const Duration(days: 30 * 30)),
-    startDate: DateTime(2020, 10, 1),
+    endDate: DateTime.now().add(
+      const Duration(days: 30 * 12),
+    ),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 70),
+    ),
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
     intervalType: IntervalType.fixedInterval,
@@ -328,8 +344,12 @@ List<Budget> TMP_DATA_budgetList = [
     description: '',
     balance: 0.0,
     intervalRepetitions: 3,
-    endDate: DateTime(2020, 01, 1).add(const Duration(days: 3 * 365)),
-    startDate: DateTime(2020, 01, 01),
+    endDate: DateTime.now().add(
+      const Duration(days: 70),
+    ),
+    startDate: DateTime.now().add(
+      const Duration(days: 8),
+    ),
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
     intervalType: IntervalType.fixedInterval,
@@ -349,8 +369,12 @@ List<Budget> TMP_DATA_budgetList = [
     description: '',
     balance: 0.0,
     intervalRepetitions: 5,
-    endDate: DateTime(2022, 10, 2).add(const Duration(days: 3 * 5)),
-    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime.now().add(
+      const Duration(days: 70),
+    ),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 5),
+    ),
     intervalAmount: 3,
     intervalUnit: IntervalUnit.day,
     intervalType: IntervalType.fixedInterval,
@@ -365,7 +389,9 @@ List<Budget> TMP_DATA_budgetList = [
     color: Colors.orange,
     description: '',
     balance: 0,
-    startDate: DateTime(2020, 10, 2),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 70),
+    ),
     isRecurring: false,
     limit: 500,
     transactionCategories: [
@@ -379,8 +405,12 @@ List<Budget> TMP_DATA_budgetList = [
     color: Colors.orange,
     description: '',
     balance: 0,
-    endDate: DateTime(2021, 01, 2),
-    startDate: DateTime(2020, 10, 2),
+    endDate: DateTime.now().add(
+      const Duration(days: 70),
+    ),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 45),
+    ),
     intervalRepetitions: 3,
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
