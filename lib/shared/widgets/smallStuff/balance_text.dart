@@ -5,11 +5,13 @@ class BalanceText extends StatefulWidget {
   const BalanceText(
     this.balance, {
     this.hasPrefix = true,
+    this.isColored = true,
     Key? key,
   }) : super(key: key);
 
   final double balance;
   final bool hasPrefix;
+  final bool isColored;
 
   @override
   State<BalanceText> createState() => _BalanceTextState();
@@ -36,16 +38,20 @@ class _BalanceTextState extends State<BalanceText> {
     TextStyle textStyle = Theme.of(context).textTheme.bodyMedium!;
     String prefix = '';
     if (widget.balance >= 0) {
-      textStyle = textStyle.copyWith(
-        color: const Color.fromARGB(239, 29, 129, 37),
-      );
+      if (widget.isColored) {
+        textStyle = textStyle.copyWith(
+          color: Colors.green,
+        );
+      }
       if (widget.hasPrefix) {
         prefix = '+ ';
       }
     } else {
-      textStyle = textStyle.copyWith(
-        color: const Color.fromARGB(255, 174, 74, 99),
-      );
+      if (widget.isColored) {
+        textStyle = textStyle.copyWith(
+          color: Colors.red,
+        );
+      }
       if (widget.hasPrefix) {
         prefix = '- ';
       }

@@ -9,20 +9,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Checkout (develop)'
+      - name: "Checkout (develop)"
         uses: actions/checkout@v2
         with:
-          ref: 'develop'
+          ref: "develop"
 
       - name: Setup of JDK
         uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
+          java-version: "12.x"
 
       - name: Setup Flutter Environment
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Create Java Upload-Keystore
         env:

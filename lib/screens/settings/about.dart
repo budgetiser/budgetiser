@@ -23,8 +23,9 @@ class AboutScreen extends StatelessWidget {
               subtitle: const Text(
                 'github.com/budgetiser/budgetiser',
               ),
-              onTap: () =>
-                  _launchURL('https://github.com/budgetiser/budgetiser'),
+              onTap: () => _launchURL(
+                'https://github.com/budgetiser/budgetiser',
+              ),
             ),
             ListTile(
               title: const Text('Website'),
