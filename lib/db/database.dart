@@ -40,6 +40,11 @@ class DatabaseHelper {
   Future<Database> get database async =>
       _database ??= await initializeDatabase();
 
+  /// Only for unittest
+  void setDatabase(Database db) {
+    _database = db;
+  }
+
   Future<int> login(String passCode) async {
     final preferences = await SharedPreferences.getInstance();
     if (!preferences.containsKey('encrypted')) {
@@ -74,7 +79,7 @@ class DatabaseHelper {
     await _onCreate(db, 1);
   }
 
-  void fillDBwithTMPdata() async {
+  Future fillDBwithTMPdata() async {
     for (var account in TMP_DATA_accountList) {
       await createAccount(account);
     }
