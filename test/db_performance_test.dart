@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -26,7 +27,9 @@ void main() {
     await dbh.resetDB();
     await dbh.fillDBwithTMPdata();
     stopwatch.stop();
-    print('refilled DB in ${stopwatch.elapsed}');
+    if (kDebugMode) {
+      print('refilled DB in ${stopwatch.elapsed}');
+    }
 
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
