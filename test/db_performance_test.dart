@@ -20,13 +20,15 @@ void main() {
     var db = await openDatabase(
       inMemoryDatabasePath,
     );
-
     var dbh = DatabaseHelper.instance..setDatabase(db);
 
     final stopwatch = Stopwatch()..start();
+
     await dbh.resetDB();
     await dbh.fillDBwithTMPdata();
+
     stopwatch.stop();
+
     if (kDebugMode) {
       print('refilled DB in ${stopwatch.elapsed}');
     }
