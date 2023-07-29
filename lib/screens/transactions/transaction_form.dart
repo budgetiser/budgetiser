@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
@@ -48,12 +50,13 @@ class _TransactionFormState extends State<TransactionForm> {
   bool hasInitialData = false;
 
   var titleController = TextEditingController();
-  var valueController = TextEditingController(text: '-');
+  var valueController = TextEditingController();
   var descriptionController = TextEditingController();
   bool wasValueNegative =
-      true; // remembering if value was negative to display the correct prefix button when value field is not valid
+      false; // remembering if value was negative to display the correct prefix button when value field is not valid
 
   final _formKey = GlobalKey<FormState>();
+  final _valueInputKey = GlobalKey<FormState>();
 
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
@@ -150,7 +153,6 @@ class _TransactionFormState extends State<TransactionForm> {
                         labelText: 'Value',
                       ),
                       onChanged: (value) {
-                        // _formKey.currentState!.validate();
                         updateWasValueNegative(value);
                         // to update the visualization
                         setState(() {});
@@ -434,10 +436,9 @@ class _TransactionFormState extends State<TransactionForm> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               clickableAccountIcon(selectedAccount!),
-              (value != null && value >= 0)
+              (!wasValueNegative)
                   ? Transform.rotate(
-                      // rotate by pi to flip the arrow
-                      angle: 3.14,
+                      angle: pi, // rotate by pi to flip the arrow
                       child: const Icon(
                         Icons.arrow_right_alt,
                         size: 60,
@@ -515,8 +516,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void updateWasValueNegative(String newValue) {
     setState(() {
-      if (valueController.text == '') {
+      if (valueController.text.trim() == '') {
         wasValueNegative = false;
+      }
+      if (valueController.text.trim() == '-') {
+        wasValueNegative = true;
       }
       if (tryValueParse(valueController.text) != null) {
         wasValueNegative = tryValueParse(valueController.text)! < 0;
@@ -558,6 +562,7 @@ class _TransactionFormState extends State<TransactionForm> {
           break;
       }
     });
+    updateWasValueNegative(valueController.text);
     // move cursor to the end
     valueController.selection =
         TextSelection.collapsed(offset: valueController.text.length);
