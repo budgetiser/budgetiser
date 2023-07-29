@@ -56,6 +56,7 @@ class _TransactionFormState extends State<TransactionForm> {
       true; // remembering if value was negative to display the correct prefix button when value field is not valid
 
   final _formKey = GlobalKey<FormState>();
+  final _valueKey = GlobalKey<FormState>();
 
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
@@ -144,33 +145,42 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                   ),
                   Flexible(
-                    child: TextFormField(
-                      controller: valueController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: 'Value',
-                      ),
-                      onChanged: (value) {
-                        updateWasValueNegative(value);
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a value';
-                        }
-                        try {
-                          if (valueParser.evaluate(value) < 0 && hasAccount2) {
-                            return 'Only positive values with two accounts';
+                    child: Form(
+                      key: _valueKey,
+                      child: TextFormField(
+                        controller: valueController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        decoration: const InputDecoration(
+                          labelText: 'Value',
+                        ),
+                        onChanged: (value) {
+                          if (tryValueParse(valueController.text) != null) {
+                            _valueKey.currentState!.validate();
                           }
-                          if (valueParser.evaluate(value) == double.infinity ||
-                              valueParser.evaluate(value) == -double.infinity) {
+                          updateWasValueNegative(value);
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a value';
+                          }
+                          try {
+                            if (valueParser.evaluate(value) < 0 &&
+                                hasAccount2) {
+                              return 'Only positive values with two accounts';
+                            }
+                            if (valueParser.evaluate(value) ==
+                                    double.infinity ||
+                                valueParser.evaluate(value) ==
+                                    -double.infinity) {
+                              return 'Please enter a valid number';
+                            }
+                          } catch (e) {
                             return 'Please enter a valid number';
                           }
-                        } catch (e) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
+                          return null;
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -354,7 +364,10 @@ class _TransactionFormState extends State<TransactionForm> {
           // Save button
           FloatingActionButton.extended(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
+              _valueKey.currentState!
+                  .validate(); // will otherwise not be called if global form is also invalid
+              if (_formKey.currentState!.validate() &&
+                  _valueKey.currentState!.validate()) {
                 if (hasInitialData) {
                   DatabaseHelper.instance.updateSingleTransaction(
                     _currentTransaction(),
