@@ -50,13 +50,12 @@ class _TransactionFormState extends State<TransactionForm> {
   bool hasInitialData = false;
 
   var titleController = TextEditingController();
-  var valueController = TextEditingController();
+  var valueController = TextEditingController(text: '-');
   var descriptionController = TextEditingController();
   bool wasValueNegative =
-      false; // remembering if value was negative to display the correct prefix button when value field is not valid
+      true; // remembering if value was negative to display the correct prefix button when value field is not valid
 
   final _formKey = GlobalKey<FormState>();
-  final _valueInputKey = GlobalKey<FormState>();
 
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
@@ -154,8 +153,6 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                       onChanged: (value) {
                         updateWasValueNegative(value);
-                        // to update the visualization
-                        setState(() {});
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -359,17 +356,20 @@ class _TransactionFormState extends State<TransactionForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 if (hasInitialData) {
-                  DatabaseHelper.instance
-                      .updateSingleTransaction(_currentTransaction());
+                  DatabaseHelper.instance.updateSingleTransaction(
+                    _currentTransaction(),
+                  );
                   Navigator.of(context).pop();
                 } else {
-                  DatabaseHelper.instance
-                      .createSingleTransaction(_currentTransaction());
+                  DatabaseHelper.instance.createSingleTransaction(
+                    _currentTransaction(),
+                  );
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const TransactionsScreen(),
-                      ),
-                      (Route<dynamic> route) => false);
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionsScreen(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
                 }
               }
             },
