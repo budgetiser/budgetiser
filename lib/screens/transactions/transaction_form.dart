@@ -274,16 +274,15 @@ class _TransactionFormState extends State<TransactionForm> {
           // title input
           const SizedBox(height: 20),
           TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a title';
-              }
-              return null;
+            onChanged: (value) {
+              setState(() {});
             },
             controller: titleController,
             // initialValue: widget.initialName,
-            decoration: const InputDecoration(
-              labelText: 'Title',
+            decoration: InputDecoration(
+              labelText: titleController.text == ''
+                  ? 'Title: ${selectedCategory?.name}'
+                  : 'Title',
             ),
           ),
           // account picker
@@ -510,10 +509,15 @@ class _TransactionFormState extends State<TransactionForm> {
       description = descriptionController.text.trim();
     }
 
+    String title = titleController.text.trim();
+    if (title == '') {
+      title = selectedCategory!.name;
+    }
+
     SingleTransaction transaction;
     transaction = SingleTransaction(
       id: 0,
-      title: titleController.text.trim(),
+      title: title,
       value: double.parse(
           valueParser.evaluate(valueController.text).toStringAsFixed(2)),
       category: selectedCategory!,
