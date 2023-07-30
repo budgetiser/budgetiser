@@ -304,7 +304,9 @@ class _TransactionFormState extends State<TransactionForm> {
                   ),
                 ),
                 SelectAccount(
-                    initialAccount: selectedAccount, callback: setAccount),
+                  initialAccount: selectedAccount,
+                  callback: setAccount,
+                ),
                 InkWell(
                   customBorder: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -331,7 +333,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 ),
                 if (hasAccount2)
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text('to '),
                       Flexible(
@@ -591,5 +593,6 @@ class _TransactionFormState extends State<TransactionForm> {
         selectedAccount2 = null;
       }
     });
+    _valueKey.currentState?.validate();
   }
 }
