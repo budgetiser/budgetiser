@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
@@ -11,7 +9,7 @@ import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
@@ -118,9 +116,13 @@ class _TransactionFormState extends State<TransactionForm> {
             : const Text('New Transaction'),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: selectedAccount2 != null
-            ? _visualizeTwoAccountTransaction()
-            : _visualizeOneAccountTransaction(),
+        deadSpaceContent: VisualizeTransaction(
+          account1: selectedAccount,
+          account2: selectedAccount2,
+          category: selectedCategory,
+          wasNegative: wasValueNegative,
+          value: tryValueParse(valueController.text),
+        ),
         child: _transactionFormWidget(context),
       ),
       floatingActionButton: Row(
@@ -402,79 +404,6 @@ class _TransactionFormState extends State<TransactionForm> {
     } catch (e) {
       return null;
     }
-  }
-
-  Widget _visualizeTwoAccountTransaction() {
-    if (selectedAccount == null ||
-        selectedAccount2 == null ||
-        selectedCategory == null) {
-      return const SizedBox();
-    }
-    double? value = tryValueParse(valueController.text);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            clickableAccountIcon(selectedAccount!),
-            const Icon(Icons.arrow_right_alt, size: 60),
-            Icon(
-              selectedCategory!.icon,
-              color: selectedCategory!.color,
-              size: 40,
-            ),
-            const Icon(Icons.arrow_right_alt, size: 60),
-            clickableAccountIcon(selectedAccount2!),
-          ],
-        ),
-        if (value != null && value >= 0)
-          BalanceText(
-            value,
-            hasPrefix: false,
-          ),
-      ],
-    );
-  }
-
-  Widget _visualizeOneAccountTransaction() {
-    if (selectedAccount == null || selectedCategory == null) {
-      return const SizedBox();
-    }
-    double? value = tryValueParse(valueController.text);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              clickableAccountIcon(selectedAccount!),
-              (!wasValueNegative)
-                  ? Transform.rotate(
-                      angle: pi, // rotate by pi to flip the arrow
-                      child: const Icon(
-                        Icons.arrow_right_alt,
-                        size: 60,
-                      ),
-                    )
-                  : const Icon(Icons.arrow_right_alt, size: 60),
-              Icon(
-                selectedCategory!.icon,
-                color: selectedCategory!.color,
-                size: 40,
-              ),
-            ],
-          ),
-          if (value != null)
-            BalanceText(
-              value,
-              hasPrefix: false,
-            ),
-        ],
-      ),
-    );
   }
 
   InkWell clickableAccountIcon(Account account) {
