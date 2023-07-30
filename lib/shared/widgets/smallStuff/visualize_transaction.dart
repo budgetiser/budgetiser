@@ -29,71 +29,44 @@ class VisualizeTransaction extends StatefulWidget {
 class _VisualizeTransactionState extends State<VisualizeTransaction> {
   @override
   Widget build(BuildContext context) {
-    if (widget.account1 == null ||
-        widget.account1 == null ||
-        widget.category == null) {
+    if (widget.account1 == null || widget.category == null) {
       return Container();
     }
-    if (widget.account2 != null) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              clickableAccountIcon(widget.account1!),
-              const Icon(Icons.arrow_right_alt, size: 60),
-              Icon(
-                widget.category!.icon,
-                color: widget.category!.color,
-                size: 40,
-              ),
-              const Icon(Icons.arrow_right_alt, size: 60),
-              clickableAccountIcon(widget.account2!),
-            ],
-          ),
-          if (widget.value != null && !widget.wasNegative)
-            BalanceText(
-              widget.value!,
-              hasPrefix: false,
-            ),
-        ],
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                clickableAccountIcon(widget.account1!),
-                (!widget.wasNegative)
-                    ? Transform.rotate(
-                        angle: pi, // rotate by pi to flip the arrow
-                        child: const Icon(
-                          Icons.arrow_right_alt,
-                          size: 60,
-                        ),
-                      )
-                    : const Icon(Icons.arrow_right_alt, size: 60),
-                Icon(
-                  widget.category!.icon,
-                  color: widget.category!.color,
-                  size: 40,
-                ),
-              ],
-            ),
-            if (widget.value != null)
-              BalanceText(
-                widget.value!,
-                hasPrefix: false,
-              ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: (widget.account2 != null)
+              ? [
+                  clickableAccountIcon(widget.account1!),
+                  _arrow(flipped: false),
+                  Icon(
+                    widget.category!.icon,
+                    color: widget.category!.color,
+                    size: 40,
+                  ),
+                  _arrow(flipped: false),
+                  clickableAccountIcon(widget.account2!),
+                ]
+              : [
+                  clickableAccountIcon(widget.account1!),
+                  _arrow(flipped: !widget.wasNegative),
+                  Icon(
+                    widget.category!.icon,
+                    color: widget.category!.color,
+                    size: 40,
+                  ),
+                ],
         ),
-      );
-    }
+        if (widget.value != null &&
+            (widget.account2 == null || !widget.wasNegative))
+          BalanceText(
+            widget.value!,
+            hasPrefix: false,
+          ),
+      ],
+    );
   }
 
   InkWell clickableAccountIcon(Account account) {
@@ -116,5 +89,19 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
         size: 40,
       ),
     );
+  }
+
+  Widget _arrow({required bool flipped}) {
+    if (flipped) {
+      return Transform.rotate(
+        angle: pi, // rotate by pi to flip the arrow
+        child: const Icon(
+          Icons.arrow_right_alt,
+          size: 60,
+        ),
+      );
+    } else {
+      return const Icon(Icons.arrow_right_alt, size: 60);
+    }
   }
 }
