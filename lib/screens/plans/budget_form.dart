@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
@@ -7,6 +5,7 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/category_picker.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/recurring_form.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
@@ -32,8 +31,7 @@ class _BudgetFormState extends State<BudgetForm> {
   );
   List<TransactionCategory> budgetCategories = [];
   IconData? _icon;
-  Color _color = Color.fromRGBO(
-      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
+  Color _color = randomColor();
 
   // scrollController for the recurring form to scroll to the bottom
   final ScrollController _scrollController = ScrollController();
