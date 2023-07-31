@@ -47,10 +47,11 @@ class _DatePickerState extends State<DatePicker> {
       ),
       onTap: () async {
         var date = await showDatePicker(
-            context: context,
-            initialDate: widget.initialDate ?? DateTime.now(),
-            firstDate: DateTime(1900),
-            lastDate: DateTime(2100));
+          context: context,
+          initialDate: widget.initialDate ?? DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        );
         if (date != null) {
           setState(() {
             if (isSameDay(date, DateTime.now())) {

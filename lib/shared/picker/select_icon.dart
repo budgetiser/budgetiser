@@ -29,20 +29,28 @@ class _IconPickerState extends State<IconPicker> {
         onTap: () {
           _searchString = null;
           showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return StatefulBuilder(builder: (context, setState) {
+            context: context,
+            builder: (BuildContext context) {
+              return StatefulBuilder(
+                builder: (context, setState) {
                   return SimpleDialog(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.only(top: 0),
                     children: [
                       TextField(
                         decoration: InputDecoration(
-                            hintText: 'Search',
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                            hintStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary)),
+                          hintText: 'Search',
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                          hintStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary),
+                        ),
                         onChanged: (String value) {
                           setState(() {
                             _searchString = value;
@@ -52,8 +60,10 @@ class _IconPickerState extends State<IconPicker> {
                       getIcons(),
                     ],
                   );
-                });
-              });
+                },
+              );
+            },
+          );
         },
         child: Icon(
           size: 48,
@@ -77,8 +87,6 @@ class _IconPickerState extends State<IconPicker> {
       height: 500,
       width: double.maxFinite,
       child: GridView.count(
-        physics: const ScrollPhysics(),
-        shrinkWrap: true,
         crossAxisCount: 5,
         children: List.generate(filteredIcons.length, (index) {
           return InkWell(

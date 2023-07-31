@@ -114,7 +114,6 @@ class _AccountScreenState extends State<AccountScreen> {
             snapshot.data!.sort(sortFunction);
             return ListView.builder(
               itemCount: snapshot.data!.length,
-              physics: const ClampingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 80),
               itemBuilder: (BuildContext context, int index) {
                 return AccountItem(
