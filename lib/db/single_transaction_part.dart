@@ -173,8 +173,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
       DateTime dateTime = DateTime.parse(item['date']);
-      distinctMonths.add(DateTime.parse(
-          '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-01'));
+      distinctMonths.add(DateTime.parse('${dateAsYYYYMM(dateTime)}-01'));
     }
 
     List<DateTime> sorted = distinctMonths.toList()
@@ -198,7 +197,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       ${account != null ? "and (singleTransactionToAccount.account1_id = ${account.id} or singleTransactionToAccount.account2_id = ${account.id})" : ""}
       ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
       ''',
-      ['${inMonth.year}-${inMonth.month.toString().padLeft(2, '0')}%'],
+      ['${dateAsYYYYMM(inMonth)}%'],
     );
 
     List<SingleTransaction> transactions = [];

@@ -208,8 +208,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         if (isCurrentMonth(monthYear))
                           const Text('Current Month')
                         else
-                          Text(
-                              "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
+                          Text(dateAsYYYYMM(monthYear)),
                         Text(snapshot.data!.length.toString()),
                       ],
                     ),
