@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 
 class DatePicker extends StatefulWidget {
@@ -64,12 +65,5 @@ class _DatePickerState extends State<DatePicker> {
         }
       },
     );
-  }
-
-  /// Returns true if the two dates are on the same day ignoring the time.
-  bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
   }
 }
