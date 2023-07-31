@@ -41,13 +41,6 @@ class _AccountFormState extends State<AccountForm> {
   }
 
   @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    nameController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

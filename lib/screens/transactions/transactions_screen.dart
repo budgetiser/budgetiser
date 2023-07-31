@@ -26,7 +26,14 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  String title = 'Transactions';
+  final GlobalKey _futureBuilderKey = GlobalKey();
+  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
+
+  Account? _currentFilterAccount;
+  TransactionCategory? _currentFilterCategory;
+
+  List<Account> _accountList = <Account>[];
+  List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   @override
   void initState() {
@@ -51,15 +58,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     super.initState();
   }
-
-  final GlobalKey _futureBuilderKey = GlobalKey();
-  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
-
-  Account? _currentFilterAccount;
-  TransactionCategory? _currentFilterCategory;
-
-  List<Account> _accountList = <Account>[];
-  List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +148,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             },
           ),
         ],
-        title: Text(title),
+        title: const Text('Transactions'),
       ),
       drawer: const CreateDrawer(),
       body: FutureBuilder<List<DateTime>>(

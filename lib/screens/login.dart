@@ -9,7 +9,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // DatabaseHelper.instance.logout();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -23,7 +22,11 @@ class LoginScreen extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 15.0, right: 15.0, top: 15, bottom: 0),
+                  left: 15.0,
+                  right: 15.0,
+                  top: 15,
+                  bottom: 0,
+                ),
                 child: TextFormField(
                   autofocus: true,
                   controller: _passcodeController,
@@ -55,8 +58,9 @@ class LoginScreen extends StatelessWidget {
                 height: 50,
                 width: 250,
                 decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20)),
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: TextButton(
                   onPressed: () async {
                     final navigator = Navigator.of(
