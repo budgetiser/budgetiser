@@ -24,7 +24,6 @@ class AccountItemsWidget extends StatelessWidget {
               ),
             );
           }
-          print(snapshot.data!);
           return Container(
             height:
                 snapshot.data!.length * 95 + (snapshot.data!.length - 1) * 21,

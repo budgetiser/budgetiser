@@ -26,7 +26,7 @@ class _RecurringFormState extends State<RecurringForm> {
   var fixedIntervalAmountController = TextEditingController();
   IntervalUnit fixedPointOfTimeUnit = IntervalUnit.week;
   IntervalUnit fixedIntervalUnit = IntervalUnit.day;
-  DateTime? enddate;
+  DateTime? endDate;
   double repetitions = 1;
 
   final _formKey = GlobalKey<FormState>();
@@ -74,7 +74,7 @@ class _RecurringFormState extends State<RecurringForm> {
             widget.initialRecurringData.intervalAmount.toString();
         fixedIntervalUnit = widget.initialRecurringData.intervalUnit!;
       }
-      enddate = widget.initialRecurringData.endDate;
+      endDate = widget.initialRecurringData.endDate;
       repetitions = widget.initialRecurringData.repetitionAmount != null
           ? widget.initialRecurringData.repetitionAmount!.toDouble()
           : _getRecurringData().calculateNeededRepetitions().toDouble();
@@ -84,7 +84,7 @@ class _RecurringFormState extends State<RecurringForm> {
       fixedPointOfTimeAmountController.text = '1';
       fixedPointOfTimeUnit = IntervalUnit.week;
     }
-    enddate = _getRecurringData().calculateAndSetEndDate();
+    endDate = _getRecurringData().calculateAndSetEndDate();
   }
 
   @override
@@ -103,7 +103,7 @@ class _RecurringFormState extends State<RecurringForm> {
                   onDateChangedCallback: (date) {
                     setState(() {
                       startDate = date;
-                      enddate = _getRecurringData().calculateAndSetEndDate();
+                      endDate = _getRecurringData().calculateAndSetEndDate();
                       _callCallback();
                     });
                   },
@@ -140,7 +140,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     onChanged: (IntervalType? value) {
                       setState(() {
                         _selectedIntervalType = value!;
-                        enddate = _getRecurringData().calculateAndSetEndDate();
+                        endDate = _getRecurringData().calculateAndSetEndDate();
                         _callCallback();
                       });
                     },
@@ -159,7 +159,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       ),
                       onChanged: (string) {
                         setState(() {
-                          enddate =
+                          endDate =
                               _getRecurringData().calculateAndSetEndDate();
                           _callCallback();
                         });
@@ -181,7 +181,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (IntervalUnit? value) {
                         setState(() {
                           fixedPointOfTimeUnit = value!;
-                          enddate =
+                          endDate =
                               _getRecurringData().calculateAndSetEndDate();
                           _callCallback();
                         });
@@ -194,7 +194,7 @@ class _RecurringFormState extends State<RecurringForm> {
                     onChanged: (IntervalType? value) {
                       setState(() {
                         _selectedIntervalType = value!;
-                        enddate = _getRecurringData().calculateAndSetEndDate();
+                        endDate = _getRecurringData().calculateAndSetEndDate();
                         _callCallback();
                       });
                     },
@@ -213,7 +213,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       ),
                       onChanged: (string) {
                         setState(() {
-                          enddate =
+                          endDate =
                               _getRecurringData().calculateAndSetEndDate();
                           _callCallback();
                         });
@@ -235,7 +235,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (IntervalUnit? value) {
                         setState(() {
                           fixedIntervalUnit = value!;
-                          enddate =
+                          endDate =
                               _getRecurringData().calculateAndSetEndDate();
                           _callCallback();
                         });
@@ -255,7 +255,7 @@ class _RecurringFormState extends State<RecurringForm> {
                       onChanged: (string) {
                         repetitions = string;
                         setState(() {
-                          enddate =
+                          endDate =
                               _getRecurringData().calculateAndSetEndDate();
                           _callCallback();
                         });
@@ -266,7 +266,8 @@ class _RecurringFormState extends State<RecurringForm> {
                 Row(
                   children: [
                     Text(
-                        "Ends on: ${enddate != null ? enddate.toString().substring(0, 10) : ""}"),
+                      "Ends on: ${endDate != null ? endDate.toString().substring(0, 10) : ""}",
+                    ),
                   ],
                 ),
               ],
@@ -279,7 +280,7 @@ class _RecurringFormState extends State<RecurringForm> {
   void _onRecurringCheckboxClicked() {
     setState(() {
       isRecurring = !isRecurring;
-      enddate = _getRecurringData().calculateAndSetEndDate();
+      endDate = _getRecurringData().calculateAndSetEndDate();
       _callCallback();
     });
     if (isRecurring) {
@@ -315,7 +316,7 @@ class _RecurringFormState extends State<RecurringForm> {
           : _selectedIntervalType == IntervalType.fixedPointOfTime
               ? int.parse(fixedPointOfTimeAmountController.text)
               : int.parse(fixedIntervalAmountController.text),
-      endDate: enddate,
+      endDate: endDate,
       repetitionAmount: repetitions.toInt(),
     );
   }

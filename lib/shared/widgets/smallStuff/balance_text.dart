@@ -21,19 +21,6 @@ class _BalanceTextState extends State<BalanceText> {
   String currency = SettingsCurrencyHandler().defaultCurrency;
 
   @override
-  void initState() {
-    awaitFunction(); //call async function.
-    super.initState();
-  }
-
-  void awaitFunction() async {
-    final awaitedCurrency = await SettingsCurrencyHandler().getCurrency();
-    setState(() {
-      currency = awaitedCurrency;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.bodyMedium!;
     String prefix = '';
