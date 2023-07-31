@@ -86,12 +86,13 @@ class _CategoryFormState extends State<CategoryForm> {
                 ],
               ),
               ColorPickerWidget(
-                  initialSelectedColor: _color,
-                  onColorChangedCallback: (color) {
-                    setState(() {
-                      _color = color;
-                    });
-                  }),
+                initialSelectedColor: _color,
+                onColorChangedCallback: (color) {
+                  setState(() {
+                    _color = color;
+                  });
+                },
+              ),
               TextFormField(
                 controller: descriptionController,
                 keyboardType: TextInputType.multiline,

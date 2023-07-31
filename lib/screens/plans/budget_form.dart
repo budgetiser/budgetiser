@@ -12,7 +12,10 @@ import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
-  const BudgetForm({Key? key, this.budgetData}) : super(key: key);
+  const BudgetForm({
+    Key? key,
+    this.budgetData,
+  }) : super(key: key);
   final Budget? budgetData;
 
   @override
@@ -110,12 +113,13 @@ class _BudgetFormState extends State<BudgetForm> {
                 ],
               ),
               ColorPickerWidget(
-                  initialSelectedColor: _color,
-                  onColorChangedCallback: (color) {
-                    setState(() {
-                      _color = color;
-                    });
-                  }),
+                initialSelectedColor: _color,
+                onColorChangedCallback: (color) {
+                  setState(() {
+                    _color = color;
+                  });
+                },
+              ),
               Row(
                 children: [
                   Flexible(
@@ -184,23 +188,24 @@ class _BudgetFormState extends State<BudgetForm> {
             onPressed: () {
               if (widget.budgetData != null) {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ConfirmationDialog(
-                        title: 'Attention',
-                        description:
-                            "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
-                        onSubmitCallback: () {
-                          DatabaseHelper.instance
-                              .deleteBudget(widget.budgetData!.id);
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        onCancelCallback: () {
-                          Navigator.pop(context);
-                        },
-                      );
-                    });
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance
+                            .deleteBudget(widget.budgetData!.id);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
               } else {
                 Navigator.of(context).pop();
               }

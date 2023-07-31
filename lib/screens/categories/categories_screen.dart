@@ -17,7 +17,6 @@ class CategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Categories',
-          // style: Theme.of(context).textTheme.caption,
         ),
       ),
       drawer: const CreateDrawer(),
@@ -25,9 +24,9 @@ class CategoriesScreen extends StatelessWidget {
         stream: DatabaseHelper.instance.allCategoryStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<TransactionCategory> categoryList = snapshot.data!.toList();
-            // ignore: cascade_invocations
-            categoryList.sort((a, b) => a.name.compareTo(b.name));
+            List<TransactionCategory> categoryList = snapshot.data!
+              ..sort((a, b) => a.name.compareTo(b.name));
+
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: ListView.builder(
@@ -60,7 +59,10 @@ class CategoriesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const CategoryForm()));
+            MaterialPageRoute(
+              builder: (context) => const CategoryForm(),
+            ),
+          );
         },
         tooltip: 'New category',
         backgroundColor: Theme.of(context).colorScheme.primary,

@@ -10,7 +10,10 @@ import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {
-  const GroupForm({Key? key, this.initialGroup}) : super(key: key);
+  const GroupForm({
+    Key? key,
+    this.initialGroup,
+  }) : super(key: key);
 
   final Group? initialGroup;
 
@@ -158,12 +161,13 @@ class _GroupFormState extends State<GroupForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Group a = Group(
-                    name: nameController.text,
-                    icon: _icon ?? Icons.blur_on,
-                    color: _color,
-                    description: descriptionController.text,
-                    id: 0,
-                    transactionCategories: _categories);
+                  name: nameController.text,
+                  icon: _icon ?? Icons.blur_on,
+                  color: _color,
+                  description: descriptionController.text,
+                  id: 0,
+                  transactionCategories: _categories,
+                );
                 if (widget.initialGroup != null) {
                   a.id = widget.initialGroup!.id;
                   DatabaseHelper.instance.updateGroup(a);
