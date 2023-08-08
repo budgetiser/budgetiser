@@ -86,6 +86,7 @@ List<TransactionCategory> getCategoryList() {
     id++;
   }
 
+  addCategory('Snacks', Icons.fastfood);
   addCategory('Salary', Icons.attach_money);
   addCategory('Business Income', Icons.business);
   addCategory('Commissions', Icons.trending_up);
@@ -124,7 +125,6 @@ List<TransactionCategory> getCategoryList() {
 
   addCategory('Groceries', Icons.shopping_cart);
   addCategory('Take Aways', Icons.food_bank);
-  addCategory('Snacks', Icons.fastfood);
 
   addCategory('Daycare', Icons.child_care);
   addCategory('Extracurricular Activities', Icons.sports_soccer);
@@ -189,8 +189,9 @@ List<SingleTransaction> getTransactionList() {
     int categoryIndex,
     int accountIndex,
     int daysMinus,
-    String description,
-  ) {
+    String description, {
+    int? account2index,
+  }) {
     list.add(
       SingleTransaction(
         id: id,
@@ -200,6 +201,9 @@ List<SingleTransaction> getTransactionList() {
             TMP_DATA_categoryList[categoryIndex % TMP_DATA_categoryList.length],
         account:
             TMP_DATA_accountList[accountIndex % TMP_DATA_accountList.length],
+        account2: account2index != null
+            ? TMP_DATA_accountList[account2index % TMP_DATA_accountList.length]
+            : null,
         date: DateTime.now().subtract(
           Duration(days: daysMinus),
         ),
@@ -227,9 +231,9 @@ List<SingleTransaction> getTransactionList() {
   addTransaction('Grocery Shopping', -70, 31, 0, 5, '');
   addTransaction('Haircut', -25, 45, 2, 7, '');
   addTransaction('Movie Tickets', -40, 22, 1, 8, '');
-  addTransaction('Pet Grooming', -35, 49, 3, 4, '');
+  addTransaction('Pet Grooming', -35, 49, 4, 4, '');
   addTransaction('Gift Shop', -15, 39, 0, 6, '');
-  addTransaction('Home Decor', -80, 29, 2, 9, '');
+  addTransaction('Home Decor', -80, 29, 4, 9, '');
   addTransaction('Mobile Recharge', -20, 49, 1, 3, '');
   addTransaction('Fitness Class', -50, 37, 0, 2, '');
   addTransaction('Tech Accessories', -60, 32, 2, 1, '');
@@ -241,10 +245,10 @@ List<SingleTransaction> getTransactionList() {
   addTransaction('Online Course', -50, 14, 3, 20, '');
   addTransaction('Business Trip', -250, 12, 1, 25, '');
   addTransaction('Charity Donation', -30, 40, 0, 27, '');
-  addTransaction('Pet Supplies', -40, 50, 2, 30, '');
+  addTransaction('Pet Supplies', -40, 50, 4, 30, '');
   addTransaction('Home Repairs', -120, 28, 3, 28, '');
   addTransaction('Coffee Shop', -15, 22, 1, 29, '');
-  addTransaction('Subscription Renewal', -10, 23, 0, 26, '');
+  addTransaction('Subscription Renewal', -10, 23, 4, 26, '');
   addTransaction('New Phone', -500, 32, 1, 23, '');
   addTransaction('Tax Payment', -180, 27, 2, 22, '');
   addTransaction('Music Concert', -100, 22, 3, 18, '');
@@ -259,6 +263,12 @@ List<SingleTransaction> getTransactionList() {
   addTransaction('Grooming', -20, 46, 3, 21, '');
   addTransaction('SPA', -150, 47, 0, 20, '');
   addTransaction('Clothing', -70, 48, 1, 19, '');
+
+  addTransaction('Charge', 100, 0, 1, 40, '', account2index: 5);
+  for (int i = 4; i < 30; i += 2) {
+    addTransaction('Cafeteria', -Random().nextDouble() * 5, 0, 5, i, '');
+  }
+
   return list;
 }
 
