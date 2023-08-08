@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 /// * optional [SingleTransaction] - edit this transaction
 /// * optional [initialBalance] - set initial balance
 /// * optional [SingleTransaction] - set initial selected account
-
 class TransactionForm extends StatefulWidget {
   const TransactionForm({
     Key? key,
@@ -89,22 +88,6 @@ class _TransactionFormState extends State<TransactionForm> {
     updateWasValueNegative(valueController.text);
 
     super.initState();
-  }
-
-  void setAccount(Account a) {
-    if (mounted) {
-      setState(() {
-        selectedAccount = a;
-      });
-    }
-  }
-
-  void setAccount2(Account a) {
-    if (mounted) {
-      setState(() {
-        selectedAccount2 = a;
-      });
-    }
   }
 
   @override
@@ -197,6 +180,34 @@ class _TransactionFormState extends State<TransactionForm> {
         ],
       ),
     );
+  }
+
+  void setAccount(Account a) {
+    if (mounted) {
+      setState(() {
+        selectedAccount = a;
+      });
+    }
+  }
+
+  void setAccount2(Account a) {
+    if (mounted) {
+      setState(() {
+        selectedAccount2 = a;
+      });
+    }
+  }
+
+  void _onAccount2checkboxClicked() {
+    setState(() {
+      hasAccount2 = !hasAccount2;
+      if (hasAccount2) {
+        changePrefix(EnumPrefix.plus);
+      } else {
+        selectedAccount2 = null;
+      }
+    });
+    _valueKey.currentState?.validate();
   }
 
   Form _transactionFormWidget(BuildContext context) {
@@ -515,17 +526,5 @@ class _TransactionFormState extends State<TransactionForm> {
     // move cursor to the end
     valueController.selection =
         TextSelection.collapsed(offset: valueController.text.length);
-  }
-
-  void _onAccount2checkboxClicked() {
-    setState(() {
-      hasAccount2 = !hasAccount2;
-      if (hasAccount2) {
-        changePrefix(EnumPrefix.plus);
-      } else {
-        selectedAccount2 = null;
-      }
-    });
-    _valueKey.currentState?.validate();
   }
 }
