@@ -19,10 +19,10 @@ class Group {
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
+        'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'description': description,
+        'description': description.trim(),
       };
 
   Map<String, dynamic> toJsonMap() {

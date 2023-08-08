@@ -50,6 +50,7 @@ class AccountItem extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => TransactionForm(
                                   initialSelectedAccount: accountData,
+                                  initialBalance: '',
                                 ),
                               ),
                             );
