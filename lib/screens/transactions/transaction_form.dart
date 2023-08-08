@@ -9,7 +9,7 @@ import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +54,7 @@ class _TransactionFormState extends State<TransactionForm> {
       true; // remembering if value was negative to display the correct prefix button when value field is not valid
 
   final _formKey = GlobalKey<FormState>();
+  final _valueKey = GlobalKey<FormState>();
 
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
@@ -108,7 +109,6 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: hasInitialData
@@ -116,200 +116,14 @@ class _TransactionFormState extends State<TransactionForm> {
             : const Text('New Transaction'),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: selectedAccount2 != null
-            ? _visualizeTwoAccountTransaction()
-            : _visualizeOneAccountTransaction(),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // prefix-button, value & date input
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 70,
-                    child: IconButton(
-                      icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
-                      onPressed: () {
-                        changePrefix(EnumPrefix.other);
-                      },
-                      color: wasValueNegative
-                          ? const Color.fromARGB(255, 174, 74, 99)
-                          : const Color.fromARGB(239, 29, 129, 37),
-                      splashRadius: 24,
-                      iconSize: 48,
-                    ),
-                  ),
-                  Flexible(
-                    child: TextFormField(
-                      controller: valueController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: 'Value',
-                      ),
-                      onChanged: (value) {
-                        // _formKey.currentState!.validate();
-                        updateWasValueNegative(value);
-                        // to update the visualization
-                        setState(() {});
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a value';
-                        }
-                        try {
-                          if (valueParser.evaluate(value) < 0 && hasAccount2) {
-                            return 'Only positive values with two accounts';
-                          }
-                          if (valueParser.evaluate(value) == double.infinity ||
-                              valueParser.evaluate(value) == -double.infinity) {
-                            return 'Please enter a valid number';
-                          }
-                        } catch (e) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Flexible(
-                    child: DatePicker(
-                      label: 'Date',
-                      initialDate: transactionDate,
-                      onDateChangedCallback: (date) {
-                        setState(() {
-                          transactionDate = date;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              // title input
-              const SizedBox(height: 20),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-                controller: titleController,
-                // initialValue: widget.initialName,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                ),
-              ),
-              // account picker
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        'Account',
-                        textAlign: TextAlign.left,
-                        style: themeData.inputDecorationTheme.labelStyle != null
-                            ? themeData.inputDecorationTheme.labelStyle!
-                                .copyWith(fontSize: 16)
-                            : const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SelectAccount(
-                        initialAccount: selectedAccount, callback: setAccount),
-                    InkWell(
-                      customBorder: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      onTap: () {
-                        _onAccount2checkboxClicked();
-                      },
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: hasAccount2,
-                            onChanged: (bool? newValue) {
-                              _onAccount2checkboxClicked();
-                            },
-                          ),
-                          const Flexible(
-                            child: Text(
-                              'transfer to another account',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (hasAccount2)
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('to '),
-                          Flexible(
-                            child: SelectAccount(
-                              initialAccount: selectedAccount2,
-                              callback: setAccount2,
-                              blackListAccountId: selectedAccount?.id,
-                            ),
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
-              // category picker
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        'Category',
-                        textAlign: TextAlign.left,
-                        style: themeData.inputDecorationTheme.labelStyle != null
-                            ? themeData.inputDecorationTheme.labelStyle!
-                                .copyWith(fontSize: 16)
-                            : const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SelectCategory(
-                      initialCategory: selectedCategory,
-                      callback: (TransactionCategory c) {
-                        setState(() {
-                          if (mounted) {
-                            selectedCategory = c;
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              // notes input
-              const SizedBox(height: 16),
-              Theme(
-                data: Theme.of(context).copyWith(
-                  dividerColor: Colors.transparent,
-                ),
-                child: TextFormField(
-                  controller: descriptionController,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    labelText: 'Notes',
-                    alignLabelWithHint: true,
-                  ),
-                ),
-              ),
-            ],
-          ),
+        deadSpaceContent: VisualizeTransaction(
+          account1: selectedAccount,
+          account2: selectedAccount2,
+          category: selectedCategory,
+          wasNegative: wasValueNegative,
+          value: tryValueParse(valueController.text),
         ),
+        child: _transactionFormWidget(context),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -355,24 +169,229 @@ class _TransactionFormState extends State<TransactionForm> {
           // Save button
           FloatingActionButton.extended(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
+              _valueKey.currentState!
+                  .validate(); // will otherwise not be called if global form is also invalid
+              if (_formKey.currentState!.validate() &&
+                  _valueKey.currentState!.validate()) {
                 if (hasInitialData) {
-                  DatabaseHelper.instance
-                      .updateSingleTransaction(_currentTransaction());
+                  DatabaseHelper.instance.updateSingleTransaction(
+                    _currentTransaction(),
+                  );
                   Navigator.of(context).pop();
                 } else {
-                  DatabaseHelper.instance
-                      .createSingleTransaction(_currentTransaction());
+                  DatabaseHelper.instance.createSingleTransaction(
+                    _currentTransaction(),
+                  );
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const TransactionsScreen(),
-                      ),
-                      (Route<dynamic> route) => false);
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionsScreen(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
                 }
               }
             },
             label: const Text('Save'),
             icon: const Icon(Icons.save),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Form _transactionFormWidget(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          // prefix-button, value & date input
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 70,
+                child: IconButton(
+                  icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
+                  onPressed: () {
+                    changePrefix(EnumPrefix.other);
+                  },
+                  color: wasValueNegative
+                      ? const Color.fromARGB(255, 174, 74, 99)
+                      : const Color.fromARGB(239, 29, 129, 37),
+                  splashRadius: 24,
+                  iconSize: 48,
+                ),
+              ),
+              Flexible(
+                child: Form(
+                  key: _valueKey,
+                  child: TextFormField(
+                    controller: valueController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Value',
+                    ),
+                    onChanged: (value) {
+                      if (tryValueParse(valueController.text) != null) {
+                        _valueKey.currentState!.validate();
+                      }
+                      updateWasValueNegative(value);
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a value';
+                      }
+                      try {
+                        if (valueParser.evaluate(value) < 0 && hasAccount2) {
+                          return 'Only positive values with two accounts';
+                        }
+                        if (valueParser.evaluate(value) == double.infinity ||
+                            valueParser.evaluate(value) == -double.infinity) {
+                          return 'Please enter a valid number';
+                        }
+                      } catch (e) {
+                        return 'Please enter a valid number';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Flexible(
+                child: DatePicker(
+                  label: 'Date',
+                  initialDate: transactionDate,
+                  onDateChangedCallback: (date) {
+                    setState(() {
+                      transactionDate = date;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          // title input
+          const SizedBox(height: 20),
+          TextFormField(
+            onChanged: (value) {
+              setState(() {});
+            },
+            controller: titleController,
+            // initialValue: widget.initialName,
+            decoration: InputDecoration(
+              labelText: titleController.text == ''
+                  ? 'Title: ${selectedCategory?.name}'
+                  : 'Title',
+            ),
+          ),
+          // account picker
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    'Account',
+                    textAlign: TextAlign.left,
+                    style: themeData.inputDecorationTheme.labelStyle != null
+                        ? themeData.inputDecorationTheme.labelStyle!
+                            .copyWith(fontSize: 16)
+                        : const TextStyle(fontSize: 16),
+                  ),
+                ),
+                SelectAccount(
+                  initialAccount: selectedAccount,
+                  callback: setAccount,
+                ),
+                InkWell(
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onTap: () {
+                    _onAccount2checkboxClicked();
+                  },
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: hasAccount2,
+                        onChanged: (bool? newValue) {
+                          _onAccount2checkboxClicked();
+                        },
+                      ),
+                      const Flexible(
+                        child: Text(
+                          'transfer to another account',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (hasAccount2)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text('to '),
+                      Flexible(
+                        child: SelectAccount(
+                          initialAccount: selectedAccount2,
+                          callback: setAccount2,
+                          blackListAccountId: selectedAccount?.id,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          // category picker
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    'Category',
+                    textAlign: TextAlign.left,
+                    style: themeData.inputDecorationTheme.labelStyle != null
+                        ? themeData.inputDecorationTheme.labelStyle!
+                            .copyWith(fontSize: 16)
+                        : const TextStyle(fontSize: 16),
+                  ),
+                ),
+                SelectCategory(
+                  initialCategory: selectedCategory,
+                  callback: (TransactionCategory c) {
+                    setState(() {
+                      if (mounted) {
+                        selectedCategory = c;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          // notes input
+          const SizedBox(height: 16),
+          Theme(
+            data: Theme.of(context).copyWith(
+              dividerColor: Colors.transparent,
+            ),
+            child: TextFormField(
+              controller: descriptionController,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                labelText: 'Notes',
+                alignLabelWithHint: true,
+              ),
+            ),
           ),
         ],
       ),
@@ -385,80 +404,6 @@ class _TransactionFormState extends State<TransactionForm> {
     } catch (e) {
       return null;
     }
-  }
-
-  Widget _visualizeTwoAccountTransaction() {
-    if (selectedAccount == null ||
-        selectedAccount2 == null ||
-        selectedCategory == null) {
-      return const SizedBox();
-    }
-    double? value = tryValueParse(valueController.text);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            clickableAccountIcon(selectedAccount!),
-            const Icon(Icons.arrow_right_alt, size: 60),
-            Icon(
-              selectedCategory!.icon,
-              color: selectedCategory!.color,
-              size: 40,
-            ),
-            const Icon(Icons.arrow_right_alt, size: 60),
-            clickableAccountIcon(selectedAccount2!),
-          ],
-        ),
-        if (value != null && value >= 0)
-          BalanceText(
-            value,
-            hasPrefix: false,
-          ),
-      ],
-    );
-  }
-
-  Widget _visualizeOneAccountTransaction() {
-    if (selectedAccount == null || selectedCategory == null) {
-      return const SizedBox();
-    }
-    double? value = tryValueParse(valueController.text);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              clickableAccountIcon(selectedAccount!),
-              (value != null && value >= 0)
-                  ? Transform.rotate(
-                      // rotate by pi to flip the arrow
-                      angle: 3.14,
-                      child: const Icon(
-                        Icons.arrow_right_alt,
-                        size: 60,
-                      ),
-                    )
-                  : const Icon(Icons.arrow_right_alt, size: 60),
-              Icon(
-                selectedCategory!.icon,
-                color: selectedCategory!.color,
-                size: 40,
-              ),
-            ],
-          ),
-          if (value != null)
-            BalanceText(
-              value,
-              hasPrefix: false,
-            ),
-        ],
-      ),
-    );
   }
 
   InkWell clickableAccountIcon(Account account) {
@@ -493,10 +438,15 @@ class _TransactionFormState extends State<TransactionForm> {
       description = descriptionController.text.trim();
     }
 
+    String title = titleController.text.trim();
+    if (title == '') {
+      title = selectedCategory!.name;
+    }
+
     SingleTransaction transaction;
     transaction = SingleTransaction(
       id: 0,
-      title: titleController.text.trim(),
+      title: title,
       value: double.parse(
           valueParser.evaluate(valueController.text).toStringAsFixed(2)),
       category: selectedCategory!,
@@ -515,8 +465,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void updateWasValueNegative(String newValue) {
     setState(() {
-      if (valueController.text == '') {
+      if (valueController.text.trim() == '') {
         wasValueNegative = false;
+      }
+      if (valueController.text.trim() == '-') {
+        wasValueNegative = true;
       }
       if (tryValueParse(valueController.text) != null) {
         wasValueNegative = tryValueParse(valueController.text)! < 0;
@@ -558,6 +511,7 @@ class _TransactionFormState extends State<TransactionForm> {
           break;
       }
     });
+    updateWasValueNegative(valueController.text);
     // move cursor to the end
     valueController.selection =
         TextSelection.collapsed(offset: valueController.text.length);
@@ -572,5 +526,6 @@ class _TransactionFormState extends State<TransactionForm> {
         selectedAccount2 = null;
       }
     });
+    _valueKey.currentState?.validate();
   }
 }
