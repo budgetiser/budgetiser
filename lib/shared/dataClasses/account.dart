@@ -18,11 +18,11 @@ class Account {
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
+        'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
         'balance': balance,
-        'description': description,
+        'description': description.trim(),
       };
 
   Map<String, dynamic> toJsonMap() {

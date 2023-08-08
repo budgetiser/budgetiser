@@ -31,8 +31,9 @@ class LinearProgressBar extends StatelessWidget {
   List<Color> createGradient(Color baseColor) {
     List<Color> gradient = [];
     for (double opacity = 0.4; opacity <= 1.0; opacity += 0.1) {
-      gradient.add(Color.fromRGBO(
-          baseColor.red, baseColor.green, baseColor.blue, opacity));
+      gradient.add(
+        Color.fromRGBO(baseColor.red, baseColor.green, baseColor.blue, opacity),
+      );
     }
     return gradient;
   }

@@ -6,7 +6,38 @@ import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// enum currencySymbol { dollar, pound, euro, yen, rupee, bitcoin, ethereum } //TODO:
+enum CurrencySymbol {
+  dollar,
+  pound,
+  euro,
+  yen,
+  rupee,
+  peso,
+  bitcoin,
+  ethereum;
+
+  @override
+  String toString() {
+    switch (this) {
+      case CurrencySymbol.dollar:
+        return '\$';
+      case CurrencySymbol.pound:
+        return '£';
+      case CurrencySymbol.euro:
+        return '€';
+      case CurrencySymbol.yen:
+        return '¥';
+      case CurrencySymbol.peso:
+        return '₱';
+      case CurrencySymbol.rupee:
+        return '₹';
+      case CurrencySymbol.bitcoin:
+        return '₿';
+      case CurrencySymbol.ethereum:
+        return 'Ξ';
+    }
+  }
+}
 
 class SettingsScreen extends StatefulWidget {
   static String routeID = 'settings';
@@ -20,7 +51,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _selectedDarkModeValue;
-  String _selectedCurrency = '€';
+  String _selectedCurrency = CurrencySymbol.euro.toString();
 
   @override
   void initState() {
@@ -116,9 +147,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: TextStyle(fontSize: 16.0),
                           ),
                         ),
-                        currencyRadioItem(context, currencySymbol: '€'),
-                        currencyRadioItem(context, currencySymbol: '\$'),
-                        currencyRadioItem(context, currencySymbol: '£'),
+                        for (var value in CurrencySymbol.values)
+                          currencyRadioItem(
+                            context,
+                            currencySymbol: value.toString(),
+                          ),
                       ],
                     );
                   },

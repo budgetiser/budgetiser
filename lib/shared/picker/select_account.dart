@@ -53,8 +53,12 @@ class _SelectAccountState extends State<SelectAccount> {
         int? accountId =
             await recentlyUsedAccount.getLastUsed().then((value) => value?.id);
         if (accountId != null) {
-          _selectedAccount = _filteredAccounts
-              .firstWhere((element) => element.id == accountId);
+          try {
+            _selectedAccount = _filteredAccounts
+                .firstWhere((element) => element.id == accountId);
+          } catch (e) {
+            // recently used not in filtered accounts (e.g. when blacklisted)
+          }
         }
       }
       if (mounted && _selectedAccount != null) {
@@ -72,7 +76,7 @@ class _SelectAccountState extends State<SelectAccount> {
       errorText = 'Create 2nd account';
     }
 
-    if (_accounts.isEmpty || _filteredAccounts.isEmpty) {
+    if (_filteredAccounts.isEmpty) {
       return Center(
         child: FloatingActionButton.extended(
           heroTag: null,
@@ -87,6 +91,15 @@ class _SelectAccountState extends State<SelectAccount> {
           extendedTextStyle: const TextStyle(fontSize: 18),
         ),
       );
+    }
+    _filteredAccounts = _accounts
+        .where((element) => element.id != widget.blackListAccountId)
+        .toList();
+    if (mounted && !_filteredAccounts.contains(_selectedAccount)) {
+      _selectedAccount = _filteredAccounts.first;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.callback(_selectedAccount!);
+      });
     }
 
     return ButtonTheme(

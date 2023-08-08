@@ -4,6 +4,7 @@ import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
@@ -25,7 +26,14 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  String title = 'Transactions';
+  final GlobalKey _futureBuilderKey = GlobalKey();
+  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
+
+  Account? _currentFilterAccount;
+  TransactionCategory? _currentFilterCategory;
+
+  List<Account> _accountList = <Account>[];
+  List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   @override
   void initState() {
@@ -50,15 +58,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     super.initState();
   }
-
-  final GlobalKey _futureBuilderKey = GlobalKey();
-  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
-
-  Account? _currentFilterAccount;
-  TransactionCategory? _currentFilterCategory;
-
-  List<Account> _accountList = <Account>[];
-  List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +148,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             },
           ),
         ],
-        title: Text(title),
+        title: const Text('Transactions'),
       ),
       drawer: const CreateDrawer(),
       body: FutureBuilder<List<DateTime>>(
@@ -195,23 +194,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  bool isCurrentMonth =
-                      DateTime.now().month == monthYear.month &&
-                          DateTime.now().year == monthYear.year;
                   if (snapshot.data!.isEmpty) return Container();
                   return ExpansionTile(
                     backgroundColor: Theme.of(context).dividerTheme.color,
                     collapsedBackgroundColor:
                         Theme.of(context).dividerTheme.color,
-                    initiallyExpanded: isCurrentMonth,
+                    initiallyExpanded: isCurrentMonth(monthYear),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (isCurrentMonth)
+                        if (isCurrentMonth(monthYear))
                           const Text('Current Month')
                         else
-                          Text(
-                              "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
+                          Text(dateAsYYYYMM(monthYear)),
                         Text(snapshot.data!.length.toString()),
                       ],
                     ),
