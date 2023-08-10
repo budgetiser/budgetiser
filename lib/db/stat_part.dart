@@ -49,16 +49,14 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
     Map<Account, List<Map<DateTime, double>>> result = {};
-    print("===");
-    print('getting data for $accounts');
     await Future.forEach(accounts, (account) async {
-      final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
-        // TODO
-        '''SELECT balance 
-        FROM account
-        WHERE account.id = ?''',
-        [account.id],
+      final List<Map<String, dynamic>> balanceMaps = await db.query(
+        'account',
+        columns: ['balance'],
+        where: 'id=?',
+        whereArgs: [account.id],
       );
+
       double balance = balanceMaps[0]['balance'];
       double startBalance = balance;
       double endBalance = balance;
@@ -73,7 +71,6 @@ extension DatabaseExtensionStat on DatabaseHelper {
         ORDER BY singleTransaction.date DESC''',
         [account.id, startString],
       );
-      print("db $transactionMaps");
       List<Map<DateTime, double>> temp = [];
       for (var element in transactionMaps) {
         if (endString.compareTo(element['date']) <= 0) {
@@ -103,7 +100,6 @@ extension DatabaseExtensionStat on DatabaseHelper {
         result[account] = temp;
       }
     });
-    print('result of db call: $result');
     return result;
   }
 
