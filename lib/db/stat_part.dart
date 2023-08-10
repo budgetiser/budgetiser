@@ -71,35 +71,43 @@ extension DatabaseExtensionStat on DatabaseHelper {
         ORDER BY singleTransaction.date DESC''',
         [account.id, startString],
       );
-      List<Map<DateTime, double>> temp = [];
+      List<Map<DateTime, double>> singleAccountResult = [];
+
       for (var element in transactionMaps) {
         if (endString.compareTo(element['date']) <= 0) {
           balance = balance - element['value'];
           endBalance = balance;
         } else {
-          temp.add({
+          singleAccountResult.add({
             DateTime.parse(element['date']): _roundDouble(balance),
           });
           balance = balance - element['value'];
-          startBalance = balance;
         }
       }
-      if (temp.isNotEmpty &&
+      startBalance = balance;
+
+      if (singleAccountResult.isNotEmpty &&
           endString.compareTo(transactionMaps.first['date']) != 0) {
-        temp.insert(0, {
-          endDate: _roundDouble(endBalance),
+        singleAccountResult.insert(0, {
+          endDate: _roundDouble(endBalance), //TODO
         });
       }
-      if (temp.isNotEmpty &&
+      if (singleAccountResult.isNotEmpty &&
           startString.compareTo(transactionMaps.last['date']) != 0) {
-        temp.add({
+        singleAccountResult.add({
           startDate: _roundDouble(startBalance),
         });
       }
-      if (temp.isNotEmpty) {
-        result[account] = temp;
+
+      if (singleAccountResult.isEmpty) {
+        singleAccountResult = [
+          {startDate: _roundDouble(startBalance)},
+          {endDate: _roundDouble(endBalance)},
+        ];
       }
+      result[account] = singleAccountResult;
     });
+    // print(result);
     return result;
   }
 

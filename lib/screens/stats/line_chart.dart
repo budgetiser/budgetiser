@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -94,7 +96,7 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                 minValue = 0;
               }
 
-              double spread = maxValue! - minValue!;
+              double spread = max(maxValue! - minValue!, 1);
               return LineChart(
                 LineChartData(
                   gridData: FlGridData(
@@ -136,7 +138,7 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        interval: (spread / 10).roundToDouble(),
+                        interval: max((spread / 10).roundToDouble(), 1),
                         reservedSize: 70,
                         getTitlesWidget: (value, meta) {
                           if (value == meta.max || value == meta.min) {
