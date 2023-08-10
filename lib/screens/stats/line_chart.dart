@@ -128,10 +128,10 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                         reservedSize: 30,
                         interval: 5,
                         getTitlesWidget: (value, meta) {
-                          if (value == meta.max) {
-                            return Container();
+                          if (value.remainder(5) == 0 || value == 1) {
+                            return Text(meta.formattedValue);
                           }
-                          return Text(meta.formattedValue);
+                          return Container();
                         },
                       ),
                     ),
@@ -154,7 +154,7 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                     border: Border.all(color: const Color(0xff37434d)),
                   ),
                   minX: 1,
-                  maxX: 31,
+                  maxX: widget.endDate.day.toDouble(),
                   minY: minValue! - spread * 0.1,
                   maxY: maxValue! + spread * 0.1,
                   lineBarsData: snapshot.data!.entries
