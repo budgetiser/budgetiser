@@ -22,70 +22,70 @@ extension DatabaseExtensionStat on DatabaseHelper {
   }
 
   /// Get current balance of account
-  Future<double> getCurrentAccountBalance(
-      Account account) async {
+  Future<double> getCurrentAccountBalance(Account account) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT balance 
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT balance 
         FROM account
-        WHERE account.id = ?''',
-        [account.id]);
-    return maps[0]["balance"];
+        WHERE account.id = ?''', [account.id]);
+    return maps[0]['balance'];
   }
 
   /// Get Account Balances in date range
   Future<Map<Account, List<Map<String, dynamic>>>> getAccountBalancesAtTime(
-      List<Account> accounts, DateTime start, DateTime end) async {
+    List<Account> accounts,
+    DateTime start,
+    DateTime end,
+  ) async {
     final db = await database;
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
     Map<Account, List<Map<String, dynamic>>> result = {};
     accounts.forEach((account) async {
-      final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
-          '''SELECT balance 
+      final List<Map<String, dynamic>> balanceMaps =
+          await db.rawQuery('''SELECT balance 
         FROM account
-        WHERE account.id = ?''',
-          [account.id]);
-      double balance = balanceMaps[0]["balance"];
+        WHERE account.id = ?''', [account.id]);
+      double balance = balanceMaps[0]['balance'];
       double startBalance = balance;
       double endBalance = balance;
 
-      final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
-          '''SELECT SUM(value) as value, date 
+      final List<Map<String, dynamic>> transactionMaps =
+          await db.rawQuery('''SELECT SUM(value) as value, date 
         FROM singleTransaction, singleTransactionToAccount 
         WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
         AND account1_id = ?
         AND singleTransaction.date >= ?
         GROUP BY date
-        ORDER BY singleTransaction.date DESC''',
-          [account.id, startString]);
+        ORDER BY singleTransaction.date DESC''', [account.id, startString]);
       List<Map<String, dynamic>> temp = [];
       for (var element in transactionMaps) {
-        if (endString.compareTo(element["date"]) <= 0){
-          balance = balance - element["value"];
+        if (endString.compareTo(element['date']) <= 0) {
+          balance = balance - element['value'];
           endBalance = balance;
-        }else {
+        } else {
           temp.add({
-            "value": double.parse((balance).toStringAsFixed(1)),
-            "date": element["date"]
+            'value': double.parse((balance).toStringAsFixed(1)),
+            'date': element['date']
           });
-          balance = balance - element["value"];
+          balance = balance - element['value'];
           startBalance = balance;
         }
       }
-      if(temp.isNotEmpty && endString.compareTo(transactionMaps.first["date"]) != 0){
+      if (temp.isNotEmpty &&
+          endString.compareTo(transactionMaps.first['date']) != 0) {
         temp.insert(0, {
-          "value": double.parse((endBalance).toStringAsFixed(1)),
-          "date": endString
+          'value': double.parse((endBalance).toStringAsFixed(1)),
+          'date': endString
         });
       }
-      if(temp.isNotEmpty && startString.compareTo(transactionMaps.last["date"]) != 0){
+      if (temp.isNotEmpty &&
+          startString.compareTo(transactionMaps.last['date']) != 0) {
         temp.add({
-          "value": double.parse((startBalance).toStringAsFixed(1)),
-          "date": startString
+          'value': double.parse((startBalance).toStringAsFixed(1)),
+          'date': startString
         });
       }
-      if (temp.isNotEmpty){
+      if (temp.isNotEmpty) {
         result[account] = temp;
       }
     });
@@ -94,7 +94,11 @@ extension DatabaseExtensionStat on DatabaseHelper {
 
   /// Get all transactions in a category and account
   Future<List<Map<String, dynamic>>> getTransactions(
-      Account account, TransactionCategory transactionCategory, DateTime start, DateTime end) async {
+    Account account,
+    TransactionCategory transactionCategory,
+    DateTime start,
+    DateTime end,
+  ) async {
     final db = await database;
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
