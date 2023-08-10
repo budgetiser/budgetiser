@@ -40,8 +40,9 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
     Map<Account, List<Map<String, dynamic>>> result = {};
-    print('getting data ${accounts}');
-    accounts.forEach((account) async {
+    print("===");
+    print('getting data for $accounts');
+    await Future.forEach(accounts, (account) async {
       final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
         '''SELECT balance 
         FROM account
@@ -52,14 +53,17 @@ extension DatabaseExtensionStat on DatabaseHelper {
       double startBalance = balance;
       double endBalance = balance;
 
-      final List<Map<String, dynamic>> transactionMaps =
-          await db.rawQuery('''SELECT SUM(value) as value, date 
+      final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
+        '''SELECT SUM(value) as value, date 
         FROM singleTransaction, singleTransactionToAccount 
         WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
         AND account1_id = ?
         AND singleTransaction.date >= ?
         GROUP BY date
-        ORDER BY singleTransaction.date DESC''', [account.id, startString]);
+        ORDER BY singleTransaction.date DESC''',
+        [account.id, startString],
+      );
+      print("db $transactionMaps");
       List<Map<String, dynamic>> temp = [];
       for (var element in transactionMaps) {
         if (endString.compareTo(element['date']) <= 0) {
@@ -92,7 +96,7 @@ extension DatabaseExtensionStat on DatabaseHelper {
         result[account] = temp;
       }
     });
-    print(result);
+    print('result of db call: $result');
     return result;
   }
 

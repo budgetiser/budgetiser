@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 class GeneralMultiPicker<T extends Selectable> extends StatefulWidget {
   const GeneralMultiPicker({
     Key? key,
-    // this.initialSelected,
     required this.heading,
     required this.callback,
     required this.allValues,
   }) : super(key: key);
-  // final List<T>? initialSelected;
   final String heading;
   final Function(List<T> selected) callback;
   final List<T> allValues;
@@ -24,12 +22,6 @@ class _GeneralMultiPickerState<T extends Selectable>
 
   @override
   void initState() {
-    // print('init selected: $_selectedValues');
-    // TODO: with stats init state is only called once. initSelected needed?
-    // DatabaseHelper.instance.pushGetAllAccountsStream();
-    // if (widget.initialSelected != null) {
-    //   _selectedValues = widget.initialSelected!.cast<T>();
-    // }
     super.initState();
   }
 

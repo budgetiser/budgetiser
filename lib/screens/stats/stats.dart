@@ -2,7 +2,7 @@ import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/stats/line_chart.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/account_picker.dart';
-import 'package:budgetiser/shared/picker/monthPicker.dart';
+import 'package:budgetiser/shared/picker/month_picker.dart';
 import 'package:flutter/material.dart';
 
 class Stats extends StatefulWidget {
@@ -57,7 +57,7 @@ class _StatsState extends State<Stats> {
             ),
             const SizedBox(height: 16),
             if (_selectedAccounts != null)
-              LineChartTest(
+              LineChartAccounts(
                 accounts: _selectedAccounts!,
                 startDate: DateTime(startDate.year, startDate.month, 1),
                 endDate: DateTime(startDate.year, startDate.month + 1, 0),
