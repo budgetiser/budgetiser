@@ -6,7 +6,10 @@ extension DatabaseExtensionStat on DatabaseHelper {
       Account account, TransactionCategory transactionCategory) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT SUM(value) as value FROM singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and account1_id = ? and category_id = ?',
+        '''SELECT SUM(value) as value 
+        FROM singleTransaction, singleTransactionToAccount 
+        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
+        AND account1_id = ? and category_id = ?''',
         [account.id, transactionCategory.id]);
     return maps[0]['value'] ?? 0.0;
   }
@@ -16,7 +19,10 @@ extension DatabaseExtensionStat on DatabaseHelper {
       Account account, TransactionCategory transactionCategory) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT COUNT(*) as count FROM singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and account1_id = ? and category_id = ?',
+        '''SELECT COUNT(*) as count 
+        FROM singleTransaction, singleTransactionToAccount 
+        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
+        AND account1_id = ? and category_id = ?''',
         [account.id, transactionCategory.id]);
     return maps[0]['count'];
   }
@@ -24,14 +30,17 @@ extension DatabaseExtensionStat on DatabaseHelper {
   /// Get current balance of account
   Future<double> getCurrentAccountBalance(Account account) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT balance 
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      '''SELECT balance 
         FROM account
-        WHERE account.id = ?''', [account.id]);
+        WHERE account.id = ?''',
+      [account.id],
+    );
     return maps[0]['balance'];
   }
 
   /// Get Account Balances in date range
-  Future<Map<Account, List<Map<String, dynamic>>>> getAccountBalancesAtTime(
+  Future<Map<Account, List<Map<DateTime, double>>>> getAccountBalancesAtTime(
     List<Account> accounts,
     DateTime start,
     DateTime end,
@@ -39,11 +48,12 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final db = await database;
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
-    Map<Account, List<Map<String, dynamic>>> result = {};
+    Map<Account, List<Map<DateTime, double>>> result = {};
     print("===");
     print('getting data for $accounts');
     await Future.forEach(accounts, (account) async {
       final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
+        // TODO
         '''SELECT balance 
         FROM account
         WHERE account.id = ?''',
@@ -64,15 +74,14 @@ extension DatabaseExtensionStat on DatabaseHelper {
         [account.id, startString],
       );
       print("db $transactionMaps");
-      List<Map<String, dynamic>> temp = [];
+      List<Map<DateTime, double>> temp = [];
       for (var element in transactionMaps) {
         if (endString.compareTo(element['date']) <= 0) {
           balance = balance - element['value'];
           endBalance = balance;
         } else {
           temp.add({
-            'value': double.parse((balance).toStringAsFixed(1)),
-            'date': element['date']
+            DateTime.parse(element['date']): _roundDouble(balance),
           });
           balance = balance - element['value'];
           startBalance = balance;
@@ -81,15 +90,13 @@ extension DatabaseExtensionStat on DatabaseHelper {
       if (temp.isNotEmpty &&
           endString.compareTo(transactionMaps.first['date']) != 0) {
         temp.insert(0, {
-          'value': double.parse((endBalance).toStringAsFixed(1)),
-          'date': endString
+          DateTime.parse(endString): _roundDouble(endBalance),
         });
       }
       if (temp.isNotEmpty &&
           startString.compareTo(transactionMaps.last['date']) != 0) {
         temp.add({
-          'value': double.parse((startBalance).toStringAsFixed(1)),
-          'date': startString
+          DateTime.parse(startString): _roundDouble(startBalance),
         });
       }
       if (temp.isNotEmpty) {

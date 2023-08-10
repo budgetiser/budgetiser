@@ -18,8 +18,8 @@ class LineChartAccounts extends StatefulWidget {
 }
 
 class _LineChartAccountsState extends State<LineChartAccounts> {
-  double? max;
-  double? min;
+  double? maxValue;
+  double? minValue;
   double? spread;
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -36,14 +36,14 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
 
   LineChartBarData lineChartBarData(
     Account acc,
-    List<Map<String, dynamic>> data,
+    List<Map<DateTime, double>> data,
   ) {
-    data.sort((a, b) => a['date'].compareTo(b['date']));
+    data.sort((a, b) => a.keys.first.compareTo(b.keys.first));
 
     return LineChartBarData(
       spots: List.generate(data.length, (index) {
-        double day = DateTime.parse(data[index]['date']).day.toDouble();
-        double value = data[index]['value'].toDouble();
+        double day = data[index].keys.first.day.toDouble();
+        double value = data[index].values.first;
         return FlSpot(day, value);
       }),
       isCurved: false,
@@ -61,7 +61,7 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: FutureBuilder<Map<Account, List<Map<String, dynamic>>>>(
+        child: FutureBuilder<Map<Account, List<Map<DateTime, double>>>>(
           future: DatabaseHelper.instance.getAccountBalancesAtTime(
             widget.accounts,
             widget.startDate,
@@ -72,31 +72,29 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
               if (snapshot.data!.isEmpty) {
                 return const Text('No data');
               }
-              max = null;
-              min = null;
+              maxValue = null;
+              minValue = null;
 
-              for (MapEntry<Account, List<Map<String, dynamic>>> value
+              for (MapEntry<Account, List<Map<DateTime, double>>> value
                   in snapshot.data!.entries) {
-                List<Map<String, dynamic>> temp = value.value
-                  ..sort((a, b) => a['value'].compareTo(b['value']));
-                if (max == null || temp.last['value'] > max) {
-                  max = temp.last['value'];
-                }
-                if (min == null || temp.first['value'] < min) {
-                  min = temp.first['value'];
+                for (Map<DateTime, double> innerValue in value.value) {
+                  if (maxValue == null || innerValue.values.first > maxValue!) {
+                    maxValue = innerValue.values.first;
+                  }
+                  if (minValue == null || innerValue.values.first < minValue!) {
+                    minValue = innerValue.values.first;
+                  }
                 }
               }
 
-              if (max != null && max! < 0) {
-                max = 0;
+              if (maxValue != null && maxValue! < 0) {
+                maxValue = 0;
               }
-              if (min != null && min! > 0) {
-                min = 0;
+              if (minValue != null && minValue! > 0) {
+                minValue = 0;
               }
 
-              double spread = max! - min!;
-              print('returning');
-              print(spread);
+              double spread = maxValue! - minValue!;
               return LineChart(
                 LineChartData(
                   gridData: FlGridData(
@@ -144,8 +142,8 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                   ),
                   minX: 1,
                   maxX: 31,
-                  minY: min! - (spread.abs() * 0.1),
-                  maxY: max! + (spread.abs() * 0.1),
+                  minY: minValue! - (spread.abs() * 0.1),
+                  maxY: maxValue! + (spread.abs() * 0.1),
                   lineBarsData: snapshot.data!.entries
                       .map((entry) => lineChartBarData(entry.key, entry.value))
                       .toList(),
