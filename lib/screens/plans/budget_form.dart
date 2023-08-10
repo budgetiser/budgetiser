@@ -2,7 +2,7 @@ import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/picker/category_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';

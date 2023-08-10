@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/picker/multi_account_picker/picker_content.dart';
+import 'package:budgetiser/shared/picker/multi_picker/picker_content.dart';
 import 'package:flutter/material.dart';
 
 class AccountPicker extends StatefulWidget {
