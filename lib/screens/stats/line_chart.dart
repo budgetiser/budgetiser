@@ -1,7 +1,7 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
 class LineChartTest extends StatefulWidget {
   const LineChartTest({
@@ -57,7 +57,7 @@ class _LineChartTestState extends State<LineChartTest> {
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
-    String text = "";
+    String text = '';
     if (spread != null && value.toInt() % (spread! / 4) == 0) {
       text = value.toInt().toString();
     }
@@ -67,8 +67,8 @@ class _LineChartTestState extends State<LineChartTest> {
   LineChartBarData lineChartBarData(Account acc, data) {
     return LineChartBarData(
       spots: List.generate(data.length, (index) {
-        double day = DateTime.parse(data[index]["date"]).day.toDouble();
-        double value = data[index]["value"].toDouble();
+        double day = DateTime.parse(data[index]['date']).day.toDouble();
+        double value = data[index]['value'].toDouble();
         return FlSpot(day, value);
       }),
       isCurved: false,
@@ -91,27 +91,34 @@ class _LineChartTestState extends State<LineChartTest> {
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
         child: FutureBuilder<Map<Account, List<Map<String, dynamic>>>>(
           future: DatabaseHelper.instance.getAccountBalancesAtTime(
-              widget.accounts, widget.startDate, widget.endDate),
+            widget.accounts,
+            widget.startDate,
+            widget.endDate,
+          ),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
-                return const Text("No data");
+                return const Text('No data');
               }
+              print("starting plots");
 
               snapshot.data!.forEach(
                 (key, value) {
                   List<Map<String, dynamic>> temp = value;
                   temp.sort((a, b) => a['value'].compareTo(b['value']));
-                  if (max == null || temp.last["value"] > max) {
-                    max = temp.last["value"];
+                  if (max == null || temp.last['value'] > max) {
+                    max = temp.last['value'];
                   }
-                  if (min == null || temp.first["value"] < min) {
-                    min = temp.first["value"];
+                  if (min == null || temp.first['value'] < min) {
+                    min = temp.first['value'];
                   }
                 },
               );
 
               spread = (max! - min!);
+              print('returning');
+              print(spread);
+              print(snapshot.data!.entries);
               return LineChart(
                 LineChartData(
                   gridData: FlGridData(

@@ -18,7 +18,6 @@ class AccountPicker extends StatefulWidget {
 }
 
 class _AccountPickerState extends State<AccountPicker> {
-  var scrollController = ScrollController();
   List<Account> _allAccounts = [];
 
   @override
@@ -32,12 +31,6 @@ class _AccountPickerState extends State<AccountPicker> {
     );
     DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 
   @override

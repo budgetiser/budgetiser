@@ -41,10 +41,12 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final endString = end.toIso8601String();
     Map<Account, List<Map<String, dynamic>>> result = {};
     accounts.forEach((account) async {
-      final List<Map<String, dynamic>> balanceMaps =
-          await db.rawQuery('''SELECT balance 
+      final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
+        '''SELECT balance 
         FROM account
-        WHERE account.id = ?''', [account.id]);
+        WHERE account.id = ?''',
+        [account.id],
+      );
       double balance = balanceMaps[0]['balance'];
       double startBalance = balance;
       double endBalance = balance;
@@ -89,6 +91,7 @@ extension DatabaseExtensionStat on DatabaseHelper {
         result[account] = temp;
       }
     });
+    print(result);
     return result;
   }
 
@@ -103,14 +106,15 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT value, date 
+      '''SELECT value, date 
         FROM singleTransaction, singleTransactionToAccount 
         WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
         AND account1_id = ? and category_id = ?
         AND singleTransaction.date >= ?
         AND singleTransaction.date <= ?
         ORDER BY singleTransaction.date''',
-        [account.id, transactionCategory.id, startString, endString]);
+      [account.id, transactionCategory.id, startString, endString],
+    );
     return maps;
   }
 }
