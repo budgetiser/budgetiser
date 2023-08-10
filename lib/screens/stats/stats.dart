@@ -1,8 +1,8 @@
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/stats/line_chart.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/picker/multi_picker/account_picker.dart';
 import 'package:budgetiser/shared/picker/month_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/account_picker.dart';
 import 'package:flutter/material.dart';
 
 class Stats extends StatefulWidget {
@@ -23,7 +23,6 @@ class _StatsState extends State<Stats> {
     if (mounted) {
       setState(() {
         _selectedAccounts = accounts;
-        print('selected accounts $_selectedAccounts');
       });
     }
   }

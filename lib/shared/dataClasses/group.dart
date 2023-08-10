@@ -1,20 +1,16 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:flutter/material.dart';
 
-class Group implements Selectable {
+class Group extends Selectable {
   int id;
-  String name;
-  IconData icon;
-  Color color;
   String description;
   List<TransactionCategory> transactionCategories;
 
   Group({
     required this.id,
-    required this.name,
-    required this.icon,
-    required this.color,
+    required super.name,
+    required super.icon,
+    required super.color,
     required this.description,
     required this.transactionCategories,
   });

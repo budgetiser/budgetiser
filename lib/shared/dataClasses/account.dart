@@ -1,19 +1,15 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
-import 'package:flutter/material.dart';
 
-class Account implements Selectable {
+class Account extends Selectable {
   int id;
-  String name;
-  IconData icon;
-  Color color;
   double balance;
   String description;
 
   Account({
+    required super.name,
+    required super.icon,
+    required super.color,
     required this.id,
-    required this.name,
-    required this.icon,
-    required this.color,
     required this.balance,
     required this.description,
   });

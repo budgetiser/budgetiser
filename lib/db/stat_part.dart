@@ -42,12 +42,12 @@ extension DatabaseExtensionStat on DatabaseHelper {
   /// Get Account Balances in date range
   Future<Map<Account, List<Map<DateTime, double>>>> getAccountBalancesAtTime(
     List<Account> accounts,
-    DateTime start,
-    DateTime end,
+    DateTime startDate,
+    DateTime endDate,
   ) async {
     final db = await database;
-    final startString = start.toIso8601String();
-    final endString = end.toIso8601String();
+    final startString = startDate.toIso8601String();
+    final endString = endDate.toIso8601String();
     Map<Account, List<Map<DateTime, double>>> result = {};
     await Future.forEach(accounts, (account) async {
       final List<Map<String, dynamic>> balanceMaps = await db.query(
@@ -87,13 +87,13 @@ extension DatabaseExtensionStat on DatabaseHelper {
       if (temp.isNotEmpty &&
           endString.compareTo(transactionMaps.first['date']) != 0) {
         temp.insert(0, {
-          DateTime.parse(endString): _roundDouble(endBalance),
+          endDate: _roundDouble(endBalance),
         });
       }
       if (temp.isNotEmpty &&
           startString.compareTo(transactionMaps.last['date']) != 0) {
         temp.add({
-          DateTime.parse(startString): _roundDouble(startBalance),
+          startDate: _roundDouble(startBalance),
         });
       }
       if (temp.isNotEmpty) {

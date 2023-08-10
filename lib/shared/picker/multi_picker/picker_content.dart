@@ -37,7 +37,6 @@ class _GeneralMultiPickerState<T extends Selectable>
               title: Text(widget.heading),
               content: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
-                  print('inner build');
                   if (widget.allValues.isEmpty) {
                     return const SizedBox(
                       width: double.maxFinite,

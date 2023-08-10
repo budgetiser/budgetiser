@@ -8,6 +8,6 @@ abstract class Selectable {
   Selectable({
     required this.name,
     required this.icon,
-    required this.color
+    required this.color,
   });
 }
