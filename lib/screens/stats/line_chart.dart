@@ -120,19 +120,30 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                     topTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
-                    bottomTitles: const AxisTitles(
+                    bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 30,
                         interval: 5,
+                        getTitlesWidget: (value, meta) {
+                          if (value == meta.max) {
+                            return Container();
+                          }
+                          return Text(meta.formattedValue);
+                        },
                       ),
                     ),
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         interval: (spread / 10).roundToDouble(),
-                        // getTitlesWidget: leftTitleWidgets,
                         reservedSize: 70,
+                        getTitlesWidget: (value, meta) {
+                          if (value == meta.max || value == meta.min) {
+                            return Container();
+                          }
+                          return Text(meta.formattedValue);
+                        },
                       ),
                     ),
                   ),
@@ -142,12 +153,13 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                   ),
                   minX: 1,
                   maxX: 31,
-                  minY: minValue! - (spread.abs() * 0.1),
-                  maxY: maxValue! + (spread.abs() * 0.1),
+                  minY: minValue! - spread * 0.1,
+                  maxY: maxValue! + spread * 0.1,
                   lineBarsData: snapshot.data!.entries
                       .map((entry) => lineChartBarData(entry.key, entry.value))
                       .toList(),
                 ),
+                duration: Duration.zero,
               );
             } else if (snapshot.hasError) {
               throw snapshot.error!;
