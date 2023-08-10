@@ -40,10 +40,10 @@ class Budget implements Selectable {
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
+        'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'description': description,
+        'description': description.trim(),
         'balance': balance,
         'limitXX': limit,
         'is_recurring': isRecurring ? 1 : 0,

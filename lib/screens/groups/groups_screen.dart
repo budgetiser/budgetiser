@@ -17,7 +17,6 @@ class GroupsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Groups',
-          // style: Theme.of(context).textTheme.caption,
         ),
       ),
       drawer: const CreateDrawer(),
@@ -52,8 +51,11 @@ class GroupsScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const GroupForm()));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const GroupForm(),
+            ),
+          );
         },
         tooltip: 'New Group',
         backgroundColor: Theme.of(context).colorScheme.primary,

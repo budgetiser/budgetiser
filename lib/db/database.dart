@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
@@ -11,6 +12,7 @@ import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -34,6 +36,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
   static String? _passcode;
+  final recentlyUsedAccount = RecentlyUsed<Account>();
 
   Future<Database> get database async =>
       _database ??= await initializeDatabase();
@@ -63,10 +66,12 @@ class DatabaseHelper {
     }
   }
 
+  /// Clear db and reset (TODO some) shared preferences
   // ignore: always_declare_return_types
   resetDB() async {
     final Database db = await database;
     await _dropTables(db);
+    await recentlyUsedAccount.removeAllItems();
     await _onCreate(db, 1);
   }
 

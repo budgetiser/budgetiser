@@ -11,14 +11,20 @@ class CategoryTextWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Icon(
-        category.icon,
-        color: category.color,
-      ),
-      Flexible(
-        child: Text(' ${category.name}', overflow: TextOverflow.ellipsis),
-      ),
-    ]);
+    return Row(
+      children: [
+        Icon(
+          category.icon,
+          color: category.color,
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            category.name,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
   }
 }

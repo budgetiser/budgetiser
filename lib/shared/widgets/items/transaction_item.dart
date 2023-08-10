@@ -1,7 +1,6 @@
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
-import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
-import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
@@ -9,36 +8,20 @@ import 'package:flutter/material.dart';
 class TransactionItem extends StatelessWidget {
   const TransactionItem({
     Key? key,
-    required this.singleTransactionData,
+    required this.transactionData,
   }) : super(key: key);
 
-  final SingleTransaction singleTransactionData;
+  final SingleTransaction transactionData;
 
   @override
   Widget build(BuildContext context) {
-    String title;
-    String description;
-    double value;
-    TransactionCategory category;
-    Account account;
-    Account? account2;
-    DateTime date;
-
-    title = singleTransactionData.title;
-    description = singleTransactionData.description;
-    value = singleTransactionData.value;
-    category = singleTransactionData.category;
-    account = singleTransactionData.account;
-    account2 = singleTransactionData.account2;
-    date = singleTransactionData.date;
-
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () => {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => TransactionForm(
-              initialSingleTransactionData: singleTransactionData,
+              initialSingleTransactionData: transactionData,
             ),
           ),
         )
@@ -47,59 +30,61 @@ class TransactionItem extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Column(
           children: [
+            // top row
             Row(
               //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title),
-                if (account2 == null)
+                Text(transactionData.title),
+                if (transactionData.account2 == null)
                   Row(
                     children: [
                       Icon(
-                        category.icon,
-                        color: category.color,
+                        transactionData.category.icon,
+                        color: transactionData.category.color,
                       ),
                       const Text(' in '),
                       Icon(
-                        account.icon,
-                        color: account.color,
+                        transactionData.account.icon,
+                        color: transactionData.account.color,
                       ),
                     ],
                   ),
-                if (account2 != null)
+                if (transactionData.account2 != null)
                   Row(
                     children: [
                       Icon(
-                        category.icon,
-                        color: category.color,
+                        transactionData.category.icon,
+                        color: transactionData.category.color,
                       ),
                       const Text(' from '),
                       Icon(
-                        account.icon,
-                        color: account.color,
+                        transactionData.account.icon,
+                        color: transactionData.account.color,
                       ),
                       const Text(' to '),
                       Icon(
-                        account2.icon,
-                        color: account2.color,
+                        transactionData.account2!.icon,
+                        color: transactionData.account2!.color,
                       ),
                     ],
                   ),
               ],
             ),
             const SizedBox(height: 8),
+            // second/bottom row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${date.day}.${date.month}.${date.year}',
+                  dateAsDDMMYYYY(transactionData.date),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      description,
+                      transactionData.description,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       textWidthBasis: TextWidthBasis.parent,
@@ -110,7 +95,11 @@ class TransactionItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                BalanceText(value),
+                BalanceText(
+                  transactionData.value,
+                  isColored: transactionData.account2 == null,
+                  hasPrefix: transactionData.account2 == null,
+                ),
               ],
             ),
           ],

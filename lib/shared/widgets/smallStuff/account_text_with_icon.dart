@@ -11,14 +11,20 @@ class AccountTextWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Icon(
-        account.icon,
-        color: account.color,
-      ),
-      Flexible(
-        child: Text(' ${account.name}', overflow: TextOverflow.ellipsis),
-      ),
-    ]);
+    return Row(
+      children: [
+        Icon(
+          account.icon,
+          color: account.color,
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            account.name,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
   }
 }

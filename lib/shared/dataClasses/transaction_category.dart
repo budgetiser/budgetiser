@@ -19,10 +19,10 @@ class TransactionCategory implements Selectable {
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
+        'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'description': description,
+        'description': description.trim(),
         'is_hidden': isHidden,
       };
 

@@ -23,9 +23,9 @@ class SingleTransaction {
   });
 
   Map<String, dynamic> toMap() => {
-        'title': title,
+        'title': title.trim(),
         'value': value,
-        'description': description,
+        'description': description.trim(),
         'category_id': category.id,
         'date': date.toString().substring(0, 19)
       };

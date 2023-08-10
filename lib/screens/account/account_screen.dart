@@ -114,7 +114,6 @@ class _AccountScreenState extends State<AccountScreen> {
             snapshot.data!.sort(sortFunction);
             return ListView.builder(
               itemCount: snapshot.data!.length,
-              physics: const ClampingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 80),
               itemBuilder: (BuildContext context, int index) {
                 return AccountItem(
@@ -133,7 +132,10 @@ class _AccountScreenState extends State<AccountScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AccountForm()));
+            MaterialPageRoute(
+              builder: (context) => const AccountForm(),
+            ),
+          );
         },
         tooltip: 'Increment',
         backgroundColor: Theme.of(context).colorScheme.primary,

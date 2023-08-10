@@ -11,11 +11,15 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Timeline.startSync('allTransactionsStream');
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id');
+      '''Select distinct * from singleTransaction, singleTransactionToAccount
+      where singleTransaction.id = singleTransactionToAccount.transaction_id''',
+    );
 
     List<SingleTransaction> list = [];
     for (int i = 0; i < mapSingle.length; i++) {
-      list.add(await _mapToSingleTransaction(mapSingle[i]));
+      list.add(
+        await _mapToSingleTransaction(mapSingle[i]),
+      );
     }
 
     list.sort((a, b) {
@@ -26,20 +30,11 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Timeline.finishSync();
   }
 
-  Future<SingleTransaction> _getOneSingleTransaction(int transactionId) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-      'Select distinct * from singleTransaction, singleTransactionToAccount where singleTransaction.id = singleTransactionToAccount.transaction_id and singleTransaction.id = ?',
-      [transactionId],
-    );
-
-    return await _mapToSingleTransaction(maps[0]);
-  }
-
   Future<SingleTransaction> _mapToSingleTransaction(
-      Map<String, dynamic> mapItem) async {
+    Map<String, dynamic> mapItem,
+  ) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
-    Account account = await _getOneAccount(mapItem['account1_id']);
+    Account account = await getOneAccount(mapItem['account1_id']);
     return SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -49,7 +44,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       account: account,
       account2: mapItem['account2_id'] == null
           ? null
-          : await _getOneAccount(mapItem['account2_id']),
+          : await getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
   }
@@ -63,23 +58,14 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    Account account = await _getOneAccount(transaction.account.id);
+    Account account =
+        await getOneAccount(transaction.account.id); // to get current balance
     if (transaction.account2 == null) {
-      await db.update(
-        'account',
-        {'balance': _roundDouble(account.balance + transaction.value)},
-        where: 'id = ?',
-        whereArgs: [account.id],
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
+      await _setAccountBalance(account, account.balance + transaction.value);
     } else {
-      Account account2 = await _getOneAccount(transaction.account2!.id);
-      await db.update('account',
-          {'balance': _roundDouble(account.balance - transaction.value)},
-          where: 'id = ?', whereArgs: [account.id]);
-      await db.update('account',
-          {'balance': _roundDouble(account2.balance + transaction.value)},
-          where: 'id = ?', whereArgs: [account2.id]);
+      Account account2 = await getOneAccount(transaction.account2!.id);
+      await _setAccountBalance(account, account.balance - transaction.value);
+      await _setAccountBalance(account2, account2.balance + transaction.value);
     }
 
     await db.insert('singleTransactionToAccount', {
@@ -91,12 +77,15 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
     pushGetAllTransactionsStream();
     pushGetAllAccountsStream();
+    recentlyUsedAccount.addItem(account.id.toString());
 
-    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
-        columns: ['budget_id'],
-        where: 'category_id = ?',
-        whereArgs: [transaction.category.id],
-        distinct: true);
+    final List<Map<String, dynamic>> maps = await db.query(
+      'categoryToBudget',
+      columns: ['budget_id'],
+      where: 'category_id = ?',
+      whereArgs: [transaction.category.id],
+      distinct: true,
+    );
     for (int i = 0; i < maps.length; i++) {
       reloadBudgetBalanceFromID(maps[i]['budget_id']);
     }
@@ -105,38 +94,28 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
   Future<void> deleteSingleTransaction(SingleTransaction transaction) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('categoryToBudget',
-        columns: ['budget_id'],
-        where: 'category_id = ?',
-        whereArgs: [transaction.category.id],
-        distinct: true);
+    final List<Map<String, dynamic>> maps = await db.query(
+      'categoryToBudget',
+      columns: ['budget_id'],
+      where: 'category_id = ?',
+      whereArgs: [transaction.category.id],
+      distinct: true,
+    );
 
     if (transaction.account2 == null) {
-      await db.update(
-          'account',
-          {
-            'balance':
-                _roundDouble(transaction.account.balance - transaction.value)
-          },
-          where: 'id = ?',
-          whereArgs: [transaction.account.id]);
+      await _setAccountBalance(
+        transaction.account,
+        transaction.account.balance - transaction.value,
+      );
     } else {
-      await db.update(
-          'account',
-          {
-            'balance':
-                _roundDouble(transaction.account.balance + transaction.value)
-          },
-          where: 'id = ?',
-          whereArgs: [transaction.account.id]);
-      await db.update(
-          'account',
-          {
-            'balance':
-                _roundDouble(transaction.account2!.balance - transaction.value)
-          },
-          where: 'id = ?',
-          whereArgs: [transaction.account2!.id]);
+      await _setAccountBalance(
+        transaction.account,
+        transaction.account.balance + transaction.value,
+      );
+      await _setAccountBalance(
+        transaction.account2!,
+        transaction.account2!.balance - transaction.value,
+      );
     }
 
     await db.delete(
@@ -159,7 +138,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   }
 
   Future<void> deleteSingleTransactionById(int id) async {
-    await deleteSingleTransaction(await _getOneSingleTransaction(id));
+    await deleteSingleTransaction(await getOneTransaction(id));
   }
 
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
@@ -172,8 +151,11 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   Future<SingleTransaction> getOneTransaction(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-        'Select distinct * from SingleTransaction, singleTransactionToAccount where SingleTransaction.id = singleTransactionToAccount.transaction_id and SingleTransaction.id = ?',
-        [id]);
+      '''Select distinct * from SingleTransaction, singleTransactionToAccount
+      where SingleTransaction.id = singleTransactionToAccount.transaction_id 
+      and SingleTransaction.id = ?''',
+      [id],
+    );
 
     if (mapSingle.length == 1) {
       return await _mapToSingleTransaction(mapSingle[0]);
@@ -191,8 +173,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
       DateTime dateTime = DateTime.parse(item['date']);
-      distinctMonths.add(DateTime.parse(
-          '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-01'));
+      distinctMonths.add(DateTime.parse('${dateAsYYYYMM(dateTime)}-01'));
     }
 
     List<DateTime> sorted = distinctMonths.toList()
@@ -216,7 +197,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       ${account != null ? "and (singleTransactionToAccount.account1_id = ${account.id} or singleTransactionToAccount.account2_id = ${account.id})" : ""}
       ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
       ''',
-      ['${inMonth.year}-${inMonth.month.toString().padLeft(2, '0')}%'],
+      ['${dateAsYYYYMM(inMonth)}%'],
     );
 
     List<SingleTransaction> transactions = [];

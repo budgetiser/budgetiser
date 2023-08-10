@@ -1,14 +1,43 @@
-import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/settings/about.dart';
+import 'package:budgetiser/screens/settings/danger_zone.dart';
 import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
-import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-// enum currencySymbol { dollar, pound, euro, yen, rupee, bitcoin, ethereum }
+enum CurrencySymbol {
+  dollar,
+  pound,
+  euro,
+  yen,
+  rupee,
+  peso,
+  bitcoin,
+  ethereum;
+
+  @override
+  String toString() {
+    switch (this) {
+      case CurrencySymbol.dollar:
+        return '\$';
+      case CurrencySymbol.pound:
+        return '£';
+      case CurrencySymbol.euro:
+        return '€';
+      case CurrencySymbol.yen:
+        return '¥';
+      case CurrencySymbol.peso:
+        return '₱';
+      case CurrencySymbol.rupee:
+        return '₹';
+      case CurrencySymbol.bitcoin:
+        return '₿';
+      case CurrencySymbol.ethereum:
+        return 'Ξ';
+    }
+  }
+}
 
 class SettingsScreen extends StatefulWidget {
   static String routeID = 'settings';
@@ -22,7 +51,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _selectedDarkModeValue;
-  String _selectedCurrency = '€';
+  String _selectedCurrency = CurrencySymbol.euro.toString();
 
   @override
   void initState() {
@@ -75,103 +104,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: const Text('Appearance'),
                       children: [
                         Column(
-                          children: <Widget>[
-                            RadioListTile<String>(
-                              title: const Text('system'),
-                              value: 'system',
-                              groupValue: _selectedDarkModeValue,
-                              onChanged: setAppearance,
-                            ),
-                            RadioListTile<String>(
-                              title: const Text('light'),
-                              value: 'light',
-                              groupValue: _selectedDarkModeValue,
-                              onChanged: setAppearance,
-                            ),
-                            RadioListTile<String>(
-                              title: const Text('dark'),
-                              value: 'dark',
-                              groupValue: _selectedDarkModeValue,
-                              onChanged: setAppearance,
-                            ),
+                          children: [
+                            for (var item in ['system', 'light', 'dark'])
+                              RadioListTile<String>(
+                                title: Text(item),
+                                value: item,
+                                groupValue: _selectedDarkModeValue,
+                                onChanged: setAppearance,
+                              ),
                           ],
                         ),
                       ],
-                    );
-                  },
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Export Database'),
-              subtitle: const Text(
-                'Into android/data',
-              ),
-              onTap: () async {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          'Are you sure? This will potentially override existing budgetiser.db file in the Download folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.exportDB();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Export Database (JSON)'),
-              subtitle: const Text(
-                'Into android/data',
-              ),
-              onTap: () async {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          'Are you sure? This will potentially override existing budgetiser.json file in the App folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.exportAsJson();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Import Database'),
-              subtitle: const Text(
-                'From android/data',
-              ),
-              onTap: () async {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          'Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.importDB();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
                     );
                   },
                 );
@@ -204,9 +147,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: TextStyle(fontSize: 16.0),
                           ),
                         ),
-                        currencyRadioItem(context, currencySymbol: '€'),
-                        currencyRadioItem(context, currencySymbol: '\$'),
-                        currencyRadioItem(context, currencySymbol: '£'),
+                        for (var value in CurrencySymbol.values)
+                          currencyRadioItem(
+                            context,
+                            currencySymbol: value.toString(),
+                          ),
                       ],
                     );
                   },
@@ -214,13 +159,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             ListTile(
-              title: const Text('About'),
+              title: const Text(
+                'Danger Zone',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
               subtitle: const Text(
-                'Version, Source code, ...',
+                'Manage stored data (im-/export)',
               ),
               onTap: () async {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const AboutScreen()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const DangerZone(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('About'),
+              subtitle: const Text(
+                'Version, Source code, Website',
+              ),
+              onTap: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const AboutScreen(),
+                  ),
+                );
               },
             ),
           ],
@@ -229,8 +195,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  ListTile currencyRadioItem(BuildContext context,
-      {required String currencySymbol}) {
+  ListTile currencyRadioItem(
+    BuildContext context, {
+    required String currencySymbol,
+  }) {
     return ListTile(
       title: Text(currencySymbol),
       visualDensity: VisualDensity.compact,
