@@ -40,6 +40,7 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final startString = start.toIso8601String();
     final endString = end.toIso8601String();
     Map<Account, List<Map<String, dynamic>>> result = {};
+    print('getting data ${accounts}');
     accounts.forEach((account) async {
       final List<Map<String, dynamic>> balanceMaps = await db.rawQuery(
         '''SELECT balance 

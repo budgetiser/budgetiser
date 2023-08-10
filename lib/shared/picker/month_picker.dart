@@ -34,34 +34,37 @@ class _MonthPickerState extends State<MonthPicker> {
         Center(
           child: IconButton(
             icon: const Icon(Icons.arrow_back_outlined),
-            tooltip: "Previous Month",
+            tooltip: 'Previous Month',
             onPressed: () {
               setState(() {
-                startDate = new DateTime(startDate.year, startDate.month - 1, startDate.day);
+                startDate = DateTime(
+                    startDate.year, startDate.month - 1, startDate.day);
                 widget.onDateChangedCallback(startDate);
               });
             },
           ),
         ),
-        Expanded(child: Center(
-          child: InkWell(
+        Expanded(
+          child: Center(
+              child: InkWell(
             onTap: () {
               setState(() {
-                startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+                startDate =
+                    DateTime(DateTime.now().year, DateTime.now().month, 1);
                 widget.onDateChangedCallback(startDate);
               });
             },
-            child: Text(DateFormat("yyyy, MMMM").format(startDate)),
-            )
-          ),
+            child: Text(DateFormat('yyyy, MMMM').format(startDate)),
+          )),
         ),
         Center(
           child: IconButton(
             icon: const Icon(Icons.arrow_forward_outlined),
-            tooltip: "Next Month",
+            tooltip: 'Next Month',
             onPressed: () {
               setState(() {
-                startDate = new DateTime(startDate.year, startDate.month + 1, startDate.day);
+                startDate = DateTime(
+                    startDate.year, startDate.month + 1, startDate.day);
                 widget.onDateChangedCallback(startDate);
               });
             },
