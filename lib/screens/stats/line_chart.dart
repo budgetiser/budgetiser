@@ -20,22 +20,6 @@ class LineChartAccounts extends StatefulWidget {
 }
 
 class _LineChartAccountsState extends State<LineChartAccounts> {
-  double? maxValue;
-  double? minValue;
-  double? spread;
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text = '';
-    if (spread != null && value.toInt() % (spread! / 4) == 0) {
-      text = value.toInt().toString();
-    }
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
   LineChartBarData lineChartBarData(
     Account acc,
     List<Map<DateTime, double>> data,
@@ -74,25 +58,25 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
               if (snapshot.data!.isEmpty) {
                 return const Text('No data');
               }
-              maxValue = null;
-              minValue = null;
+              double? maxValue;
+              double? minValue;
 
               for (MapEntry<Account, List<Map<DateTime, double>>> value
                   in snapshot.data!.entries) {
                 for (Map<DateTime, double> innerValue in value.value) {
-                  if (maxValue == null || innerValue.values.first > maxValue!) {
+                  if (maxValue == null || innerValue.values.first > maxValue) {
                     maxValue = innerValue.values.first;
                   }
-                  if (minValue == null || innerValue.values.first < minValue!) {
+                  if (minValue == null || innerValue.values.first < minValue) {
                     minValue = innerValue.values.first;
                   }
                 }
               }
 
-              if (maxValue != null && maxValue! < 0) {
+              if (maxValue != null && maxValue < 0) {
                 maxValue = 0;
               }
-              if (minValue != null && minValue! > 0) {
+              if (minValue != null && minValue > 0) {
                 minValue = 0;
               }
 
@@ -151,12 +135,11 @@ class _LineChartAccountsState extends State<LineChartAccounts> {
                   ),
                   borderData: FlBorderData(
                     show: false,
-                    border: Border.all(color: const Color(0xff37434d)),
                   ),
                   minX: 1,
                   maxX: widget.endDate.day.toDouble(),
-                  minY: minValue! - spread * 0.1,
-                  maxY: maxValue! + spread * 0.1,
+                  minY: minValue - spread * 0.1,
+                  maxY: maxValue + spread * 0.1,
                   lineBarsData: snapshot.data!.entries
                       .map((entry) => lineChartBarData(entry.key, entry.value))
                       .toList(),
