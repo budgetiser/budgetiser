@@ -114,6 +114,12 @@ class _LineChartTestState extends State<LineChartTest> {
                   }
                 },
               );
+              if (max != null && max! < 0) {
+                max = 0;
+              }
+              if (min != null && min! > 0) {
+                min = 0;
+              }
 
               spread = (max! - min!);
               print('returning');

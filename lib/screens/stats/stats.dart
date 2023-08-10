@@ -20,10 +20,12 @@ class _StatsState extends State<Stats> {
   DateTime startDate = DateTime.now();
 
   void setAccount(List<Account> accounts) {
-    setState(() {
-      _selectedAccounts = accounts;
-      print('selected accounts $_selectedAccounts');
-    });
+    if (mounted) {
+      setState(() {
+        _selectedAccounts = accounts;
+        print('selected accounts $_selectedAccounts');
+      });
+    }
   }
 
   @override
