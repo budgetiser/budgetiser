@@ -46,8 +46,8 @@ extension DatabaseExtensionStat on DatabaseHelper {
     DateTime endDate,
   ) async {
     final db = await database;
-    final startString = startDate.toIso8601String();
-    final endString = endDate.toIso8601String();
+    final startString = startDate.toString().substring(0, 19);
+    final endString = endDate.toString().substring(0, 19);
     Map<Account, List<Map<DateTime, double>>> result = {};
     await Future.forEach(accounts, (account) async {
       final List<Map<String, dynamic>> balanceMaps = await db.query(
@@ -86,17 +86,14 @@ extension DatabaseExtensionStat on DatabaseHelper {
       }
       startBalance = balance;
 
-      if (singleAccountResult.isNotEmpty &&
-          endString.compareTo(transactionMaps.first['date']) != 0) {
-        singleAccountResult.insert(0, {
-          endDate: _roundDouble(endBalance), //TODO
-        });
-      }
-      if (singleAccountResult.isNotEmpty &&
-          startString.compareTo(transactionMaps.last['date']) != 0) {
-        singleAccountResult.add({
-          startDate: _roundDouble(startBalance),
-        });
+      if (singleAccountResult.isNotEmpty) {
+        singleAccountResult
+          ..insert(0, {
+            startDate: _roundDouble(startBalance),
+          })
+          ..add({
+            endDate: _roundDouble(endBalance),
+          });
       }
 
       if (singleAccountResult.isEmpty) {
@@ -107,7 +104,6 @@ extension DatabaseExtensionStat on DatabaseHelper {
       }
       result[account] = singleAccountResult;
     });
-    // print(result);
     return result;
   }
 
