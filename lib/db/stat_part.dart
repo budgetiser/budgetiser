@@ -74,17 +74,22 @@ extension DatabaseExtensionStat on DatabaseHelper {
       List<Map<DateTime, double>> singleAccountResult = [];
 
       for (var element in transactionMaps) {
-        if (endString.compareTo(element['date']) <= 0) {
+        if (endString.compareTo(element['date']) < 0) {
           balance = balance - element['value'];
           endBalance = balance;
         } else {
           singleAccountResult.add({
-            DateTime.parse(element['date']): _roundDouble(balance),
+            DateTime.parse(element['date']).add(const Duration(minutes: 1)):
+                _roundDouble(balance),
           });
           balance = balance - element['value'];
+          singleAccountResult.add({
+            DateTime.parse(element['date']): _roundDouble(balance),
+          });
         }
       }
       startBalance = balance;
+      print(singleAccountResult);
 
       if (singleAccountResult.isNotEmpty) {
         singleAccountResult
