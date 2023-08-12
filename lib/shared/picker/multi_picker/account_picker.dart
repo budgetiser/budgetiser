@@ -46,7 +46,7 @@ class _AccountPickerState extends State<AccountPicker> {
   @override
   Widget build(BuildContext context) {
     return GeneralMultiPicker<Account>(
-      heading: 'Select Account',
+      heading: 'Select Accounts',
       callback: widget.onAccountPickedCallback,
       allValues: _allAccounts,
     );

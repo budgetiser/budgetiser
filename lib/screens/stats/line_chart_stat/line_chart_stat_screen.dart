@@ -15,7 +15,7 @@ class _LineChartStatScreenState extends State<LineChartStatScreen> {
   List<Account>? _selectedAccounts;
   DateTime startDate = DateTime.now();
 
-  void setAccount(List<Account> accounts) {
+  void setAccounts(List<Account> accounts) {
     if (mounted) {
       setState(() {
         _selectedAccounts = accounts;
@@ -40,7 +40,7 @@ class _LineChartStatScreenState extends State<LineChartStatScreen> {
             children: [
               Expanded(
                 child: AccountPicker(
-                  onAccountPickedCallback: setAccount,
+                  onAccountPickedCallback: setAccounts,
                 ),
               ),
             ],

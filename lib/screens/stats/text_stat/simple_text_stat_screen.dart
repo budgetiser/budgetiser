@@ -32,7 +32,7 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           Row(
