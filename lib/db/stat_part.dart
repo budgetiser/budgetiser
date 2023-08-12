@@ -89,7 +89,6 @@ extension DatabaseExtensionStat on DatabaseHelper {
         }
       }
       startBalance = balance;
-      print(singleAccountResult);
 
       if (singleAccountResult.isNotEmpty) {
         singleAccountResult
