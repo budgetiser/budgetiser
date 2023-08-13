@@ -2,18 +2,16 @@ import 'dart:async';
 
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/picker/multi_picker/picker_content.dart';
+import 'package:budgetiser/shared/picker/multi_picker/general_multi_picker.dart';
 import 'package:flutter/material.dart';
 
 class AccountPicker extends StatefulWidget {
   const AccountPicker({
     Key? key,
     required this.onAccountPickedCallback,
-    // required this.initialSelected,
   }) : super(key: key);
 
   final Function(List<Account>) onAccountPickedCallback;
-  // final List<Account> initialSelected;
 
   @override
   State<AccountPicker> createState() => _AccountPickerState();
@@ -28,13 +26,13 @@ class _AccountPickerState extends State<AccountPicker> {
     streamSubscription = DatabaseHelper.instance.allAccountsStream.listen(
       (value) {
         setState(() {
-          _allAccounts = value.cast();
+          _allAccounts = value;
         });
       },
     );
     DatabaseHelper.instance.pushGetAllAccountsStream();
+
     super.initState();
-    streamSubscription;
   }
 
   @override

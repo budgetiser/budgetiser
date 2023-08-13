@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,19 +14,7 @@ class MonthPicker extends StatefulWidget {
 }
 
 class _MonthPickerState extends State<MonthPicker> {
-  final dateController = TextEditingController();
-  DateTime startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    dateController.dispose();
-    super.dispose();
-  }
+  DateTime selectedDate = firstOfMonth(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +26,11 @@ class _MonthPickerState extends State<MonthPicker> {
             tooltip: 'Previous Month',
             onPressed: () {
               setState(() {
-                startDate = DateTime(
-                    startDate.year, startDate.month - 1, startDate.day);
-                widget.onDateChangedCallback(startDate);
+                selectedDate = DateTime(
+                  selectedDate.year,
+                  selectedDate.month - 1,
+                );
+                widget.onDateChangedCallback(selectedDate);
               });
             },
           ),
@@ -49,12 +40,11 @@ class _MonthPickerState extends State<MonthPicker> {
               child: InkWell(
             onTap: () {
               setState(() {
-                startDate =
-                    DateTime(DateTime.now().year, DateTime.now().month, 1);
-                widget.onDateChangedCallback(startDate);
+                selectedDate = firstOfMonth(DateTime.now());
+                widget.onDateChangedCallback(selectedDate);
               });
             },
-            child: Text(DateFormat('yyyy, MMMM').format(startDate)),
+            child: Text(DateFormat('yyyy, MMMM').format(selectedDate)),
           )),
         ),
         Center(
@@ -63,9 +53,11 @@ class _MonthPickerState extends State<MonthPicker> {
             tooltip: 'Next Month',
             onPressed: () {
               setState(() {
-                startDate = DateTime(
-                    startDate.year, startDate.month + 1, startDate.day);
-                widget.onDateChangedCallback(startDate);
+                selectedDate = DateTime(
+                  selectedDate.year,
+                  selectedDate.month + 1,
+                );
+                widget.onDateChangedCallback(selectedDate);
               });
             },
           ),

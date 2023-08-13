@@ -10,4 +10,8 @@ abstract class Selectable {
     required this.icon,
     required this.color,
   });
+
+  Icon getSelectableIconWidget() {
+    return Icon(icon, color: color);
+  }
 }

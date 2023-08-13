@@ -19,3 +19,8 @@ String dateAsYYYYMM(DateTime date) {
 String dateAsDDMMYYYY(DateTime date) {
   return '${date.day.toString().padLeft(2, "0")}.${date.month.toString().padLeft(2, "0")}.${date.year}';
 }
+
+/// Return the first of the month of [date]
+DateTime firstOfMonth(DateTime date) {
+  return DateTime(date.year, date.month, 1);
+}

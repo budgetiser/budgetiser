@@ -21,11 +21,6 @@ class _GeneralMultiPickerState<T extends Selectable>
   final List<T> _selectedValues = [];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(15),
@@ -106,9 +101,21 @@ class _GeneralMultiPickerState<T extends Selectable>
         // dialog closed
         widget.callback(_selectedValues);
       },
-      child: ListTile(
-        leading: const Icon(Icons.add),
-        title: Center(child: Text(widget.heading)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Icon(Icons.add, color: Colors.blue),
+            const SizedBox(width: 8),
+            Text(widget.heading),
+            Row(
+              children: [
+                for (T i in _selectedValues) i.getSelectableIconWidget()
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
