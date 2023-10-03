@@ -88,8 +88,10 @@ class _AccountFormState extends State<AccountForm> {
               ),
               TextFormField(
                 controller: balanceController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Balance',
                 ),
@@ -232,6 +234,11 @@ class _AccountFormState extends State<AccountForm> {
             key: formKey,
             child: TextFormField(
               controller: inputController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: false,
+                signed: true,
+              ),
+              autofocus: true,
               textAlign: TextAlign.center,
               validator: (value) {
                 if (value!.isEmpty) {
