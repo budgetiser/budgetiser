@@ -42,14 +42,6 @@ List<Account> getExampleAccounts() {
     'PayPal',
     'Students ID'
   ];
-  List<Color> colors = [
-    Colors.brown,
-    Colors.red,
-    Colors.green,
-    Colors.purple,
-    Colors.blue,
-    Colors.yellow
-  ];
 
   for (int i = 0; i < icons.length; i++) {
     accounts.add(
@@ -57,7 +49,7 @@ List<Account> getExampleAccounts() {
         id: i + 1,
         name: names[i],
         icon: icons[i],
-        color: colors[i],
+        color: _availableColors[Random().nextInt(_availableColors.length)],
         balance: 0.0,
         description: '',
       ),
@@ -86,7 +78,7 @@ List<TransactionCategory> getCategoryList() {
     id++;
   }
 
-  addCategory('Snacks', Icons.fastfood);
+  // 0-6
   addCategory('Salary', Icons.attach_money);
   addCategory('Business Income', Icons.business);
   addCategory('Commissions', Icons.trending_up);
@@ -94,66 +86,67 @@ List<TransactionCategory> getCategoryList() {
   addCategory('Money Gifts', Icons.card_giftcard);
   addCategory('Side Gigs', Icons.work);
   addCategory('Private Sellings', Icons.shopping_bag);
-
+  // 7-11
   addCategory('Gas', Icons.local_gas_station);
   addCategory('Parking', Icons.local_parking);
   addCategory('Car Maintenance', Icons.car_repair);
   addCategory('Public Transports', Icons.directions_bus);
   addCategory('Bike', Icons.directions_bike);
-
+  // 12-16
   addCategory('Workshops', Icons.event);
   addCategory('Conferences', Icons.event);
   addCategory('Courses', Icons.school);
   addCategory('Coaching', Icons.group);
   addCategory('Books', Icons.menu_book);
-
+  // 17-20
   addCategory('Doctor Bills', Icons.local_hospital);
   addCategory('Hospital Bills', Icons.local_hospital);
   addCategory('Dentist', Icons.local_hospital);
   addCategory('Medical Devices', Icons.medical_services);
-
+  // 21-25
   addCategory('Cinema', Icons.local_movies);
   addCategory('Theater', Icons.theaters);
   addCategory('Subscriptions', Icons.subscriptions);
   addCategory('Memberships', Icons.card_membership);
   addCategory('Hobbies', Icons.sports_esports);
-
+  // 26-29
   addCategory('Rent', Icons.home);
   addCategory('Property Taxes', Icons.home);
   addCategory('Home Repairs', Icons.home_repair_service);
   addCategory('Gardening', Icons.spa);
-
+  // 30-32
   addCategory('Groceries', Icons.shopping_cart);
   addCategory('Take Aways', Icons.food_bank);
-
+  addCategory('Snacks', Icons.fastfood);
+  // 33-34
   addCategory('Daycare', Icons.child_care);
   addCategory('Extracurricular Activities', Icons.sports_soccer);
-
+  // 35-38
   addCategory('Life Insurances', Icons.local_hospital);
   addCategory('Home Insurances', Icons.home);
   addCategory('Car Insurances', Icons.directions_car);
   addCategory('Business Insurances', Icons.business);
-
+  // 39-41
   addCategory('Birthday Gifts', Icons.card_giftcard);
   addCategory('Holiday Gifts', Icons.card_giftcard);
   addCategory('Donations', Icons.favorite);
-
+  // 42-46
   addCategory('Electricity Bill', Icons.flash_on);
   addCategory('Water Bill', Icons.opacity);
   addCategory('Heat Bill', Icons.whatshot);
   addCategory('Internet Bill', Icons.wifi);
   addCategory('Phone Billings', Icons.phone);
-
+  // 47-51
   addCategory('Beauty', Icons.spa);
   addCategory('Hygiene', Icons.spa);
   addCategory('Grooming', Icons.spa);
   addCategory('SPA', Icons.spa);
   addCategory('Clothing', Icons.shopping_bag);
-
+  // 52-54
   addCategory('Pet Food', Icons.pets);
   addCategory('Veterinary Bills', Icons.local_hospital);
   addCategory('Pet Training', Icons.pets);
-
+  // 55-57
   addCategory('Car Debt', Icons.credit_card);
   addCategory('Personal Loans', Icons.credit_card);
   addCategory('House debt', Icons.home);
@@ -163,22 +156,73 @@ List<TransactionCategory> getCategoryList() {
 
 List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
 
-List<Group> TMP_DATA_groupList = [
-  Group(
-    id: 1,
-    name: 'Transportation',
-    icon: Icons.emoji_transportation,
-    color: Colors.green,
-    description: 'All transportation summarized',
-    transactionCategories: [
-      TMP_DATA_categoryList[7],
-      TMP_DATA_categoryList[8],
-      TMP_DATA_categoryList[9],
-      TMP_DATA_categoryList[10],
-      TMP_DATA_categoryList[11],
-    ],
-  ),
-];
+List<Group> getGroupList() {
+  List<Group> groups = [];
+  List<IconData> icons = [
+    Icons.wallet,
+    Icons.credit_card,
+    Icons.account_balance,
+    Icons.show_chart,
+    Icons.paypal,
+    Icons.paypal,
+    Icons.wallet,
+    Icons.credit_card,
+    Icons.account_balance,
+    Icons.show_chart,
+    Icons.paypal,
+    Icons.paypal,
+    Icons.paypal,
+    Icons.perm_identity
+  ];
+  List<String> names = [
+    'Wallet',
+    'Credit Card',
+    'Savings',
+    'Investment',
+    'PayPal',
+    'Wallet',
+    'Credit Card',
+    'Savings',
+    'Investment',
+    'PayPal',
+    'PayPal',
+    'PayPal',
+    'PayPal',
+    'Students ID'
+  ];
+  List<List<TransactionCategory>> categories = [
+    TMP_DATA_categoryList.sublist(0, 6+1),
+    TMP_DATA_categoryList.sublist(7, 11+1),
+    TMP_DATA_categoryList.sublist(12, 16+1),
+    TMP_DATA_categoryList.sublist(17, 20+1),
+    TMP_DATA_categoryList.sublist(21, 25+1),
+    TMP_DATA_categoryList.sublist(26, 29+1),
+    TMP_DATA_categoryList.sublist(30, 32+1),
+    TMP_DATA_categoryList.sublist(33, 34+1),
+    TMP_DATA_categoryList.sublist(35, 38+1),
+    TMP_DATA_categoryList.sublist(39, 41+1),
+    TMP_DATA_categoryList.sublist(42, 46+1),
+    TMP_DATA_categoryList.sublist(47, 51+1),
+    TMP_DATA_categoryList.sublist(52, 54+1),
+    TMP_DATA_categoryList.sublist(55, 57+1),
+  ];
+
+  for (int i = 0; i < icons.length; i++) {
+    groups.add(
+      Group(
+        id: 1,
+        name: names[i],
+        icon: icons[i],
+        color: _availableColors[Random().nextInt(_availableColors.length)],
+        description: '',
+        transactionCategories: categories[i],
+      ),
+    );
+  }
+  return groups;
+}
+
+List<Group> TMP_DATA_groupList = getGroupList();
 
 List<SingleTransaction> getTransactionList() {
   List<SingleTransaction> list = [];
