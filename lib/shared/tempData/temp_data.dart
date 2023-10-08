@@ -6,7 +6,6 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
-import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/tempData/categories.dart' as Cats;
@@ -24,6 +23,14 @@ List<Color> _availableColors = [
   Colors.deepOrange,
   Colors.cyan,
 ];
+
+
+
+/// ************************
+///
+///     ACCOUNT SECTION
+///
+/// ************************
 
 class Accs {
   final int _idx;
@@ -74,6 +81,14 @@ List<Account> getExampleAccounts() {
   return accounts;
 }
 List<Account> TMP_DATA_accountList = getExampleAccounts();
+
+
+
+/// ************************
+///
+///     CATEGORY SECTION
+///
+/// ************************
 
 List<TransactionCategory> getCategoryList() {
   List<TransactionCategory> list = [];
@@ -169,6 +184,14 @@ List<TransactionCategory> getCategoryList() {
 }
 List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
 
+
+
+/// ************************
+///
+///     GROUP SECTION
+///
+/// ************************
+
 List<Group> getGroupList() {
   List<Group> groups = [];
   List<IconData> icons = [
@@ -236,148 +259,74 @@ List<Group> getGroupList() {
 }
 List<Group> TMP_DATA_groupList = getGroupList();
 
+
+
+/// ************************
+///
+///     TRANSACTION SECTION
+///
+/// ************************
+
 List<SingleTransaction> getTransactionList() {
   List<SingleTransaction> list = [];
   int id = 1;
+  DateTime now = DateTime.now();
+
   void addTransaction(
-    String title,
-    double value,
-    int categoryIndex,
-    int accountIndex,
-    int daysMinus,
-    String description,
-    {
-      int? account2index,
-    }) {
-    list.add(
-      SingleTransaction(
-        id: id,
-        title: title,
-        value: value,
-        category:
-            TMP_DATA_categoryList[categoryIndex % TMP_DATA_categoryList.length],
-        account:
-            TMP_DATA_accountList[accountIndex % TMP_DATA_accountList.length],
-        account2: account2index != null
-            ? TMP_DATA_accountList[account2index % TMP_DATA_accountList.length]
-            : null,
-        date: DateTime.now().subtract(
-          Duration(days: daysMinus),
-        ),
-        description: description,
-      ),
-    );
-    id++;
+      String title,
+      String description,
+      List<Accs> accounts,
+      List<Cats.Group> categories,
+      List<double> values,
+      List<int> daysInbetween,
+      int amount,
+      {List<Accs>? toAccounts}
+  ) {
+    int daysAhead = 0;
+    for(var cIdx = 1; cIdx<amount; cIdx++){
+      daysAhead += daysInbetween.elementAt(cIdx % daysInbetween.length);
+    }
+    DateTime nextOccurrence = now.subtract(Duration(days: daysAhead+1));
+    for(var cIdx = 0; cIdx<amount; cIdx++){
+      list.add(
+        SingleTransaction(
+          id: id,
+          title: title,
+          value: values.elementAt(cIdx % values.length),
+          category: TMP_DATA_categoryList[categories.elementAt(cIdx % categories.length).toInt()],
+          account: TMP_DATA_accountList[accounts.elementAt(cIdx % accounts.length).toInt()],
+          description: description ?? '',
+          date: nextOccurrence
+        )
+      );
+      nextOccurrence = nextOccurrence.add(
+          Duration(days: daysInbetween.elementAt(cIdx % daysInbetween.length))
+      );
+      id++;
+    }
   }
 
-  addTransaction('Flight to aveiro', -400.70, 0, 2, 51, 'Portugal internship');
-  addTransaction('Refuel', -120, 1, 0, 63, '');
-  addTransaction('New clothes', -380, 2, 0, 35, '');
-  addTransaction('Bus ticket', -206, 3, 2, 21, '');
-  addTransaction('Telekom', -44.5, 4, 2, 13, '');
-  addTransaction('Gym', -26.5, 6, 2, 15, '');
-  addTransaction('Cafeteria', -15, 5, 0, 8, '');
-  addTransaction('Mom & Dad', 200, 7, 2, 7, '');
-  addTransaction('Salary', 27000, 7, 2, 5, '');
-  addTransaction('Withdrawal', 1500, 5, 2, 0, '');
-  addTransaction('Rental car', -480, 5, 1, 10, '');
-  addTransaction('Flight to Paris', -600.85, 0, 1, 62, 'Vacation trip');
-  addTransaction('New Laptop', -1200, 2, 3, 10, 'Tech upgrade');
-  addTransaction('Restaurant Dinner', -80, 5, 1, 5, '');
-
-  addTransaction('Grocery Shopping', -70, 31, 0, 5, '');
-  addTransaction('Haircut', -25, 45, 2, 7, '');
-  addTransaction('Movie Tickets', -40, 22, 1, 8, '');
-  addTransaction('Pet Grooming', -35, 49, 4, 4, '');
-  addTransaction('Gift Shop', -15, 39, 0, 6, '');
-  addTransaction('Home Decor', -80, 29, 4, 9, '');
-  addTransaction('Mobile Recharge', -20, 49, 1, 3, '');
-  addTransaction('Fitness Class', -50, 37, 0, 2, '');
-  addTransaction('Tech Accessories', -60, 32, 2, 1, '');
-  addTransaction('Dinner with Friends', -90, 22, 1, 12, '');
-  addTransaction('Vacation Expenses', -300, 16, 2, 11, '');
-  addTransaction('Car Wash', -20, 8, 0, 14, '');
-  addTransaction('Home Insurance', -120, 30, 1, 15, '');
-  addTransaction('Health Checkup', -75, 17, 2, 17, '');
-  addTransaction('Online Course', -50, 14, 3, 20, '');
-  addTransaction('Business Trip', -250, 12, 1, 25, '');
-  addTransaction('Charity Donation', -30, 40, 0, 27, '');
-  addTransaction('Pet Supplies', -40, 50, 4, 30, '');
-  addTransaction('Home Repairs', -120, 28, 3, 28, '');
-  addTransaction('Coffee Shop', -15, 22, 1, 29, '');
-  addTransaction('Subscription Renewal', -10, 23, 4, 26, '');
-  addTransaction('New Phone', -500, 32, 1, 23, '');
-  addTransaction('Tax Payment', -180, 27, 2, 22, '');
-  addTransaction('Music Concert', -100, 22, 3, 18, '');
-
-  addTransaction('Electricity Bill', -85, 24, 0, 27, '');
-  addTransaction('Water Bill', -50, 25, 1, 27, '');
-  addTransaction('Heat Bill', -70, 26, 2, 26, '');
-  addTransaction('Internet Bill', -60, 28, 3, 25, '');
-  addTransaction('Phone Billings', -45, 28, 0, 24, '');
-  addTransaction('Beauty', -90, 44, 1, 23, '');
-  addTransaction('Hygiene', -30, 45, 2, 22, '');
-  addTransaction('Grooming', -20, 46, 3, 21, '');
-  addTransaction('SPA', -150, 47, 0, 20, '');
-  addTransaction('Clothing', -70, 48, 1, 19, '');
-
-  addTransaction('Charge', 100, 0, 1, 40, '', account2index: 5);
-  for (int i = 4; i < 30; i += 2) {
-    addTransaction('Cafeteria', -Random().nextDouble() * 5, 0, 5, i, '');
-  }
-
+  /// PLEASE NOTICE!
+  /// This section is for adding all transactions to the temporary data list.
+  /// Please sort new transactions according to their respective group.
+  addTransaction(
+      "Gas refill", "",
+      [Accs.creditCard],
+      [Cats.Transportation.gas],
+      [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
+      [12, 14, 16, 13, 15, 19, 11], 7
+  );
   return list;
 }
-
 List<SingleTransaction> TMP_DATA_transactionList = getTransactionList();
 
-List<Savings> TMP_DATA_savingsList = [
-  Savings(
-    id: 1,
-    name: 'new pc',
-    icon: Icons.computer,
-    color: Colors.red,
-    description: '',
-    balance: 1728.0,
-    endDate: DateTime.now().add(
-      const Duration(days: 50),
-    ),
-    goal: 2000.0,
-    startDate: DateTime.now().subtract(
-      const Duration(days: 4),
-    ),
-  ),
-  Savings(
-    id: 2,
-    name: 'new camera',
-    icon: Icons.camera_alt,
-    color: Colors.blue,
-    description: '',
-    balance: 0.0,
-    endDate: DateTime.now().add(
-      const Duration(days: 32),
-    ),
-    goal: 1000.0,
-    startDate: DateTime.now().subtract(
-      const Duration(days: 40),
-    ),
-  ),
-  Savings(
-    id: 4,
-    name: 'other',
-    icon: Icons.more,
-    color: Colors.orange,
-    description: '',
-    balance: 150.0,
-    endDate: DateTime.now().add(
-      const Duration(days: 4),
-    ),
-    goal: 300.0,
-    startDate: DateTime.now().subtract(
-      const Duration(days: 70),
-    ),
-  ),
-];
+
+
+/// ************************
+///
+///     BUDGET SECTION
+///
+/// ************************
 
 List<Budget> TMP_DATA_budgetList = [
   Budget(

@@ -90,9 +90,6 @@ class DatabaseHelper {
     for (var transaction in TMP_DATA_transactionList) {
       await createSingleTransaction(transaction);
     }
-    for (var saving in TMP_DATA_savingsList) {
-      await createSaving(saving);
-    }
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
     }
