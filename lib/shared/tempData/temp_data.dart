@@ -9,6 +9,7 @@ import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/tempData/categories.dart' as Cats;
 import 'package:flutter/material.dart';
 
 List<Color> _availableColors = [
@@ -23,6 +24,20 @@ List<Color> _availableColors = [
   Colors.deepOrange,
   Colors.cyan,
 ];
+
+class Accs {
+  final int _idx;
+  const Accs._(this._idx);
+  int toInt() {
+    return _idx;
+  }
+  static const Accs wallet = Accs._(1);
+  static const Accs creditCard = Accs._(2);
+  static const Accs savings = Accs._(3);
+  static const Accs investments = Accs._(4);
+  static const Accs payPal = Accs._(5);
+  static const Accs studentsID = Accs._(6);
+}
 
 List<Account> getExampleAccounts() {
   List<Account> accounts = [];
@@ -58,7 +73,6 @@ List<Account> getExampleAccounts() {
 
   return accounts;
 }
-
 List<Account> TMP_DATA_accountList = getExampleAccounts();
 
 List<TransactionCategory> getCategoryList() {
@@ -153,42 +167,41 @@ List<TransactionCategory> getCategoryList() {
 
   return list;
 }
-
 List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
 
 List<Group> getGroupList() {
   List<Group> groups = [];
   List<IconData> icons = [
-    Icons.wallet,
-    Icons.credit_card,
-    Icons.account_balance,
-    Icons.show_chart,
-    Icons.paypal,
-    Icons.paypal,
-    Icons.wallet,
-    Icons.credit_card,
-    Icons.account_balance,
-    Icons.show_chart,
-    Icons.paypal,
-    Icons.paypal,
-    Icons.paypal,
-    Icons.perm_identity
+    Icons.add,
+    Icons.train,
+    Icons.book,
+    Icons.medical_services_outlined,
+    Icons.movie_creation_outlined,
+    Icons.house,
+    Icons.no_food,
+    Icons.child_care,
+    Icons.library_books,
+    Icons.card_giftcard,
+    Icons.electric_bolt,
+    Icons.person,
+    Icons.pets,
+    Icons.keyboard_double_arrow_down_sharp
   ];
   List<String> names = [
-    'Wallet',
-    'Credit Card',
-    'Savings',
-    'Investment',
-    'PayPal',
-    'Wallet',
-    'Credit Card',
-    'Savings',
-    'Investment',
-    'PayPal',
-    'PayPal',
-    'PayPal',
-    'PayPal',
-    'Students ID'
+    'Income',
+    'Transportation',
+    'Personal Development',
+    'Medical and Healthcare',
+    'Entertainment',
+    'Housing',
+    'Food',
+    'Children',
+    'Insurances',
+    'Gifts',
+    'Essential Bills',
+    'Personal Care',
+    'Pets',
+    'Debt'
   ];
   List<List<TransactionCategory>> categories = [
     TMP_DATA_categoryList.sublist(0, 6+1),
@@ -221,7 +234,6 @@ List<Group> getGroupList() {
   }
   return groups;
 }
-
 List<Group> TMP_DATA_groupList = getGroupList();
 
 List<SingleTransaction> getTransactionList() {
@@ -233,9 +245,10 @@ List<SingleTransaction> getTransactionList() {
     int categoryIndex,
     int accountIndex,
     int daysMinus,
-    String description, {
-    int? account2index,
-  }) {
+    String description,
+    {
+      int? account2index,
+    }) {
     list.add(
       SingleTransaction(
         id: id,
