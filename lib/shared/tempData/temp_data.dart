@@ -309,12 +309,72 @@ List<SingleTransaction> getTransactionList() {
   /// PLEASE NOTICE!
   /// This section is for adding all transactions to the temporary data list.
   /// Please sort new transactions according to their respective group.
+
+  ///Cats.Income
+  addTransaction(
+      "Monthly Salary", "",
+      [Accs.creditCard],
+      [Cats.Income.salary],
+      [2500],
+      [30], 12
+  );
+  addTransaction(
+      "Overtime Hours", "",
+      [Accs.creditCard],
+      [Cats.Income.salary],
+      [350, 500],
+      [60, 60, 30, 90], 4
+  );
+  addTransaction(
+      "Birthday Card Gift", "",
+      [Accs.wallet],
+      [Cats.Income.moneyGifts],
+      [15, 20, 15],
+      [0], 6
+  );
+  addTransaction(
+      "Old TV", "Sold on Ebay",
+      [Accs.wallet],
+      [Cats.Income.privateSellings],
+      [125],
+      [61], 1
+  );
+  addTransaction(
+      "Vintage Selling", "",
+      [Accs.creditCard],
+      [Cats.Income.privateSellings],
+      [17.50, 23.00, 5],
+      [17, 32], 3
+  );
+  addTransaction(
+      "Singing at Ralphs Wedding", "",
+      [Accs.wallet],
+      [Cats.Income.sideGigs],
+      [50],
+      [74], 1
+  );
+
+  /// Cats.Transportation
   addTransaction(
       "Gas refill", "",
       [Accs.creditCard],
       [Cats.Transportation.gas],
       [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
       [12, 14, 16, 13, 15, 19, 11], 7
+  );
+  addTransaction(
+      "Parking ticket", "",
+      [Accs.creditCard, Accs.wallet, Accs.wallet, Accs.creditCard, Accs.wallet],
+      [Cats.Transportation.parking],
+      [-4.75, -3.5, -1.5],
+      [5, 10, 6, 9, 14, 15, 13, 11, 8, 7, 3, 4], 42
+  );
+  addTransaction(
+      "New brakes", "",
+      [Accs.creditCard],
+      [Cats.Transportation.bike],
+      [-123.99],
+      [122], 1
   );
   return list;
 }
