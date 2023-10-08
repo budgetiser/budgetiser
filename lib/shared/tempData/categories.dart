@@ -1,6 +1,14 @@
-class Income {
+abstract class Group {
   final int _idx;
-  const Income._(this._idx);
+  //factory Group() => const Group._(0);
+  const Group._(this._idx);
+  int toInt();
+}
+
+class Income extends Group{
+  final int _idx;
+  const Income._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -13,9 +21,10 @@ class Income {
   static const Income privateSellings = Income._(6);
 }
 
-class Transportation {
+class Transportation extends Group{
   final int _idx;
-  const Transportation._(this._idx);
+  const Transportation._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -26,9 +35,10 @@ class Transportation {
   static const Transportation bike = Transportation._(11);
 }
 
-class PersonalDevelopment {
+class PersonalDevelopment extends Group{
   final int _idx;
-  const PersonalDevelopment._(this._idx);
+  const PersonalDevelopment._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -39,9 +49,10 @@ class PersonalDevelopment {
   static const PersonalDevelopment books = PersonalDevelopment._(16);
 }
 
-class Medical {
+class Medical extends Group{
   final int _idx;
-  const Medical._(this._idx);
+  const Medical._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -51,9 +62,10 @@ class Medical {
   static const Medical medicalDevices = Medical._(20);
 }
 
-class Entertainment {
+class Entertainment extends Group{
   final int _idx;
-  const Entertainment._(this._idx);
+  const Entertainment._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -64,9 +76,10 @@ class Entertainment {
   static const Entertainment hobbies = Entertainment._(25);
 }
 
-class Housing {
+class Housing extends Group{
   final int _idx;
-  const Housing._(this._idx);
+  const Housing._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -76,9 +89,10 @@ class Housing {
   static const Housing gardening = Housing._(29);
 }
 
-class Food {
+class Food extends Group{
   final int _idx;
-  const Food._(this._idx);
+  const Food._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -87,9 +101,10 @@ class Food {
   static const Food snacks = Food._(32);
 }
 
-class Children {
+class Children extends Group{
   final int _idx;
-  const Children._(this._idx);
+  const Children._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -97,9 +112,10 @@ class Children {
   static const Children extracurricularActivities = Children._(34);
 }
 
-class Insurance {
+class Insurance extends Group{
   final int _idx;
-  const Insurance._(this._idx);
+  const Insurance._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -109,9 +125,10 @@ class Insurance {
   static const Insurance businessInsurance = Insurance._(38);
 }
 
-class Gifts {
+class Gifts extends Group{
   final int _idx;
-  const Gifts._(this._idx);
+  const Gifts._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -120,9 +137,10 @@ class Gifts {
   static const Gifts donations = Gifts._(41);
 }
 
-class EssentialBills {
+class EssentialBills extends Group{
   final int _idx;
-  const EssentialBills._(this._idx);
+  const EssentialBills._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -133,9 +151,10 @@ class EssentialBills {
   static const EssentialBills phoneBill = EssentialBills._(46);
 }
 
-class PersonalCare {
+class PersonalCare extends Group{
   final int _idx;
-  const PersonalCare._(this._idx);
+  const PersonalCare._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -146,9 +165,10 @@ class PersonalCare {
   static const PersonalCare clothing = PersonalCare._(51);
 }
 
-class Pets {
+class Pets extends Group{
   final int _idx;
-  const Pets._(this._idx);
+  const Pets._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
@@ -157,9 +177,10 @@ class Pets {
   static const Pets petTraining = Pets._(54);
 }
 
-class Debt {
+class Debt extends Group{
   final int _idx;
-  const Debt._(this._idx);
+  const Debt._(this._idx) : super._(_idx);
+  @override
   int toInt() {
     return _idx;
   }
