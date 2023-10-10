@@ -24,8 +24,6 @@ List<Color> _availableColors = [
   Colors.cyan,
 ];
 
-
-
 /// ************************
 ///
 ///     ACCOUNT SECTION
@@ -38,6 +36,7 @@ class Accs {
   int toInt() {
     return _idx;
   }
+
   static const Accs wallet = Accs._(1);
   static const Accs creditCard = Accs._(2);
   static const Accs savings = Accs._(3);
@@ -80,9 +79,8 @@ List<Account> getExampleAccounts() {
 
   return accounts;
 }
+
 List<Account> TMP_DATA_accountList = getExampleAccounts();
-
-
 
 /// ************************
 ///
@@ -182,9 +180,8 @@ List<TransactionCategory> getCategoryList() {
 
   return list;
 }
+
 List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
-
-
 
 /// ************************
 ///
@@ -227,20 +224,20 @@ List<Group> getGroupList() {
     'Debt'
   ];
   List<List<TransactionCategory>> categories = [
-    TMP_DATA_categoryList.sublist(0, 6+1),
-    TMP_DATA_categoryList.sublist(7, 11+1),
-    TMP_DATA_categoryList.sublist(12, 16+1),
-    TMP_DATA_categoryList.sublist(17, 20+1),
-    TMP_DATA_categoryList.sublist(21, 25+1),
-    TMP_DATA_categoryList.sublist(26, 29+1),
-    TMP_DATA_categoryList.sublist(30, 32+1),
-    TMP_DATA_categoryList.sublist(33, 34+1),
-    TMP_DATA_categoryList.sublist(35, 38+1),
-    TMP_DATA_categoryList.sublist(39, 41+1),
-    TMP_DATA_categoryList.sublist(42, 46+1),
-    TMP_DATA_categoryList.sublist(47, 51+1),
-    TMP_DATA_categoryList.sublist(52, 54+1),
-    TMP_DATA_categoryList.sublist(55, 57+1),
+    TMP_DATA_categoryList.sublist(0, 6 + 1),
+    TMP_DATA_categoryList.sublist(7, 11 + 1),
+    TMP_DATA_categoryList.sublist(12, 16 + 1),
+    TMP_DATA_categoryList.sublist(17, 20 + 1),
+    TMP_DATA_categoryList.sublist(21, 25 + 1),
+    TMP_DATA_categoryList.sublist(26, 29 + 1),
+    TMP_DATA_categoryList.sublist(30, 32 + 1),
+    TMP_DATA_categoryList.sublist(33, 34 + 1),
+    TMP_DATA_categoryList.sublist(35, 38 + 1),
+    TMP_DATA_categoryList.sublist(39, 41 + 1),
+    TMP_DATA_categoryList.sublist(42, 46 + 1),
+    TMP_DATA_categoryList.sublist(47, 51 + 1),
+    TMP_DATA_categoryList.sublist(52, 54 + 1),
+    TMP_DATA_categoryList.sublist(55, 57 + 1),
   ];
 
   for (int i = 0; i < icons.length; i++) {
@@ -257,9 +254,8 @@ List<Group> getGroupList() {
   }
   return groups;
 }
+
 List<Group> TMP_DATA_groupList = getGroupList();
-
-
 
 /// ************************
 ///
@@ -272,36 +268,34 @@ List<SingleTransaction> getTransactionList() {
   int id = 1;
   DateTime now = DateTime.now();
 
-  void addTransaction(
-      String title,
-      String description,
-      List<Accs> accounts,
-      List<Cats.Group> categories,
-      List<double> values,
-      List<int> daysInbetween,
-      int amount,
-      {List<Accs>? toAccounts}
-  ) {
+  void addTransaction({
+    required String title,
+    required String description,
+    required List<Accs> accounts,
+    required List<Cats.Group> categories,
+    required List<double> values,
+    required List<int> daysInBetween,
+    required int amount,
+    List<Accs>? toAccounts,
+  }) {
     int daysAhead = 0;
-    for(var cIdx = 1; cIdx<amount; cIdx++){
-      daysAhead += daysInbetween.elementAt(cIdx % daysInbetween.length);
+    for (var cIdx = 1; cIdx < amount; cIdx++) {
+      daysAhead += daysInBetween.elementAt(cIdx % daysInBetween.length);
     }
-    DateTime nextOccurrence = now.subtract(Duration(days: daysAhead+1));
-    for(var cIdx = 0; cIdx<amount; cIdx++){
-      list.add(
-        SingleTransaction(
+    DateTime nextOccurrence = now.subtract(Duration(days: daysAhead + 1));
+    for (var cIdx = 0; cIdx < amount; cIdx++) {
+      list.add(SingleTransaction(
           id: id,
           title: title,
           value: values.elementAt(cIdx % values.length),
-          category: TMP_DATA_categoryList[categories.elementAt(cIdx % categories.length).toInt()],
-          account: TMP_DATA_accountList[accounts.elementAt(cIdx % accounts.length).toInt()],
-          description: description ?? '',
-          date: nextOccurrence
-        )
-      );
+          category: TMP_DATA_categoryList[
+              categories.elementAt(cIdx % categories.length).toInt()],
+          account: TMP_DATA_accountList[
+              accounts.elementAt(cIdx % accounts.length).toInt()],
+          description: description,
+          date: nextOccurrence));
       nextOccurrence = nextOccurrence.add(
-          Duration(days: daysInbetween.elementAt(cIdx % daysInbetween.length))
-      );
+          Duration(days: daysInBetween.elementAt(cIdx % daysInBetween.length)));
       id++;
     }
   }
@@ -312,75 +306,98 @@ List<SingleTransaction> getTransactionList() {
 
   ///Cats.Income
   addTransaction(
-      "Monthly Salary", "",
-      [Accs.creditCard],
-      [Cats.Income.salary],
-      [2500],
-      [30], 12
+    title: 'Monthly Salary',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [Cats.Income.salary],
+    values: [2500],
+    daysInBetween: [30],
+    amount: 12,
   );
   addTransaction(
-      "Overtime Hours", "",
-      [Accs.creditCard],
-      [Cats.Income.salary],
-      [350, 500],
-      [60, 60, 30, 90], 4
+    title: 'Overtime Hours',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [Cats.Income.salary],
+    values: [350, 500],
+    daysInBetween: [60, 60, 30, 90],
+    amount: 4,
   );
   addTransaction(
-      "Birthday Card Gift", "",
-      [Accs.wallet],
-      [Cats.Income.moneyGifts],
-      [15, 20, 15],
-      [0], 6
+    title: 'Birthday Card Gift',
+    description: '',
+    accounts: [Accs.wallet],
+    categories: [Cats.Income.moneyGifts],
+    values: [15, 20, 15],
+    daysInBetween: [10, 20, 3],
+    amount: 6,
   );
   addTransaction(
-      "Old TV", "Sold on Ebay",
-      [Accs.wallet],
-      [Cats.Income.privateSellings],
-      [125],
-      [61], 1
+    title: 'Old TV',
+    description: 'Sold on Ebay',
+    accounts: [Accs.wallet],
+    categories: [Cats.Income.privateSellings],
+    values: [125],
+    daysInBetween: [61],
+    amount: 1,
   );
   addTransaction(
-      "Vintage Selling", "",
-      [Accs.creditCard],
-      [Cats.Income.privateSellings],
-      [17.50, 23.00, 5],
-      [17, 32], 3
+    title: 'Vintage Selling',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [Cats.Income.privateSellings],
+    values: [17.50, 23.00, 5],
+    daysInBetween: [17, 32],
+    amount: 3,
   );
   addTransaction(
-      "Singing at Ralphs Wedding", "",
-      [Accs.wallet],
-      [Cats.Income.sideGigs],
-      [50],
-      [74], 1
+    title: 'Singing at Ralphs Wedding',
+    description: '',
+    accounts: [Accs.wallet],
+    categories: [Cats.Income.sideGigs],
+    values: [50],
+    daysInBetween: [74],
+    amount: 1,
   );
 
   /// Cats.Transportation
   addTransaction(
-      "Gas refill", "",
-      [Accs.creditCard],
-      [Cats.Transportation.gas],
-      [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
-      [12, 14, 16, 13, 15, 19, 11], 7
+    title: 'Gas refill',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [Cats.Transportation.gas],
+    values: [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
+    daysInBetween: [12, 14, 16, 13, 15, 19, 11],
+    amount: 7,
   );
   addTransaction(
-      "Parking ticket", "",
-      [Accs.creditCard, Accs.wallet, Accs.wallet, Accs.creditCard, Accs.wallet],
-      [Cats.Transportation.parking],
-      [-4.75, -3.5, -1.5],
-      [5, 10, 6, 9, 14, 15, 13, 11, 8, 7, 3, 4], 42
+    title: 'Parking ticket',
+    description: '',
+    accounts: [
+      Accs.creditCard,
+      Accs.wallet,
+      Accs.wallet,
+      Accs.creditCard,
+      Accs.wallet
+    ],
+    categories: [Cats.Transportation.parking],
+    values: [-4.75, -3.5, -1.5],
+    daysInBetween: [5, 10, 6, 9, 14, 15, 13, 11, 8, 7, 3, 4],
+    amount: 42,
   );
   addTransaction(
-      "New brakes", "",
-      [Accs.creditCard],
-      [Cats.Transportation.bike],
-      [-123.99],
-      [122], 1
+    title: 'New brakes',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [Cats.Transportation.bike],
+    values: [-123.99],
+    daysInBetween: [122],
+    amount: 1,
   );
   return list;
 }
+
 List<SingleTransaction> TMP_DATA_transactionList = getTransactionList();
-
-
 
 /// ************************
 ///
