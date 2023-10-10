@@ -406,6 +406,17 @@ List<SingleTransaction> getTransactionList() {
     amount: 40,
   );
 
+  /// Cats.Entertainment
+  addTransaction(
+    title: 'Music streaming service',
+    description: 'Student subscription',
+    accounts: [Accs.creditCard],
+    categories: [cats.Entertainment.subscriptions],
+    values: [-4.99],
+    daysInBetween: [30],
+    amount: 7,
+  );
+
   return list;
 }
 
