@@ -265,8 +265,6 @@ List<Group> TMP_DATA_groupList = getGroupList();
 
 List<SingleTransaction> getTransactionList() {
   List<SingleTransaction> list = [];
-  int id = 1;
-  DateTime now = DateTime.now();
 
   void addTransaction({
     required String title,
@@ -278,15 +276,13 @@ List<SingleTransaction> getTransactionList() {
     required int amount,
     List<Accs>? toAccounts,
   }) {
-    int daysAhead = 0;
-    for (var i = 1; i < amount; i++) {
-      daysAhead += daysInBetween.elementAt(i % daysInBetween.length);
-    }
-    DateTime nextOccurrence = now.subtract(Duration(days: daysAhead + 1));
+    DateTime nextOccurrence = DateTime.now().subtract(
+      Duration(days: daysInBetween[0]),
+    );
     for (var i = 0; i < amount; i++) {
       list.add(
         SingleTransaction(
-          id: id,
+          id: i + 1,
           title: title,
           value: values.elementAt(i % values.length),
           category: TMP_DATA_categoryList[
@@ -301,10 +297,9 @@ List<SingleTransaction> getTransactionList() {
           date: nextOccurrence,
         ),
       );
-      nextOccurrence = nextOccurrence.add(
-        Duration(days: daysInBetween.elementAt(i % daysInBetween.length)),
+      nextOccurrence = nextOccurrence.subtract(
+        Duration(days: daysInBetween.elementAt((i + 1) % daysInBetween.length)),
       );
-      id++;
     }
   }
 
