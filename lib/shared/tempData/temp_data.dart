@@ -279,30 +279,30 @@ List<SingleTransaction> getTransactionList() {
     List<Accs>? toAccounts,
   }) {
     int daysAhead = 0;
-    for (var cIdx = 1; cIdx < amount; cIdx++) {
-      daysAhead += daysInBetween.elementAt(cIdx % daysInBetween.length);
+    for (var i = 1; i < amount; i++) {
+      daysAhead += daysInBetween.elementAt(i % daysInBetween.length);
     }
     DateTime nextOccurrence = now.subtract(Duration(days: daysAhead + 1));
-    for (var cIdx = 0; cIdx < amount; cIdx++) {
+    for (var i = 0; i < amount; i++) {
       list.add(
         SingleTransaction(
           id: id,
           title: title,
-          value: values.elementAt(cIdx % values.length),
+          value: values.elementAt(i % values.length),
           category: TMP_DATA_categoryList[
-              categories.elementAt(cIdx % categories.length).toInt()],
+              categories.elementAt(i % categories.length).toInt()],
           account: TMP_DATA_accountList[
-              accounts.elementAt(cIdx % accounts.length).toInt()],
+              accounts.elementAt(i % accounts.length).toInt()],
           account2: toAccounts == null
               ? null
               : TMP_DATA_accountList[
-                  toAccounts.elementAt(cIdx % toAccounts.length).toInt()],
+                  toAccounts.elementAt(i % toAccounts.length).toInt()],
           description: description,
           date: nextOccurrence,
         ),
       );
       nextOccurrence = nextOccurrence.add(
-        Duration(days: daysInBetween.elementAt(cIdx % daysInBetween.length)),
+        Duration(days: daysInBetween.elementAt(i % daysInBetween.length)),
       );
       id++;
     }
