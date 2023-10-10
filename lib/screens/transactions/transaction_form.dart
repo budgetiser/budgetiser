@@ -239,8 +239,10 @@ class _TransactionFormState extends State<TransactionForm> {
                   key: _valueKey,
                   child: TextFormField(
                     controller: valueController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                      signed: true,
+                    ),
                     decoration: const InputDecoration(
                       labelText: 'Value',
                     ),

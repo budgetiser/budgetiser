@@ -118,8 +118,10 @@ class _BudgetFormState extends State<BudgetForm> {
                   Flexible(
                     child: TextFormField(
                       controller: balanceController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Balance',
                       ),
@@ -131,8 +133,10 @@ class _BudgetFormState extends State<BudgetForm> {
                   Flexible(
                     child: TextFormField(
                       controller: limitController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Limit',
                       ),
