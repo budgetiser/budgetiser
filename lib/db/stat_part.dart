@@ -61,15 +61,16 @@ extension DatabaseExtensionStat on DatabaseHelper {
       double startBalance = balance;
       double endBalance = balance;
 
+      // compare to: https://stackoverflow.com/questions/16244952/case-when-null-makes-wrong-result-in-sqlite
       final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
-        '''SELECT SUM(value) as value, date 
+        '''SELECT SUM(CASE WHEN account2_id IS NULL THEN value WHEN account2_id = ? THEN value ELSE -value END) as value, date 
         FROM singleTransaction, singleTransactionToAccount 
-        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
-        AND account1_id = ?
+        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id
+        AND (account1_id = ? OR account2_id = ?)
         AND singleTransaction.date >= ?
         GROUP BY date
         ORDER BY singleTransaction.date DESC''',
-        [account.id, startString],
+        [account.id, account.id, account.id, startString],
       );
       List<Map<DateTime, double>> singleAccountResult = [];
 
