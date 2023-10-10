@@ -235,7 +235,7 @@ class _AccountFormState extends State<AccountForm> {
             child: TextFormField(
               controller: inputController,
               keyboardType: const TextInputType.numberWithOptions(
-                decimal: false,
+                decimal: true,
                 signed: true,
               ),
               autofocus: true,
