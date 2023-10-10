@@ -424,6 +424,7 @@ List<SingleTransaction> getTransactionList() {
     amount: 40,
   );
 
+
   /// Cats.Entertainment
   addTransaction(
     title: 'Music streaming service',
@@ -449,6 +450,7 @@ List<SingleTransaction> TMP_DATA_transactionList = getTransactionList();
 List<Budget> TMP_DATA_budgetList = [
   Budget(
     id: 1,
+
     name: 'shopping',
     icon: Icons.shopping_bag_outlined,
     color: Colors.red,
@@ -467,12 +469,14 @@ List<Budget> TMP_DATA_budgetList = [
     isRecurring: true,
     limit: 100,
     transactionCategories: [
-      TMP_DATA_categoryList[2],
+      TMP_DATA_categoryList[8],
+      TMP_DATA_categoryList[14],
+      TMP_DATA_categoryList[18],
     ],
   ),
   Budget(
     id: 2,
-    name: 'transportation',
+    name: 'Transportation',
     icon: Icons.emoji_transportation,
     color: Colors.blue,
     description: '',
@@ -488,11 +492,11 @@ List<Budget> TMP_DATA_budgetList = [
     intervalUnit: IntervalUnit.month,
     intervalType: IntervalType.fixedInterval,
     isRecurring: true,
-    limit: 5000,
+    limit: 250,
     transactionCategories: [
-      TMP_DATA_categoryList[3],
+      TMP_DATA_categoryList[17],
+      TMP_DATA_categoryList[7],
       TMP_DATA_categoryList[0],
-      TMP_DATA_categoryList[1],
     ],
   ),
   Budget(
@@ -529,7 +533,9 @@ List<Budget> TMP_DATA_budgetList = [
     isRecurring: false,
     limit: 500,
     transactionCategories: [
-      TMP_DATA_categoryList[5],
+      TMP_DATA_categoryList[3],
+      TMP_DATA_categoryList[10],
+      TMP_DATA_categoryList[15],
     ],
   ),
   Budget(
@@ -552,7 +558,13 @@ List<Budget> TMP_DATA_budgetList = [
     isRecurring: true,
     limit: 50,
     transactionCategories: [
+      TMP_DATA_categoryList[0],
+      TMP_DATA_categoryList[2],
+      TMP_DATA_categoryList[5],
       TMP_DATA_categoryList[6],
+      TMP_DATA_categoryList[7],
+      TMP_DATA_categoryList[9],
+      TMP_DATA_categoryList[12],
     ],
   ),
 ];
