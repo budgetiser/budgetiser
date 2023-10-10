@@ -37,12 +37,12 @@ class Accs {
     return _idx;
   }
 
-  static const Accs wallet = Accs._(1);
-  static const Accs creditCard = Accs._(2);
-  static const Accs savings = Accs._(3);
-  static const Accs investments = Accs._(4);
-  static const Accs payPal = Accs._(5);
-  static const Accs studentsID = Accs._(6);
+  static const Accs wallet = Accs._(0);
+  static const Accs creditCard = Accs._(1);
+  static const Accs savings = Accs._(2);
+  static const Accs investments = Accs._(3);
+  static const Accs payPal = Accs._(4);
+  static const Accs studentsID = Accs._(5);
 }
 
 List<Account> getExampleAccounts() {
@@ -394,6 +394,18 @@ List<SingleTransaction> getTransactionList() {
     daysInBetween: [122],
     amount: 1,
   );
+
+  /// Cats.Food
+  addTransaction(
+    title: 'Groceries',
+    description: '',
+    accounts: [Accs.creditCard, Accs.creditCard, Accs.wallet],
+    categories: [Cats.Food.groceries],
+    values: [-28.75, -12.88, -37.26, -47.48, -32.46, -26.47, -59.31],
+    daysInBetween: [4, 5, 6, 5, 7, 4, 6, 3, 2, 5, 3],
+    amount: 40,
+  );
+
   return list;
 }
 
