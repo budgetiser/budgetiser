@@ -25,10 +25,16 @@ dependencies:
   url_launcher: ^6.1.12
   package_info_plus: ^4.0.2
   equations: ^5.0.1
+  intl: ^0.18.1
+
+  # MIT License
+  fl_chart: ^0.63.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.1
+  sqflite_common_ffi: ^2.3.0
+  test: ^1.24.4
 
 flutter_icons:
   android: true

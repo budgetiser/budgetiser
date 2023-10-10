@@ -1,18 +1,15 @@
-import 'package:flutter/material.dart';
+import 'package:budgetiser/shared/dataClasses/selectable.dart';
 
-class TransactionCategory {
+class TransactionCategory extends Selectable {
   int id;
-  String name;
-  IconData icon;
-  Color color;
   String description;
   bool isHidden;
 
   TransactionCategory({
     required this.id,
-    required this.name,
-    required this.icon,
-    required this.color,
+    required super.name,
+    required super.icon,
+    required super.color,
     required this.description,
     required this.isHidden,
   });

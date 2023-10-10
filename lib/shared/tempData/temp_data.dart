@@ -1,305 +1,520 @@
-// ignore_for_file: non_constant_identifier_names, prefer_single_quotes
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:math';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
-import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/tempData/categories.dart' as cats;
 import 'package:flutter/material.dart';
 
-List<Account> TMP_DATA_accountList = [
-  Account(
-    id: 1,
-    name: "Cash",
-    icon: Icons.attach_money,
-    balance: 0,
-    color: Colors.green,
-    description: "Cash in my portemonnaie",
-  ),
-  Account(
-    id: 2,
-    name: "Credit Card",
-    icon: Icons.credit_card,
-    balance: 0,
-    color: Colors.yellow,
-    description: "Not booked credit card transactions",
-  ),
-  Account(
-    id: 3,
-    name: "Giro",
-    icon: Icons.account_balance,
-    balance: 0,
-    color: Colors.redAccent,
-    description: "Default account",
-  ),
+List<Color> _availableColors = [
+  Colors.green,
+  Colors.blue,
+  Colors.red,
+  Colors.purple,
+  Colors.orange,
+  Colors.teal,
+  Colors.indigo,
+  Colors.amber,
+  Colors.deepOrange,
+  Colors.cyan,
 ];
 
-List<Group> TMP_DATA_groupList = [
-  Group(
-    id: 1,
-    name: "Transportation",
-    icon: Icons.emoji_transportation,
-    color: Colors.green,
-    description: "All transportation summarized",
-    transactionCategories: [
-      TMP_DATA_categoryList[0],
-      TMP_DATA_categoryList[1],
-      TMP_DATA_categoryList[3],
+/// ************************
+///
+///     ACCOUNT SECTION
+///
+/// ************************
+
+class Accs {
+  final int _idx;
+  const Accs._(this._idx);
+  int toInt() {
+    return _idx;
+  }
+
+  static const Accs wallet = Accs._(0);
+  static const Accs creditCard = Accs._(1);
+  static const Accs savings = Accs._(2);
+  static const Accs investments = Accs._(3);
+  static const Accs payPal = Accs._(4);
+  static const Accs studentsID = Accs._(5);
+}
+
+List<Account> getExampleAccounts() {
+  List<Account> accounts = [];
+  List<IconData> icons = [
+    Icons.wallet,
+    Icons.credit_card,
+    Icons.account_balance,
+    Icons.show_chart,
+    Icons.paypal,
+    Icons.perm_identity
+  ];
+  List<String> names = [
+    'Wallet',
+    'Credit Card',
+    'Savings',
+    'Investment',
+    'PayPal',
+    'Students ID'
+  ];
+
+  for (int i = 0; i < icons.length; i++) {
+    accounts.add(
+      Account(
+        id: i + 1,
+        name: names[i],
+        icon: icons[i],
+        color: _availableColors[Random().nextInt(_availableColors.length)],
+        balance: 0.0,
+        description: '',
+      ),
+    );
+  }
+
+  return accounts;
+}
+
+List<Account> TMP_DATA_accountList = getExampleAccounts();
+
+/// ************************
+///
+///     CATEGORY SECTION
+///
+/// ************************
+
+List<TransactionCategory> getCategoryList() {
+  List<TransactionCategory> list = [];
+  int id = 1;
+  void addCategory(String name, IconData icon) {
+    list.add(
+      TransactionCategory(
+        id: id,
+        name: name,
+        icon: icon,
+        color: _availableColors[Random().nextInt(_availableColors.length)],
+        description: '',
+        isHidden: false,
+      ),
+    );
+    id++;
+  }
+
+  // 0-6
+  addCategory('Salary', Icons.attach_money);
+  addCategory('Business Income', Icons.business);
+  addCategory('Commissions', Icons.trending_up);
+  addCategory('Investments', Icons.trending_up);
+  addCategory('Money Gifts', Icons.card_giftcard);
+  addCategory('Side Gigs', Icons.work);
+  addCategory('Private Sellings', Icons.shopping_bag);
+  // 7-11
+  addCategory('Gas', Icons.local_gas_station);
+  addCategory('Parking', Icons.local_parking);
+  addCategory('Car Maintenance', Icons.car_repair);
+  addCategory('Public Transports', Icons.directions_bus);
+  addCategory('Bike', Icons.directions_bike);
+  // 12-16
+  addCategory('Workshops', Icons.event);
+  addCategory('Conferences', Icons.event);
+  addCategory('Courses', Icons.school);
+  addCategory('Coaching', Icons.group);
+  addCategory('Books', Icons.menu_book);
+  // 17-20
+  addCategory('Doctor Bills', Icons.local_hospital);
+  addCategory('Hospital Bills', Icons.local_hospital);
+  addCategory('Dentist', Icons.local_hospital);
+  addCategory('Medical Devices', Icons.medical_services);
+  // 21-25
+  addCategory('Cinema', Icons.local_movies);
+  addCategory('Theater', Icons.theaters);
+  addCategory('Subscriptions', Icons.subscriptions);
+  addCategory('Memberships', Icons.card_membership);
+  addCategory('Hobbies', Icons.sports_esports);
+  // 26-29
+  addCategory('Rent', Icons.home);
+  addCategory('Property Taxes', Icons.home);
+  addCategory('Home Repairs', Icons.home_repair_service);
+  addCategory('Gardening', Icons.spa);
+  // 30-32
+  addCategory('Groceries', Icons.shopping_cart);
+  addCategory('Take Aways', Icons.food_bank);
+  addCategory('Snacks', Icons.fastfood);
+  // 33-34
+  addCategory('Daycare', Icons.child_care);
+  addCategory('Extracurricular Activities', Icons.sports_soccer);
+  // 35-38
+  addCategory('Life Insurances', Icons.local_hospital);
+  addCategory('Home Insurances', Icons.home);
+  addCategory('Car Insurances', Icons.directions_car);
+  addCategory('Business Insurances', Icons.business);
+  // 39-41
+  addCategory('Birthday Gifts', Icons.card_giftcard);
+  addCategory('Holiday Gifts', Icons.card_giftcard);
+  addCategory('Donations', Icons.favorite);
+  // 42-46
+  addCategory('Electricity Bill', Icons.flash_on);
+  addCategory('Water Bill', Icons.opacity);
+  addCategory('Heat Bill', Icons.whatshot);
+  addCategory('Internet Bill', Icons.wifi);
+  addCategory('Phone Billings', Icons.phone);
+  // 47-51
+  addCategory('Beauty', Icons.spa);
+  addCategory('Hygiene', Icons.spa);
+  addCategory('Grooming', Icons.spa);
+  addCategory('SPA', Icons.spa);
+  addCategory('Clothing', Icons.shopping_bag);
+  // 52-54
+  addCategory('Pet Food', Icons.pets);
+  addCategory('Veterinary Bills', Icons.local_hospital);
+  addCategory('Pet Training', Icons.pets);
+  // 55-57
+  addCategory('Car Debt', Icons.credit_card);
+  addCategory('Personal Loans', Icons.credit_card);
+  addCategory('House debt', Icons.home);
+
+  return list;
+}
+
+List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
+
+/// ************************
+///
+///     GROUP SECTION
+///
+/// ************************
+
+List<Group> getGroupList() {
+  List<Group> groups = [];
+  List<IconData> icons = [
+    Icons.add,
+    Icons.train,
+    Icons.book,
+    Icons.medical_services_outlined,
+    Icons.movie_creation_outlined,
+    Icons.house,
+    Icons.no_food,
+    Icons.child_care,
+    Icons.library_books,
+    Icons.card_giftcard,
+    Icons.electric_bolt,
+    Icons.person,
+    Icons.pets,
+    Icons.keyboard_double_arrow_down_sharp
+  ];
+  List<String> names = [
+    'Income',
+    'Transportation',
+    'Personal Development',
+    'Medical and Healthcare',
+    'Entertainment',
+    'Housing',
+    'Food',
+    'Children',
+    'Insurances',
+    'Gifts',
+    'Essential Bills',
+    'Personal Care',
+    'Pets',
+    'Debt'
+  ];
+  List<List<TransactionCategory>> categories = [
+    TMP_DATA_categoryList.sublist(0, 6 + 1),
+    TMP_DATA_categoryList.sublist(7, 11 + 1),
+    TMP_DATA_categoryList.sublist(12, 16 + 1),
+    TMP_DATA_categoryList.sublist(17, 20 + 1),
+    TMP_DATA_categoryList.sublist(21, 25 + 1),
+    TMP_DATA_categoryList.sublist(26, 29 + 1),
+    TMP_DATA_categoryList.sublist(30, 32 + 1),
+    TMP_DATA_categoryList.sublist(33, 34 + 1),
+    TMP_DATA_categoryList.sublist(35, 38 + 1),
+    TMP_DATA_categoryList.sublist(39, 41 + 1),
+    TMP_DATA_categoryList.sublist(42, 46 + 1),
+    TMP_DATA_categoryList.sublist(47, 51 + 1),
+    TMP_DATA_categoryList.sublist(52, 54 + 1),
+    TMP_DATA_categoryList.sublist(55, 57 + 1),
+  ];
+
+  for (int i = 0; i < icons.length; i++) {
+    groups.add(
+      Group(
+        id: 1,
+        name: names[i],
+        icon: icons[i],
+        color: _availableColors[Random().nextInt(_availableColors.length)],
+        description: '',
+        transactionCategories: categories[i],
+      ),
+    );
+  }
+  return groups;
+}
+
+List<Group> TMP_DATA_groupList = getGroupList();
+
+/// ************************
+///
+///     TRANSACTION SECTION
+///
+/// ************************
+
+List<SingleTransaction> getTransactionList() {
+  List<SingleTransaction> list = [];
+
+  void addTransaction({
+    required String title,
+    required String description,
+    required List<Accs> accounts,
+    required List<cats.Group> categories,
+    required List<double> values,
+    required List<int> daysInBetween,
+    required int amount,
+    List<Accs>? toAccounts,
+  }) {
+    DateTime nextOccurrence = DateTime.now().subtract(
+      Duration(days: daysInBetween[0]),
+    );
+    for (var i = 0; i < amount; i++) {
+      list.add(
+        SingleTransaction(
+          id: i + 1,
+          title: title,
+          value: values.elementAt(i % values.length),
+          category: TMP_DATA_categoryList[
+              categories.elementAt(i % categories.length).toInt()],
+          account: TMP_DATA_accountList[
+              accounts.elementAt(i % accounts.length).toInt()],
+          account2: toAccounts == null
+              ? null
+              : TMP_DATA_accountList[
+                  toAccounts.elementAt(i % toAccounts.length).toInt()],
+          description: description,
+          date: nextOccurrence,
+        ),
+      );
+      nextOccurrence = nextOccurrence.subtract(
+        Duration(days: daysInBetween.elementAt((i + 1) % daysInBetween.length)),
+      );
+    }
+  }
+
+  /// PLEASE NOTICE!
+  /// This section is for adding all transactions to the temporary data list.
+  /// Please sort new transactions according to their respective group.
+
+  ///Cats.Income
+  addTransaction(
+    title: 'Monthly Salary',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [cats.Income.salary],
+    values: [2500],
+    daysInBetween: [30],
+    amount: 12,
+  );
+  addTransaction(
+    title: 'Overtime Hours',
+    description: '',
+    accounts: [Accs.savings],
+    categories: [cats.Income.salary],
+    values: [350, 500],
+    daysInBetween: [60, 60, 30, 90],
+    amount: 4,
+  );
+  addTransaction(
+    title: 'Birthday Card Gift',
+    description: '',
+    accounts: [Accs.wallet],
+    categories: [cats.Income.moneyGifts],
+    values: [15, 20, 15],
+    daysInBetween: [10, 20, 3],
+    amount: 6,
+  );
+  addTransaction(
+    title: 'Old TV',
+    description: 'Sold on Ebay',
+    accounts: [Accs.wallet],
+    categories: [cats.Income.privateSellings],
+    values: [125],
+    daysInBetween: [61],
+    amount: 1,
+  );
+  addTransaction(
+    title: 'Vintage Selling',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [cats.Income.privateSellings],
+    values: [17.50, 23.00, 5],
+    daysInBetween: [17, 32],
+    amount: 3,
+  );
+  addTransaction(
+    title: 'Singing at Ralphs Wedding',
+    description: '',
+    accounts: [Accs.wallet],
+    categories: [cats.Income.sideGigs],
+    values: [50],
+    daysInBetween: [74],
+    amount: 1,
+  );
+  addTransaction(
+    title: 'Savings',
+    description: '',
+    accounts: [Accs.creditCard],
+    toAccounts: [Accs.savings],
+    categories: [cats.Income.investments],
+    values: [1000],
+    daysInBetween: [30],
+    amount: 12,
+  );
+
+  /// Cats.Transportation
+  addTransaction(
+    title: 'Gas refill',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [cats.Transportation.gas],
+    values: [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
+    daysInBetween: [12, 14, 16, 13, 15, 19, 11],
+    amount: 7,
+  );
+  addTransaction(
+    title: 'Parking ticket',
+    description: '',
+    accounts: [
+      Accs.creditCard,
+      Accs.wallet,
+      Accs.wallet,
+      Accs.creditCard,
+      Accs.wallet
     ],
-  ),
-];
+    categories: [cats.Transportation.parking],
+    values: [-4.75, -3.5, -1.5],
+    daysInBetween: [5, 10, 6, 9, 14, 15, 13, 11, 8, 7, 3, 4],
+    amount: 42,
+  );
+  addTransaction(
+    title: 'New brakes',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [cats.Transportation.bike],
+    values: [-123.99],
+    daysInBetween: [122],
+    amount: 1,
+  );
 
-List<TransactionCategory> TMP_DATA_categoryList = [
-  TransactionCategory(
-      id: 1,
-      name: "Flight Tickets",
-      icon: Icons.airplane_ticket,
-      color: Colors.red,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 2,
-      name: "Car fuel",
-      icon: Icons.local_gas_station,
-      color: Colors.blue,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 3,
-      name: "Shopping",
-      icon: Icons.shopping_bag_outlined,
-      color: Colors.green,
-      description: "clothes",
-      isHidden: false),
-  TransactionCategory(
-      id: 4,
-      name: "Public transportation",
-      icon: Icons.train,
-      color: Colors.orange,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 5,
-      name: "Bills",
-      icon: Icons.receipt,
-      color: Colors.purple,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 6,
-      name: "Other",
-      icon: Icons.more,
-      color: Colors.grey,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 7,
-      name: "Sports",
-      icon: Icons.sports,
-      color: Colors.red,
-      description: "",
-      isHidden: false),
-  TransactionCategory(
-      id: 8,
-      name: "Pay check",
-      icon: Icons.payments_outlined,
-      color: Colors.green,
-      description: "all incoming",
-      isHidden: false),
-];
+  /// Cats.Food
+  addTransaction(
+    title: 'Groceries',
+    description: '',
+    accounts: [Accs.creditCard, Accs.creditCard, Accs.wallet],
+    categories: [cats.Food.groceries],
+    values: [-28.75, -12.88, -37.26, -47.48, -32.46, -26.47, -59.31],
+    daysInBetween: [4, 5, 6, 5, 7, 4, 6, 3, 2, 5, 3],
+    amount: 40,
+  );
 
-List<SingleTransaction> TMP_DATA_transactionList = [
-  SingleTransaction(
-    id: 1,
-    title: 'flight to aveiro',
-    value: -400.70,
-    category: TMP_DATA_categoryList[0],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 05, 12),
-    description: 'portugal internship',
-  ),
-  SingleTransaction(
-    id: 2,
-    title: 'refuel',
-    value: -120,
-    category: TMP_DATA_categoryList[1],
-    account: TMP_DATA_accountList[0],
-    date: DateTime(2022, 05, 15),
+  /// Cats.Entertainment
+  addTransaction(
+    title: 'Music streaming service',
+    description: 'Student subscription',
+    accounts: [Accs.creditCard],
+    categories: [cats.Entertainment.subscriptions],
+    values: [-4.99],
+    daysInBetween: [30],
+    amount: 7,
+  );
+  addTransaction(
+    title: 'Pc components',
     description: '',
-  ),
-  SingleTransaction(
-    id: 3,
-    title: 'new clothes',
-    value: -380,
-    category: TMP_DATA_categoryList[2],
-    account: TMP_DATA_accountList[0],
-    date: DateTime(2022, 05, 07),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 4,
-    title: 'studi ticket',
-    value: -206,
-    category: TMP_DATA_categoryList[3],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 03, 01),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 5,
-    title: 'telekom',
-    value: -44.5,
-    category: TMP_DATA_categoryList[4],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 05, 01),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 6,
-    title: 'gym',
-    value: -26.5,
-    category: TMP_DATA_categoryList[6],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 05, 7),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 7,
-    title: 'cantine',
-    value: -15,
-    category: TMP_DATA_categoryList[5],
-    account: TMP_DATA_accountList[0],
-    date: DateTime(2022, 4, 30),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 8,
-    title: 'Mom & Dad',
-    value: 200,
-    category: TMP_DATA_categoryList[7],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 5, 1),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 9,
-    title: 'bosch',
-    value: 27000,
-    category: TMP_DATA_categoryList[7],
-    account: TMP_DATA_accountList[2],
-    date: DateTime(2022, 4, 30),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 10,
-    title: 'withdrawal',
-    value: 1500,
-    category: TMP_DATA_categoryList[5],
-    account: TMP_DATA_accountList[2],
-    account2: TMP_DATA_accountList[0],
-    date: DateTime(2022, 5, 1),
-    description: '',
-  ),
-  SingleTransaction(
-    id: 11,
-    title: 'rental car',
-    value: -480,
-    category: TMP_DATA_categoryList[5],
-    account: TMP_DATA_accountList[1],
-    date: DateTime(2022, 5, 20),
-    description: '',
-  ),
-];
+    accounts: [Accs.payPal],
+    categories: [cats.Entertainment.hobbies],
+    values: [-199.99, -589.45, -35.99, -875, 15],
+    daysInBetween: [50, 4, 3, 7, 2, 1],
+    amount: 6,
+  );
 
-List<Savings> TMP_DATA_savingsList = [
-  Savings(
-    id: 1,
-    name: "new pc",
-    icon: Icons.computer,
-    color: Colors.red,
-    description: "",
-    balance: 1728.0,
-    endDate: DateTime(2022, 10, 7),
-    goal: 2000.0,
-    startDate: DateTime(2022, 03, 01),
-  ),
-  Savings(
-    id: 2,
-    name: "new camera",
-    icon: Icons.camera_alt,
-    color: Colors.blue,
-    description: "",
-    balance: 0.0,
-    endDate: DateTime(2022, 08, 01),
-    goal: 1000.0,
-    startDate: DateTime(2022, 06, 01),
-  ),
-  Savings(
-    id: 4,
-    name: "other",
-    icon: Icons.more,
-    color: Colors.orange,
-    description: "",
-    balance: 150.0,
-    endDate: DateTime(2022, 04, 2),
-    goal: 300.0,
-    startDate: DateTime(2022, 02, 2),
-  ),
-];
+  return list;
+}
+
+List<SingleTransaction> TMP_DATA_transactionList = getTransactionList();
+
+/// ************************
+///
+///     BUDGET SECTION
+///
+/// ************************
 
 List<Budget> TMP_DATA_budgetList = [
   Budget(
     id: 1,
-    name: "shopping",
+    name: 'shopping',
     icon: Icons.shopping_bag_outlined,
     color: Colors.red,
-    description: "",
+    description: '',
     balance: 0.0,
     intervalRepetitions: 30,
-    endDate: DateTime(2020, 10, 1).add(const Duration(days: 30 * 30)),
-    startDate: DateTime(2020, 10, 1),
+    endDate: DateTime.now().add(
+      const Duration(days: 30 * 12),
+    ),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 70),
+    ),
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
     intervalType: IntervalType.fixedInterval,
     isRecurring: true,
     limit: 100,
     transactionCategories: [
-      TMP_DATA_categoryList[2],
+      TMP_DATA_categoryList[8],
+      TMP_DATA_categoryList[14],
+      TMP_DATA_categoryList[18],
     ],
   ),
   Budget(
     id: 2,
-    name: "transportation",
+    name: 'Transportation',
     icon: Icons.emoji_transportation,
     color: Colors.blue,
-    description: "",
+    description: '',
     balance: 0.0,
     intervalRepetitions: 3,
-    endDate: DateTime(2020, 01, 1).add(const Duration(days: 3 * 365)),
-    startDate: DateTime(2020, 01, 01),
+    endDate: DateTime.now().add(
+      const Duration(days: 70),
+    ),
+    startDate: DateTime.now().add(
+      const Duration(days: 8),
+    ),
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
     intervalType: IntervalType.fixedInterval,
     isRecurring: true,
-    limit: 5000,
+    limit: 250,
     transactionCategories: [
-      TMP_DATA_categoryList[3],
+      TMP_DATA_categoryList[17],
+      TMP_DATA_categoryList[7],
       TMP_DATA_categoryList[0],
-      TMP_DATA_categoryList[1],
     ],
   ),
   Budget(
     id: 3,
-    name: "house",
+    name: 'house',
     icon: Icons.home,
     color: Colors.green,
-    description: "",
+    description: '',
     balance: 0.0,
     intervalRepetitions: 5,
-    endDate: DateTime(2022, 10, 2).add(const Duration(days: 3 * 5)),
-    startDate: DateTime(2022, 10, 2),
+    endDate: DateTime.now().add(
+      const Duration(days: 70),
+    ),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 5),
+    ),
     intervalAmount: 3,
     intervalUnit: IntervalUnit.day,
     intervalType: IntervalType.fixedInterval,
@@ -309,27 +524,35 @@ List<Budget> TMP_DATA_budgetList = [
   ),
   Budget(
     id: 4,
-    name: "other",
+    name: 'other',
     icon: Icons.more,
     color: Colors.orange,
-    description: "",
+    description: '',
     balance: 0,
-    startDate: DateTime(2020, 10, 2),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 70),
+    ),
     isRecurring: false,
     limit: 500,
     transactionCategories: [
-      TMP_DATA_categoryList[5],
+      TMP_DATA_categoryList[3],
+      TMP_DATA_categoryList[10],
+      TMP_DATA_categoryList[15],
     ],
   ),
   Budget(
     id: 5,
-    name: "sports",
+    name: 'sports',
     icon: Icons.more,
     color: Colors.orange,
-    description: "",
+    description: '',
     balance: 0,
-    endDate: DateTime(2021, 01, 2),
-    startDate: DateTime(2020, 10, 2),
+    endDate: DateTime.now().add(
+      const Duration(days: 70),
+    ),
+    startDate: DateTime.now().subtract(
+      const Duration(days: 45),
+    ),
     intervalRepetitions: 3,
     intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
@@ -337,7 +560,13 @@ List<Budget> TMP_DATA_budgetList = [
     isRecurring: true,
     limit: 50,
     transactionCategories: [
+      TMP_DATA_categoryList[0],
+      TMP_DATA_categoryList[2],
+      TMP_DATA_categoryList[5],
       TMP_DATA_categoryList[6],
+      TMP_DATA_categoryList[7],
+      TMP_DATA_categoryList[9],
+      TMP_DATA_categoryList[12],
     ],
   ),
 ];
