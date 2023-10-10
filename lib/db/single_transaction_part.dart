@@ -7,7 +7,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   Stream<List<SingleTransaction>> get allTransactionStream =>
       _allTransactionStreamController.stream;
 
-  void pushGetAllTransactionsStream() async {
+  Future pushGetAllTransactionsStream() async {
     Timeline.startSync('allTransactionsStream');
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
