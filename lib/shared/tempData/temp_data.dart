@@ -429,6 +429,15 @@ List<SingleTransaction> getTransactionList() {
     daysInBetween: [30],
     amount: 7,
   );
+  addTransaction(
+    title: 'Pc components',
+    description: '',
+    accounts: [Accs.payPal],
+    categories: [cats.Entertainment.hobbies],
+    values: [-199.99, -589.45, -35.99, -875, 15],
+    daysInBetween: [50, 4, 3, 7, 2, 1],
+    amount: 6,
+  );
 
   return list;
 }
