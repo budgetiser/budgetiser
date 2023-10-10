@@ -424,7 +424,6 @@ List<SingleTransaction> getTransactionList() {
     amount: 40,
   );
 
-
   /// Cats.Entertainment
   addTransaction(
     title: 'Music streaming service',
@@ -450,7 +449,6 @@ List<SingleTransaction> TMP_DATA_transactionList = getTransactionList();
 List<Budget> TMP_DATA_budgetList = [
   Budget(
     id: 1,
-
     name: 'shopping',
     icon: Icons.shopping_bag_outlined,
     color: Colors.red,
