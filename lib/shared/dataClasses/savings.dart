@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:budgetiser/shared/dataClasses/selectable.dart';
 
-class Savings {
+class Savings extends Selectable {
   int id;
-  String name;
-  IconData icon;
-  Color color;
   double balance;
   DateTime startDate;
   DateTime endDate;
@@ -13,9 +10,9 @@ class Savings {
 
   Savings({
     required this.id,
-    required this.name,
-    required this.icon,
-    required this.color,
+    required super.name,
+    required super.icon,
+    required super.color,
     required this.balance,
     required this.startDate,
     required this.endDate,

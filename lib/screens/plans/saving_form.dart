@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +23,7 @@ class _SavingFormState extends State<SavingForm> {
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   IconData? _icon;
-  Color _color = Color.fromRGBO(
-      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
+  Color _color = randomColor();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 30));
 
@@ -78,18 +76,19 @@ class _SavingFormState extends State<SavingForm> {
                     color: _color,
                   ),
                   Flexible(
-                      child: TextFormField(
-                    controller: nameController,
-                    validator: (data) {
-                      if (data == null || data == '') {
-                        return 'Please enter a valid name';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
+                    child: TextFormField(
+                      controller: nameController,
+                      validator: (data) {
+                        if (data == null || data == '') {
+                          return 'Please enter a valid name';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                      ),
                     ),
-                  ))
+                  )
                 ],
               ),
               ColorPickerWidget(
@@ -104,77 +103,81 @@ class _SavingFormState extends State<SavingForm> {
               Row(
                 children: [
                   Flexible(
-                      child: TextFormField(
-                    validator: (data) {
-                      if (data!.isEmpty) {
-                        return 'Please enter a balance';
-                      }
-                      try {
-                        double.parse(data);
-                      } catch (e) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                    controller: balController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(
-                      labelText: 'Start',
-                    ),
-                  )),
-                  Flexible(
-                      child: TextFormField(
-                    controller: goalController,
-                    validator: (data) {
-                      if (data!.isEmpty) {
-                        return 'Please enter a balance';
-                      }
-                      try {
-                        double a = double.parse(data);
-                        if (a <= double.parse(balController.text)) {
-                          return 'Goal must be higher than value';
+                    child: TextFormField(
+                      validator: (data) {
+                        if (data!.isEmpty) {
+                          return 'Please enter a balance';
                         }
-                      } catch (e) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(
-                      labelText: 'Goal',
+                        try {
+                          double.parse(data);
+                        } catch (e) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                      controller: balController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Start',
+                      ),
                     ),
-                  ))
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                      controller: goalController,
+                      validator: (data) {
+                        if (data!.isEmpty) {
+                          return 'Please enter a balance';
+                        }
+                        try {
+                          double a = double.parse(data);
+                          if (a <= double.parse(balController.text)) {
+                            return 'Goal must be higher than value';
+                          }
+                        } catch (e) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Goal',
+                      ),
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Flexible(
-                      child: DatePicker(
-                    label: 'Start',
-                    initialDate: (widget.savingData != null)
-                        ? widget.savingData!.startDate
-                        : DateTime.now(),
-                    onDateChangedCallback: (date) {
-                      setState(() {
-                        startDate = date;
-                      });
-                    },
-                  )),
+                    child: DatePicker(
+                      label: 'Start',
+                      initialDate: (widget.savingData != null)
+                          ? widget.savingData!.startDate
+                          : DateTime.now(),
+                      onDateChangedCallback: (date) {
+                        setState(() {
+                          startDate = date;
+                        });
+                      },
+                    ),
+                  ),
                   Flexible(
-                      child: DatePicker(
-                    label: 'End',
-                    initialDate: (widget.savingData != null)
-                        ? widget.savingData!.endDate
-                        : DateTime.now().add(const Duration(days: 30)),
-                    onDateChangedCallback: (date) {
-                      setState(() {
-                        endDate = date;
-                      });
-                    },
-                  ))
+                    child: DatePicker(
+                      label: 'End',
+                      initialDate: (widget.savingData != null)
+                          ? widget.savingData!.endDate
+                          : DateTime.now().add(const Duration(days: 30)),
+                      onDateChangedCallback: (date) {
+                        setState(() {
+                          endDate = date;
+                        });
+                      },
+                    ),
+                  )
                 ],
               ),
               const Divider(height: 32),
@@ -199,23 +202,24 @@ class _SavingFormState extends State<SavingForm> {
             onPressed: () {
               if (widget.savingData != null) {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ConfirmationDialog(
-                        title: 'Attention',
-                        description:
-                            "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
-                        onSubmitCallback: () {
-                          DatabaseHelper.instance
-                              .deleteSaving(widget.savingData!.id);
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        onCancelCallback: () {
-                          Navigator.pop(context);
-                        },
-                      );
-                    });
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance
+                            .deleteSaving(widget.savingData!.id);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
               } else {
                 Navigator.of(context).pop();
               }

@@ -68,9 +68,9 @@ class _PlansState extends State<Plans> {
             stream: DatabaseHelper.instance.allBudgetsStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<Budget> budgetList = snapshot.data!.toList();
-                // ignore: cascade_invocations
-                budgetList.sort((a, b) => a.compareTo(b));
+                List<Budget> budgetList = snapshot.data!
+                  ..sort((a, b) => a.compareTo(b));
+
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: budgetList.length,
@@ -93,9 +93,9 @@ class _PlansState extends State<Plans> {
             stream: DatabaseHelper.instance.allSavingsStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<Savings> savingsList = snapshot.data!.toList();
-                // ignore: cascade_invocations
-                savingsList.sort((a, b) => a.name.compareTo(b.name));
+                List<Savings> savingsList = snapshot.data!
+                  ..sort((a, b) => a.name.compareTo(b.name));
+
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: savingsList.length,
@@ -116,23 +116,19 @@ class _PlansState extends State<Plans> {
           ),
         ],
       ),
-      floatingActionButton: _currentPage == Pages.budgets.index
-          ? FloatingActionButton(
-              tooltip: buttonTooltip,
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const BudgetForm()));
-              },
-              child: const Icon(Icons.add),
-            )
-          : FloatingActionButton(
-              tooltip: buttonTooltip,
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SavingForm()));
-              },
-              child: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        tooltip: buttonTooltip,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => _currentPage == Pages.budgets.index
+                  ? const BudgetForm()
+                  : const SavingForm(),
             ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

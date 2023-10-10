@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
   FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE);
 ''');
     if (kDebugMode) {
-      print('done');
+      print('done initializing tables');
     }
   }
 

@@ -1,28 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:budgetiser/shared/dataClasses/selectable.dart';
 
-class Account {
+class Account extends Selectable {
   int id;
-  String name;
-  IconData icon;
-  Color color;
   double balance;
   String description;
 
   Account({
+    required super.name,
+    required super.icon,
+    required super.color,
     required this.id,
-    required this.name,
-    required this.icon,
-    required this.color,
     required this.balance,
     required this.description,
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
+        'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
         'balance': balance,
-        'description': description,
+        'description': description.trim(),
       };
 
   Map<String, dynamic> toJsonMap() {
@@ -33,6 +30,6 @@ class Account {
 
   @override
   String toString() {
-    return 'Account{id: $id, name: $name, icon: $icon, color: $color, balance: $balance, description: $description}';
+    return 'Account: ${toJsonMap()}';
   }
 }

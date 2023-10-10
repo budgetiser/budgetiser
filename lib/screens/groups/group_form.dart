@@ -1,17 +1,19 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/picker/category_picker.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
 
 class GroupForm extends StatefulWidget {
-  const GroupForm({Key? key, this.initialGroup}) : super(key: key);
+  const GroupForm({
+    Key? key,
+    this.initialGroup,
+  }) : super(key: key);
 
   final Group? initialGroup;
 
@@ -23,8 +25,7 @@ class _GroupFormState extends State<GroupForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Color.fromRGBO(
-      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
+  Color _color = randomColor();
   IconData? _icon;
   List<TransactionCategory> _categories = [];
 
@@ -160,12 +161,13 @@ class _GroupFormState extends State<GroupForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Group a = Group(
-                    name: nameController.text,
-                    icon: _icon ?? Icons.blur_on,
-                    color: _color,
-                    description: descriptionController.text,
-                    id: 0,
-                    transactionCategories: _categories);
+                  name: nameController.text,
+                  icon: _icon ?? Icons.blur_on,
+                  color: _color,
+                  description: descriptionController.text,
+                  id: 0,
+                  transactionCategories: _categories,
+                );
                 if (widget.initialGroup != null) {
                   a.id = widget.initialGroup!.id;
                   DatabaseHelper.instance.updateGroup(a);

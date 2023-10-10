@@ -4,6 +4,7 @@ import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
@@ -25,7 +26,14 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  String title = 'Transactions';
+  final GlobalKey _futureBuilderKey = GlobalKey();
+  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
+
+  Account? _currentFilterAccount;
+  TransactionCategory? _currentFilterCategory;
+
+  List<Account> _accountList = <Account>[];
+  List<TransactionCategory> _categoryList = <TransactionCategory>[];
 
   @override
   void initState() {
@@ -51,105 +59,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     super.initState();
   }
 
-  final GlobalKey _futureBuilderKey = GlobalKey();
-  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
-
-  Account? _currentFilterAccount;
-  TransactionCategory? _currentFilterCategory;
-
-  List<Account> _accountList = <Account>[];
-  List<TransactionCategory> _categoryList = <TransactionCategory>[];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_alt_sharp),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SimpleDialog(
-                    contentPadding: const EdgeInsets.only(right: 25),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Filter'),
-                        ElevatedButton(
-                          onPressed: (_currentFilterAccount == null &&
-                                  _currentFilterCategory == null)
-                              ? null
-                              : () {
-                                  setState(() {
-                                    _currentFilterAccount = null;
-                                    _currentFilterCategory = null;
-                                  });
-                                  Navigator.pop(context);
-                                },
-                          child: const Text('Reset'),
-                        ),
-                      ],
-                    ),
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25,
-                          vertical: 10,
-                        ),
-                        child: Text('By Account'),
-                      ),
-                      ListTile(
-                        title: const Text('All Accounts'),
-                        visualDensity: VisualDensity.compact,
-                        leading: Radio<Account?>(
-                          value: null,
-                          groupValue: _currentFilterAccount,
-                          onChanged: (value) {
-                            setState(() {
-                              _currentFilterAccount = value;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                      for (var account in _accountList)
-                        _accountFilterListTile(account),
-                      const Divider(
-                        indent: 25,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25,
-                          vertical: 10,
-                        ),
-                        child: Text('By Category'),
-                      ),
-                      ListTile(
-                        title: const Text('All Categories'),
-                        visualDensity: VisualDensity.compact,
-                        leading: Radio<TransactionCategory?>(
-                          value: null,
-                          groupValue: _currentFilterCategory,
-                          onChanged: (value) {
-                            setState(() {
-                              _currentFilterCategory = value;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                      for (var category in _categoryList)
-                        _categoryFilterListTile(category),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+          transactionFilter(context),
         ],
-        title: Text(title),
+        title: const Text('Transactions'),
       ),
       drawer: const CreateDrawer(),
       body: FutureBuilder<List<DateTime>>(
@@ -165,11 +82,97 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const TransactionForm()));
+            MaterialPageRoute(
+              builder: (context) => const TransactionForm(),
+            ),
+          );
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  // TODO: extract as seperate widget, use general multi picker
+  IconButton transactionFilter(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.filter_alt_sharp),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              contentPadding: const EdgeInsets.only(right: 25),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Filter'),
+                  ElevatedButton(
+                    onPressed: (_currentFilterAccount == null &&
+                            _currentFilterCategory == null)
+                        ? null
+                        : () {
+                            setState(() {
+                              _currentFilterAccount = null;
+                              _currentFilterCategory = null;
+                            });
+                            Navigator.pop(context);
+                          },
+                    child: const Text('Reset'),
+                  ),
+                ],
+              ),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 10,
+                  ),
+                  child: Text('By Account'),
+                ),
+                RadioListTile<Account?>(
+                  value: null,
+                  title: const Text('All Accounts'),
+                  visualDensity: VisualDensity.compact,
+                  groupValue: _currentFilterAccount,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentFilterAccount = value;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                for (var account in _accountList)
+                  _accountFilterListTile(account),
+                const Divider(
+                  indent: 25,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 10,
+                  ),
+                  child: Text('By Category'),
+                ),
+                RadioListTile<TransactionCategory?>(
+                  value: null,
+                  title: const Text('All Categories'),
+                  visualDensity: VisualDensity.compact,
+                  groupValue: _currentFilterCategory,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentFilterCategory = value;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                for (var category in _categoryList)
+                  _categoryFilterListTile(category),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -195,23 +198,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  bool isCurrentMonth =
-                      DateTime.now().month == monthYear.month &&
-                          DateTime.now().year == monthYear.year;
                   if (snapshot.data!.isEmpty) return Container();
                   return ExpansionTile(
                     backgroundColor: Theme.of(context).dividerTheme.color,
                     collapsedBackgroundColor:
                         Theme.of(context).dividerTheme.color,
-                    initiallyExpanded: isCurrentMonth,
+                    initiallyExpanded: isCurrentMonth(monthYear),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (isCurrentMonth)
+                        if (isCurrentMonth(monthYear))
                           const Text('Current Month')
                         else
-                          Text(
-                              "${monthYear.year}-${monthYear.month.toString().padLeft(2, '0')}"),
+                          Text(dateAsYYYYMM(monthYear)),
                         Text(snapshot.data!.length.toString()),
                       ],
                     ),
@@ -241,37 +240,33 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  ListTile _accountFilterListTile(Account element) {
-    return ListTile(
+  RadioListTile _accountFilterListTile(Account element) {
+    return RadioListTile<Account>(
+      value: element,
       title: AccountTextWithIcon(element),
       visualDensity: VisualDensity.compact,
-      leading: Radio<Account>(
-        value: element,
-        groupValue: _currentFilterAccount,
-        onChanged: (value) {
-          setState(() {
-            _currentFilterAccount = value;
-          });
-          Navigator.of(context).pop();
-        },
-      ),
+      groupValue: _currentFilterAccount,
+      onChanged: (value) {
+        setState(() {
+          _currentFilterAccount = value;
+        });
+        Navigator.of(context).pop();
+      },
     );
   }
 
-  ListTile _categoryFilterListTile(TransactionCategory element) {
-    return ListTile(
+  RadioListTile _categoryFilterListTile(TransactionCategory element) {
+    return RadioListTile<TransactionCategory>(
+      value: element,
       title: CategoryTextWithIcon(element),
       visualDensity: VisualDensity.compact,
-      leading: Radio<TransactionCategory>(
-        value: element,
-        groupValue: _currentFilterCategory,
-        onChanged: (value) {
-          setState(() {
-            _currentFilterCategory = value;
-          });
-          Navigator.of(context).pop();
-        },
-      ),
+      groupValue: _currentFilterCategory,
+      onChanged: (value) {
+        setState(() {
+          _currentFilterCategory = value;
+        });
+        Navigator.of(context).pop();
+      },
     );
   }
 }

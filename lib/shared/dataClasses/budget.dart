@@ -1,13 +1,10 @@
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
+import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
-class Budget {
+class Budget extends Selectable {
   int id;
-  String name;
-  IconData icon;
-  Color color;
   String description;
   double balance;
   double limit;
@@ -22,9 +19,9 @@ class Budget {
 
   Budget({
     required this.id,
-    required this.name,
-    required this.icon,
-    required this.color,
+    required super.name,
+    required super.icon,
+    required super.color,
     required this.description,
     required this.balance,
     required this.limit,
@@ -39,10 +36,10 @@ class Budget {
   });
 
   Map<String, dynamic> toMap() => {
-        'name': name,
+        'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'description': description,
+        'description': description.trim(),
         'balance': balance,
         'limitXX': limit,
         'is_recurring': isRecurring ? 1 : 0,

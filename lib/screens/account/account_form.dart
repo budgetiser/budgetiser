@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +25,7 @@ class _AccountFormState extends State<AccountForm> {
   var balanceController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Color _color = Color.fromRGBO(
-      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
+  Color _color = randomColor();
   IconData? _icon;
 
   @override
@@ -40,13 +38,6 @@ class _AccountFormState extends State<AccountForm> {
       _icon = widget.initialAccount!.icon;
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    nameController.dispose();
-    super.dispose();
   }
 
   @override
@@ -97,8 +88,10 @@ class _AccountFormState extends State<AccountForm> {
               ),
               TextFormField(
                 controller: balanceController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Balance',
                 ),
@@ -148,11 +141,13 @@ class _AccountFormState extends State<AccountForm> {
                       icon: const Icon(Icons.list),
                       heroTag: 'viewTransactions',
                       onPressed: (() {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => TransactionsScreen(
-                            initialAccountFilter: widget.initialAccount,
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => TransactionsScreen(
+                              initialAccountFilter: widget.initialAccount,
+                            ),
                           ),
-                        ));
+                        );
                       }),
                     ),
                   ],
@@ -170,24 +165,25 @@ class _AccountFormState extends State<AccountForm> {
           onPressed: () {
             if (widget.initialAccount != null) {
               showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.deleteAccount(
-                          widget.initialAccount!.id,
-                        );
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  });
+                context: context,
+                builder: (BuildContext context) {
+                  return ConfirmationDialog(
+                    title: 'Attention',
+                    description:
+                        "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
+                    onSubmitCallback: () {
+                      DatabaseHelper.instance.deleteAccount(
+                        widget.initialAccount!.id,
+                      );
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    onCancelCallback: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              );
             } else {
               Navigator.of(context).pop();
             }
@@ -238,6 +234,11 @@ class _AccountFormState extends State<AccountForm> {
             key: formKey,
             child: TextFormField(
               controller: inputController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
+              autofocus: true,
               textAlign: TextAlign.center,
               validator: (value) {
                 if (value!.isEmpty) {

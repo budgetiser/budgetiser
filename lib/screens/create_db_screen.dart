@@ -10,8 +10,8 @@ class CreateDatabaseScreen extends StatefulWidget {
 }
 
 class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
-  final _passcodeController = TextEditingController();
-  final _repeatPasscodeController = TextEditingController();
+  final _passCodeController = TextEditingController();
+  final _repeatPassCodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _passKey = GlobalKey<FormFieldState>();
   final _encryptionKey = GlobalKey<FormFieldState>();
@@ -37,7 +37,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                 child: TextFormField(
                   key: _passKey,
                   autofocus: true,
-                  controller: _passcodeController,
+                  controller: _passCodeController,
                   obscureText: true,
                   validator: (data) {
                     if (_noEncryption == false) {
@@ -67,7 +67,7 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
                   autofocus: true,
-                  controller: _repeatPasscodeController,
+                  controller: _repeatPassCodeController,
                   obscureText: true,
                   validator: (data) {
                     if (_noEncryption == false) {
@@ -103,8 +103,8 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                     _noEncryption = !_noEncryption;
                     _formKey.currentState?.validate();
                     if (_noEncryption) {
-                      _passcodeController.clear();
-                      _repeatPasscodeController.clear();
+                      _passCodeController.clear();
+                      _repeatPassCodeController.clear();
                     }
                   });
                 },
@@ -124,13 +124,15 @@ class _CreateDatabaseScreenState extends State<CreateDatabaseScreen> {
                     if (_formKey.currentState!.validate() == true ||
                         _noEncryption) {
                       int verify = await DatabaseHelper.instance
-                          .createDatabase(_passcodeController.text);
+                          .createDatabase(_passCodeController.text);
                       if (verify == 1) {
                         if (!mounted) return;
                         Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const HomeScreen()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreen(),
+                          ),
+                        );
                       }
                     }
                   },

@@ -1,5 +1,6 @@
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
@@ -76,7 +77,7 @@ class TransactionItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${transactionData.date.day}.${transactionData.date.month}.${transactionData.date.year}',
+                  dateAsDDMMYYYY(transactionData.date),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 Expanded(

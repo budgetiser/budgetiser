@@ -1,19 +1,21 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/picker/category_picker.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
 import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/recurring_form.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
 
 class BudgetForm extends StatefulWidget {
-  const BudgetForm({Key? key, this.budgetData}) : super(key: key);
+  const BudgetForm({
+    Key? key,
+    this.budgetData,
+  }) : super(key: key);
   final Budget? budgetData;
 
   @override
@@ -32,8 +34,7 @@ class _BudgetFormState extends State<BudgetForm> {
   );
   List<TransactionCategory> budgetCategories = [];
   IconData? _icon;
-  Color _color = Color.fromRGBO(
-      Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 1);
+  Color _color = randomColor();
 
   // scrollController for the recurring form to scroll to the bottom
   final ScrollController _scrollController = ScrollController();
@@ -60,13 +61,6 @@ class _BudgetFormState extends State<BudgetForm> {
       }
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    nameController.dispose();
-    super.dispose();
   }
 
   @override
@@ -112,19 +106,22 @@ class _BudgetFormState extends State<BudgetForm> {
                 ],
               ),
               ColorPickerWidget(
-                  initialSelectedColor: _color,
-                  onColorChangedCallback: (color) {
-                    setState(() {
-                      _color = color;
-                    });
-                  }),
+                initialSelectedColor: _color,
+                onColorChangedCallback: (color) {
+                  setState(() {
+                    _color = color;
+                  });
+                },
+              ),
               Row(
                 children: [
                   Flexible(
                     child: TextFormField(
                       controller: balanceController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Balance',
                       ),
@@ -136,8 +133,10 @@ class _BudgetFormState extends State<BudgetForm> {
                   Flexible(
                     child: TextFormField(
                       controller: limitController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
                       decoration: const InputDecoration(
                         labelText: 'Limit',
                       ),
@@ -186,23 +185,24 @@ class _BudgetFormState extends State<BudgetForm> {
             onPressed: () {
               if (widget.budgetData != null) {
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ConfirmationDialog(
-                        title: 'Attention',
-                        description:
-                            "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
-                        onSubmitCallback: () {
-                          DatabaseHelper.instance
-                              .deleteBudget(widget.budgetData!.id);
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        onCancelCallback: () {
-                          Navigator.pop(context);
-                        },
-                      );
-                    });
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance
+                            .deleteBudget(widget.budgetData!.id);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
               } else {
                 Navigator.of(context).pop();
               }

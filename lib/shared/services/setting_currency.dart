@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsCurrencyHandler {
   String defaultCurrency = '€';
+  // TODO: perfomance improvement with caching
+  // move enum here
 
   Future<String> getCurrency() async {
     final prefs = await SharedPreferences.getInstance();

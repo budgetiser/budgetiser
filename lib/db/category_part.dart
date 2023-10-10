@@ -7,20 +7,24 @@ extension DatabaseExtensionCategory on DatabaseHelper {
   Stream<List<TransactionCategory>> get allCategoryStream =>
       _allCategoryStreamController.stream;
 
-  void pushGetAllCategoriesStream() async {
+  Future pushGetAllCategoriesStream() async {
+    Timeline.startSync('allCategoriesStream');
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('category');
 
-    allCategorySink.add(List.generate(maps.length, (i) {
-      return TransactionCategory(
-        id: maps[i]['id'],
-        name: maps[i]['name'].toString(),
-        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-        color: Color(maps[i]['color']),
-        description: maps[i]['description'].toString(),
-        isHidden: maps[i]['is_hidden'] == 1,
-      );
-    }));
+    allCategorySink.add(
+      List.generate(maps.length, (i) {
+        return TransactionCategory(
+          id: maps[i]['id'],
+          name: maps[i]['name'].toString(),
+          icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+          color: Color(maps[i]['color']),
+          description: maps[i]['description'].toString(),
+          isHidden: maps[i]['is_hidden'] == 1,
+        );
+      }),
+    );
+    Timeline.finishSync();
   }
 
   Future<int> createCategory(TransactionCategory category) async {
