@@ -284,7 +284,8 @@ List<SingleTransaction> getTransactionList() {
     }
     DateTime nextOccurrence = now.subtract(Duration(days: daysAhead + 1));
     for (var cIdx = 0; cIdx < amount; cIdx++) {
-      list.add(SingleTransaction(
+      list.add(
+        SingleTransaction(
           id: id,
           title: title,
           value: values.elementAt(cIdx % values.length),
@@ -292,10 +293,17 @@ List<SingleTransaction> getTransactionList() {
               categories.elementAt(cIdx % categories.length).toInt()],
           account: TMP_DATA_accountList[
               accounts.elementAt(cIdx % accounts.length).toInt()],
+          account2: toAccounts == null
+              ? null
+              : TMP_DATA_accountList[
+                  toAccounts.elementAt(cIdx % toAccounts.length).toInt()],
           description: description,
-          date: nextOccurrence));
+          date: nextOccurrence,
+        ),
+      );
       nextOccurrence = nextOccurrence.add(
-          Duration(days: daysInBetween.elementAt(cIdx % daysInBetween.length)));
+        Duration(days: daysInBetween.elementAt(cIdx % daysInBetween.length)),
+      );
       id++;
     }
   }
@@ -317,7 +325,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Overtime Hours',
     description: '',
-    accounts: [Accs.creditCard],
+    accounts: [Accs.savings],
     categories: [cats.Income.salary],
     values: [350, 500],
     daysInBetween: [60, 60, 30, 90],
@@ -358,6 +366,16 @@ List<SingleTransaction> getTransactionList() {
     values: [50],
     daysInBetween: [74],
     amount: 1,
+  );
+  addTransaction(
+    title: 'Savings',
+    description: '',
+    accounts: [Accs.creditCard],
+    toAccounts: [Accs.savings],
+    categories: [cats.Income.investments],
+    values: [1000],
+    daysInBetween: [30],
+    amount: 12,
   );
 
   /// Cats.Transportation
