@@ -8,7 +8,7 @@ import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/tempData/categories.dart' as Cats;
+import 'package:budgetiser/shared/tempData/categories.dart' as cats;
 import 'package:flutter/material.dart';
 
 List<Color> _availableColors = [
@@ -272,7 +272,7 @@ List<SingleTransaction> getTransactionList() {
     required String title,
     required String description,
     required List<Accs> accounts,
-    required List<Cats.Group> categories,
+    required List<cats.Group> categories,
     required List<double> values,
     required List<int> daysInBetween,
     required int amount,
@@ -309,7 +309,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Monthly Salary',
     description: '',
     accounts: [Accs.creditCard],
-    categories: [Cats.Income.salary],
+    categories: [cats.Income.salary],
     values: [2500],
     daysInBetween: [30],
     amount: 12,
@@ -318,7 +318,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Overtime Hours',
     description: '',
     accounts: [Accs.creditCard],
-    categories: [Cats.Income.salary],
+    categories: [cats.Income.salary],
     values: [350, 500],
     daysInBetween: [60, 60, 30, 90],
     amount: 4,
@@ -327,7 +327,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Birthday Card Gift',
     description: '',
     accounts: [Accs.wallet],
-    categories: [Cats.Income.moneyGifts],
+    categories: [cats.Income.moneyGifts],
     values: [15, 20, 15],
     daysInBetween: [10, 20, 3],
     amount: 6,
@@ -336,7 +336,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Old TV',
     description: 'Sold on Ebay',
     accounts: [Accs.wallet],
-    categories: [Cats.Income.privateSellings],
+    categories: [cats.Income.privateSellings],
     values: [125],
     daysInBetween: [61],
     amount: 1,
@@ -345,7 +345,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Vintage Selling',
     description: '',
     accounts: [Accs.creditCard],
-    categories: [Cats.Income.privateSellings],
+    categories: [cats.Income.privateSellings],
     values: [17.50, 23.00, 5],
     daysInBetween: [17, 32],
     amount: 3,
@@ -354,7 +354,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Singing at Ralphs Wedding',
     description: '',
     accounts: [Accs.wallet],
-    categories: [Cats.Income.sideGigs],
+    categories: [cats.Income.sideGigs],
     values: [50],
     daysInBetween: [74],
     amount: 1,
@@ -365,7 +365,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Gas refill',
     description: '',
     accounts: [Accs.creditCard],
-    categories: [Cats.Transportation.gas],
+    categories: [cats.Transportation.gas],
     values: [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
     daysInBetween: [12, 14, 16, 13, 15, 19, 11],
     amount: 7,
@@ -380,7 +380,7 @@ List<SingleTransaction> getTransactionList() {
       Accs.creditCard,
       Accs.wallet
     ],
-    categories: [Cats.Transportation.parking],
+    categories: [cats.Transportation.parking],
     values: [-4.75, -3.5, -1.5],
     daysInBetween: [5, 10, 6, 9, 14, 15, 13, 11, 8, 7, 3, 4],
     amount: 42,
@@ -389,7 +389,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'New brakes',
     description: '',
     accounts: [Accs.creditCard],
-    categories: [Cats.Transportation.bike],
+    categories: [cats.Transportation.bike],
     values: [-123.99],
     daysInBetween: [122],
     amount: 1,
@@ -400,7 +400,7 @@ List<SingleTransaction> getTransactionList() {
     title: 'Groceries',
     description: '',
     accounts: [Accs.creditCard, Accs.creditCard, Accs.wallet],
-    categories: [Cats.Food.groceries],
+    categories: [cats.Food.groceries],
     values: [-28.75, -12.88, -37.26, -47.48, -32.46, -26.47, -59.31],
     daysInBetween: [4, 5, 6, 5, 7, 4, 6, 3, 2, 5, 3],
     amount: 40,
