@@ -1,6 +1,6 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/screens/plans/budget_form.dart';
+import 'package:budgetiser/screens/budgets/budget_form.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/widgets/items/budget_item.dart';
 import 'package:flutter/material.dart';
