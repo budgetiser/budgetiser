@@ -105,13 +105,12 @@ class DatabaseHelper {
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
-        version: 1,
+        version: 2,
         password: preferences.getBool('encrypted')! ? _passcode : null,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {
-          await _dropTables(db);
-          await _onCreate(db, newVersion);
+          await resetDB();
         },
       );
     } catch (e) {
