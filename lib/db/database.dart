@@ -71,11 +71,17 @@ class DatabaseHelper {
 
   /// Clear db and reset (TODO some) shared preferences
   // ignore: always_declare_return_types
-  resetDB() async {
-    final Database db = await database;
+  _resetDB(Database db, int newVersion) async {
     await _dropTables(db);
     await recentlyUsedAccount.removeAllItems();
-    await _onCreate(db, 1);
+    await _onCreate(db, newVersion);
+  }
+
+  /// Public method for resetting db
+  // ignore: always_declare_return_types
+  resetDB({int newVersion = 1}) async {
+    final Database db = await database;
+    await _resetDB(db, newVersion);
   }
 
   Future fillDBwithTMPdata() async {
@@ -110,7 +116,7 @@ class DatabaseHelper {
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {
-          await resetDB();
+          await _resetDB(db, newVersion);
         },
       );
     } catch (e) {
