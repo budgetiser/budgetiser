@@ -24,7 +24,6 @@ part 'account_part.dart';
 part 'budget_part.dart';
 part 'category_part.dart';
 part 'group_part.dart';
-part 'savings_part.dart';
 part 'single_transaction_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
@@ -178,13 +177,6 @@ class DatabaseHelper {
     });
     pushGetAllGroupsStream();
     await allGroupsStream.first;
-
-    allSavingsStream.listen((event) {
-      fullJSON['Savings'] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllSavingsStream();
-    await allSavingsStream.first;
 
     allTransactionStream.listen((event) {
       fullJSON['Transactions'] =

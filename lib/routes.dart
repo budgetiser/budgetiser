@@ -12,7 +12,7 @@ import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 //named lower case and also needs to be defined in beginning of class as: static String routeID = ''
 var routes = {
   'home': (context) => const HomeScreen(),
-  'plans': (context) => const Plans(),
+  'budgets': (context) => const Budgets(),
   'account': (context) => const AccountScreen(),
   'categories': (context) => const CategoriesScreen(),
   'groups': (context) => const GroupsScreen(),
