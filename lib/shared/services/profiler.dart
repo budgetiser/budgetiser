@@ -6,7 +6,7 @@ class Profiler {
   static final Profiler instance = Profiler._privateConstructor();
 
   Map<String, Map<String, dynamic>> timeMeasurements = {};
-  String lastStarted = '';
+  List<String> lastStarted = [];
 
   void start(String eventName) {
     bool add = false;
@@ -27,16 +27,16 @@ class Profiler {
 
     // Start measurement as late as possible
     if (add) {
-      lastStarted = eventName;
+      lastStarted.add(eventName);
       (timeMeasurements[eventName]!['start'] as List<int>)
           .add(DateTime.now().microsecondsSinceEpoch);
     }
   }
 
   void end([String? eventName]) {
-    String name = eventName ?? lastStarted;
     // End measurement as fast as possible
     final tempTime = DateTime.now().microsecondsSinceEpoch;
+    String name = eventName ?? lastStarted.removeLast();
     if (!timeMeasurements.containsKey(name)) {
       throw 'Time measure error: Event "$name" not defined!';
     } else if ((timeMeasurements[name]!['end'] as List<int>).length >=
@@ -47,7 +47,12 @@ class Profiler {
       timeMeasurements[name]!['count'] =
           (timeMeasurements[name]!['count'] as int) + 1;
     }
-    analyseTimeMeasurements();
+  }
+
+  void endAll() {
+    for (var event in lastStarted) {
+      end(event);
+    }
   }
 
   void analyseTimeMeasurements() {
