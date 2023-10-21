@@ -61,7 +61,7 @@ class Profiler {
             (grouped_measures[name]!['occurences'] as int) + 1;
       } else {
         grouped_measures[name] = {
-          'durations': [duration],
+          'durations': <int>[duration],
           'occurences': 1
         };
       }
