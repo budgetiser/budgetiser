@@ -37,6 +37,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     DatabaseHelper.instance.allTransactionStream.listen((event) {
       updateMonthsFuture();
     });
@@ -55,8 +57,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     if (widget.initialCategoryFilter != null) {
       _currentFilterCategory = widget.initialCategoryFilter;
     }
-
-    super.initState();
   }
 
   @override
