@@ -76,7 +76,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator();
           }
-          return _screenContent(snapshot);
+          return _screenContent(snapshot.data!);
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -184,12 +184,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
   }
 
-  SingleChildScrollView _screenContent(AsyncSnapshot<List<DateTime>> snapshot) {
+  SingleChildScrollView _screenContent(List<DateTime> monthYearSnapshotData) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         children: [
-          for (DateTime monthYear in snapshot.data!)
+          for (DateTime monthYear in monthYearSnapshotData)
             FutureBuilder<List<SingleTransaction>>(
               future: DatabaseHelper.instance.getFilteredTransactionsByMonth(
                 inMonth: monthYear,
