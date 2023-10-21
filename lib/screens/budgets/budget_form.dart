@@ -133,6 +133,12 @@ class _BudgetFormState extends State<BudgetForm> {
                   Flexible(
                     child: TextFormField(
                       controller: limitController,
+                      validator: (data) {
+                        if (data == null || data == '') {
+                          return 'Please enter a number';
+                        }
+                        return null;
+                      },
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                         signed: true,

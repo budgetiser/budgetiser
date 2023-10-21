@@ -1,10 +1,22 @@
+// ignore_for_file: always_declare_return_types
+
 part of 'database.dart';
 
 extension DatabaseExtensionSQL on DatabaseHelper {
-  // ignore: always_declare_return_types
+  _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (newVersion >= 2) {
+      if (kDebugMode) {
+        print('deleting savings table if existent');
+      }
+      await db.execute('''
+          DROP TABLE IF EXISTS saving;
+          ''');
+    }
+  }
+
   _onCreate(Database db, int version) async {
     if (kDebugMode) {
-      print('creating database');
+      print('creating database version $version');
     }
     await db.execute('PRAGMA foreign_keys = ON');
     await db.execute('''
@@ -46,19 +58,6 @@ CREATE TABLE IF NOT EXISTS XXGroup(
   name TEXT,
   icon INTEGER,
   color INTEGER,
-  description TEXT,
-  PRIMARY KEY(id));
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS saving(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  balance REAL,
-  start_date TEXT,
-  end_date TEXT,
-  goal REAL,
   description TEXT,
   PRIMARY KEY(id));
   ''');
@@ -114,13 +113,9 @@ CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
     }
   }
 
-  // ignore: always_declare_return_types
   _dropTables(Database db) async {
     await db.execute('''
           DROP TABLE IF EXISTS XXGroup;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS saving;
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS budget;
