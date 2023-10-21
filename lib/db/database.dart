@@ -8,7 +8,6 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
-import 'package:budgetiser/shared/dataClasses/savings.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
@@ -24,7 +23,6 @@ part 'account_part.dart';
 part 'budget_part.dart';
 part 'category_part.dart';
 part 'group_part.dart';
-part 'savings_part.dart';
 part 'single_transaction_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
@@ -73,11 +71,17 @@ class DatabaseHelper {
 
   /// Clear db and reset (TODO some) shared preferences
   // ignore: always_declare_return_types
-  resetDB() async {
-    final Database db = await database;
+  _resetDB(Database db, int newVersion) async {
     await _dropTables(db);
     await recentlyUsedAccount.removeAllItems();
-    await _onCreate(db, 1);
+    await _onCreate(db, newVersion);
+  }
+
+  /// Public method for resetting db
+  // ignore: always_declare_return_types
+  resetDB({int newVersion = 1}) async {
+    final Database db = await database;
+    await _resetDB(db, newVersion);
   }
 
   Future fillDBwithTMPdata() async {
@@ -107,16 +111,12 @@ class DatabaseHelper {
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
-        version: 1,
+        version: 2,
         password: preferences.getBool('encrypted')! ? _passcode : null,
         onCreate: _onCreate,
-        onUpgrade: (db, oldVersion, newVersion) async {
-          _dropTables(db);
-          _onCreate(db, newVersion);
-        },
+        onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {
-          _dropTables(db);
-          _onCreate(db, newVersion);
+          await _resetDB(db, newVersion);
         },
       );
     } catch (e) {
@@ -179,13 +179,6 @@ class DatabaseHelper {
     pushGetAllGroupsStream();
     await allGroupsStream.first;
 
-    allSavingsStream.listen((event) {
-      fullJSON['Savings'] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllSavingsStream();
-    await allSavingsStream.first;
-
     allTransactionStream.listen((event) {
       fullJSON['Transactions'] =
           event.map((element) => element.toJsonMap()).toList();
@@ -217,9 +210,6 @@ class DatabaseHelper {
       _allCategoryStreamController =
       StreamController<List<TransactionCategory>>.broadcast();
 
-  final StreamController<List<Savings>> _allSavingsStreamController =
-      StreamController<List<Savings>>.broadcast();
-
   final StreamController<List<Budget>> _allBudgetsStreamController =
       StreamController<List<Budget>>.broadcast();
 
@@ -230,7 +220,6 @@ class DatabaseHelper {
     _allAccountsStreamController.close();
     _allTransactionStreamController.close();
     _allCategoryStreamController.close();
-    _allSavingsStreamController.close();
     _allBudgetsStreamController.close();
     _allGroupsStreamController.close();
   }
