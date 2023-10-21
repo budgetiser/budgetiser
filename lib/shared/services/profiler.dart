@@ -11,13 +11,14 @@ class Profiler {
 
   var uuid = const Uuid();
 
-  void start(String eventName) {
+  String start(String eventName) {
     String id = uuid.v1();
     timeMeasurements[id] = {'id': id, 'name': eventName, 'start': 0, 'end': 0};
 
     // Start measurement as late as possible
     lastStarted.add(id);
     timeMeasurements[id]!['start'] = DateTime.now().microsecondsSinceEpoch;
+    return id;
   }
 
   void end([String? id]) {
