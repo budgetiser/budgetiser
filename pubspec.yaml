@@ -26,6 +26,7 @@ dependencies:
   package_info_plus: ^4.0.2
   equations: ^5.0.1
   intl: ^0.18.1
+  uuid: ^4.0.0
 
   # MIT License
   fl_chart: ^0.63.0

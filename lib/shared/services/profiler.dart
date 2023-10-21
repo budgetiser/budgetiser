@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 class Profiler {
   Profiler._privateConstructor();
@@ -8,44 +9,30 @@ class Profiler {
   Map<String, Map<String, dynamic>> timeMeasurements = {};
   List<String> lastStarted = [];
 
+  var uuid = const Uuid();
+
   void start(String eventName) {
-    bool add = false;
-    if (!timeMeasurements.containsKey(eventName)) {
-      timeMeasurements[eventName] = {
-        'name': eventName,
-        'start': <int>[],
-        'end': <int>[],
-        'count': 0,
-      };
-      add = true;
-    } else if ((timeMeasurements[eventName]!['start'] as List<int>).length >
-        (timeMeasurements[eventName]!['end'] as List<int>).length) {
-      throw 'Time measure error: Event "$eventName" not finished before reassignment!';
-    } else {
-      add = true;
-    }
+    String id = uuid.v1();
+    timeMeasurements[id] = {'id': id, 'name': eventName, 'start': 0, 'end': 0};
 
     // Start measurement as late as possible
-    if (add) {
-      lastStarted.add(eventName);
-      (timeMeasurements[eventName]!['start'] as List<int>)
-          .add(DateTime.now().microsecondsSinceEpoch);
-    }
+    lastStarted.add(id);
+    timeMeasurements[id]!['start'] = DateTime.now().microsecondsSinceEpoch;
   }
 
-  void end([String? eventName]) {
+  void end([String? id]) {
     // End measurement as fast as possible
     final tempTime = DateTime.now().microsecondsSinceEpoch;
-    String name = eventName ?? lastStarted.removeLast();
-    if (!timeMeasurements.containsKey(name)) {
-      throw 'Time measure error: Event "$name" not defined!';
-    } else if ((timeMeasurements[name]!['end'] as List<int>).length >=
-        (timeMeasurements[name]!['start'] as List<int>).length) {
-      throw 'Time measure error: Event "$name" not started before reassignment!';
+    if (id == null) {
+      id = lastStarted.removeLast();
     } else {
-      (timeMeasurements[name]!['end'] as List<int>).add(tempTime);
-      timeMeasurements[name]!['count'] =
-          (timeMeasurements[name]!['count'] as int) + 1;
+      lastStarted.removeWhere((element) => element == id);
+    }
+
+    if (!timeMeasurements.containsKey(id)) {
+      throw 'Time measure error: Event "$id" not defined!';
+    } else {
+      timeMeasurements[id]!['end'] = tempTime;
     }
   }
 
@@ -62,38 +49,38 @@ class Profiler {
       print(
           'Name\tAvg. [ms]\tMin. [ms]\tMax. [ms]\tOccurrences [compl.]\tTotal Time [ms]');
     }
+    Map<String, Map<String, dynamic>> grouped_measures = {};
+
     timeMeasurements.forEach((key, event) {
-      final List<int> startTimes = event['start'];
-      final List<int> endTimes = event['end'];
-      final List<int> timings = [];
-
-      if (startTimes.length != endTimes.length) {
-        throw 'Time measure error: Event "$key" has different amounts of values for start and end times!';
-      }
-
-      for (int i = 0; i < startTimes.length; i++) {
-        final timing = (endTimes[i] - startTimes[i]);
-        // Exclude 0 values
-        if (timing >= 0) {
-          final timingInMs = timing / 1000;
-          timings.add(timingInMs.toInt());
-        }
-      }
-
-      final minTiming =
-          timings.isEmpty ? 0 : timings.reduce((a, b) => a < b ? a : b);
-      final maxTiming =
-          timings.isEmpty ? 0 : timings.reduce((a, b) => a > b ? a : b);
-      final avgTiming = timings.isEmpty
-          ? 0
-          : timings.reduce((a, b) => a + b) / timings.length;
-      final totalTiming = avgTiming * event['count'];
-
-      if (kDebugMode) {
-        print(
-            '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t${event['count']}\t${totalTiming.toStringAsFixed(2)}');
+      final String name = event['name'];
+      final duration = event['end'] - event['start'];
+      if (grouped_measures.containsKey(name)) {
+        (grouped_measures[name]!['durations'] as List<int>).add(duration);
+        grouped_measures[name]!['occurences'] =
+            (grouped_measures[name]!['occurences'] as int) + 1;
+      } else {
+        grouped_measures[name] = {
+          'durations': [duration],
+          'occurences': 1
+        };
       }
     });
+
+    grouped_measures.forEach((key, value) {
+      final List<int> durations = (value['durations'] as List<int>);
+      final int occurences = value['occurences'];
+      final minTiming =
+          durations.isEmpty ? 0 : durations.reduce((a, b) => a < b ? a : b);
+      final maxTiming =
+          durations.isEmpty ? 0 : durations.reduce((a, b) => a < b ? a : b);
+      final totalTiming = durations.reduce((a, b) => a + b);
+      final avgTiming = durations.isEmpty ? 0 : totalTiming / occurences;
+      if (kDebugMode) {
+        print(
+            '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t$occurences\t${totalTiming.toStringAsFixed(2)}');
+      }
+    });
+
     if (reset) {
       endAll();
       lastStarted.clear();
