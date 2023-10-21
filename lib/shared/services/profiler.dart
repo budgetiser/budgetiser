@@ -55,7 +55,7 @@ class Profiler {
     }
   }
 
-  void analyseTimeMeasurements() {
+  void analyseTimeMeasurements({bool reset = true}) {
     // Analyze time measurements and print them in a table.
     // Multiple events with the same name are averaged.
     if (kDebugMode) {
@@ -94,5 +94,10 @@ class Profiler {
             '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t${event['count']}\t${totalTiming.toStringAsFixed(2)}');
       }
     });
+    if (reset) {
+      endAll();
+      lastStarted.clear();
+      timeMeasurements.clear();
+    }
   }
 }
