@@ -110,22 +110,23 @@ class _AccountScreenState extends State<AccountScreen> {
       body: StreamBuilder<List<Account>>(
         stream: DatabaseHelper.instance.allAccountsStream,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            snapshot.data!.sort(sortFunction);
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              padding: const EdgeInsets.only(bottom: 80),
-              itemBuilder: (BuildContext context, int index) {
-                return AccountItem(
-                  accountData: snapshot.data![index],
-                );
-              },
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          } else if (snapshot.hasError) {
+          }
+          if (snapshot.hasError) {
             return const Text('Oops!');
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          snapshot.data!.sort(sortFunction);
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            padding: const EdgeInsets.only(bottom: 80),
+            itemBuilder: (BuildContext context, int index) {
+              return AccountItem(
+                accountData: snapshot.data![index],
+              );
+            },
           );
         },
       ),

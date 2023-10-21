@@ -60,59 +60,60 @@ class _CategoryPickerState extends State<CategoryPicker> {
                           child: StreamBuilder<List<TransactionCategory>>(
                             stream: DatabaseHelper.instance.allCategoryStream,
                             builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return ListView.builder(
-                                  itemBuilder: (context, j) {
-                                    return StatefulBuilder(
-                                      builder: (context, localSetState) =>
-                                          CheckboxListTile(
-                                        title: Row(
-                                          children: [
-                                            Icon(
-                                              snapshot.data![j].icon,
-                                              color: snapshot.data![j].color,
-                                            ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            Flexible(
-                                              child: Text(
-                                                snapshot.data![j].name,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                  color:
-                                                      snapshot.data![j].color,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        value: _selected
-                                            .contains(snapshot.data![j]),
-                                        onChanged: (bool? value) {
-                                          localSetState(() {
-                                            if (value == true) {
-                                              _selected.add(
-                                                snapshot.data![j],
-                                              );
-                                            } else {
-                                              _selected.remove(
-                                                snapshot.data![j],
-                                              );
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  itemCount: snapshot.data!.length,
+                              if (!snapshot.hasData) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
                                 );
-                              } else if (snapshot.hasError) {
+                              }
+                              if (snapshot.hasError) {
                                 return const Text('Oops!');
                               }
-                              return const Center(
-                                child: CircularProgressIndicator(),
+
+                              return ListView.builder(
+                                itemBuilder: (context, j) {
+                                  return StatefulBuilder(
+                                    builder: (context, localSetState) =>
+                                        CheckboxListTile(
+                                      title: Row(
+                                        children: [
+                                          Icon(
+                                            snapshot.data![j].icon,
+                                            color: snapshot.data![j].color,
+                                          ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              snapshot.data![j].name,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                color: snapshot.data![j].color,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      value:
+                                          _selected.contains(snapshot.data![j]),
+                                      onChanged: (bool? value) {
+                                        localSetState(() {
+                                          if (value == true) {
+                                            _selected.add(
+                                              snapshot.data![j],
+                                            );
+                                          } else {
+                                            _selected.remove(
+                                              snapshot.data![j],
+                                            );
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                                itemCount: snapshot.data!.length,
                               );
                             },
                           ),

@@ -15,43 +15,43 @@ class AccountItemsWidget extends StatelessWidget {
     return FutureBuilder(
       future: recentlyUsedAccount.getList(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.isEmpty) {
-            return const SizedBox(
-              height: 40,
-              child: Center(
-                child: Text('no accounts used yet'),
-              ),
-            );
-          }
-          return Container(
-            height:
-                snapshot.data!.length * 95 + (snapshot.data!.length - 1) * 21,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(8),
-              ),
-              border: Border.all(
-                color: Colors.grey,
-                width: 1.0,
-              ),
-            ),
-            child: ListView.builder(
-              itemCount: snapshot.data!.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return AccountItem(
-                  accountData: snapshot.data![index],
-                );
-              },
-            ),
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
-        } else if (snapshot.hasError) {
+        }
+        if (snapshot.hasError) {
           return const Text('Oops!');
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        if (snapshot.data!.isEmpty) {
+          return const SizedBox(
+            height: 40,
+            child: Center(
+              child: Text('no accounts used yet'),
+            ),
+          );
+        }
+        return Container(
+          height: snapshot.data!.length * 95 + (snapshot.data!.length - 1) * 21,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8),
+            ),
+            border: Border.all(
+              color: Colors.grey,
+              width: 1.0,
+            ),
+          ),
+          child: ListView.builder(
+            itemCount: snapshot.data!.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return AccountItem(
+                accountData: snapshot.data![index],
+              );
+            },
+          ),
         );
       },
     );

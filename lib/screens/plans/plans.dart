@@ -67,50 +67,50 @@ class _PlansState extends State<Plans> {
           StreamBuilder<List<Budget>>(
             stream: DatabaseHelper.instance.allBudgetsStream,
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<Budget> budgetList = snapshot.data!
-                  ..sort((a, b) => a.compareTo(b));
-
-                return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: budgetList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return BudgetItem(
-                      budgetData: budgetList[index],
-                    );
-                  },
-                  padding: const EdgeInsets.only(bottom: 80),
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
-              } else if (snapshot.hasError) {
+              }
+              if (snapshot.hasError) {
                 return const Text('Oops!');
               }
-              return const Center(
-                child: CircularProgressIndicator(),
+              List<Budget> budgetList = snapshot.data!
+                ..sort((a, b) => a.compareTo(b));
+              return ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: budgetList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return BudgetItem(
+                    budgetData: budgetList[index],
+                  );
+                },
+                padding: const EdgeInsets.only(bottom: 80),
               );
             },
           ),
           StreamBuilder<List<Savings>>(
             stream: DatabaseHelper.instance.allSavingsStream,
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<Savings> savingsList = snapshot.data!
-                  ..sort((a, b) => a.name.compareTo(b.name));
-
-                return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: savingsList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SavingItem(
-                      savingData: savingsList[index],
-                    );
-                  },
-                  padding: const EdgeInsets.only(bottom: 80),
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
-              } else if (snapshot.hasError) {
+              }
+              if (snapshot.hasError) {
                 return const Text('Oops!');
               }
-              return const Center(
-                child: CircularProgressIndicator(),
+              List<Savings> savingsList = snapshot.data!
+                ..sort((a, b) => a.name.compareTo(b.name));
+              return ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: savingsList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SavingItem(
+                    savingData: savingsList[index],
+                  );
+                },
+                padding: const EdgeInsets.only(bottom: 80),
               );
             },
           ),
