@@ -57,28 +57,28 @@ class Profiler {
       final duration = event['end'] - event['start'];
       if (grouped_measures.containsKey(name)) {
         (grouped_measures[name]!['durations'] as List<int>).add(duration);
-        grouped_measures[name]!['occurences'] =
-            (grouped_measures[name]!['occurences'] as int) + 1;
+        grouped_measures[name]!['occurrences'] =
+            (grouped_measures[name]!['occurrences'] as int) + 1;
       } else {
         grouped_measures[name] = {
           'durations': <int>[duration],
-          'occurences': 1
+          'occurrences': 1
         };
       }
     });
 
     grouped_measures.forEach((key, value) {
       final List<int> durations = (value['durations'] as List<int>);
-      final int occurences = value['occurences'];
+      final int occurrences = value['occurrences'];
       final minTiming =
           durations.isEmpty ? 0 : durations.reduce((a, b) => a < b ? a : b);
       final maxTiming =
           durations.isEmpty ? 0 : durations.reduce((a, b) => a < b ? a : b);
       final totalTiming = durations.reduce((a, b) => a + b);
-      final avgTiming = durations.isEmpty ? 0 : totalTiming / occurences;
+      final avgTiming = durations.isEmpty ? 0 : totalTiming / occurrences;
       if (kDebugMode) {
         print(
-            '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t$occurences\t${totalTiming.toStringAsFixed(2)}');
+            '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t$occurrences\t${totalTiming.toStringAsFixed(2)}');
       }
     });
 
