@@ -23,7 +23,7 @@ class Profiler {
 
   void end([String? id]) {
     // End measurement as fast as possible
-    final tempTime = DateTime.now().microsecondsSinceEpoch;
+    final int tempTime = DateTime.now().microsecondsSinceEpoch;
     if (id == null) {
       id = lastStarted.removeLast();
     } else {
@@ -54,7 +54,7 @@ class Profiler {
 
     timeMeasurements.forEach((key, event) {
       final String name = event['name'];
-      final duration = event['end'] - event['start'];
+      final int duration = event['end'] - event['start'];
       if (grouped_measures.containsKey(name)) {
         (grouped_measures[name]!['durations'] as List<int>).add(duration);
         grouped_measures[name]!['occurrences'] =
