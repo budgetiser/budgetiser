@@ -46,7 +46,7 @@ class CreateDrawer extends StatelessWidget {
             ),
           ),
           singleDrawerItem(context, Icons.home, 'Home', 'home'),
-          singleDrawerItem(context, Icons.attach_money, 'Plans', 'plans'),
+          singleDrawerItem(context, Icons.attach_money, 'Budgets', 'budgets'),
           singleDrawerItem(
               context, Icons.account_balance, 'Account', 'account'),
           const Divider(thickness: 2, height: 2),
