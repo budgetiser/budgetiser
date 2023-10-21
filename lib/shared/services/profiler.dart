@@ -86,10 +86,11 @@ class Profiler {
       final avgTiming = timings.isEmpty
           ? 0
           : timings.reduce((a, b) => a + b) / timings.length;
+      final totalTiming = avgTiming * event['count'];
 
       if (kDebugMode) {
         print(
-            '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t${event['count']}');
+            '$key\t${avgTiming.toStringAsFixed(2)}\t${minTiming.toStringAsFixed(2)}\t${maxTiming.toStringAsFixed(2)}\t${event['count']}\t${totalTiming.toStringAsFixed(2)}');
       }
     });
   }
