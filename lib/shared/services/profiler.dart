@@ -50,8 +50,8 @@ class Profiler {
   }
 
   void endAll() {
-    for (var event in lastStarted) {
-      end(event);
+    for (int i = 0; i < lastStarted.length; i++) {
+      end(lastStarted.removeLast());
     }
   }
 
@@ -59,7 +59,8 @@ class Profiler {
     // Analyze time measurements and print them in a table.
     // Multiple events with the same name are averaged.
     if (kDebugMode) {
-      print('Name\tAvg. [ms]\tMin. [ms]\tMax. [ms]\tOccurrences [compl.]');
+      print(
+          'Name\tAvg. [ms]\tMin. [ms]\tMax. [ms]\tOccurrences [compl.]\tTotal Time [ms]');
     }
     timeMeasurements.forEach((key, event) {
       final List<int> startTimes = event['start'];
