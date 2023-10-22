@@ -92,7 +92,7 @@ class DatabaseHelper {
       await createCategory(category);
     }
     for (var transaction in TMP_DATA_transactionList) {
-      await createSingleTransaction(transaction);
+      await createSingleTransaction(transaction, updateStreams: false);
     }
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);

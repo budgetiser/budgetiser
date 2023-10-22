@@ -49,7 +49,10 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     );
   }
 
-  Future<int> createSingleTransaction(SingleTransaction transaction) async {
+  Future<int> createSingleTransaction(
+    SingleTransaction transaction, {
+    bool updateStreams = true,
+  }) async {
     final db = await database;
 
     int transactionId = await db.insert(
@@ -75,10 +78,11 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
           transaction.account2 != null ? transaction.account2!.id : null,
     });
 
-    pushGetAllTransactionsStream();
-    pushGetAllAccountsStream();
+    if (updateStreams) {
+      pushGetAllTransactionsStream();
+      pushGetAllAccountsStream();
+    }
     recentlyUsedAccount.addItem(account.id.toString());
-
     final List<Map<String, dynamic>> maps = await db.query(
       'categoryToBudget',
       columns: ['budget_id'],
