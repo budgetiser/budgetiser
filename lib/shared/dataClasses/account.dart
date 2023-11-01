@@ -11,7 +11,7 @@ class Account extends Selectable {
     required super.color,
     required this.id,
     required this.balance,
-    required this.description,
+    this.description = '',
   });
 
   Map<String, dynamic> toMap() => {

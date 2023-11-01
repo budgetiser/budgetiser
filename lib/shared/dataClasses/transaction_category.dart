@@ -10,8 +10,8 @@ class TransactionCategory extends Selectable {
     required super.name,
     required super.icon,
     required super.color,
-    required this.description,
-    required this.isHidden,
+    this.description = '',
+    this.isHidden = false,
   });
 
   Map<String, dynamic> toMap() => {

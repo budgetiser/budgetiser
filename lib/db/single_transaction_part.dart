@@ -18,7 +18,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     List<SingleTransaction> list = [];
     for (int i = 0; i < mapSingle.length; i++) {
       list.add(
-        await _mapToSingleTransaction(mapSingle[i]),
+        await _mapToSingleTransactionLEGACY(mapSingle[i]),
       );
     }
 
@@ -30,7 +30,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Timeline.finishSync();
   }
 
-  Future<SingleTransaction> _mapToSingleTransaction(
+  Future<SingleTransaction> _mapToSingleTransactionLEGACY(
     Map<String, dynamic> mapItem,
   ) async {
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
@@ -45,6 +45,38 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       account2: mapItem['account2_id'] == null
           ? null
           : await getOneAccount(mapItem['account2_id']),
+      date: DateTime.parse(mapItem['date'].toString()),
+    );
+  }
+
+  Future<SingleTransaction> _mapToSingleTransaction(
+    Map<String, dynamic> mapItem,
+  ) async {
+    if (mapItem['account2_id'] != null) {
+      return _mapToSingleTransactionLEGACY(mapItem);
+    }
+    return SingleTransaction(
+      id: mapItem['id'],
+      title: mapItem['title'].toString(),
+      value: mapItem['value'],
+      description: mapItem['description'].toString(),
+      category: TransactionCategory(
+        id: mapItem['category_id'],
+        name: mapItem['category_name'],
+        color: Color(mapItem['category_color']),
+        icon: IconData(mapItem['category_icon'], fontFamily: 'MaterialIcons'),
+      ),
+      account: Account(
+        name: mapItem['account_name'],
+        icon: IconData(mapItem['account_icon'], fontFamily: 'MaterialIcons'),
+        color: Color(mapItem['account_color']),
+        id: mapItem['account_id'],
+        balance: mapItem['account_balance'],
+        // todo no description
+      ),
+      // account2: mapItem['account2_id'] == null
+      //     ? null
+      //     : await getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
   }
@@ -162,7 +194,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     );
 
     if (mapSingle.length == 1) {
-      return await _mapToSingleTransaction(mapSingle[0]);
+      return await _mapToSingleTransactionLEGACY(mapSingle[0]);
     }
     throw Exception('Error in getOneTransaction');
   }
@@ -177,7 +209,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
       DateTime dateTime = DateTime.parse(item['date']);
-      distinctMonths.add(DateTime.parse('${dateAsYYYYMM(dateTime)}-01'));
+      distinctMonths.add(firstOfMonth(dateTime));
     }
 
     List<DateTime> sorted = distinctMonths.toList()
@@ -193,17 +225,22 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     TransactionCategory? category,
   }) async {
     final db = await database;
+    var s = Stopwatch()..start();
 
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-      '''Select distinct * from singleTransaction, singleTransactionToAccount 
-      where singleTransaction.id = singleTransactionToAccount.transaction_id 
+      '''Select distinct *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,
+      account.icon as account_icon, account.color as account_color, account.id as account_id, account.name as account_name, account.balance as account_balance,
+      singleTransaction.description as description, singleTransaction.id as id
+      from singleTransaction, singleTransactionToAccount, category, account
+      where account.id = singleTransactionToAccount.account1_id 
+      and singleTransactionToAccount.transaction_id = singleTransaction.id
+      and category.id = singleTransaction.category_id
       and date LIKE ?
       ${account != null ? "and (singleTransactionToAccount.account1_id = ${account.id} or singleTransactionToAccount.account2_id = ${account.id})" : ""}
       ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
       ''',
       ['${dateAsYYYYMM(inMonth)}%'],
     );
-
     List<SingleTransaction> transactions = [];
     for (int i = 0; i < mapSingle.length; i++) {
       transactions.add(await _mapToSingleTransaction(mapSingle[i]));
@@ -212,6 +249,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     transactions.sort((a, b) {
       return b.date.compareTo(a.date);
     });
+    print('month in ${s.elapsed}');
 
     return transactions;
   }
