@@ -23,30 +23,30 @@ class GroupsScreen extends StatelessWidget {
       body: StreamBuilder<List<Group>>(
         stream: DatabaseHelper.instance.allGroupsStream,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    GroupItem(groupData: snapshot.data![index]),
-                    const Divider(
-                      indent: 15,
-                      endIndent: 15,
-                    ),
-                  ],
-                );
-              },
-              padding: const EdgeInsets.only(bottom: 80),
-            );
-          } else if (snapshot.hasError) {
-            return const Text('Oops!');
-          } else {
+          if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
+          if (snapshot.hasError) {
+            return const Text('Oops!');
+          }
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Column(
+                children: [
+                  GroupItem(groupData: snapshot.data![index]),
+                  const Divider(
+                    indent: 15,
+                    endIndent: 15,
+                  ),
+                ],
+              );
+            },
+            padding: const EdgeInsets.only(bottom: 80),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(

@@ -39,12 +39,12 @@ class AboutScreen extends StatelessWidget {
               subtitle: FutureBuilder(
                 future: PackageInfo.fromPlatform(),
                 builder: (context, AsyncSnapshot<PackageInfo> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(
-                      snapshot.data!.version,
-                    );
+                  if (!snapshot.hasData) {
+                    return Container();
                   }
-                  return Container();
+                  return Text(
+                    snapshot.data!.version,
+                  );
                 },
               ),
               onTap: null,

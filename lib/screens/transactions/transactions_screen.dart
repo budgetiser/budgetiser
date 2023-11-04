@@ -37,6 +37,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     DatabaseHelper.instance.allTransactionStream.listen((event) {
       updateMonthsFuture();
     });
@@ -55,8 +57,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     if (widget.initialCategoryFilter != null) {
       _currentFilterCategory = widget.initialCategoryFilter;
     }
-
-    super.initState();
   }
 
   @override
@@ -73,10 +73,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         future: monthsFuture,
         key: _futureBuilderKey,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _screenContent(snapshot);
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
           }
-          return const Center(child: CircularProgressIndicator());
+          return _screenContent(snapshot.data!);
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -184,12 +184,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
   }
 
-  SingleChildScrollView _screenContent(AsyncSnapshot<List<DateTime>> snapshot) {
+  SingleChildScrollView _screenContent(List<DateTime> monthYearSnapshotData) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         children: [
-          for (DateTime monthYear in snapshot.data!)
+          for (DateTime monthYear in monthYearSnapshotData)
             FutureBuilder<List<SingleTransaction>>(
               future: DatabaseHelper.instance.getFilteredTransactionsByMonth(
                 inMonth: monthYear,
@@ -197,42 +197,46 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 category: _currentFilterCategory,
               ),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!.isEmpty) return Container();
-                  return ExpansionTile(
-                    backgroundColor: Theme.of(context).dividerTheme.color,
-                    collapsedBackgroundColor:
-                        Theme.of(context).dividerTheme.color,
-                    initiallyExpanded: isCurrentMonth(monthYear),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (isCurrentMonth(monthYear))
-                          const Text('Current Month')
-                        else
-                          Text(dateAsYYYYMM(monthYear)),
-                        Text(snapshot.data!.length.toString()),
-                      ],
-                    ),
-                    children: [
-                      Container(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) {
-                            return TransactionItem(
-                              // TODO: Bug: no splash effect. probably because of colored container
-                              transactionData: snapshot.data![index],
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 }
-                return const Center(child: CircularProgressIndicator());
+                if (snapshot.data!.isEmpty) {
+                  return Container();
+                }
+                return ExpansionTile(
+                  backgroundColor: Theme.of(context).dividerTheme.color,
+                  collapsedBackgroundColor:
+                      Theme.of(context).dividerTheme.color,
+                  initiallyExpanded: isCurrentMonth(monthYear),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (isCurrentMonth(monthYear))
+                        const Text('Current Month')
+                      else
+                        Text(dateAsYYYYMM(monthYear)),
+                      Text(snapshot.data!.length.toString()),
+                    ],
+                  ),
+                  children: [
+                    Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return TransactionItem(
+                            // TODO: Bug: no splash effect. probably because of colored container
+                            transactionData: snapshot.data![index],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
         ],
