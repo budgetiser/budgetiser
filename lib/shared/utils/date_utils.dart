@@ -24,3 +24,11 @@ String dateAsDDMMYYYY(DateTime date) {
 DateTime firstOfMonth(DateTime date) {
   return DateTime(date.year, date.month, 1);
 }
+
+/// Used for debugging messages
+String currentSecondsAndMilliseconds() {
+  DateTime now = DateTime.now();
+  String formattedTime =
+      "${now.second}.${now.millisecond.toString().padLeft(3, '0')}";
+  return formattedTime;
+}
