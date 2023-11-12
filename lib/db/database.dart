@@ -10,7 +10,9 @@ import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -179,12 +181,9 @@ class DatabaseHelper {
     pushGetAllGroupsStream();
     await allGroupsStream.first;
 
-    allTransactionStream.listen((event) {
-      fullJSON['Transactions'] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllTransactionsStream();
-    await allTransactionStream.first;
+    List<SingleTransaction> allTransactions = await getAllTransactions();
+    fullJSON['Transactions'] =
+        allTransactions.map((element) => element.toJsonMap()).toList();
 
     saveJsonToJsonFile(jsonEncode(fullJSON));
   }
@@ -202,10 +201,6 @@ class DatabaseHelper {
   final StreamController<List<Account>> _allAccountsStreamController =
       StreamController<List<Account>>.broadcast();
 
-  final StreamController<List<SingleTransaction>>
-      _allTransactionStreamController =
-      StreamController<List<SingleTransaction>>.broadcast();
-
   final StreamController<List<TransactionCategory>>
       _allCategoryStreamController =
       StreamController<List<TransactionCategory>>.broadcast();
@@ -218,18 +213,8 @@ class DatabaseHelper {
 
   void dispose() {
     _allAccountsStreamController.close();
-    _allTransactionStreamController.close();
     _allCategoryStreamController.close();
     _allBudgetsStreamController.close();
     _allGroupsStreamController.close();
-  }
-
-  /**
-   * Helper methods
-   */
-
-  /// rounds to 2 decimal places by cutting off all digits after
-  double _roundDouble(double value) {
-    return double.parse(value.toStringAsFixed(2));
   }
 }

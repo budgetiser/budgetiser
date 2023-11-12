@@ -62,7 +62,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
     final db = await database;
     await db.update(
       'account',
-      {'balance': _roundDouble(newBalance)},
+      {'balance': roundDouble(newBalance)},
       where: 'id = ?',
       whereArgs: [account.id],
     );
