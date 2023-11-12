@@ -8,13 +8,14 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       _allTransactionStreamController.stream;
 
   Future pushGetAllTransactionsStream() async {
-    Timeline.startSync('allTransactionsStream');
+    Profiler.instance.start('push all transaction stream');
     final db = await database;
+    Profiler.instance.start('sql fetching');
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       '''Select distinct * from singleTransaction, singleTransactionToAccount
       where singleTransaction.id = singleTransactionToAccount.transaction_id''',
     );
-
+    Profiler.instance.end();
     List<SingleTransaction> list = [];
     for (int i = 0; i < mapSingle.length; i++) {
       list.add(
@@ -27,15 +28,16 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     });
 
     allTransactionSink.add(list);
-    Timeline.finishSync();
+    Profiler.instance.end();
   }
 
   Future<SingleTransaction> _mapToSingleTransaction(
     Map<String, dynamic> mapItem,
   ) async {
+    Profiler.instance.start('map to single transaction');
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
     Account account = await getOneAccount(mapItem['account1_id']);
-    return SingleTransaction(
+    SingleTransaction s = SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
       value: mapItem['value'],
@@ -47,6 +49,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
           : await getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
+    Profiler.instance.end();
+    return s;
   }
 
   Future<int> createSingleTransaction(SingleTransaction transaction) async {
@@ -188,6 +192,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Account? account,
     TransactionCategory? category,
   }) async {
+    var timelineTask = TimelineTask(filterKey: 'getFilterByMonth')
+      ..start('get filter by month ${dateAsYYYYMM(inMonth)}');
     final db = await database;
 
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
@@ -208,7 +214,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     transactions.sort((a, b) {
       return b.date.compareTo(a.date);
     });
-
+    timelineTask.finish();
     return transactions;
   }
 }
