@@ -4,11 +4,13 @@ import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
@@ -37,9 +39,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   void initState() {
-    DatabaseHelper.instance.allTransactionStream.listen((event) {
-      updateMonthsFuture();
-    });
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       _accountList = event;
     });
@@ -61,36 +60,39 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          transactionFilter(context),
-        ],
-        title: const Text('Transactions'),
-      ),
-      drawer: const CreateDrawer(),
-      body: FutureBuilder<List<DateTime>>(
-        future: monthsFuture,
-        key: _futureBuilderKey,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _screenContent(snapshot);
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const TransactionForm(),
-            ),
-          );
-        },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
-      ),
-    );
+    return Consumer<TransactionModel>(builder: (context, value, child) {
+      context.watch<TransactionModel>().addListener(updateMonthsFuture);
+      return Scaffold(
+        appBar: AppBar(
+          actions: [
+            transactionFilter(context),
+          ],
+          title: const Text('Transactions'),
+        ),
+        drawer: const CreateDrawer(),
+        body: FutureBuilder<List<DateTime>>(
+          future: monthsFuture,
+          key: _futureBuilderKey,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _screenContent(snapshot);
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const TransactionForm(),
+              ),
+            );
+          },
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: const Icon(Icons.add),
+        ),
+      );
+    });
   }
 
   // TODO: extract as seperate widget, use general multi picker

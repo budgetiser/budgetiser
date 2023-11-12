@@ -28,20 +28,15 @@ void main() {
 
     final stopwatch = Stopwatch()..start();
 
-    List<SingleTransaction>? streamContent;
-    var transactions = dbh.allTransactionStream.listen((event) {
-      streamContent = event;
-    });
-    await dbh.pushGetAllTransactionsStream();
+    List<SingleTransaction> allTransactions = await dbh.getAllTransactions();
 
     stopwatch.stop();
-    transactions.cancel();
 
     if (kDebugMode) {
       print('got Transaction stream in ${stopwatch.elapsed}');
     }
 
-    expect(streamContent!.length, equals(TMP_DATA_transactionList.length));
+    expect(allTransactions.length, equals(TMP_DATA_transactionList.length));
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
   test('Performance: Fetch all TMP categories', () async {

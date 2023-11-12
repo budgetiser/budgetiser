@@ -81,11 +81,11 @@ extension DatabaseExtensionStat on DatabaseHelper {
         } else {
           singleAccountResult.add({
             DateTime.parse(element['date']).add(const Duration(minutes: 1)):
-                _roundDouble(balance),
+                roundDouble(balance),
           });
           balance = balance - element['value'];
           singleAccountResult.add({
-            DateTime.parse(element['date']): _roundDouble(balance),
+            DateTime.parse(element['date']): roundDouble(balance),
           });
         }
       }
@@ -94,17 +94,17 @@ extension DatabaseExtensionStat on DatabaseHelper {
       if (singleAccountResult.isNotEmpty) {
         singleAccountResult
           ..insert(0, {
-            startDate: _roundDouble(startBalance),
+            startDate: roundDouble(startBalance),
           })
           ..add({
-            endDate: _roundDouble(endBalance),
+            endDate: roundDouble(endBalance),
           });
       }
 
       if (singleAccountResult.isEmpty) {
         singleAccountResult = [
-          {startDate: _roundDouble(startBalance)},
-          {endDate: _roundDouble(endBalance)},
+          {startDate: roundDouble(startBalance)},
+          {endDate: roundDouble(endBalance)},
         ];
       }
       result[account] = singleAccountResult;

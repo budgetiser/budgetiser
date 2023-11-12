@@ -8,11 +8,14 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
+import 'package:budgetiser/shared/services/transaction_provider.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A screen that allows the user to add a transaction
 /// or edit an existing one
@@ -125,9 +128,14 @@ class _TransactionFormState extends State<TransactionForm> {
                       title: 'Attention',
                       description:
                           "Are you sure to delete this Transaction? This action can't be undone!",
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.deleteSingleTransactionById(
-                            widget.initialSingleTransactionData!.id);
+                      onSubmitCallback: () async {
+                        await DatabaseHelper.instance
+                            .deleteSingleTransactionById(
+                          widget.initialSingleTransactionData!.id,
+                        );
+                        context
+                            .read<TransactionModel>()
+                            .notifyTransactionUpdate();
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
@@ -151,20 +159,22 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
           // Save button
           FloatingActionButton.extended(
-            onPressed: () {
+            onPressed: () async {
               _valueKey.currentState!
                   .validate(); // will otherwise not be called if global form is also invalid
               if (_formKey.currentState!.validate() &&
                   _valueKey.currentState!.validate()) {
                 if (hasInitialData) {
-                  DatabaseHelper.instance.updateSingleTransaction(
+                  await DatabaseHelper.instance.updateSingleTransaction(
                     _currentTransaction(),
                   );
+                  context.read<TransactionModel>().notifyTransactionUpdate();
                   Navigator.of(context).pop();
                 } else {
-                  DatabaseHelper.instance.createSingleTransaction(
+                  await DatabaseHelper.instance.createSingleTransaction(
                     _currentTransaction(),
                   );
+                  context.read<TransactionModel>().notifyTransactionUpdate();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => const TransactionsScreen(),

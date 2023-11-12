@@ -22,6 +22,18 @@ class SingleTransaction {
     required this.date,
   });
 
+  // SingleTransaction.fromDbMap( // TODO after db refactor: use common map datatype for initializing a transaction
+  //   this.category,
+  //   this.account,
+  //   this.account2,
+  // ) {
+  //   id = 1;
+  //   title = '';
+  //   value = 1;
+  //   description = '';
+  //   date = DateTime.now();
+  // }
+
   Map<String, dynamic> toMap() => {
         'title': title.trim(),
         'value': value,

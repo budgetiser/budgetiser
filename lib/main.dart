@@ -6,13 +6,20 @@ import 'package:budgetiser/screens/create_db_screen.dart';
 import 'package:budgetiser/screens/home_screen.dart';
 import 'package:budgetiser/screens/login.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
+import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 
 Future<void> main() async {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TransactionModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

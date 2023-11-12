@@ -17,7 +17,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   sqflite_sqlcipher: ^2.1.1
   flutter_markdown: ^0.6.9+1
-  provider: ^6.0.2
+  provider: ^6.0.5
   jiffy: ^6.2.1
   shared_preferences: ^2.0.13
   path: ^1.8.1

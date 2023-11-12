@@ -1,13 +1,7 @@
 part of 'database.dart';
 
 extension DatabaseExtensionSingleTransaction on DatabaseHelper {
-  Sink<List<SingleTransaction>> get allTransactionSink =>
-      _allTransactionStreamController.sink;
-
-  Stream<List<SingleTransaction>> get allTransactionStream =>
-      _allTransactionStreamController.stream;
-
-  Future pushGetAllTransactionsStream() async {
+  Future<List<SingleTransaction>> getAllTransactions() async {
     Timeline.startSync('allTransactionsStream');
     final db = await database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
@@ -26,8 +20,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       return b.date.compareTo(a.date);
     });
 
-    allTransactionSink.add(list);
-    Timeline.finishSync();
+    return list;
   }
 
   Future<SingleTransaction> _mapToSingleTransactionLEGACY(
@@ -111,10 +104,12 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     });
 
     if (updateStreams) {
-      pushGetAllTransactionsStream();
+      getAllTransactions();
       pushGetAllAccountsStream();
     }
+
     recentlyUsedAccount.addItem(account.id.toString());
+
     final List<Map<String, dynamic>> maps = await db.query(
       'categoryToBudget',
       columns: ['budget_id'],
@@ -168,9 +163,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     for (int i = 0; i < maps.length; i++) {
       reloadBudgetBalanceFromID(maps[i]['budget_id']);
     }
-
-    pushGetAllAccountsStream();
-    pushGetAllTransactionsStream();
+    // pushGetAllAccountsStream();
+    // pushGetAllTransactionsStream();
   }
 
   Future<void> deleteSingleTransactionById(int id) async {
@@ -179,9 +173,9 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
     await deleteSingleTransactionById(transaction.id);
-    await createSingleTransaction(transaction);
+    await createSingleTransaction(transaction, updateStreams: false);
 
-    pushGetAllTransactionsStream();
+    // pushGetAllTransactionsStream();
   }
 
   Future<SingleTransaction> getOneTransaction(int id) async {
@@ -249,8 +243,6 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     transactions.sort((a, b) {
       return b.date.compareTo(a.date);
     });
-    print('month in ${s.elapsed}');
-
     return transactions;
   }
 }
