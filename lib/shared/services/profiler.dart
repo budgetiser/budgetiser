@@ -7,7 +7,7 @@ class Profiler {
 
   static final Profiler instance = Profiler._privateConstructor();
 
-  final _timeline = TimelineTask(filterKey: "profiler-UID-993e63f6");
+  final _timeline = TimelineTask(filterKey: 'profiler-UID-993e63f6');
 
   var uuid = const Uuid();
 
