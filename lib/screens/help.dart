@@ -19,17 +19,16 @@ class HelpScreen extends StatelessWidget {
       body: FutureBuilder(
         future: rootBundle.loadString('assets/how-to.md'),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if (snapshot.hasData) {
-            String data = snapshot.data!
-                .replaceAll('](images/', '](resource:assets/images/');
-            return Markdown(
-              data: data,
-            );
-          } else {
+          if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
+          String data = snapshot.data!
+              .replaceAll('](images/', '](resource:assets/images/');
+          return Markdown(
+            data: data,
+          );
         },
       ),
     );

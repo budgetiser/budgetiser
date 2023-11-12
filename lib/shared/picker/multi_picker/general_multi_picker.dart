@@ -18,7 +18,7 @@ class GeneralMultiPicker<T extends Selectable> extends StatefulWidget {
 
 class _GeneralMultiPickerState<T extends Selectable>
     extends State<GeneralMultiPicker<T>> {
-  final List<T> _selectedValues = [];
+  final List<T> selectedValues = [];
 
   @override
   Widget build(BuildContext context) {
@@ -38,60 +38,7 @@ class _GeneralMultiPickerState<T extends Selectable>
                       child: Text('No data!'),
                     );
                   }
-                  return SizedBox(
-                    width: double.maxFinite,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: widget.allValues.length,
-                          itemBuilder: (context, listIDX) {
-                            return CheckboxListTile(
-                              title: Row(
-                                children: [
-                                  Icon(
-                                    widget.allValues[listIDX].icon,
-                                    color: widget.allValues[listIDX].color,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Flexible(
-                                    child: Text(
-                                      widget.allValues[listIDX].name,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        color: widget.allValues[listIDX].color,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              value: _selectedValues
-                                  .contains(widget.allValues[listIDX]),
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == true) {
-                                    _selectedValues
-                                        .add(widget.allValues[listIDX]);
-                                  } else {
-                                    _selectedValues
-                                        .remove(widget.allValues[listIDX]);
-                                  }
-                                });
-                              },
-                            );
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, _selectedValues);
-                          },
-                          child: const Text('Save'),
-                        ),
-                      ],
-                    ),
-                  );
+                  return dialogContent(setState, context);
                 },
               ),
             );
@@ -99,7 +46,7 @@ class _GeneralMultiPickerState<T extends Selectable>
         );
 
         // dialog closed
-        widget.callback(_selectedValues);
+        widget.callback(selectedValues);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -111,11 +58,65 @@ class _GeneralMultiPickerState<T extends Selectable>
             Text(widget.heading),
             Row(
               children: [
-                for (T i in _selectedValues) i.getSelectableIconWidget()
+                for (T i in selectedValues) i.getSelectableIconWidget()
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  SizedBox dialogContent(StateSetter setState, BuildContext context) {
+    return SizedBox(
+      width: double.maxFinite,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.allValues.length,
+            itemBuilder: (context, listIDX) {
+              return CheckboxListTile(
+                title: Row(
+                  children: [
+                    Icon(
+                      widget.allValues[listIDX].icon,
+                      color: widget.allValues[listIDX].color,
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        widget.allValues[listIDX].name,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: widget.allValues[listIDX].color,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                value: selectedValues.contains(widget.allValues[listIDX]),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value == true) {
+                      selectedValues.add(widget.allValues[listIDX]);
+                    } else {
+                      selectedValues.remove(widget.allValues[listIDX]);
+                    }
+                  });
+                },
+              );
+            },
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, selectedValues);
+            },
+            child: const Text('Save'),
+          ),
+        ],
       ),
     );
   }

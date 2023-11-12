@@ -23,6 +23,8 @@ class _AccountPickerState extends State<AccountPicker> {
 
   @override
   void initState() {
+    super.initState();
+
     streamSubscription = DatabaseHelper.instance.allAccountsStream.listen(
       (value) {
         setState(() {
@@ -31,8 +33,6 @@ class _AccountPickerState extends State<AccountPicker> {
       },
     );
     DatabaseHelper.instance.pushGetAllAccountsStream();
-
-    super.initState();
   }
 
   @override

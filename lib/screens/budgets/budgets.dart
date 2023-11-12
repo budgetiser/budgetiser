@@ -31,25 +31,25 @@ class _BudgetsState extends State<Budgets> {
       body: StreamBuilder<List<Budget>>(
         stream: DatabaseHelper.instance.allBudgetsStream,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Budget> budgetList = snapshot.data!
-              ..sort((a, b) => a.compareTo(b));
-
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: budgetList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return BudgetItem(
-                  budgetData: budgetList[index],
-                );
-              },
-              padding: const EdgeInsets.only(bottom: 80),
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          } else if (snapshot.hasError) {
+          }
+          if (snapshot.hasError) {
             return const Text('Oops!');
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          List<Budget> budgetList = snapshot.data!
+            ..sort((a, b) => a.compareTo(b));
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: budgetList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return BudgetItem(
+                budgetData: budgetList[index],
+              );
+            },
+            padding: const EdgeInsets.only(bottom: 80),
           );
         },
       ),

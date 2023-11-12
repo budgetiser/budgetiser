@@ -53,24 +53,25 @@ class _MyAppState extends State<MyApp> {
       home: FutureBuilder(
         future: checkForStartScreen(),
         builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data) {
-              case 0: //Codes: [0 - Database found, no encryption preference]
-                return const HomeScreen();
-              case 1: //Codes: [1 - Database found, encryption preference]
-                return LoginScreen();
-              case 2: //Codes: [2 - no database found]
-                return const CreateDatabaseScreen();
-              case -1: //Codes: [-1 - Error]
-              default:
-                break;
-            }
-          } else if (snapshot.hasError) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
             return const Text('Oops!');
           }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          switch (snapshot.data) {
+            case 0: //Codes: [0 - Database found, no encryption preference]
+              return const HomeScreen();
+            case 1: //Codes: [1 - Database found, encryption preference]
+              return LoginScreen();
+            case 2: //Codes: [2 - no database found]
+              return const CreateDatabaseScreen();
+            case -1: //Codes: [-1 - Error]
+            default:
+              return Container();
+          }
         },
       ),
       routes: routes,

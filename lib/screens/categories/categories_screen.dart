@@ -23,36 +23,36 @@ class CategoriesScreen extends StatelessWidget {
       body: StreamBuilder<List<TransactionCategory>>(
         stream: DatabaseHelper.instance.allCategoryStream,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<TransactionCategory> categoryList = snapshot.data!
-              ..sort((a, b) => a.name.compareTo(b.name));
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: categoryList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      CategoryItem(
-                        categoryData: categoryList[index],
-                      ),
-                      const Divider(
-                        indent: 8,
-                        endIndent: 8,
-                      )
-                    ],
-                  );
-                },
-                padding: const EdgeInsets.only(bottom: 80),
-              ),
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          } else if (snapshot.hasError) {
+          }
+          if (snapshot.hasError) {
             return const Text('Oops!');
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          List<TransactionCategory> categoryList = snapshot.data!
+            ..sort((a, b) => a.name.compareTo(b.name));
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: categoryList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  children: [
+                    CategoryItem(
+                      categoryData: categoryList[index],
+                    ),
+                    const Divider(
+                      indent: 8,
+                      endIndent: 8,
+                    )
+                  ],
+                );
+              },
+              padding: const EdgeInsets.only(bottom: 80),
+            ),
           );
         },
       ),
