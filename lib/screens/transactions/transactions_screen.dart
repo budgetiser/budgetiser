@@ -58,18 +58,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TransactionModel>(builder: (context, value, child) {
-      context.watch<TransactionModel>().addListener(updateMonthsFuture);
-      return Scaffold(
-        appBar: AppBar(
-          actions: [
-            transactionFilter(context),
-          ],
-          title: const Text('Transactions'),
-        ),
-        drawer: const CreateDrawer(),
-        body: FutureBuilder<List<DateTime>>(
-          future: monthsFuture,
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          transactionFilter(context),
+        ],
+        title: const Text('Transactions'),
+      ),
+      drawer: const CreateDrawer(),
+      body: Consumer<TransactionModel>(builder: (context, value, child) {
+        return FutureBuilder<List<DateTime>>(
+          future: TransactionModel().getAllMonths(),
           key: _futureBuilderKey,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -77,20 +76,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             }
             return const Center(child: CircularProgressIndicator());
           },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const TransactionForm(),
-              ),
-            );
-          },
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          child: const Icon(Icons.add),
-        ),
-      );
-    });
+        );
+      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const TransactionForm(),
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
   // TODO: extract as seperate widget, use general multi picker

@@ -13,6 +13,7 @@ import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart'
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A screen that allows the user to add a transaction
 /// or edit an existing one
@@ -126,7 +127,8 @@ class _TransactionFormState extends State<TransactionForm> {
                       description:
                           "Are you sure to delete this Transaction? This action can't be undone!",
                       onSubmitCallback: () async {
-                        await TransactionModel().deleteSingleTransactionById(
+                        Provider.of<TransactionModel>(context, listen: false)
+                            .deleteSingleTransactionById(
                           widget.initialSingleTransactionData!.id,
                         );
                         Navigator.of(context).pop();
@@ -158,15 +160,16 @@ class _TransactionFormState extends State<TransactionForm> {
               if (_formKey.currentState!.validate() &&
                   _valueKey.currentState!.validate()) {
                 if (hasInitialData) {
-                  await TransactionModel().updateSingleTransaction(
+                  Provider.of<TransactionModel>(context, listen: false)
+                      .updateSingleTransaction(
                     _currentTransaction(),
                   );
                   Navigator.of(context).pop();
                 } else {
-                  await TransactionModel().createSingleTransaction(
+                  Provider.of<TransactionModel>(context, listen: false)
+                      .createSingleTransaction(
                     _currentTransaction(),
                   );
-                  // context.read<TransactionModel>().notifyTransactionUpdate();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => const TransactionsScreen(),

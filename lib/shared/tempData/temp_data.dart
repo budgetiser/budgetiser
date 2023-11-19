@@ -178,11 +178,6 @@ List<TransactionCategory> getCategoryList() {
   addCategory('Personal Loans', Icons.credit_card);
   addCategory('House debt', Icons.home);
 
-  // tmp
-  for (var i = 0; i < 5000; i++) {
-    addCategory('$i', Icons.home);
-  }
-
   return list;
 }
 
