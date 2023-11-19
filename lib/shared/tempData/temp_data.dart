@@ -419,6 +419,28 @@ List<SingleTransaction> getTransactionList() {
     amount: 40,
   );
 
+  /// Cats.Food
+  addTransaction(
+    title: 'snacks',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [cats.Food.groceries],
+    values: [-2],
+    daysInBetween: [1],
+    amount: 4000,
+  );
+
+  /// Cats.Food
+  addTransaction(
+    title: 'gambling',
+    description: '',
+    accounts: [Accs.creditCard],
+    categories: [cats.Food.groceries],
+    values: [-2],
+    daysInBetween: [1, 0, 0, 0, 0, 0, 0],
+    amount: 4000,
+  );
+
   /// Cats.Entertainment
   addTransaction(
     title: 'Music streaming service',

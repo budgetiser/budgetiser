@@ -9,7 +9,6 @@ import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
 import 'package:budgetiser/shared/services/transaction_provider.dart';
-import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
@@ -174,7 +173,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   await DatabaseHelper.instance.createSingleTransaction(
                     _currentTransaction(),
                   );
-                  context.read<TransactionModel>().notifyTransactionUpdate();
+                  // context.read<TransactionModel>().notifyTransactionUpdate();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => const TransactionsScreen(),

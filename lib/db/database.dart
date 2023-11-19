@@ -11,6 +11,7 @@ import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
+import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
@@ -87,6 +88,7 @@ class DatabaseHelper {
   }
 
   Future fillDBwithTMPdata() async {
+    Profiler.instance.start('fill with TMP data');
     for (var account in TMP_DATA_accountList) {
       await createAccount(account);
     }
@@ -105,6 +107,7 @@ class DatabaseHelper {
     if (kDebugMode) {
       print('finished filling DB with TMP data');
     }
+    Profiler.instance.end();
   }
 
   Future<Database> initializeDatabase() async {

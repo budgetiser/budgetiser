@@ -28,7 +28,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   Future<SingleTransaction> _mapToSingleTransactionLEGACY(
     Map<String, dynamic> mapItem,
   ) async {
-    Profiler.instance.start('map to single transaction');
+    Profiler.instance.start('map to single transactionLEGACY');
     TransactionCategory cat = await _getCategory(mapItem['category_id']);
     Account account = await getOneAccount(mapItem['account1_id']);
     SingleTransaction s = SingleTransaction(
@@ -53,7 +53,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     if (mapItem['account2_id'] != null) {
       return _mapToSingleTransactionLEGACY(mapItem);
     }
-    return SingleTransaction(
+    Profiler.instance.start('map to single transaction');
+    SingleTransaction returnTransaction = SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
       value: mapItem['value'],
@@ -77,6 +78,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       //     : await getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
+    Profiler.instance.end();
+    return returnTransaction;
   }
 
   Future<int> createSingleTransaction(
@@ -109,7 +112,9 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     });
 
     if (updateStreams) {
-      getAllTransactions();
+      // getAllTransactions(); TODO: notifier
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      TransactionModel().notifyListeners();
       pushGetAllAccountsStream();
     }
 
