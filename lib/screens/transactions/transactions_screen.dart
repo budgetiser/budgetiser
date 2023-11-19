@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
@@ -41,14 +42,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void initState() {
     super.initState();
 
+    CategoryModel().getAllCategories().then((value) => _categoryList = value);
     DatabaseHelper.instance.allAccountsStream.listen((event) {
       _accountList = event;
     });
-    DatabaseHelper.instance.allCategoryStream.listen((event) {
-      _categoryList = event;
-    });
     DatabaseHelper.instance.pushGetAllAccountsStream();
-    DatabaseHelper.instance.pushGetAllCategoriesStream();
 
     if (widget.initialAccountFilter != null) {
       _currentFilterAccount = widget.initialAccountFilter;

@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
@@ -6,6 +7,7 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryForm extends StatefulWidget {
   const CategoryForm({
@@ -121,7 +123,7 @@ class _CategoryFormState extends State<CategoryForm> {
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance
+                          Provider.of<CategoryModel>(context, listen: false)
                               .deleteCategory(widget.categoryData!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
@@ -155,9 +157,11 @@ class _CategoryFormState extends State<CategoryForm> {
                     id: 0);
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
-                  DatabaseHelper.instance.updateCategory(a);
+                  Provider.of<CategoryModel>(context, listen: false)
+                      .updateCategory(a);
                 } else {
-                  DatabaseHelper.instance.createCategory(a);
+                  Provider.of<CategoryModel>(context, listen: false)
+                      .createCategory(a);
                 }
                 Navigator.of(context).pop();
               }

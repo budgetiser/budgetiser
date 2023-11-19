@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:budgetiser/config/themes/themes.dart';
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/routes.dart';
 import 'package:budgetiser/screens/create_db_screen.dart';
 import 'package:budgetiser/screens/home_screen.dart';
@@ -15,8 +16,11 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 
 Future<void> main() async {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => TransactionModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => TransactionModel()),
+        ChangeNotifierProvider(create: (context) => CategoryModel())
+      ],
       child: const MyApp(),
     ),
   );

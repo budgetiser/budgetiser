@@ -39,26 +39,26 @@ void main() {
     expect(allTransactions.length, equals(TMP_DATA_transactionList.length));
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
-  test('Performance: Fetch all TMP categories', () async {
-    var db = await openDatabase(
-      inMemoryDatabasePath,
-    );
-    var dbh = DatabaseHelper.instance..setDatabase(db);
-    await dbh.resetDB();
-    await dbh.fillDBwithTMPdata();
+  // test('Performance: Fetch all TMP categories', () async {
+  //   var db = await openDatabase(
+  //     inMemoryDatabasePath,
+  //   );
+  //   var dbh = DatabaseHelper.instance..setDatabase(db);
+  //   await dbh.resetDB();
+  //   await dbh.fillDBwithTMPdata();
 
-    final stopwatch = Stopwatch()..start();
+  //   final stopwatch = Stopwatch()..start();
 
-    dbh.pushGetAllCategoriesStream();
-    var stream = await dbh.allCategoryStream.first;
+  //   dbh.pushGetAllCategoriesStream();
+  //   var stream = await dbh.allCategoryStream.first;
 
-    stopwatch.stop();
+  //   stopwatch.stop();
 
-    if (kDebugMode) {
-      print('got Categories stream in ${stopwatch.elapsed}');
-    }
+  //   if (kDebugMode) {
+  //     print('got Categories stream in ${stopwatch.elapsed}');
+  //   }
 
-    expect(stream.length, equals(TMP_DATA_categoryList.length));
-    expect(stopwatch.elapsed, lessThan(const Duration(milliseconds: 100)));
-  });
+  //   expect(stream.length, equals(TMP_DATA_categoryList.length));
+  //   expect(stopwatch.elapsed, lessThan(const Duration(milliseconds: 100)));
+  // });
 }

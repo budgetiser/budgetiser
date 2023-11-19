@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,6 @@ class _CategoryPickerState extends State<CategoryPicker> {
     if (widget.initialCategories != null) {
       _selected = widget.initialCategories!;
     }
-    DatabaseHelper.instance.pushGetAllCategoriesStream();
     super.initState();
   }
 
@@ -52,13 +52,12 @@ class _CategoryPickerState extends State<CategoryPicker> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      DatabaseHelper.instance.pushGetAllCategoriesStream();
                       return AlertDialog(
                         title: const Text('Select categories'),
                         content: SizedBox(
                           width: double.maxFinite,
-                          child: StreamBuilder<List<TransactionCategory>>(
-                            stream: DatabaseHelper.instance.allCategoryStream,
+                          child: FutureBuilder<List<TransactionCategory>>(
+                            future: CategoryModel().getAllCategories(),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
                                 return const Center(

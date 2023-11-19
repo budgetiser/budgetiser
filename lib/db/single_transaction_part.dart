@@ -29,7 +29,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Map<String, dynamic> mapItem,
   ) async {
     Profiler.instance.start('map to single transactionLEGACY');
-    TransactionCategory cat = await _getCategory(mapItem['category_id']);
+    TransactionCategory cat =
+        await CategoryModel().getCategory(mapItem['category_id']);
     Account account = await getOneAccount(mapItem['account1_id']);
     SingleTransaction s = SingleTransaction(
       id: mapItem['id'],

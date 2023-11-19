@@ -1,8 +1,10 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/screens/categories/category_form.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Category selector dropdown
@@ -29,12 +31,10 @@ class _SelectCategoryState extends State<SelectCategory> {
 
   @override
   void initState() {
-    DatabaseHelper.instance.allCategoryStream.listen((event) async {
-      if (event.isEmpty) {
-        return;
-      }
-      _categories?.clear();
-      _categories = (event.map((e) => e).toList());
+    Provider.of<CategoryModel>(context, listen: false)
+        .getAllCategories()
+        .then((value) async {
+      _categories = value;
       final prefs = await SharedPreferences.getInstance();
       if (widget.initialCategory != null) {
         try {
@@ -62,7 +62,7 @@ class _SelectCategoryState extends State<SelectCategory> {
         widget.callback(selectedCategory!);
       }
     });
-    DatabaseHelper.instance.pushGetAllCategoriesStream();
+
     super.initState();
   }
 

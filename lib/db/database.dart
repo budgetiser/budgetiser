@@ -19,12 +19,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:budgetiser/db/category_provider.dart';
 
 part 'account_part.dart';
 part 'budget_part.dart';
-part 'category_part.dart';
+// part 'category_part.dart';
 part 'group_part.dart';
 part 'single_transaction_part.dart';
 part 'sql_part.dart';
@@ -93,7 +95,9 @@ class DatabaseHelper {
       await createAccount(account);
     }
     for (var category in TMP_DATA_categoryList) {
-      await createCategory(category);
+      Profiler.instance.start('create categories');
+      await CategoryModel().createCategory(category);
+      Profiler.instance.end();
     }
     for (var transaction in TMP_DATA_transactionList) {
       await createSingleTransaction(transaction, updateStreams: false);
@@ -171,12 +175,12 @@ class DatabaseHelper {
     pushGetAllBudgetsStream();
     await allBudgetsStream.first;
 
-    allCategoryStream.listen((event) {
-      fullJSON['Categories'] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllCategoriesStream();
-    await allCategoryStream.first;
+    // CategoryModel()
+    //     .getAllCategories()
+    //     .then((value) => fullJSON['Categories'] = value.map((element) {
+    //           element.toJsonMap();
+    //         }));
+    // TODO: broken
 
     allGroupsStream.listen((event) {
       fullJSON['Groups'] = event.map((element) => element.toJsonMap()).toList();
