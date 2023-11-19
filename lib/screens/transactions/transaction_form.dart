@@ -1,4 +1,4 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
@@ -8,13 +8,11 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/select_account.dart';
 import 'package:budgetiser/shared/picker/select_category.dart';
-import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 /// A screen that allows the user to add a transaction
 /// or edit an existing one
@@ -128,13 +126,9 @@ class _TransactionFormState extends State<TransactionForm> {
                       description:
                           "Are you sure to delete this Transaction? This action can't be undone!",
                       onSubmitCallback: () async {
-                        await DatabaseHelper.instance
-                            .deleteSingleTransactionById(
+                        await TransactionModel().deleteSingleTransactionById(
                           widget.initialSingleTransactionData!.id,
                         );
-                        context
-                            .read<TransactionModel>()
-                            .notifyTransactionUpdate();
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
@@ -164,13 +158,12 @@ class _TransactionFormState extends State<TransactionForm> {
               if (_formKey.currentState!.validate() &&
                   _valueKey.currentState!.validate()) {
                 if (hasInitialData) {
-                  await DatabaseHelper.instance.updateSingleTransaction(
+                  await TransactionModel().updateSingleTransaction(
                     _currentTransaction(),
                   );
-                  context.read<TransactionModel>().notifyTransactionUpdate();
                   Navigator.of(context).pop();
                 } else {
-                  await DatabaseHelper.instance.createSingleTransaction(
+                  await TransactionModel().createSingleTransaction(
                     _currentTransaction(),
                   );
                   // context.read<TransactionModel>().notifyTransactionUpdate();

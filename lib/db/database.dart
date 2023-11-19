@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
@@ -11,24 +12,18 @@ import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
-import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
-import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
-import 'package:budgetiser/db/category_provider.dart';
 
 part 'account_part.dart';
 part 'budget_part.dart';
-// part 'category_part.dart';
 part 'group_part.dart';
-part 'single_transaction_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
 
@@ -100,7 +95,10 @@ class DatabaseHelper {
       Profiler.instance.end();
     }
     for (var transaction in TMP_DATA_transactionList) {
-      await createSingleTransaction(transaction, updateStreams: false);
+      await TransactionModel().createSingleTransaction(
+        transaction,
+        notify: false,
+      );
     }
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
@@ -188,7 +186,8 @@ class DatabaseHelper {
     pushGetAllGroupsStream();
     await allGroupsStream.first;
 
-    List<SingleTransaction> allTransactions = await getAllTransactions();
+    List<SingleTransaction> allTransactions =
+        await TransactionModel().getAllTransactions();
     fullJSON['Transactions'] =
         allTransactions.map((element) => element.toJsonMap()).toList();
 

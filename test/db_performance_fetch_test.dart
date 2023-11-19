@@ -1,4 +1,6 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
 import 'package:flutter/foundation.dart';
@@ -28,7 +30,8 @@ void main() {
 
     final stopwatch = Stopwatch()..start();
 
-    List<SingleTransaction> allTransactions = await dbh.getAllTransactions();
+    List<SingleTransaction> allTransactions =
+        await TransactionModel().getAllTransactions();
 
     stopwatch.stop();
 
@@ -39,26 +42,25 @@ void main() {
     expect(allTransactions.length, equals(TMP_DATA_transactionList.length));
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
-  // test('Performance: Fetch all TMP categories', () async {
-  //   var db = await openDatabase(
-  //     inMemoryDatabasePath,
-  //   );
-  //   var dbh = DatabaseHelper.instance..setDatabase(db);
-  //   await dbh.resetDB();
-  //   await dbh.fillDBwithTMPdata();
+  test('Performance: Fetch all TMP categories', () async {
+    var db = await openDatabase(
+      inMemoryDatabasePath,
+    );
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+    await dbh.fillDBwithTMPdata();
 
-  //   final stopwatch = Stopwatch()..start();
+    final stopwatch = Stopwatch()..start();
 
-  //   dbh.pushGetAllCategoriesStream();
-  //   var stream = await dbh.allCategoryStream.first;
+    var fetchedData = await CategoryModel().getAllCategories();
 
-  //   stopwatch.stop();
+    stopwatch.stop();
 
-  //   if (kDebugMode) {
-  //     print('got Categories stream in ${stopwatch.elapsed}');
-  //   }
+    if (kDebugMode) {
+      print('got Categories stream in ${stopwatch.elapsed}');
+    }
 
-  //   expect(stream.length, equals(TMP_DATA_categoryList.length));
-  //   expect(stopwatch.elapsed, lessThan(const Duration(milliseconds: 100)));
-  // });
+    expect(fetchedData.length, equals(TMP_DATA_categoryList.length));
+    expect(stopwatch.elapsed, lessThan(const Duration(milliseconds: 100)));
+  });
 }

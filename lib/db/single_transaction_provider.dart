@@ -1,9 +1,26 @@
-part of 'database.dart';
+import 'dart:developer';
 
-extension DatabaseExtensionSingleTransaction on DatabaseHelper {
+import 'package:budgetiser/db/category_provider.dart';
+import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/recently_used.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/services/profiler.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
+
+class TransactionModel extends ChangeNotifier {
+  final recentlyUsedAccount = RecentlyUsed<Account>();
+
+  void notifyTransactionUpdate() {
+    notifyListeners();
+  }
+
   Future<List<SingleTransaction>> getAllTransactions() async {
     Profiler.instance.start('getAllTransactions');
-    final db = await database;
+    var db = await DatabaseHelper.instance.database;
     Profiler.instance.start('sql fetching');
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       '''Select distinct * from singleTransaction, singleTransactionToAccount
@@ -31,7 +48,8 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
     Profiler.instance.start('map to single transactionLEGACY');
     TransactionCategory cat =
         await CategoryModel().getCategory(mapItem['category_id']);
-    Account account = await getOneAccount(mapItem['account1_id']);
+    Account account =
+        await DatabaseHelper.instance.getOneAccount(mapItem['account1_id']);
     SingleTransaction s = SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -41,7 +59,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       account: account,
       account2: mapItem['account2_id'] == null
           ? null
-          : await getOneAccount(mapItem['account2_id']),
+          : await DatabaseHelper.instance.getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
     Profiler.instance.end();
@@ -85,9 +103,9 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
   Future<int> createSingleTransaction(
     SingleTransaction transaction, {
-    bool updateStreams = true,
+    bool notify = true,
   }) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     int transactionId = await db.insert(
       'singleTransaction',
@@ -95,14 +113,18 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    Account account =
-        await getOneAccount(transaction.account.id); // to get current balance
+    Account account = await DatabaseHelper.instance
+        .getOneAccount(transaction.account.id); // to get current balance
     if (transaction.account2 == null) {
-      await _setAccountBalance(account, account.balance + transaction.value);
+      await DatabaseHelper.instance
+          .setAccountBalance(account, account.balance + transaction.value);
     } else {
-      Account account2 = await getOneAccount(transaction.account2!.id);
-      await _setAccountBalance(account, account.balance - transaction.value);
-      await _setAccountBalance(account2, account2.balance + transaction.value);
+      Account account2 =
+          await DatabaseHelper.instance.getOneAccount(transaction.account2!.id);
+      await DatabaseHelper.instance
+          .setAccountBalance(account, account.balance - transaction.value);
+      await DatabaseHelper.instance
+          .setAccountBalance(account2, account2.balance + transaction.value);
     }
 
     await db.insert('singleTransactionToAccount', {
@@ -112,49 +134,31 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
           transaction.account2 != null ? transaction.account2!.id : null,
     });
 
-    if (updateStreams) {
+    if (notify) {
       // getAllTransactions(); TODO: notifier
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      TransactionModel().notifyListeners();
-      pushGetAllAccountsStream();
+      notifyTransactionUpdate();
+      // TODO: account notify
     }
 
     recentlyUsedAccount.addItem(account.id.toString());
 
-    final List<Map<String, dynamic>> maps = await db.query(
-      'categoryToBudget',
-      columns: ['budget_id'],
-      where: 'category_id = ?',
-      whereArgs: [transaction.category.id],
-      distinct: true,
-    );
-    for (int i = 0; i < maps.length; i++) {
-      reloadBudgetBalanceFromID(maps[i]['budget_id']);
-    }
     return transactionId;
   }
 
   Future<void> deleteSingleTransaction(SingleTransaction transaction) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'categoryToBudget',
-      columns: ['budget_id'],
-      where: 'category_id = ?',
-      whereArgs: [transaction.category.id],
-      distinct: true,
-    );
-
+    final db = await DatabaseHelper.instance.database;
     if (transaction.account2 == null) {
-      await _setAccountBalance(
+      await DatabaseHelper.instance.setAccountBalance(
         transaction.account,
         transaction.account.balance - transaction.value,
       );
     } else {
-      await _setAccountBalance(
+      await DatabaseHelper.instance.setAccountBalance(
         transaction.account,
         transaction.account.balance + transaction.value,
       );
-      await _setAccountBalance(
+      await DatabaseHelper.instance.setAccountBalance(
         transaction.account2!,
         transaction.account2!.balance - transaction.value,
       );
@@ -171,11 +175,10 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
       whereArgs: [transaction.id],
     );
 
-    for (int i = 0; i < maps.length; i++) {
-      reloadBudgetBalanceFromID(maps[i]['budget_id']);
-    }
     // pushGetAllAccountsStream();
     // pushGetAllTransactionsStream();
+    // TODO:
+    notifyTransactionUpdate();
   }
 
   Future<void> deleteSingleTransactionById(int id) async {
@@ -184,13 +187,13 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
     await deleteSingleTransactionById(transaction.id);
-    await createSingleTransaction(transaction, updateStreams: false);
+    await createSingleTransaction(transaction, notify: false);
 
     // pushGetAllTransactionsStream();
   }
 
   Future<SingleTransaction> getOneTransaction(int id) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       '''Select distinct * from SingleTransaction, singleTransactionToAccount
       where SingleTransaction.id = singleTransactionToAccount.transaction_id 
@@ -206,7 +209,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
 
   /// returns all months containing a transaction as the first of the month
   Future<List<DateTime>> getAllMonths() async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> dateList = await db.rawQuery(
       'Select distinct date from SingleTransaction',
     );
@@ -231,7 +234,7 @@ extension DatabaseExtensionSingleTransaction on DatabaseHelper {
   }) async {
     var timelineTask = TimelineTask(filterKey: 'getFilterByMonth')
       ..start('get filter by month ${dateAsYYYYMM(inMonth)}');
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       '''Select distinct *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,

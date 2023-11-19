@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:budgetiser/config/themes/themes.dart';
 import 'package:budgetiser/db/category_provider.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/routes.dart';
 import 'package:budgetiser/screens/create_db_screen.dart';
 import 'package:budgetiser/screens/home_screen.dart';
 import 'package:budgetiser/screens/login.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
-import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';

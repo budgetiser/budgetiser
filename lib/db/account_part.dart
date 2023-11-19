@@ -58,7 +58,7 @@ extension DatabaseExtensionAccount on DatabaseHelper {
     pushGetAllAccountsStream();
   }
 
-  Future<void> _setAccountBalance(Account account, double newBalance) async {
+  Future<void> setAccountBalance(Account account, double newBalance) async {
     final db = await database;
     await db.update(
       'account',

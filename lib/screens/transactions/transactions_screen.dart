@@ -1,11 +1,11 @@
 import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/services/transaction_provider.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
@@ -30,7 +30,7 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   final GlobalKey _futureBuilderKey = GlobalKey();
-  Future<List<DateTime>> monthsFuture = DatabaseHelper.instance.getAllMonths();
+  Future<List<DateTime>> monthsFuture = TransactionModel().getAllMonths();
 
   Account? _currentFilterAccount;
   TransactionCategory? _currentFilterCategory;
@@ -179,7 +179,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void updateMonthsFuture() async {
     if (mounted) {
       setState(() {
-        monthsFuture = DatabaseHelper.instance.getAllMonths();
+        monthsFuture = TransactionModel().getAllMonths();
       });
     }
   }
@@ -191,7 +191,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         children: [
           for (DateTime monthYear in monthYearSnapshotData)
             FutureBuilder<List<SingleTransaction>>(
-              future: DatabaseHelper.instance.getFilteredTransactionsByMonth(
+              future: TransactionModel().getFilteredTransactionsByMonth(
                 inMonth: monthYear,
                 account: _currentFilterAccount,
                 category: _currentFilterCategory,
