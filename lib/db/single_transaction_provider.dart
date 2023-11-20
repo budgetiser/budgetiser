@@ -34,9 +34,11 @@ class TransactionModel extends ChangeNotifier {
       );
     }
 
+    Profiler.instance.start('date sorting');
     list.sort((a, b) {
       return b.date.compareTo(a.date);
     });
+    Profiler.instance.end();
 
     Profiler.instance.end();
     return list;
@@ -106,32 +108,33 @@ class TransactionModel extends ChangeNotifier {
     bool notify = true,
   }) async {
     final db = await DatabaseHelper.instance.database;
+    int transactionId = 0; //TODO: fix
+    await db.transaction((txn) async {
+      transactionId = await txn.insert(
+        'singleTransaction',
+        transaction.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
 
-    int transactionId = await db.insert(
-      'singleTransaction',
-      transaction.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
+      if (transaction.account2 != null) {
+        await txn.rawUpdate(
+            'UPDATE account SET balance = balance - ? WHERE id = ?',
+            [transaction.value, transaction.account.id]);
+        await txn.rawUpdate(
+            'UPDATE account SET balance = balance + ? WHERE id = ?',
+            [transaction.value, transaction.account2!.id]);
+      } else {
+        await txn.rawUpdate(
+            'UPDATE account SET balance = balance + ? WHERE id = ?',
+            [transaction.value, transaction.account.id]);
+      }
 
-    Account account = await DatabaseHelper.instance
-        .getOneAccount(transaction.account.id); // to get current balance
-    if (transaction.account2 == null) {
-      await DatabaseHelper.instance
-          .setAccountBalance(account, account.balance + transaction.value);
-    } else {
-      Account account2 =
-          await DatabaseHelper.instance.getOneAccount(transaction.account2!.id);
-      await DatabaseHelper.instance
-          .setAccountBalance(account, account.balance - transaction.value);
-      await DatabaseHelper.instance
-          .setAccountBalance(account2, account2.balance + transaction.value);
-    }
-
-    await db.insert('singleTransactionToAccount', {
-      'transaction_id': transactionId,
-      'account1_id': transaction.account.id,
-      'account2_id':
-          transaction.account2 != null ? transaction.account2!.id : null,
+      await txn.insert('singleTransactionToAccount', {
+        'transaction_id': transactionId,
+        'account1_id': transaction.account.id,
+        'account2_id':
+            transaction.account2 != null ? transaction.account2!.id : null,
+      });
     });
 
     if (notify) {
@@ -141,7 +144,7 @@ class TransactionModel extends ChangeNotifier {
       // TODO: account notify
     }
 
-    recentlyUsedAccount.addItem(account.id.toString());
+    recentlyUsedAccount.addItem(transaction.account.id.toString());
 
     return transactionId;
   }
