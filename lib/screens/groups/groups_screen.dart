@@ -1,9 +1,11 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/groups/group_form.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/widgets/items/group_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GroupsScreen extends StatelessWidget {
   static String routeID = 'groups';
@@ -12,7 +14,6 @@ class GroupsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DatabaseHelper.instance.pushGetAllGroupsStream();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -20,32 +21,36 @@ class GroupsScreen extends StatelessWidget {
         ),
       ),
       drawer: const CreateDrawer(),
-      body: StreamBuilder<List<Group>>(
-        stream: DatabaseHelper.instance.allGroupsStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Text('Oops!');
-          }
-          return ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data!.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  GroupItem(groupData: snapshot.data![index]),
-                  const Divider(
-                    indent: 15,
-                    endIndent: 15,
-                  ),
-                ],
+      body: Consumer<GroupModel>(
+        builder: (context, value, child) {
+          return FutureBuilder<List<Group>>(
+            future: GroupModel().getAllGroups(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Text('Oops!');
+              }
+              return ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      GroupItem(groupData: snapshot.data![index]),
+                      const Divider(
+                        indent: 15,
+                        endIndent: 15,
+                      ),
+                    ],
+                  );
+                },
+                padding: const EdgeInsets.only(bottom: 80),
               );
             },
-            padding: const EdgeInsets.only(bottom: 80),
           );
         },
       ),

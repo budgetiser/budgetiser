@@ -1,32 +1,16 @@
-part of 'database.dart';
+import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/shared/dataClasses/group.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:flutter/material.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 
-extension DatabaseExtensionGroup on DatabaseHelper {
-  Sink<List<Group>> get allGroupsSink => _allGroupsStreamController.sink;
-
-  Stream<List<Group>> get allGroupsStream => _allGroupsStreamController.stream;
-
-  void pushGetAllGroupsStream() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('XXGroup');
-    List<List<TransactionCategory>> categoryList = [];
-    for (int i = 0; i < maps.length; i++) {
-      categoryList.add(await _getCategoriesToGroup(maps[i]['id']));
-    }
-
-    allGroupsSink.add(List.generate(maps.length, (i) {
-      return Group(
-        id: maps[i]['id'],
-        name: maps[i]['name'].toString(),
-        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-        color: Color(maps[i]['color']),
-        description: maps[i]['description'].toString(),
-        transactionCategories: categoryList[i],
-      );
-    }));
+class GroupModel extends ChangeNotifier {
+  void _notifyGroupUpdate() {
+    notifyListeners();
   }
 
   Future<List<TransactionCategory>> _getCategoriesToGroup(int groupID) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     final List<Map<String, dynamic>> mapCategories = await db.rawQuery(
         'Select distinct id, name, icon, color, description, is_hidden from category, categoryToGroup where category_id = category.id and group_id = ?',
@@ -43,8 +27,29 @@ extension DatabaseExtensionGroup on DatabaseHelper {
     });
   }
 
+  Future<List<Group>> getAllGroups() async {
+    final db = await DatabaseHelper.instance.database;
+
+    final List<Map<String, dynamic>> maps = await db.query('XXGroup');
+    List<List<TransactionCategory>> categoryList = [];
+    for (int i = 0; i < maps.length; i++) {
+      categoryList.add(await _getCategoriesToGroup(maps[i]['id']));
+    }
+
+    return List.generate(maps.length, (i) {
+      return Group(
+        id: maps[i]['id'],
+        name: maps[i]['name'].toString(),
+        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
+        color: Color(maps[i]['color']),
+        description: maps[i]['description'].toString(),
+        transactionCategories: categoryList[i],
+      );
+    });
+  }
+
   Future<int> createGroup(Group group) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     int id = await db.insert(
       'XXGroup',
@@ -65,23 +70,23 @@ extension DatabaseExtensionGroup on DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
-    pushGetAllGroupsStream();
+    _notifyGroupUpdate();
     return id;
   }
 
   void deleteGroup(int groupID) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     await db.delete(
       'XXGroup',
       where: 'id = ?',
       whereArgs: [groupID],
     );
-    pushGetAllGroupsStream();
+    _notifyGroupUpdate();
   }
 
   Future<void> updateGroup(Group group) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
     await db.update(
       'XXGroup',
       group.toMap(),
@@ -107,6 +112,6 @@ extension DatabaseExtensionGroup on DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
-    pushGetAllGroupsStream();
+    _notifyGroupUpdate();
   }
 }

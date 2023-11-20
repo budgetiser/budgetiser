@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:budgetiser/db/category_provider.dart';
+import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
@@ -23,7 +24,6 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 
 part 'account_part.dart';
 part 'budget_part.dart';
-part 'group_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
 
@@ -104,7 +104,9 @@ class DatabaseHelper {
       await createBudget(budget);
     }
     for (var group in TMP_DATA_groupList) {
-      await createGroup(group);
+      Profiler.instance.start('create categories');
+      await GroupModel().createGroup(group);
+      Profiler.instance.end();
     }
     if (kDebugMode) {
       print('finished filling DB with TMP data');
@@ -180,11 +182,12 @@ class DatabaseHelper {
     //         }));
     // TODO: broken
 
-    allGroupsStream.listen((event) {
-      fullJSON['Groups'] = event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllGroupsStream();
-    await allGroupsStream.first;
+    // allGroupsStream.listen((event) {
+    //   fullJSON['Groups'] = event.map((element) => element.toJsonMap()).toList();
+    // });
+    // pushGetAllGroupsStream();
+    // await allGroupsStream.first;
+    // TODO: broken
 
     List<SingleTransaction> allTransactions =
         await TransactionModel().getAllTransactions();

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:budgetiser/config/themes/themes.dart';
 import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
+import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/routes.dart';
 import 'package:budgetiser/screens/create_db_screen.dart';
 import 'package:budgetiser/screens/home_screen.dart';
@@ -19,7 +20,8 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TransactionModel()),
-        ChangeNotifierProvider(create: (context) => CategoryModel())
+        ChangeNotifierProvider(create: (context) => CategoryModel()),
+        ChangeNotifierProvider(create: (context) => GroupModel())
       ],
       child: const MyApp(),
     ),

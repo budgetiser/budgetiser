@@ -1,4 +1,5 @@
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
@@ -8,6 +9,7 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GroupForm extends StatefulWidget {
   const GroupForm({
@@ -137,7 +139,7 @@ class _GroupFormState extends State<GroupForm> {
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance
+                          Provider.of<GroupModel>(context, listen: false)
                               .deleteGroup(widget.initialGroup!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
@@ -170,9 +172,11 @@ class _GroupFormState extends State<GroupForm> {
                 );
                 if (widget.initialGroup != null) {
                   a.id = widget.initialGroup!.id;
-                  DatabaseHelper.instance.updateGroup(a);
+                  Provider.of<GroupModel>(context, listen: false)
+                      .updateGroup(a);
                 } else {
-                  DatabaseHelper.instance.createGroup(a);
+                  Provider.of<GroupModel>(context, listen: false)
+                      .createGroup(a);
                 }
                 Navigator.of(context).pop();
               }
