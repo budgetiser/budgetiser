@@ -136,10 +136,12 @@ Future<void> upgradeToV3(Database db) async {
   if (kDebugMode) {
     print('upgrading to DB V3...');
   }
-
+  var i = 0;
   await db.transaction((txn) async {
+    print('Current + ${i++}');
     await txn.execute('PRAGMA foreign_keys = OFF;');
 
+    print('Current + ${i++}');
     // account
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_account(
@@ -154,24 +156,32 @@ Future<void> upgradeToV3(Database db) async {
         CHECK(archived IN (0, 1))
         );
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
       INSERT INTO NEW_account (id, name, icon, color, balance, description) 
       SELECT id, name, icon, color, balance, description FROM account;
     ''');
 
+    print('Current + ${i++}');
     await txn.execute('''
       UPDATE NEW_account SET description = NULL
       WHERE description = '';
     ''');
 
+    print('Current + ${i++}');
     await txn.execute('''
       DROP TABLE account;
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
-      ALTER TABLE NEW_account RENAME account;
+      ALTER TABLE NEW_account RENAME TO account;
     ''');
 
     // category
+
+    print('Current + ${i++}');
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_category(
         id INTEGER NOT NULL,
@@ -184,22 +194,32 @@ Future<void> upgradeToV3(Database db) async {
         CHECK(archived IN (0, 1))
       );
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
-      INSERT INTO NEW_category (id, name, icon, color, balance, description) 
-      SELECT id, name, icon, color, balance, description FROM category;
+      INSERT INTO NEW_category (id, name, icon, color, archived, description) 
+      SELECT id, name, icon, color, is_hidden, description FROM category;
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
       UPDATE NEW_category SET description = NULL
       WHERE description = '';
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
       DROP TABLE category;
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
-      ALTER TABLE NEW_category RENAME category;
+      ALTER TABLE NEW_category RENAME TO category;
     ''');
 
     // singleTransaction
+
+    print('Current + ${i++}');
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_singleTransaction(
         id INTEGER NOT NULL,
@@ -217,6 +237,7 @@ Future<void> upgradeToV3(Database db) async {
       );
     ''');
 
+    print('Current + ${i++}');
     final List<Map<String, dynamic>> mapSingle = await txn.rawQuery(
       '''SELECT DISTINCT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
       account.icon AS account_icon, account.color AS account_color, account.id AS account_id, account.name AS account_name, account.balance AS account_balance,
@@ -227,37 +248,55 @@ Future<void> upgradeToV3(Database db) async {
       AND category.id = singleTransaction.category_id;
       ''',
     );
+
+    print('Current + ${i++}');
     for (Map<String, dynamic> transaction in mapSingle) {
+      transaction = Map.of(transaction);
       transaction['date'] =
           DateTime.parse(transaction['date']).millisecondsSinceEpoch;
       if (transaction['description'] == '') {
-        String values =
-            '${transaction['id']}, ${transaction['title']}, ${transaction['value']}, ${transaction['category_id']}, ${transaction['date']}, ${transaction['account1_id']}, ${transaction['account2_id']}';
         await txn.execute('''
         INSERT INTO NEW_singleTransaction (id, title, value, category_id, date, account1, account2) 
-        VALUES ($values);
-      ''');
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+      ''', [
+          transaction['id'],
+          transaction['title'],
+          transaction['value'],
+          transaction['category_id'],
+          transaction['date'],
+          transaction['account1_id'],
+          transaction['account2_id']
+        ]);
       } else {
-        String values =
-            '${transaction['id']}, ${transaction['title']}, ${transaction['value']}, ${transaction['description']}, ${transaction['category_id']}, ${transaction['date']}, ${transaction['account1_id']}, ${transaction['account2_id']}';
         await txn.execute('''
         INSERT INTO NEW_singleTransaction (id, title, value, description, category_id, date, account1, account2) 
-        VALUES ($values);
-      ''');
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      ''', [
+          transaction['id'],
+          transaction['title'],
+          transaction['value'],
+          transaction['description'],
+          transaction['category_id'],
+          transaction['date'],
+          transaction['account1_id'],
+          transaction['account2_id']
+        ]);
       }
     }
-    await txn.execute('''
-      INSERT INTO NEW_singleTransaction (id, title, value, description, category_id, date, account1, account2) 
-      SELECT id, name, icon, color, balance, description FROM singleTransaction;
-    ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
       DROP TABLE singleTransaction;
     ''');
+
+    print('Current + ${i++}');
     await txn.execute('''
-      ALTER TABLE NEW_singleTransaction RENAME singleTransaction;
+      ALTER TABLE NEW_singleTransaction RENAME TO singleTransaction;
     ''');
 
     // budgets
+
+    print('Current + ${i++}');
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_budget(
         id INTEGER NOT NULL,
@@ -276,11 +315,15 @@ Future<void> upgradeToV3(Database db) async {
       );
     ''');
 
+    print('Current + ${i++}');
     final List<Map<String, dynamic>> mapBudgets = await txn.rawQuery(
       '''SELECT id, name, icon, color, limitXX, interval_unit, interval_repititions, start_date, end_date, description FROM category;
       ''',
     );
+
+    print('Current + ${i++}');
     for (Map<String, dynamic> item in mapBudgets) {
+      item = Map.of(item);
       item['start_date'] =
           DateTime.parse(item['start_date']).millisecondsSinceEpoch;
       item['end_date'] =
@@ -293,6 +336,7 @@ Future<void> upgradeToV3(Database db) async {
       ''');
     }
 
+    print('Current + ${i++}');
     // categoryBridge
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS categoryBridge(
@@ -304,11 +348,16 @@ Future<void> upgradeToV3(Database db) async {
         FOREIGN KEY(descendent_id) REFERENCES category ON DELETE CASCADE
         );
     ''');
+
+    print('Current + ${i++}');
     final List<Map<String, dynamic>> mapBridge = await txn.rawQuery(
       '''SELECT id FROM category;
       ''',
     );
+
+    print('Current + ${i++}');
     for (Map<String, dynamic> item in mapBridge) {
+      item = Map.of(item);
       String values = '${item['id']}, ${item['id']}, 0';
       await txn.execute('''
         INSERT INTO categoryBridge (ancestor_id, descendent_id, distance) 
@@ -317,10 +366,17 @@ Future<void> upgradeToV3(Database db) async {
     }
 
     // final
+
+    print('Current + ${i++}');
     await txn.execute('DROP TABLE categoryToGroup;');
+
+    print('Current + ${i++}');
     await txn.execute('DROP TABLE singleTransactionToAccount;');
 
+    print('Current + ${i++}');
     await txn.execute('PRAGMA schema.foreign_key_check;');
+
+    print('Current + ${i++}');
     await txn.execute('PRAGMA foreign_keys = ON;');
   });
 
