@@ -3,7 +3,7 @@ import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AccountModel extends ChangeNotifier {
   final recentlyUsedAccount = RecentlyUsed<Account>();

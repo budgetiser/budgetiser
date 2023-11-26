@@ -10,7 +10,7 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 
 class TransactionModel extends ChangeNotifier {
   final recentlyUsedAccount = RecentlyUsed<Account>();

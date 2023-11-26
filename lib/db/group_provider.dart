@@ -2,7 +2,7 @@ import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 
 class GroupModel extends ChangeNotifier {
   void _notifyGroupUpdate() {
