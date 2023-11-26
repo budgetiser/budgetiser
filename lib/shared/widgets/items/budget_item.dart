@@ -51,40 +51,41 @@ class BudgetItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    budgetData.isRecurring
-                        ? _getTimeInfos(
-                            budgetData.startDate, budgetData.endDate!)
-                        : (budgetData.startDate.compareTo(DateTime.now()) >= 0
-                            ? Row(
-                                children: [
-                                  Text(
-                                    'starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}',
-                                  ),
-                                  const Icon(Icons.arrow_forward)
-                                ],
-                              )
-                            : Container()),
+                    // budgetData.isRecurring
+                    //     ? _getTimeInfos(
+                    //         budgetData.startDate, budgetData.endDate!)
+                    //     : (budgetData.startDate.compareTo(DateTime.now()) >= 0
+                    //         ? Row(
+                    //             children: [
+                    //               Text(
+                    //                 'starts in: ${budgetData.startDate.difference(DateTime.now()).inDays}',
+                    //               ),
+                    //               const Icon(Icons.arrow_forward)
+                    //             ],
+                    //           )
+                    //         : Container()),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: LinearProgressBar(
-                    percent: budgetData.balance / budgetData.limit,
-                    color: budgetData.color,
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 4),
+                //   child: LinearProgressBar(
+                //     percent: budgetData.balance / budgetData.limit,
+                //     color: budgetData.color,
+                //   ),
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      budgetData.balance.toString(),
-                      style: TextStyle(
-                        color: budgetData.balance > budgetData.limit
-                            ? Colors.red
-                            : Colors.white,
-                      ),
+                    const Text(
+                      'todo',
+                      // budgetData.balance.toString(),
+                      // style: TextStyle(
+                      //   color: budgetData.balance > budgetData.limit
+                      //       ? Colors.red
+                      //       : Colors.white,
+                      // ),
                     ),
-                    Text(budgetData.limit.toString()),
+                    // Text(budgetData.limit.toString()),
                   ],
                 ),
               ],
@@ -118,8 +119,8 @@ class BudgetItem extends StatelessWidget {
     } else {
       return Row(
         children: [
-          Text(
-              "days left: ${(budgetData.calculateCurrentInterval()['end']!).difference(DateTime.now()).inDays}"),
+          Text('todo'),
+          // "days left: ${(budgetData.calculateCurrentInterval()['end']!).difference(DateTime.now()).inDays}"),
           const Icon(Icons.repeat)
         ],
       );

@@ -220,7 +220,7 @@ class TransactionModel extends ChangeNotifier {
 
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
-      DateTime dateTime = DateTime.parse(item['date']);
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(item['date']);
       distinctMonths.add(firstOfMonth(dateTime));
     }
 

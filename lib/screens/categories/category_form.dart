@@ -30,7 +30,7 @@ class _CategoryFormState extends State<CategoryForm> {
   void initState() {
     if (widget.categoryData != null) {
       nameController.text = widget.categoryData!.name;
-      descriptionController.text = widget.categoryData!.description;
+      descriptionController.text = widget.categoryData!.description ?? '';
       _color = widget.categoryData!.color;
       _icon = widget.categoryData!.icon;
     }

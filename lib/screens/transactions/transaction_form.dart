@@ -2,7 +2,6 @@ import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
@@ -59,11 +58,6 @@ class _TransactionFormState extends State<TransactionForm> {
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
 
-  RecurringData recurringData = RecurringData(
-    startDate: DateTime.now(),
-    isRecurring: false,
-  );
-
   @override
   void initState() {
     if (widget.initialBalance != null) {
@@ -79,7 +73,7 @@ class _TransactionFormState extends State<TransactionForm> {
       hasAccount2 = widget.initialSingleTransactionData!.account2 != null;
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
-          widget.initialSingleTransactionData!.description;
+          widget.initialSingleTransactionData!.description ?? '';
 
       transactionDate = widget.initialSingleTransactionData!.date;
     }

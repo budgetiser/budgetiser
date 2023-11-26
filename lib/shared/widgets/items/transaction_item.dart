@@ -91,7 +91,7 @@ class TransactionItem extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      transactionData.description,
+                      transactionData.description ?? '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       textWidthBasis: TextWidthBasis.parent,

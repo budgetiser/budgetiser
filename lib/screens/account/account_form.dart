@@ -34,7 +34,7 @@ class _AccountFormState extends State<AccountForm> {
     if (widget.initialAccount != null) {
       nameController.text = widget.initialAccount!.name;
       balanceController.text = widget.initialAccount!.balance.toString();
-      descriptionController.text = widget.initialAccount!.description;
+      descriptionController.text = widget.initialAccount!.description ?? '';
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
     }

@@ -403,7 +403,6 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.shopping_bag_outlined,
     color: Colors.red,
     description: '',
-    balance: 0.0,
     intervalRepetitions: 30,
     endDate: DateTime.now().add(
       const Duration(days: 30 * 12),
@@ -411,11 +410,9 @@ List<Budget> TMP_DATA_budgetList = [
     startDate: DateTime.now().subtract(
       const Duration(days: 70),
     ),
-    intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 100,
+    maxValue: 100,
+    intervalIndex: 0,
     transactionCategories: [
       TMP_DATA_categoryList[8],
       TMP_DATA_categoryList[14],
@@ -428,7 +425,6 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.emoji_transportation,
     color: Colors.blue,
     description: '',
-    balance: 0.0,
     intervalRepetitions: 3,
     endDate: DateTime.now().add(
       const Duration(days: 70),
@@ -436,11 +432,9 @@ List<Budget> TMP_DATA_budgetList = [
     startDate: DateTime.now().add(
       const Duration(days: 8),
     ),
-    intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 250,
+    maxValue: 250,
+    intervalIndex: 0,
     transactionCategories: [
       TMP_DATA_categoryList[17],
       TMP_DATA_categoryList[7],
@@ -453,7 +447,6 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.home,
     color: Colors.green,
     description: '',
-    balance: 0.0,
     intervalRepetitions: 5,
     endDate: DateTime.now().add(
       const Duration(days: 70),
@@ -461,11 +454,9 @@ List<Budget> TMP_DATA_budgetList = [
     startDate: DateTime.now().subtract(
       const Duration(days: 5),
     ),
-    intervalAmount: 3,
     intervalUnit: IntervalUnit.day,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 500,
+    maxValue: 500,
+    intervalIndex: 2,
     transactionCategories: [],
   ),
   Budget(
@@ -474,12 +465,12 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.more,
     color: Colors.orange,
     description: '',
-    balance: 0,
     startDate: DateTime.now().subtract(
       const Duration(days: 70),
     ),
-    isRecurring: false,
-    limit: 500,
+    maxValue: 500,
+    intervalUnit: IntervalUnit.month,
+    intervalIndex: 2,
     transactionCategories: [
       TMP_DATA_categoryList[3],
       TMP_DATA_categoryList[10],
@@ -492,7 +483,6 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.more,
     color: Colors.orange,
     description: '',
-    balance: 0,
     endDate: DateTime.now().add(
       const Duration(days: 70),
     ),
@@ -500,11 +490,9 @@ List<Budget> TMP_DATA_budgetList = [
       const Duration(days: 45),
     ),
     intervalRepetitions: 3,
-    intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 50,
+    maxValue: 50,
+    intervalIndex: 1,
     transactionCategories: [
       TMP_DATA_categoryList[0],
       TMP_DATA_categoryList[2],

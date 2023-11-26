@@ -1,6 +1,5 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
 import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
@@ -28,10 +27,7 @@ class _BudgetFormState extends State<BudgetForm> {
   var limitController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  RecurringData recurringData = RecurringData(
-    isRecurring: false,
-    startDate: DateTime.now(),
-  );
+
   List<TransactionCategory> budgetCategories = [];
   IconData? _icon;
   Color _color = randomColor();
@@ -43,22 +39,11 @@ class _BudgetFormState extends State<BudgetForm> {
   void initState() {
     if (widget.budgetData != null) {
       nameController.text = widget.budgetData!.name;
-      balanceController.text = widget.budgetData!.balance.toString();
-      limitController.text = widget.budgetData!.limit.toString();
+      balanceController.text = 'todo';
+      limitController.text = 'todo';
       _color = widget.budgetData!.color;
       _icon = widget.budgetData!.icon;
       budgetCategories = widget.budgetData!.transactionCategories;
-      if (widget.budgetData!.isRecurring) {
-        recurringData = RecurringData(
-          startDate: widget.budgetData!.startDate,
-          endDate: widget.budgetData!.endDate,
-          intervalType: widget.budgetData!.intervalType,
-          intervalUnit: widget.budgetData!.intervalUnit,
-          intervalAmount: widget.budgetData!.intervalAmount,
-          repetitionAmount: widget.budgetData!.intervalRepetitions,
-          isRecurring: true,
-        );
-      }
     }
     super.initState();
   }
@@ -169,14 +154,14 @@ class _BudgetFormState extends State<BudgetForm> {
               ),
               const Divider(height: 32),
               RecurringForm(
-                scrollController: _scrollController,
-                onRecurringDataChangedCallback: (data) {
-                  setState(() {
-                    recurringData = data;
-                  });
-                },
-                initialRecurringData: recurringData,
-              ),
+                  // scrollController: _scrollController,
+                  // onRecurringDataChangedCallback: (data) {
+                  //   setState(() {
+                  //     recurringData = data;
+                  //   });
+                  // },
+                  // initialRecurringData: recurringData,
+                  ),
             ],
           ),
         ),
@@ -228,16 +213,13 @@ class _BudgetFormState extends State<BudgetForm> {
                   color: _color,
                   description: descriptionController.text,
                   id: 0,
-                  limit: double.parse(limitController.text),
-                  balance: double.parse(balanceController.text),
                   transactionCategories: budgetCategories,
-                  isRecurring: recurringData.isRecurring,
-                  startDate: recurringData.startDate,
-                  endDate: recurringData.endDate,
-                  intervalType: recurringData.intervalType,
-                  intervalUnit: recurringData.intervalUnit,
-                  intervalAmount: recurringData.intervalAmount,
-                  intervalRepetitions: recurringData.repetitionAmount,
+                  startDate: DateTime.now(),
+                  endDate: DateTime.now(),
+                  intervalUnit: IntervalUnit.day,
+                  intervalRepetitions: 1,
+                  intervalIndex: 0,
+                  maxValue: double.parse(limitController.text),
                 );
                 if (widget.budgetData != null) {
                   a.id = widget.budgetData!.id;

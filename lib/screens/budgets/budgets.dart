@@ -39,8 +39,8 @@ class _BudgetsState extends State<Budgets> {
           if (snapshot.hasError) {
             return const Text('Oops!');
           }
-          List<Budget> budgetList = snapshot.data!
-            ..sort((a, b) => a.compareTo(b));
+          List<Budget> budgetList = snapshot.data!;
+          // ..sort((a, b) => a.compareTo(b)); // TODO
           return ListView.builder(
             scrollDirection: Axis.vertical,
             itemCount: budgetList.length,
