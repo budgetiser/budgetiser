@@ -1,16 +1,18 @@
-part of 'database.dart';
+import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/recently_used.dart';
+import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 
-extension DatabaseExtensionAccount on DatabaseHelper {
-  Sink<List<Account>> get allAccountsSink => _allAccountsStreamController.sink;
+class AccountModel extends ChangeNotifier {
+  final recentlyUsedAccount = RecentlyUsed<Account>();
 
-  Stream<List<Account>> get allAccountsStream =>
-      _allAccountsStreamController.stream;
-
-  void pushGetAllAccountsStream() async {
-    final db = await database;
+  Future<List<Account>> getAllAccounts() async {
+    final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps = await db.query('account');
 
-    allAccountsSink.add(List.generate(maps.length, (i) {
+    List<Account> accounts = List.generate(maps.length, (i) {
       return Account(
         id: maps[i]['id'],
         name: maps[i]['name'].toString(),
@@ -19,35 +21,36 @@ extension DatabaseExtensionAccount on DatabaseHelper {
         balance: maps[i]['balance'],
         description: maps[i]['description'],
       );
-    }));
+    });
+    return accounts;
   }
 
   Future<int> createAccount(Account account) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
     int id = await db.insert(
       'account',
       account.toMap(),
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
 
-    pushGetAllAccountsStream();
+    notifyListeners();
     return id;
   }
 
   Future<void> deleteAccount(int accountID) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     await db.delete(
       'account',
       where: 'id = ?',
       whereArgs: [accountID],
     );
-    pushGetAllAccountsStream();
+    notifyListeners();
     recentlyUsedAccount.removeItem(accountID.toString());
   }
 
   Future<void> updateAccount(Account account) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
 
     await db.update(
       'account',
@@ -55,22 +58,22 @@ extension DatabaseExtensionAccount on DatabaseHelper {
       where: 'id = ?',
       whereArgs: [account.id],
     );
-    pushGetAllAccountsStream();
+    notifyListeners();
   }
 
-  Future<void> setAccountBalance(Account account, double newBalance) async {
-    final db = await database;
+  Future<void> setAccountBalance(int accountID, double newBalance) async {
+    final db = await DatabaseHelper.instance.database;
     await db.update(
       'account',
       {'balance': roundDouble(newBalance)},
       where: 'id = ?',
-      whereArgs: [account.id],
+      whereArgs: [accountID],
     );
   }
 
   /// TODO: null checks
   Future<Account> getOneAccount(int id) async {
-    final db = await database;
+    final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'account',
       where: 'id = ?',

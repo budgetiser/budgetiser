@@ -1,4 +1,4 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
@@ -33,8 +33,8 @@ class _SelectAccountState extends State<SelectAccount> {
 
   @override
   void initState() {
-    DatabaseHelper.instance.allAccountsStream.listen((event) async {
-      _accounts = event;
+    AccountModel().getAllAccounts().then((value) async {
+      _accounts = value;
       _filteredAccounts = _accounts
           .where((element) => element.id != widget.blackListAccountId)
           .toList();
@@ -65,7 +65,6 @@ class _SelectAccountState extends State<SelectAccount> {
         widget.callback(_selectedAccount!);
       }
     });
-    DatabaseHelper.instance.pushGetAllAccountsStream();
     super.initState();
   }
 

@@ -1,4 +1,3 @@
-import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/groups/group_form.dart';

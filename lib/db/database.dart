@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
@@ -22,7 +23,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 
-part 'account_part.dart';
 part 'budget_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
@@ -87,24 +87,28 @@ class DatabaseHelper {
   Future fillDBwithTMPdata() async {
     Profiler.instance.start('fill with TMP data');
     for (var account in TMP_DATA_accountList) {
-      await createAccount(account);
+      Profiler.instance.start('create account');
+      await AccountModel().createAccount(account);
+      Profiler.instance.end();
     }
     for (var category in TMP_DATA_categoryList) {
-      Profiler.instance.start('create categories');
+      Profiler.instance.start('create category');
       await CategoryModel().createCategory(category);
       Profiler.instance.end();
     }
     for (var transaction in TMP_DATA_transactionList) {
+      Profiler.instance.start('create transaction');
       await TransactionModel().createSingleTransaction(
         transaction,
         notify: false,
       );
+      Profiler.instance.end();
     }
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
     }
     for (var group in TMP_DATA_groupList) {
-      Profiler.instance.start('create categories');
+      Profiler.instance.start('create group');
       await GroupModel().createGroup(group);
       Profiler.instance.end();
     }
@@ -161,12 +165,12 @@ class DatabaseHelper {
   void exportAsJson() async {
     var fullJSON = {};
 
-    allAccountsStream.listen((event) {
-      fullJSON['Accounts'] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllAccountsStream();
-    await allAccountsStream.isEmpty;
+    // allAccountsStream.listen((event) {
+    //   fullJSON['Accounts'] =
+    //       event.map((element) => element.toJsonMap()).toList();
+    // });
+    // pushGetAllAccountsStream();
+    // await allAccountsStream.isEmpty;
 
     allBudgetsStream.listen((event) {
       fullJSON['Budgets'] =

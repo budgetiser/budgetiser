@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/db/recently_used.dart';
@@ -51,7 +52,7 @@ class TransactionModel extends ChangeNotifier {
     TransactionCategory cat =
         await CategoryModel().getCategory(mapItem['category_id']);
     Account account =
-        await DatabaseHelper.instance.getOneAccount(mapItem['account1_id']);
+        await AccountModel().getOneAccount(mapItem['account1_id']);
     SingleTransaction s = SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -61,7 +62,7 @@ class TransactionModel extends ChangeNotifier {
       account: account,
       account2: mapItem['account2_id'] == null
           ? null
-          : await DatabaseHelper.instance.getOneAccount(mapItem['account2_id']),
+          : await AccountModel().getOneAccount(mapItem['account2_id']),
       date: DateTime.parse(mapItem['date'].toString()),
     );
     Profiler.instance.end();
@@ -152,17 +153,17 @@ class TransactionModel extends ChangeNotifier {
   Future<void> deleteSingleTransaction(SingleTransaction transaction) async {
     final db = await DatabaseHelper.instance.database;
     if (transaction.account2 == null) {
-      await DatabaseHelper.instance.setAccountBalance(
-        transaction.account,
+      await AccountModel().setAccountBalance(
+        transaction.account.id,
         transaction.account.balance - transaction.value,
       );
     } else {
-      await DatabaseHelper.instance.setAccountBalance(
-        transaction.account,
+      await AccountModel().setAccountBalance(
+        transaction.account.id,
         transaction.account.balance + transaction.value,
       );
-      await DatabaseHelper.instance.setAccountBalance(
-        transaction.account2!,
+      await AccountModel().setAccountBalance(
+        transaction.account2!.id,
         transaction.account2!.balance - transaction.value,
       );
     }

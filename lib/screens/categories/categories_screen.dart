@@ -1,5 +1,4 @@
 import 'package:budgetiser/db/category_provider.dart';
-import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/categories/category_form.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';

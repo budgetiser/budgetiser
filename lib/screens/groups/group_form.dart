@@ -1,4 +1,3 @@
-import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/shared/dataClasses/group.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';

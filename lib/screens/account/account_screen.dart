@@ -1,9 +1,10 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/widgets/items/accountItem/account_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AccountScreen extends StatefulWidget {
   static String routeID = 'account';
@@ -17,12 +18,6 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   String currentSort = 'name';
-
-  @override
-  void initState() {
-    DatabaseHelper.instance.pushGetAllAccountsStream();
-    super.initState();
-  }
 
   int sortFunction(Account a, Account b) {
     switch (currentSort) {
@@ -43,72 +38,94 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sort),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SimpleDialog(
-                    title: const Text('Sort by'),
-                    alignment: Alignment.topRight,
-                    children: <Widget>[
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            if (currentSort == 'name') {
-                              currentSort = 'nameReverse';
-                            } else {
-                              currentSort = 'name';
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            const Text('Name'),
-                            (currentSort == 'name')
-                                ? const Icon(Icons.keyboard_arrow_up)
-                                : const Icon(Icons.keyboard_arrow_down),
-                          ],
-                        ),
-                      ),
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            if (currentSort == 'balance') {
-                              currentSort = 'balanceReverse';
-                            } else {
-                              currentSort = 'balance';
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            const Text('Balance'),
-                            (currentSort == 'balance')
-                                ? const Icon(Icons.keyboard_arrow_up)
-                                : const Icon(Icons.keyboard_arrow_down),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-        ],
-        title: const Text(
-          'Accounts',
-        ),
-      ),
+      appBar: appBar(context),
       drawer: const CreateDrawer(),
-      body: StreamBuilder<List<Account>>(
-        stream: DatabaseHelper.instance.allAccountsStream,
+      body: screenContent(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AccountForm(),
+            ),
+          );
+        },
+        tooltip: 'Increment',
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.sort),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                  title: const Text('Sort by'),
+                  alignment: Alignment.topRight,
+                  children: <Widget>[
+                    SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          if (currentSort == 'name') {
+                            currentSort = 'nameReverse';
+                          } else {
+                            currentSort = 'name';
+                          }
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          const Text('Name'),
+                          (currentSort == 'name')
+                              ? const Icon(Icons.keyboard_arrow_up)
+                              : const Icon(Icons.keyboard_arrow_down),
+                        ],
+                      ),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          if (currentSort == 'balance') {
+                            currentSort = 'balanceReverse';
+                          } else {
+                            currentSort = 'balance';
+                          }
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          const Text('Balance'),
+                          (currentSort == 'balance')
+                              ? const Icon(Icons.keyboard_arrow_up)
+                              : const Icon(Icons.keyboard_arrow_down),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ],
+      title: const Text(
+        'Accounts',
+      ),
+    );
+  }
+
+  Widget screenContent() {
+    return Consumer<AccountModel>(builder: (context, value, child) {
+      return FutureBuilder<List<Account>>(
+        future: AccountModel().getAllAccounts(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -129,19 +146,7 @@ class _AccountScreenState extends State<AccountScreen> {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AccountForm(),
-            ),
-          );
-        },
-        tooltip: 'Increment',
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
-      ),
-    );
+      );
+    });
   }
 }
