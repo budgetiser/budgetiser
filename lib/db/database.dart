@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 
 part 'budget_part.dart';
 part 'sql_part.dart';
@@ -119,13 +119,11 @@ class DatabaseHelper {
   }
 
   Future<Database> initializeDatabase() async {
-    final preferences = await SharedPreferences.getInstance();
     var databasesPath = await getDatabasesPath();
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
         version: 2,
-        password: preferences.getBool('encrypted')! ? _passcode : null,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {
