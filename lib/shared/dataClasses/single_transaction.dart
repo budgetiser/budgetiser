@@ -40,6 +40,8 @@ class SingleTransaction {
         'description': description?.trim(),
         'category_id': category.id,
         'date': date.millisecondsSinceEpoch,
+        'account1_id': account.id,
+        'account2_id': account2?.id,
       };
 
   Map<String, dynamic> toJsonMap() {

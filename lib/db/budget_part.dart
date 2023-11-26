@@ -33,7 +33,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
     final db = await database;
 
     final List<Map<String, dynamic>> mapCategories = await db.rawQuery(
-        'Select distinct id, name, icon, color, description, is_hidden from category, categoryToBudget where category_id = category.id and budget_id = ?',
+        'Select distinct id, name, icon, color, description, archived from category, categoryToBudget where category_id = category.id and budget_id = ?',
         [budgetID]);
     return List.generate(mapCategories.length, (i) {
       return TransactionCategory(
@@ -42,7 +42,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
         icon: IconData(mapCategories[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(mapCategories[i]['color']),
         description: mapCategories[i]['description'].toString(),
-        archived: mapCategories[i]['is_hidden'] == 1,
+        archived: mapCategories[i]['archived'] == 1,
       );
     });
   }

@@ -23,9 +23,8 @@ class TransactionModel extends ChangeNotifier {
     Profiler.instance.start('getAllTransactions');
     var db = await DatabaseHelper.instance.database;
     Profiler.instance.start('sql fetching');
-    final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-      '''Select distinct * from singleTransaction, singleTransactionToAccount
-      where singleTransaction.id = singleTransactionToAccount.transaction_id''',
+    final List<Map<String, dynamic>> mapSingle = await db.query(
+      'singleTransaction',
     );
     Profiler.instance.end();
     List<SingleTransaction> list = [];
@@ -128,13 +127,6 @@ class TransactionModel extends ChangeNotifier {
             'UPDATE account SET balance = balance + ? WHERE id = ?',
             [transaction.value, transaction.account.id]);
       }
-
-      await txn.insert('singleTransactionToAccount', {
-        'transaction_id': transactionId,
-        'account1_id': transaction.account.id,
-        'account2_id':
-            transaction.account2 != null ? transaction.account2!.id : null,
-      });
     });
 
     if (notify) {
@@ -172,15 +164,7 @@ class TransactionModel extends ChangeNotifier {
       where: 'id = ?',
       whereArgs: [transaction.id],
     );
-    await db.delete(
-      'singleTransactionToAccount',
-      where: 'transaction_id = ?',
-      whereArgs: [transaction.id],
-    );
 
-    // pushGetAllAccountsStream();
-    // pushGetAllTransactionsStream();
-    // TODO:
     notifyTransactionUpdate();
   }
 
@@ -197,11 +181,10 @@ class TransactionModel extends ChangeNotifier {
 
   Future<SingleTransaction> getOneTransaction(int id) async {
     final db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
-      '''Select distinct * from SingleTransaction, singleTransactionToAccount
-      where SingleTransaction.id = singleTransactionToAccount.transaction_id 
-      and SingleTransaction.id = ?''',
-      [id],
+    final List<Map<String, dynamic>> mapSingle = await db.query(
+      'singleTransaction',
+      where: 'singleTransaction.id = ?',
+      whereArgs: [id],
     );
 
     if (mapSingle.length == 1) {

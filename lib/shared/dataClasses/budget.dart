@@ -46,8 +46,9 @@ class Budget extends Selectable {
         intervalIndex = map['interval_index'],
         intervalRepetitions = map['interval_repetitions'],
         startDate = DateTime.fromMillisecondsSinceEpoch(map['start_date']),
-        endDate = map['end_date'] ??
-            DateTime.fromMillisecondsSinceEpoch(map['end_date']),
+        endDate = map['end_date'] == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(map['end_date']),
         transactionCategories = categoryList,
         super(
           name: map['name'].toString(),
