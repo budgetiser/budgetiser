@@ -136,12 +136,9 @@ Future<void> upgradeToV3(Database db) async {
   if (kDebugMode) {
     print('upgrading to DB V3...');
   }
-  var i = 0;
   await db.transaction((txn) async {
-    print('Current + ${i++}');
     await txn.execute('PRAGMA foreign_keys = OFF;');
 
-    print('Current + ${i++}');
     // account
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_account(
@@ -157,31 +154,25 @@ Future<void> upgradeToV3(Database db) async {
         );
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       INSERT INTO NEW_account (id, name, icon, color, balance, description) 
       SELECT id, name, icon, color, balance, description FROM account;
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       UPDATE NEW_account SET description = NULL
       WHERE description = '';
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       DROP TABLE account;
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       ALTER TABLE NEW_account RENAME TO account;
     ''');
 
     // category
-
-    print('Current + ${i++}');
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_category(
         id INTEGER NOT NULL,
@@ -195,31 +186,25 @@ Future<void> upgradeToV3(Database db) async {
       );
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       INSERT INTO NEW_category (id, name, icon, color, archived, description) 
       SELECT id, name, icon, color, is_hidden, description FROM category;
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       UPDATE NEW_category SET description = NULL
       WHERE description = '';
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       DROP TABLE category;
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       ALTER TABLE NEW_category RENAME TO category;
     ''');
 
     // singleTransaction
-
-    print('Current + ${i++}');
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_singleTransaction(
         id INTEGER NOT NULL,
@@ -237,7 +222,6 @@ Future<void> upgradeToV3(Database db) async {
       );
     ''');
 
-    print('Current + ${i++}');
     final List<Map<String, dynamic>> mapSingle = await txn.rawQuery(
       '''SELECT DISTINCT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
       account.icon AS account_icon, account.color AS account_color, account.id AS account_id, account.name AS account_name, account.balance AS account_balance,
@@ -249,7 +233,6 @@ Future<void> upgradeToV3(Database db) async {
       ''',
     );
 
-    print('Current + ${i++}');
     for (Map<String, dynamic> transaction in mapSingle) {
       transaction = Map.of(transaction);
       transaction['date'] =
@@ -284,19 +267,15 @@ Future<void> upgradeToV3(Database db) async {
       }
     }
 
-    print('Current + ${i++}');
     await txn.execute('''
       DROP TABLE singleTransaction;
     ''');
 
-    print('Current + ${i++}');
     await txn.execute('''
       ALTER TABLE NEW_singleTransaction RENAME TO singleTransaction;
     ''');
 
     // budgets
-
-    print('Current + ${i++}');
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS NEW_budget(
         id INTEGER NOT NULL,
@@ -315,21 +294,24 @@ Future<void> upgradeToV3(Database db) async {
       );
     ''');
 
-    print('Current + ${i++}');
     final List<Map<String, dynamic>> mapBudgets = await txn.rawQuery(
-      '''SELECT id, name, icon, color, limitXX, interval_unit, interval_repititions, start_date, end_date, description FROM category;
+      '''SELECT id, name, icon, color, limitXX, is_recurring, interval_unit, interval_repititions, start_date, end_date, description FROM budget;
       ''',
     );
 
-    print('Current + ${i++}');
     for (Map<String, dynamic> item in mapBudgets) {
       item = Map.of(item);
+      if (item['is_recurring'] != 1) {
+        item['interval_unit'] = 'IntervalUnit.month';
+        item['interval_repetitions'] = null;
+      }
       item['start_date'] =
           DateTime.parse(item['start_date']).millisecondsSinceEpoch;
-      item['end_date'] =
-          DateTime.parse(item['end_date']).millisecondsSinceEpoch;
+      item['end_date'] = item['end_date'] == null
+          ? null
+          : DateTime.parse(item['end_date']).millisecondsSinceEpoch;
       await txn.execute('''
-        INSERT INTO categoryBridge (id, name, icon, color, max_value, interval_unit, interval_index, interval_repetitions, start_date, end_date, description) 
+        INSERT INTO NEW_budget (id, name, icon, color, max_value, interval_unit, interval_index, interval_repetitions, start_date, end_date, description) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       ''', [
         item['id'],
@@ -346,7 +328,14 @@ Future<void> upgradeToV3(Database db) async {
       ]);
     }
 
-    print('Current + ${i++}');
+    await txn.execute('''
+      DROP TABLE budget;
+    ''');
+
+    await txn.execute('''
+      ALTER TABLE NEW_budget RENAME TO budget;
+    ''');
+
     // categoryBridge
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS categoryBridge(
@@ -359,13 +348,11 @@ Future<void> upgradeToV3(Database db) async {
         );
     ''');
 
-    print('Current + ${i++}');
     final List<Map<String, dynamic>> mapBridge = await txn.rawQuery(
       '''SELECT id FROM category;
       ''',
     );
 
-    print('Current + ${i++}');
     for (Map<String, dynamic> item in mapBridge) {
       item = Map.of(item);
       await txn.execute('''
@@ -375,17 +362,12 @@ Future<void> upgradeToV3(Database db) async {
     }
 
     // final
-
-    print('Current + ${i++}');
     await txn.execute('DROP TABLE categoryToGroup;');
 
-    print('Current + ${i++}');
     await txn.execute('DROP TABLE singleTransactionToAccount;');
 
-    print('Current + ${i++}');
-    await txn.execute('PRAGMA schema.foreign_key_check;');
+    await txn.execute('PRAGMA foreign_key_check;');
 
-    print('Current + ${i++}');
     await txn.execute('PRAGMA foreign_keys = ON;');
   });
 
