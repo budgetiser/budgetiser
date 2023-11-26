@@ -123,7 +123,7 @@ class DatabaseHelper {
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
-        version: 2,
+        version: 3,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {
