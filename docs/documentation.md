@@ -27,3 +27,5 @@ Budget
 - interval_repititions and end_date remain empty/null for endless repititions
 
 Dates are stored as integer (milliseconds since UNIX)
+
+- archived default is 0
