@@ -20,94 +20,81 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     }
     await db.execute('PRAGMA foreign_keys = ON');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS account(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  balance REAL,
-  description TEXT,
-  PRIMARY KEY(id));
+      CREATE TABLE IF NOT EXISTS account(
+        id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        icon INTEGER NOT NULL,
+        color INTEGER NOT NULL,
+        balance REAL NOT NULL,
+        description TEXT,
+        archived INTEGER NOT NULL,
+        PRIMARY KEY(id),
+        CHECK(archived IN (0, 1))
+        );
     ''');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS category(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  description TEXT,
-  is_hidden INTEGER,
-  PRIMARY KEY(id),
-  CHECK(is_hidden IN (0, 1)));
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS singleTransaction(
-  id INTEGER,
-  title TEXT,
-  value REAL,
-  description TEXT,
-  category_id INTEGER,
-  date TEXT,
-  PRIMARY KEY(id),
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE
-  );
+      CREATE TABLE IF NOT EXISTS category(
+        id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        icon INTEGER NOT NULL,
+        color INTEGER NOT NULL,
+        description TEXT,
+        archived INTEGER NOT NULL,
+        PRIMARY KEY(id),
+        CHECK(archived IN (0, 1))
+      );
     ''');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS XXGroup(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  description TEXT,
-  PRIMARY KEY(id));
-  ''');
+      CREATE TABLE IF NOT EXISTS singleTransaction(
+        id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        value REAL NOT NULL,
+        description TEXT,
+        category_id INTEGER NOT NULL,
+        date INTEGER NOT NULL,
+        account1 INTEGER NOT NULL,
+        account2 INTEGER,
+        PRIMARY KEY(id),
+        FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
+        FOREIGN KEY(account1) REFERENCES account ON DELETE CASCADE,
+        FOREIGN KEY(account2) REFERENCES account ON DELETE CASCADE
+      );
+    ''');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS budget(
-  id INTEGER,
-  name TEXT,
-  icon INTEGER,
-  color INTEGER,
-  balance REAL,
-  limitXX REAL,
-  is_recurring INTEGER,
-  interval_type TEXT,
-  interval_amount INTEGER,
-  interval_unit TEXT,
-  interval_repititions INTEGER,
-  start_date TEXT,
-  end_date TEXT,
-  description TEXT,
-  PRIMARY KEY(id),
-  CHECK(is_recurring IN (0, 1)),
-  CHECK(interval_type IN ('IntervalType.fixedInterval', 'IntervalType.fixedPointOfTime')),
-  CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year')));
-  ''');
+      CREATE TABLE IF NOT EXISTS budget(
+        id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        icon INTEGER NOT NULL,
+        color INTEGER NOT NULL,
+        max_value REAL NOT NULL,
+        interval_unit TEXT NOT NULL,
+        interval_repetitions INTEGER,
+        start_date INTEGER NOT NULL,
+        end_date INTEGER,
+        description TEXT,
+        PRIMARY KEY(id),
+        CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
+      );
+    ''');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS categoryToBudget(
-  category_id INTEGER,
-  budget_id INTEGER,
-  PRIMARY KEY(category_id, budget_id),
-  FOREIGN KEY(budget_id) REFERENCES budget ON DELETE CASCADE,
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE);
-  ''');
+      CREATE TABLE IF NOT EXISTS categoryToBudget(
+        category_id INTEGER,
+        budget_id INTEGER,
+        PRIMARY KEY(category_id, budget_id),
+        FOREIGN KEY(budget_id) REFERENCES budget ON DELETE CASCADE,
+        FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE
+      );
+    ''');
     await db.execute('''
-CREATE TABLE IF NOT EXISTS categoryToGroup(
-  category_id INTEGER,
-  group_id INTEGER,
-  PRIMARY KEY(category_id, group_id),
-  FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
-  FOREIGN KEY(group_id) REFERENCES XXGroup ON DELETE CASCADE);
-  ''');
-    await db.execute('''
-CREATE TABLE IF NOT EXISTS singleTransactionToAccount(
-  transaction_id INTEGER,
-  account1_id INTEGER,
-  account2_id INTEGER,
-  PRIMARY KEY(transaction_id, account1_id, account2_id),
-  FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
-  FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE,
-  FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE);
-''');
+      CREATE TABLE IF NOT EXISTS categoryBridge(
+        ancestor_id INTEGER NOT NULL,
+        descendent_id INTEGER NOT NULL,
+        distance INTEGER NOT NULL,
+        PRIMARY KEY(ancestor_id, descendent_id),
+        FOREIGN KEY(ancestor_id) REFERENCES category ON DELETE CASCADE,
+        FOREIGN KEY(descendent_id) REFERENCES category ON DELETE CASCADE
+        );
+    ''');
     if (kDebugMode) {
       print('done initializing tables');
     }
