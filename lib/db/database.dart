@@ -17,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 part 'budget_part.dart';
@@ -30,7 +29,6 @@ class DatabaseHelper {
   static const databaseName = 'budgetiser.db';
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
-  static String? _passcode;
   final recentlyUsedAccount = RecentlyUsed<Account>();
 
   Future<Database> get database async =>
@@ -39,24 +37,6 @@ class DatabaseHelper {
   /// Only for unittest
   void setDatabase(Database db) {
     _database = db;
-  }
-
-  Future<int> login(String passCode) async {
-    final preferences = await SharedPreferences.getInstance();
-    if (!preferences.containsKey('encrypted')) {
-      preferences.setBool('encrypted', false);
-    }
-    _passcode = passCode;
-    _database = await initializeDatabase();
-    return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
-  }
-
-  Future<int> createDatabase(String passCode) async {
-    final preferences = await SharedPreferences.getInstance();
-    preferences.setBool('encrypted', passCode != '' ? true : false);
-    _passcode = passCode;
-    _database = await initializeDatabase();
-    return _database != null ? (_database!.isOpen ? 1 : 0) : 0;
   }
 
   void logout() async {

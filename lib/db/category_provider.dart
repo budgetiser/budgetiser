@@ -48,12 +48,18 @@ class CategoryModel extends ChangeNotifier {
       'icon': category.icon.codePoint,
       'color': category.color.value,
       'description': category.description,
-      'is_hidden': ((category.archived) ? 1 : 0),
+      'archived': ((category.archived) ? 1 : 0),
     };
 
     int id = await db.insert(
       'category',
       row,
+      conflictAlgorithm: ConflictAlgorithm.fail,
+    );
+
+    await db.insert(
+      'categoryBridge',
+      {'ancestor_id': id, 'descendent_id': id, 'distance': 0},
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
     _notifyCategoryUpdate();
@@ -67,6 +73,11 @@ class CategoryModel extends ChangeNotifier {
       'category',
       where: 'id = ?',
       whereArgs: [categoryID],
+    );
+    await db.delete(
+      'categoryBridge',
+      where: 'ancestor_id = ? OR descendent_id = ?',
+      whereArgs: [categoryID, categoryID],
     );
 
     _notifyCategoryUpdate();

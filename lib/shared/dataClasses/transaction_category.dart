@@ -25,12 +25,12 @@ class TransactionCategory extends Selectable {
         'color': color.value,
         'description': description?.trim(),
         'archived': archived,
-        'parent_ID': parentID,
       };
 
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
+    m['parentID'] = parentID;
     return m;
   }
 }
