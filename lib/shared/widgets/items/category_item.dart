@@ -12,8 +12,8 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (categoryData.isHidden) {
-      return Container(); // isHidden not yet used
+    if (categoryData.archived) {
+      return Container(); // TODO: archived not yet implemented
     }
     return SizedBox(
       width: double.infinity,

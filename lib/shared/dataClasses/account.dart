@@ -3,7 +3,8 @@ import 'package:budgetiser/shared/dataClasses/selectable.dart';
 class Account extends Selectable {
   int id;
   double balance;
-  String description;
+  String? description;
+  bool archived;
 
   Account({
     required super.name,
@@ -11,7 +12,8 @@ class Account extends Selectable {
     required super.color,
     required this.id,
     required this.balance,
-    this.description = '',
+    this.archived = false,
+    this.description,
   });
 
   Map<String, dynamic> toMap() => {
@@ -19,7 +21,8 @@ class Account extends Selectable {
         'icon': icon.codePoint,
         'color': color.value,
         'balance': balance,
-        'description': description.trim(),
+        'description': description?.trim(),
+        'archived': archived ? 1 : 0,
       };
 
   Map<String, dynamic> toJsonMap() {

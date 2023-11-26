@@ -86,7 +86,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
         icon: IconData(mapCategories[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(mapCategories[i]['color']),
         description: mapCategories[i]['description'].toString(),
-        isHidden: mapCategories[i]['is_hidden'] == 1,
+        archived: mapCategories[i]['is_hidden'] == 1,
       );
     });
   }

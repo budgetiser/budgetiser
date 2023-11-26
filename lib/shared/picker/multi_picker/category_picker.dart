@@ -139,7 +139,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                   title: Text('Add Category'),
                 ),
               );
-            } else if (_selected[itemCount - 1].isHidden == false) {
+            } else if (_selected[itemCount - 1].archived == false) {
               return ListTile(
                 leading: Icon(_selected[itemCount - 1].icon),
                 title: Text(_selected[itemCount - 1].name),

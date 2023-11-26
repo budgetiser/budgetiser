@@ -20,7 +20,7 @@ class CategoryModel extends ChangeNotifier {
       icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
       color: Color(maps[0]['color']),
       description: maps[0]['description'],
-      isHidden: maps[0]['is_hidden'] == 1,
+      archived: maps[0]['is_hidden'] == 1,
     );
   }
 
@@ -35,7 +35,7 @@ class CategoryModel extends ChangeNotifier {
         icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(maps[i]['color']),
         description: maps[i]['description'].toString(),
-        isHidden: maps[i]['is_hidden'] == 1,
+        archived: maps[i]['is_hidden'] == 1,
       );
     });
   }
@@ -48,7 +48,7 @@ class CategoryModel extends ChangeNotifier {
       'icon': category.icon.codePoint,
       'color': category.color.value,
       'description': category.description,
-      'is_hidden': ((category.isHidden) ? 1 : 0),
+      'is_hidden': ((category.archived) ? 1 : 0),
     };
 
     int id = await db.insert(

@@ -2,8 +2,11 @@ import 'package:budgetiser/shared/dataClasses/selectable.dart';
 
 class TransactionCategory extends Selectable {
   int id;
-  String description;
-  bool isHidden;
+  String? description;
+  bool archived;
+  // TODO: discuss how to implement bridge
+  int? parentID;
+  int level; // starts at 0 for elements without parent
 
   TransactionCategory({
     required this.id,
@@ -11,15 +14,18 @@ class TransactionCategory extends Selectable {
     required super.icon,
     required super.color,
     this.description = '',
-    this.isHidden = false,
+    this.archived = false,
+    this.parentID,
+    this.level = 0,
   });
 
   Map<String, dynamic> toMap() => {
         'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'description': description.trim(),
-        'is_hidden': isHidden,
+        'description': description?.trim(),
+        'archived': archived,
+        'parent_ID': parentID,
       };
 
   Map<String, dynamic> toJsonMap() {
@@ -27,24 +33,4 @@ class TransactionCategory extends Selectable {
     m['id'] = id;
     return m;
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is TransactionCategory &&
-        id == other.id &&
-        name == other.name &&
-        icon == other.icon &&
-        color == other.color &&
-        description == other.description &&
-        isHidden == other.isHidden;
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, icon, color, description, isHidden);
 }

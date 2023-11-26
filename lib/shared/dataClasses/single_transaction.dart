@@ -8,7 +8,7 @@ class SingleTransaction {
   TransactionCategory category;
   Account account;
   Account? account2;
-  String description;
+  String? description;
   DateTime date;
 
   SingleTransaction({
@@ -37,7 +37,7 @@ class SingleTransaction {
   Map<String, dynamic> toMap() => {
         'title': title.trim(),
         'value': value,
-        'description': description.trim(),
+        'description': description?.trim(),
         'category_id': category.id,
         'date': date.toString().substring(0, 19)
       };

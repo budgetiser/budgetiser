@@ -99,7 +99,7 @@ List<TransactionCategory> getCategoryList() {
         icon: icon,
         color: _availableColors[Random().nextInt(_availableColors.length)],
         description: '',
-        isHidden: false,
+        archived: false,
       ),
     );
     id++;
