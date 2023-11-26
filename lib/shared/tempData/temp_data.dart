@@ -4,8 +4,6 @@ import 'dart:math';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
-import 'package:budgetiser/shared/dataClasses/group.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/tempData/categories.dart' as cats;
@@ -182,80 +180,6 @@ List<TransactionCategory> getCategoryList() {
 }
 
 List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
-
-/// ************************
-///
-///     GROUP SECTION
-///
-/// ************************
-
-List<Group> getGroupList() {
-  List<Group> groups = [];
-  List<IconData> icons = [
-    Icons.add,
-    Icons.train,
-    Icons.book,
-    Icons.medical_services_outlined,
-    Icons.movie_creation_outlined,
-    Icons.house,
-    Icons.no_food,
-    Icons.child_care,
-    Icons.library_books,
-    Icons.card_giftcard,
-    Icons.electric_bolt,
-    Icons.person,
-    Icons.pets,
-    Icons.keyboard_double_arrow_down_sharp
-  ];
-  List<String> names = [
-    'Income',
-    'Transportation',
-    'Personal Development',
-    'Medical and Healthcare',
-    'Entertainment',
-    'Housing',
-    'Food',
-    'Children',
-    'Insurances',
-    'Gifts',
-    'Essential Bills',
-    'Personal Care',
-    'Pets',
-    'Debt'
-  ];
-  List<List<TransactionCategory>> categories = [
-    TMP_DATA_categoryList.sublist(0, 6 + 1),
-    TMP_DATA_categoryList.sublist(7, 11 + 1),
-    TMP_DATA_categoryList.sublist(12, 16 + 1),
-    TMP_DATA_categoryList.sublist(17, 20 + 1),
-    TMP_DATA_categoryList.sublist(21, 25 + 1),
-    TMP_DATA_categoryList.sublist(26, 29 + 1),
-    TMP_DATA_categoryList.sublist(30, 32 + 1),
-    TMP_DATA_categoryList.sublist(33, 34 + 1),
-    TMP_DATA_categoryList.sublist(35, 38 + 1),
-    TMP_DATA_categoryList.sublist(39, 41 + 1),
-    TMP_DATA_categoryList.sublist(42, 46 + 1),
-    TMP_DATA_categoryList.sublist(47, 51 + 1),
-    TMP_DATA_categoryList.sublist(52, 54 + 1),
-    TMP_DATA_categoryList.sublist(55, 57 + 1),
-  ];
-
-  for (int i = 0; i < icons.length; i++) {
-    groups.add(
-      Group(
-        id: 1,
-        name: names[i],
-        icon: icons[i],
-        color: _availableColors[Random().nextInt(_availableColors.length)],
-        description: '',
-        transactionCategories: categories[i],
-      ),
-    );
-  }
-  return groups;
-}
-
-List<Group> TMP_DATA_groupList = getGroupList();
 
 /// ************************
 ///

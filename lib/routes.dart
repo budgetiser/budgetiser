@@ -1,7 +1,6 @@
 import 'package:budgetiser/screens/account/account_screen.dart';
 import 'package:budgetiser/screens/budgets/budgets.dart';
 import 'package:budgetiser/screens/categories/categories_screen.dart';
-import 'package:budgetiser/screens/groups/groups_screen.dart';
 import 'package:budgetiser/screens/help.dart';
 import 'package:budgetiser/screens/home_screen.dart';
 import 'package:budgetiser/screens/notes_screen.dart';
@@ -15,7 +14,6 @@ var routes = {
   'budgets': (context) => const Budgets(),
   'account': (context) => const AccountScreen(),
   'categories': (context) => const CategoriesScreen(),
-  'groups': (context) => const GroupsScreen(),
   'stats': (context) => const Stats(),
   'transactions': (context) => const TransactionsScreen(),
   'help': (context) => const HelpScreen(),

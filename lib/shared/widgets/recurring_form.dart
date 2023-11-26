@@ -1,3 +1,4 @@
+import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:flutter/material.dart';

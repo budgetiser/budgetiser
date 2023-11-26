@@ -363,11 +363,10 @@ Future<void> upgradeToV3(Database db) async {
 
     // final
     await txn.execute('DROP TABLE categoryToGroup;');
-
+    await txn.execute('DROP TABLE XXGroup;');
     await txn.execute('DROP TABLE singleTransactionToAccount;');
 
     await txn.execute('PRAGMA foreign_key_check;');
-
     await txn.execute('PRAGMA foreign_keys = ON;');
   });
 
