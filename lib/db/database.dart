@@ -142,12 +142,12 @@ class DatabaseHelper {
     // pushGetAllAccountsStream();
     // await allAccountsStream.isEmpty;
 
-    allBudgetsStream.listen((event) {
-      fullJSON['Budgets'] =
-          event.map((element) => element.toJsonMap()).toList();
-    });
-    pushGetAllBudgetsStream();
-    await allBudgetsStream.first;
+    // allBudgetsStream.listen((event) {
+    //   fullJSON['Budgets'] =
+    //       event.map((element) => element.toJsonMap()).toList();
+    // });
+    // pushGetAllBudgetsStream();
+    // await allBudgetsStream.first;
 
     // CategoryModel()
     //     .getAllCategories()

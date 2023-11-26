@@ -16,13 +16,13 @@ class AccountPicker extends StatefulWidget {
 }
 
 class _AccountPickerState extends State<AccountPicker> {
-  List<Account> _allAccounts = [];
+  late List<Account> _allAccounts = [];
 
   @override
   void initState() {
-    super.initState();
-
+    // TODO: Broken: setting _allAccounts only after 2nd build
     AccountModel().getAllAccounts().then((value) => _allAccounts = value);
+    super.initState();
   }
 
   @override

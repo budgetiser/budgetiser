@@ -7,9 +7,8 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         '''SELECT SUM(value) as value 
-        FROM singleTransaction, singleTransactionToAccount 
-        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
-        AND account1_id = ? and category_id = ?''',
+        FROM singleTransaction 
+        WHERE account1_id = ? and category_id = ?''',
         [account.id, transactionCategory.id]);
     return maps[0]['value'] ?? 0.0;
   }
@@ -20,9 +19,8 @@ extension DatabaseExtensionStat on DatabaseHelper {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         '''SELECT COUNT(*) as count 
-        FROM singleTransaction, singleTransactionToAccount 
-        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
-        AND account1_id = ? and category_id = ?''',
+        FROM singleTransaction 
+        WHERE account1_id = ? and category_id = ?''',
         [account.id, transactionCategory.id]);
     return maps[0]['count'];
   }
@@ -64,9 +62,8 @@ extension DatabaseExtensionStat on DatabaseHelper {
       // compare to: https://stackoverflow.com/questions/16244952/case-when-null-makes-wrong-result-in-sqlite
       final List<Map<String, dynamic>> transactionMaps = await db.rawQuery(
         '''SELECT SUM(CASE WHEN account2_id IS NULL THEN value WHEN account2_id = ? THEN value ELSE -value END) as value, date 
-        FROM singleTransaction, singleTransactionToAccount 
-        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id
-        AND (account1_id = ? OR account2_id = ?)
+        FROM singleTransaction 
+        WHERE (account1_id = ? OR account2_id = ?)
         AND singleTransaction.date >= ?
         GROUP BY date
         ORDER BY singleTransaction.date DESC''',
@@ -111,28 +108,5 @@ extension DatabaseExtensionStat on DatabaseHelper {
       result[account] = singleAccountResult;
     });
     return result;
-  }
-
-  /// Get all transactions in a category and account
-  Future<List<Map<String, dynamic>>> getTransactions(
-    Account account,
-    TransactionCategory transactionCategory,
-    DateTime start,
-    DateTime end,
-  ) async {
-    final db = await database;
-    final startString = start.toIso8601String();
-    final endString = end.toIso8601String();
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-      '''SELECT value, date 
-        FROM singleTransaction, singleTransactionToAccount 
-        WHERE singleTransaction.id = singleTransactionToAccount.transaction_id 
-        AND account1_id = ? and category_id = ?
-        AND singleTransaction.date >= ?
-        AND singleTransaction.date <= ?
-        ORDER BY singleTransaction.date''',
-      [account.id, transactionCategory.id, startString, endString],
-    );
-    return maps;
   }
 }

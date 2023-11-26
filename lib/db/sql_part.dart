@@ -106,25 +106,19 @@ extension DatabaseExtensionSQL on DatabaseHelper {
 
   _dropTables(Database db) async {
     await db.execute('''
-          DROP TABLE IF EXISTS XXGroup;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS budget;
+          DROP TABLE IF EXISTS categoryBridge;
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS categoryToBudget;
           ''');
     await db.execute('''
-          DROP TABLE IF EXISTS categoryToGroup;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS singleTransactionToAccount;
-          ''');
-    await db.execute('''
-          DROP TABLE IF EXISTS account; 
+          DROP TABLE IF EXISTS budget;
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS singleTransaction;
+          ''');
+    await db.execute('''
+          DROP TABLE IF EXISTS account; 
           ''');
     await db.execute('''
           DROP TABLE IF EXISTS category;
@@ -337,6 +331,11 @@ Future<void> upgradeToV3(Database db) async {
     ''');
 
     // categoryBridge
+    await txn.execute(// TODO: remove after finished debugging DBv3
+        ''' 
+      DROP TABLE categoryBridge;
+    ''');
+
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS categoryBridge(
         ancestor_id INTEGER NOT NULL,
