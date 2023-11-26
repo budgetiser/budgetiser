@@ -35,7 +35,14 @@ class TransactionItem extends StatelessWidget {
               //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(transactionData.title),
+                Flexible(
+                  child: Text(
+                    transactionData.title,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
                 if (transactionData.account2 == null)
                   Row(
                     children: [
