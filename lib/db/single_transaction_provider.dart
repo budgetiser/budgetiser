@@ -250,11 +250,14 @@ class TransactionModel extends ChangeNotifier {
 
       where account.id = singleTransaction.account1_id 
       and category.id = singleTransaction.category_id
-      and date LIKE ?
+      and date >= ? and date <= ?
       ${account != null ? "and (singleTransaction.account1_id = ${account.id} or singleTransaction.account2_id = ${account.id})" : ""}
       ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
       ''',
-      ['${dateAsYYYYMM(inMonth)}%'],
+      [
+        firstOfMonth(inMonth).millisecondsSinceEpoch,
+        lastSecondOfMonth(inMonth)
+      ],
     );
     List<SingleTransaction> transactions = [];
     for (int i = 0; i < mapSingle.length; i++) {

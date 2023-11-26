@@ -25,6 +25,13 @@ DateTime firstOfMonth(DateTime date) {
   return DateTime(date.year, date.month, 1);
 }
 
+/// Return millisecondsSinceEpoch of the last second of the month of [date]
+int lastSecondOfMonth(DateTime date) {
+  return DateTime(date.year, date.month + 1)
+      .subtract(const Duration(seconds: 1))
+      .millisecondsSinceEpoch;
+}
+
 /// Used for debugging messages
 String currentSecondsAndMilliseconds() {
   DateTime now = DateTime.now();
