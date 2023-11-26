@@ -328,12 +328,22 @@ Future<void> upgradeToV3(Database db) async {
           DateTime.parse(item['start_date']).millisecondsSinceEpoch;
       item['end_date'] =
           DateTime.parse(item['end_date']).millisecondsSinceEpoch;
-      String values =
-          '${item['id']}, ${item['name']}, ${item['icon']}, ${item['color']}, ${item['limitXX']}, ${item['interval_unit']}, 0, ${item['interval_repititions']}, ${item['start_date']}, ${item['end_date']}, ${item['description'] == '' ? null : item['description']}';
       await txn.execute('''
         INSERT INTO categoryBridge (id, name, icon, color, max_value, interval_unit, interval_index, interval_repetitions, start_date, end_date, description) 
-        VALUES ($values);
-      ''');
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      ''', [
+        item['id'],
+        item['name'],
+        item['icon'],
+        item['color'],
+        item['limitXX'],
+        item['interval_unit'],
+        0,
+        item['interval_repititions'],
+        item['start_date'],
+        item['end_date'],
+        item['description'] == '' ? null : item['description']
+      ]);
     }
 
     print('Current + ${i++}');
@@ -358,11 +368,10 @@ Future<void> upgradeToV3(Database db) async {
     print('Current + ${i++}');
     for (Map<String, dynamic> item in mapBridge) {
       item = Map.of(item);
-      String values = '${item['id']}, ${item['id']}, 0';
       await txn.execute('''
         INSERT INTO categoryBridge (ancestor_id, descendent_id, distance) 
-        VALUES ($values);
-      ''');
+        VALUES (?, ?, ?);
+      ''', [item['id'], item['id'], 0]);
     }
 
     // final
