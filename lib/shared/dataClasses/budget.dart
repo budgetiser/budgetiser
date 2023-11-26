@@ -1,5 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:flutter/material.dart';
 
 enum IntervalUnit {
   day,
@@ -34,6 +35,25 @@ class Budget extends Selectable {
     this.endDate,
     required this.transactionCategories,
   });
+
+  Budget.fromDBmap(
+      Map<String, dynamic> map, List<TransactionCategory> categoryList)
+      : id = map['id'],
+        description = map['description'],
+        maxValue = map['max_value'],
+        intervalUnit = IntervalUnit.values
+            .firstWhere((e) => e.toString() == map['interval_unit']),
+        intervalIndex = map['interval_index'],
+        intervalRepetitions = map['interval_repetitions'],
+        startDate = DateTime.fromMillisecondsSinceEpoch(map['start_date']),
+        endDate = map['end_date'] ??
+            DateTime.fromMillisecondsSinceEpoch(map['end_date']),
+        transactionCategories = categoryList,
+        super(
+          name: map['name'].toString(),
+          color: Color(map['color']),
+          icon: IconData(map['icon'], fontFamily: 'MaterialIcons'),
+        );
 
   Map<String, dynamic> toMap() => {
         'name': name.trim(),

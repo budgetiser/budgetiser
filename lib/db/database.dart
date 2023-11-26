@@ -4,13 +4,10 @@ import 'dart:io';
 
 import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/db/category_provider.dart';
-import 'package:budgetiser/db/group_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
-import 'package:budgetiser/shared/dataClasses/group.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
@@ -107,11 +104,6 @@ class DatabaseHelper {
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
     }
-    for (var group in TMP_DATA_groupList) {
-      Profiler.instance.start('create group');
-      await GroupModel().createGroup(group);
-      Profiler.instance.end();
-    }
     if (kDebugMode) {
       print('finished filling DB with TMP data');
     }
@@ -184,13 +176,6 @@ class DatabaseHelper {
     //         }));
     // TODO: broken
 
-    // allGroupsStream.listen((event) {
-    //   fullJSON['Groups'] = event.map((element) => element.toJsonMap()).toList();
-    // });
-    // pushGetAllGroupsStream();
-    // await allGroupsStream.first;
-    // TODO: broken
-
     List<SingleTransaction> allTransactions =
         await TransactionModel().getAllTransactions();
     fullJSON['Transactions'] =
@@ -219,13 +204,9 @@ class DatabaseHelper {
   final StreamController<List<Budget>> _allBudgetsStreamController =
       StreamController<List<Budget>>.broadcast();
 
-  final StreamController<List<Group>> _allGroupsStreamController =
-      StreamController<List<Group>>.broadcast();
-
   void dispose() {
     _allAccountsStreamController.close();
     _allCategoryStreamController.close();
     _allBudgetsStreamController.close();
-    _allGroupsStreamController.close();
   }
 }

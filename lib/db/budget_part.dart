@@ -14,29 +14,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
       categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
     }
     allBudgetsSink.add(List.generate(maps.length, (i) {
-      Budget returnBudget = Budget(
-        id: maps[i]['id'],
-        name: maps[i]['name'].toString(),
-        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-        color: Color(maps[i]['color']),
-        balance: maps[i]['balance'] ?? 0,
-        limit: maps[i]['limitXX'],
-        startDate: DateTime.parse(maps[i]['start_date']),
-        description: maps[i]['description'].toString(),
-        isRecurring: maps[i]['is_recurring'] == 1,
-        transactionCategories: categoryList[i],
-      );
-      if (maps[i]['is_recurring'] == 1) {
-        returnBudget
-          ..endDate = DateTime.parse(maps[i]['end_date'])
-          ..intervalUnit = IntervalUnit.values
-              .firstWhere((e) => e.toString() == maps[i]['interval_unit'])
-          ..intervalType = IntervalType.values
-              .firstWhere((e) => e.toString() == maps[i]['interval_type'])
-          ..intervalAmount = maps[i]['interval_amount']
-          ..intervalRepetitions = maps[i]['interval_repititions'];
-      }
-      return returnBudget;
+      return Budget.fromDBmap(maps[i], categoryList[i]);
     }));
   }
 
@@ -48,29 +26,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
     for (int i = 0; i < maps.length; i++) {
       categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
     }
-    Budget returnBudget = Budget(
-      id: maps[0]['id'],
-      name: maps[0]['name'].toString(),
-      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
-      color: Color(maps[0]['color']),
-      balance: maps[0]['balance'] ?? 0,
-      limit: maps[0]['limitXX'],
-      startDate: DateTime.parse(maps[0]['start_date']),
-      description: maps[0]['description'].toString(),
-      isRecurring: maps[0]['is_recurring'] == 1,
-      transactionCategories: categoryList[0],
-    );
-    if (maps[0]['is_recurring'] == 1) {
-      returnBudget
-        ..endDate = DateTime.parse(maps[0]['end_date'])
-        ..intervalUnit = IntervalUnit.values
-            .firstWhere((e) => e.toString() == maps[0]['interval_unit'])
-        ..intervalType = IntervalType.values
-            .firstWhere((e) => e.toString() == maps[0]['interval_type'])
-        ..intervalAmount = maps[0]['interval_amount']
-        ..intervalRepetitions = maps[0]['interval_repititions'];
-    }
-    return returnBudget;
+    return Budget.fromDBmap(maps[0], categoryList[0]);
   }
 
   Future<List<TransactionCategory>> _getCategoriesToBudget(int budgetID) async {
@@ -113,7 +69,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
-    reloadBudgetBalanceFromID(id);
+    // reloadBudgetBalanceFromID(id);
     pushGetAllBudgetsStream();
     return id;
   }
@@ -156,55 +112,55 @@ extension DatabaseExtensionBudget on DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.fail,
       );
     }
-    reloadBudgetBalanceFromID(budget.id);
+    // reloadBudgetBalanceFromID(budget.id);
     pushGetAllBudgetsStream();
   }
 
-  void reloadBudgetBalanceFromID(int budgetID) async {
-    final db = await database;
-    //Get BudgetData
-    Budget budget = await _getBudgetToID(budgetID);
-    Map<String, DateTime> interval = budget.calculateCurrentInterval();
+  // void reloadBudgetBalanceFromID(int budgetID) async {
+  //   final db = await database;
+  //   //Get BudgetData
+  //   Budget budget = await _getBudgetToID(budgetID);
+  //   Map<String, DateTime> interval = budget.calculateCurrentInterval();
 
-    if (budget.isRecurring) {
-      await db.rawUpdate('''UPDATE budget SET balance =
-            (
-              SELECT -SUM(value)
-              FROM singleTransaction
-              INNER JOIN category ON category.id = singleTransaction.category_id
-              INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
-              INNER JOIN budget ON categoryToBudget.budget_id = budget.id
-              WHERE categoryToBudget.budget_id = ?
-                  and ? <= singleTransaction.date
-                  and ? >= singleTransaction.date
-            )
-        WHERE id = ?;
-    ''', [
-        budgetID,
-        interval['start'].toString().substring(0, 10),
-        interval['end'].toString().substring(0, 10),
-        budgetID,
-      ]);
-    } else {
-      await db.rawUpdate('''UPDATE budget SET balance =
-            (
-              SELECT -SUM(value)
-              FROM singleTransaction
-              INNER JOIN category ON category.id = singleTransaction.category_id
-              INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
-              INNER JOIN budget ON categoryToBudget.budget_id = budget.id
-              WHERE categoryToBudget.budget_id = ?
-                  and ? <= singleTransaction.date
-            )
-        WHERE id = ?;
-    ''', [
-        budgetID,
-        budget.startDate.toString().substring(0, 10),
-        budgetID,
-      ]);
-    }
-    pushGetAllBudgetsStream();
-  }
+  //   if (budget.isRecurring) {
+  //     await db.rawUpdate('''UPDATE budget SET balance =
+  //           (
+  //             SELECT -SUM(value)
+  //             FROM singleTransaction
+  //             INNER JOIN category ON category.id = singleTransaction.category_id
+  //             INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
+  //             INNER JOIN budget ON categoryToBudget.budget_id = budget.id
+  //             WHERE categoryToBudget.budget_id = ?
+  //                 and ? <= singleTransaction.date
+  //                 and ? >= singleTransaction.date
+  //           )
+  //       WHERE id = ?;
+  //   ''', [
+  //       budgetID,
+  //       interval['start'].toString().substring(0, 10),
+  //       interval['end'].toString().substring(0, 10),
+  //       budgetID,
+  //     ]);
+  //   } else {
+  //     await db.rawUpdate('''UPDATE budget SET balance =
+  //           (
+  //             SELECT -SUM(value)
+  //             FROM singleTransaction
+  //             INNER JOIN category ON category.id = singleTransaction.category_id
+  //             INNER JOIN categoryToBudget ON category.id = categoryToBudget.category_id
+  //             INNER JOIN budget ON categoryToBudget.budget_id = budget.id
+  //             WHERE categoryToBudget.budget_id = ?
+  //                 and ? <= singleTransaction.date
+  //           )
+  //       WHERE id = ?;
+  //   ''', [
+  //       budgetID,
+  //       budget.startDate.toString().substring(0, 10),
+  //       budgetID,
+  //     ]);
+  //   }
+  //   pushGetAllBudgetsStream();
+  // }
 
   /// takes a long time
   void reloadAllBudgetBalance() async {
@@ -212,7 +168,7 @@ extension DatabaseExtensionBudget on DatabaseHelper {
     final List<Map<String, dynamic>> maps =
         await db.query('budget', columns: ['id']);
     for (int i = 0; i < maps.length; i++) {
-      reloadBudgetBalanceFromID(maps[i]['id']);
+      // reloadBudgetBalanceFromID(maps[i]['id']);
     }
     pushGetAllBudgetsStream();
   }
