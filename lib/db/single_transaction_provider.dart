@@ -51,19 +51,18 @@ class TransactionModel extends ChangeNotifier {
     Profiler.instance.start('map to single transactionLEGACY');
     TransactionCategory cat =
         await CategoryModel().getCategory(mapItem['category_id']);
-    Account account =
-        await AccountModel().getOneAccount(mapItem['account1_id']);
+
     SingleTransaction s = SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
       value: mapItem['value'],
       description: mapItem['description'].toString(),
       category: cat,
-      account: account,
+      account: await AccountModel().getOneAccount(mapItem['account1_id']),
       account2: mapItem['account2_id'] == null
           ? null
           : await AccountModel().getOneAccount(mapItem['account2_id']),
-      date: DateTime.parse(mapItem['date'].toString()),
+      date: DateTime.fromMillisecondsSinceEpoch(mapItem['date']),
     );
     Profiler.instance.end();
     return s;
@@ -98,7 +97,7 @@ class TransactionModel extends ChangeNotifier {
       // account2: mapItem['account2_id'] == null
       //     ? null
       //     : await getOneAccount(mapItem['account2_id']),
-      date: DateTime.parse(mapItem['date'].toString()),
+      date: DateTime.fromMillisecondsSinceEpoch(mapItem['date']),
     );
     Profiler.instance.end();
     return returnTransaction;
@@ -241,15 +240,18 @@ class TransactionModel extends ChangeNotifier {
     final db = await DatabaseHelper.instance.database;
 
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
+      // TODO: archived ?
+      // query only for account1, account2 needs to be fetched separately
       '''Select distinct *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,
       account.icon as account_icon, account.color as account_color, account.id as account_id, account.name as account_name, account.balance as account_balance,
       singleTransaction.description as description, singleTransaction.id as id
-      from singleTransaction, singleTransactionToAccount, category, account
-      where account.id = singleTransactionToAccount.account1_id 
-      and singleTransactionToAccount.transaction_id = singleTransaction.id
+
+      from singleTransaction, category, account
+
+      where account.id = singleTransaction.account1_id 
       and category.id = singleTransaction.category_id
       and date LIKE ?
-      ${account != null ? "and (singleTransactionToAccount.account1_id = ${account.id} or singleTransactionToAccount.account2_id = ${account.id})" : ""}
+      ${account != null ? "and (singleTransaction.account1_id = ${account.id} or singleTransaction.account2_id = ${account.id})" : ""}
       ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
       ''',
       ['${dateAsYYYYMM(inMonth)}%'],

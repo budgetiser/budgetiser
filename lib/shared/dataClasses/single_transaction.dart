@@ -39,7 +39,7 @@ class SingleTransaction {
         'value': value,
         'description': description?.trim(),
         'category_id': category.id,
-        'date': date.toString().substring(0, 19)
+        'date': date.millisecondsSinceEpoch,
       };
 
   Map<String, dynamic> toJsonMap() {

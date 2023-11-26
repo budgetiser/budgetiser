@@ -55,12 +55,12 @@ extension DatabaseExtensionSQL on DatabaseHelper {
         description TEXT,
         category_id INTEGER NOT NULL,
         date INTEGER NOT NULL,
-        account1 INTEGER NOT NULL,
-        account2 INTEGER,
+        account1_id INTEGER NOT NULL,
+        account2_id INTEGER,
         PRIMARY KEY(id),
         FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
-        FOREIGN KEY(account1) REFERENCES account ON DELETE CASCADE,
-        FOREIGN KEY(account2) REFERENCES account ON DELETE CASCADE
+        FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
+        FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE
       );
     ''');
     await db.execute('''
@@ -213,12 +213,12 @@ Future<void> upgradeToV3(Database db) async {
         description TEXT,
         category_id INTEGER NOT NULL,
         date INTEGER NOT NULL,
-        account1 INTEGER NOT NULL,
-        account2 INTEGER,
+        account1_id INTEGER NOT NULL,
+        account2_id INTEGER,
         PRIMARY KEY(id),
         FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
-        FOREIGN KEY(account1) REFERENCES account ON DELETE CASCADE,
-        FOREIGN KEY(account2) REFERENCES account ON DELETE CASCADE
+        FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
+        FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE
       );
     ''');
 
@@ -239,7 +239,7 @@ Future<void> upgradeToV3(Database db) async {
           DateTime.parse(transaction['date']).millisecondsSinceEpoch;
       if (transaction['description'] == '') {
         await txn.execute('''
-        INSERT INTO NEW_singleTransaction (id, title, value, category_id, date, account1, account2) 
+        INSERT INTO NEW_singleTransaction (id, title, value, category_id, date, account1_id, account2_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?);
       ''', [
           transaction['id'],
@@ -252,7 +252,7 @@ Future<void> upgradeToV3(Database db) async {
         ]);
       } else {
         await txn.execute('''
-        INSERT INTO NEW_singleTransaction (id, title, value, description, category_id, date, account1, account2) 
+        INSERT INTO NEW_singleTransaction (id, title, value, description, category_id, date, account1_id, account2_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       ''', [
           transaction['id'],

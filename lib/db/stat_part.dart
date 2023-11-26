@@ -46,8 +46,8 @@ extension DatabaseExtensionStat on DatabaseHelper {
     DateTime endDate,
   ) async {
     final db = await database;
-    final startString = startDate.toString().substring(0, 19);
-    final endString = endDate.toString().substring(0, 19);
+    final startString = startDate.millisecondsSinceEpoch;
+    final endString = endDate.millisecondsSinceEpoch;
     Map<Account, List<Map<DateTime, double>>> result = {};
     await Future.forEach(accounts, (account) async {
       final List<Map<String, dynamic>> balanceMaps = await db.query(
@@ -80,12 +80,13 @@ extension DatabaseExtensionStat on DatabaseHelper {
           endBalance = balance;
         } else {
           singleAccountResult.add({
-            DateTime.parse(element['date']).add(const Duration(minutes: 1)):
-                roundDouble(balance),
+            DateTime.fromMillisecondsSinceEpoch(element['date'])
+                .add(const Duration(minutes: 1)): roundDouble(balance),
           });
           balance = balance - element['value'];
           singleAccountResult.add({
-            DateTime.parse(element['date']): roundDouble(balance),
+            DateTime.fromMillisecondsSinceEpoch(element['date']):
+                roundDouble(balance),
           });
         }
       }
