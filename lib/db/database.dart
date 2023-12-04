@@ -62,18 +62,35 @@ class DatabaseHelper {
   }
 
   Future fillDBwithTMPdata() async {
+    var length = TMP_DATA_accountList.length +
+        TMP_DATA_categoryList.length +
+        TMP_DATA_transactionList.length +
+        TMP_DATA_budgetList.length;
+    var i = 0;
     Profiler.instance.start('fill with TMP data');
     for (var account in TMP_DATA_accountList) {
+      if (i % 100 == 0) {
+        print("${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t");
+      }
+      i++;
       Profiler.instance.start('create account');
       await AccountModel().createAccount(account);
       Profiler.instance.end();
     }
     for (var category in TMP_DATA_categoryList) {
+      if (i % 100 == 0) {
+        print("${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t");
+      }
+      i++;
       Profiler.instance.start('create category');
       await CategoryModel().createCategory(category);
       Profiler.instance.end();
     }
     for (var transaction in TMP_DATA_transactionList) {
+      if (i % 100 == 0) {
+        print("${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t");
+      }
+      i++;
       Profiler.instance.start('create transaction');
       await TransactionModel().createSingleTransaction(
         transaction,
