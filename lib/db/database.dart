@@ -84,9 +84,7 @@ class DatabaseHelper {
     for (var budget in TMP_DATA_budgetList) {
       await createBudget(budget);
     }
-    if (kDebugMode) {
-      print('finished filling DB with TMP data');
-    }
+    debugPrint('finished filling DB with TMP data');
     Profiler.instance.end();
   }
 

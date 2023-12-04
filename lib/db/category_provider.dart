@@ -1,6 +1,7 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -10,10 +11,12 @@ class CategoryModel extends ChangeNotifier {
   }
 
   Future<TransactionCategory> getCategory(int id) async {
+    Profiler.instance.start('getCategory $id');
     var db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps =
         await db.query('category', where: 'id = ?', whereArgs: [id]);
 
+    Profiler.instance.end();
     return TransactionCategory(
       id: maps[0]['id'],
       name: maps[0]['name'],

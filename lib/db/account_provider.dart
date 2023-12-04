@@ -1,14 +1,23 @@
 import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/services/profiler.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AccountModel extends ChangeNotifier {
   final recentlyUsedAccount = RecentlyUsed<Account>();
+  DateTime lastTimeFetchedAllAccounts = DateTime(0);
+  List<Account> cachedAllAccounts = [];
 
   Future<List<Account>> getAllAccounts() async {
+    debugPrint(
+        'since last cache ${DateTime.now().difference(lastTimeFetchedAllAccounts).inMilliseconds}');
+    if (DateTime.now().difference(lastTimeFetchedAllAccounts) <
+        const Duration(milliseconds: 200)) {
+      return cachedAllAccounts;
+    }
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps = await db.query('account');
 
@@ -22,6 +31,8 @@ class AccountModel extends ChangeNotifier {
         description: maps[i]['description'],
       );
     });
+    lastTimeFetchedAllAccounts = DateTime.now();
+    cachedAllAccounts = accounts;
     return accounts;
   }
 
@@ -73,6 +84,7 @@ class AccountModel extends ChangeNotifier {
 
   /// TODO: null checks
   Future<Account> getOneAccount(int id) async {
+    Profiler.instance.start('getOneAccount id: $id');
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'account',
@@ -83,7 +95,7 @@ class AccountModel extends ChangeNotifier {
     if (maps.isEmpty) {
       throw ErrorDescription('account id:$id not found');
     }
-
+    Profiler.instance.end();
     return Account(
       id: maps[0]['id'],
       name: maps[0]['name'],

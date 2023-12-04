@@ -69,11 +69,17 @@ class TransactionModel extends ChangeNotifier {
 
   Future<SingleTransaction> _mapToSingleTransaction(
     Map<String, dynamic> mapItem,
+    List<Account> fullAccountList,
   ) async {
-    if (mapItem['account2_id'] != null) {
-      return _mapToSingleTransactionLEGACY(mapItem);
-    }
     Profiler.instance.start('map to single transaction');
+    Profiler.instance.start('get accounts from list');
+    Account account1 = fullAccountList.firstWhere(
+        (element) => element.id == mapItem['account1_id']); // TODO if not found
+    Account? account2 = mapItem['account2_id'] == null
+        ? null
+        : fullAccountList.firstWhere((element) =>
+            element.id == mapItem['account2_id']); // TODO if not found
+    Profiler.instance.end();
     SingleTransaction returnTransaction = SingleTransaction(
       id: mapItem['id'],
       title: mapItem['title'].toString(),
@@ -85,17 +91,8 @@ class TransactionModel extends ChangeNotifier {
         color: Color(mapItem['category_color']),
         icon: IconData(mapItem['category_icon'], fontFamily: 'MaterialIcons'),
       ),
-      account: Account(
-        name: mapItem['account_name'],
-        icon: IconData(mapItem['account_icon'], fontFamily: 'MaterialIcons'),
-        color: Color(mapItem['account_color']),
-        id: mapItem['account_id'],
-        balance: mapItem['account_balance'],
-        // todo no description
-      ),
-      // account2: mapItem['account2_id'] == null
-      //     ? null
-      //     : await getOneAccount(mapItem['account2_id']),
+      account: account1,
+      account2: account2,
       date: DateTime.fromMillisecondsSinceEpoch(mapItem['date']),
     );
     Profiler.instance.end();
@@ -217,24 +214,23 @@ class TransactionModel extends ChangeNotifier {
     required DateTime inMonth,
     Account? account,
     TransactionCategory? category,
+    required List<Account> fullAccountList,
   }) async {
     var timelineTask = TimelineTask(filterKey: 'getFilterByMonth')
       ..start('get filter by month ${dateAsYYYYMM(inMonth)}');
     final db = await DatabaseHelper.instance.database;
 
+    timelineTask.start('sql');
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       // TODO: archived ?
       // query only for account1, account2 needs to be fetched separately
       '''Select distinct *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,
-      account.icon as account_icon, account.color as account_color, account.id as account_id, account.name as account_name, account.balance as account_balance,
       singleTransaction.description as description, singleTransaction.id as id
 
-      from singleTransaction, category, account
+      from singleTransaction, category
 
-      where account.id = singleTransaction.account1_id 
-      and category.id = singleTransaction.category_id
+      where category.id = singleTransaction.category_id
       and date >= ? and date <= ?
-      ${account != null ? "and (singleTransaction.account1_id = ${account.id} or singleTransaction.account2_id = ${account.id})" : ""}
       ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
       ''',
       [
@@ -242,15 +238,29 @@ class TransactionModel extends ChangeNotifier {
         lastSecondOfMonth(inMonth)
       ],
     );
+    // timelineTask
+    //   ..finish()
+    //   ..start('get accounts for mapping');
+    // List<Account> accountList = await AccountModel().getAllAccounts();
+
+    timelineTask
+      ..finish()
+      ..start('mapping');
+
     List<SingleTransaction> transactions = [];
     for (int i = 0; i < mapSingle.length; i++) {
-      transactions.add(await _mapToSingleTransaction(mapSingle[i]));
+      transactions
+          .add(await _mapToSingleTransaction(mapSingle[i], fullAccountList));
     }
-
+    timelineTask
+      ..finish()
+      ..start('sorting');
     transactions.sort((a, b) {
       return b.date.compareTo(a.date);
     });
-    timelineTask.finish();
+    timelineTask
+      ..finish()
+      ..finish();
     return transactions;
   }
 }

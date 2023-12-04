@@ -1,6 +1,8 @@
 import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/screens/categories/category_form.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/services/profiler.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +32,7 @@ class _SelectCategoryState extends State<SelectCategory> {
 
   @override
   void initState() {
+    Profiler.instance.start("init category-selector");
     Provider.of<CategoryModel>(context, listen: false)
         .getAllCategories()
         .then((value) async {
@@ -61,7 +64,7 @@ class _SelectCategoryState extends State<SelectCategory> {
         widget.callback(selectedCategory!);
       }
     });
-
+    Profiler.instance.end();
     super.initState();
   }
 

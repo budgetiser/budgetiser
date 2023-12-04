@@ -68,8 +68,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           future: TransactionModel().getAllMonths(),
           key: _futureBuilderKey,
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return _screenContent(snapshot.data!);
+            if (snapshot.hasData && _accountList.isNotEmpty) {
+              return _screenContent(snapshot.data!, _accountList);
             }
             return const Center(child: CircularProgressIndicator());
           },
@@ -180,7 +180,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     }
   }
 
-  SingleChildScrollView _screenContent(List<DateTime> monthYearSnapshotData) {
+  SingleChildScrollView _screenContent(
+    List<DateTime> monthYearSnapshotData,
+    List<Account> fullAccountList,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 80),
       child: Column(
@@ -191,6 +194,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 inMonth: monthYear,
                 account: _currentFilterAccount,
                 category: _currentFilterCategory,
+                fullAccountList: fullAccountList,
               ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
