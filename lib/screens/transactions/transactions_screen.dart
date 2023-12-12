@@ -5,10 +5,7 @@ import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_expansion_tile.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/utils/date_utils.dart';
-import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +56,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transactions'),
+        actions: [
+          transactionFilter(context),
+        ],
       ),
       drawer: const CreateDrawer(),
       body: Consumer<TransactionModel>(builder: (context, value, child) {
@@ -88,95 +88,87 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   // TODO: extract as seperate widget, use general multi picker
-  // IconButton transactionFilter(BuildContext context) {
-  //   return IconButton(
-  //     icon: const Icon(Icons.filter_alt_sharp),
-  //     onPressed: () {
-  //       showDialog(
-  //         context: context,
-  //         builder: (BuildContext context) {
-  //           return SimpleDialog(
-  //             contentPadding: const EdgeInsets.only(right: 25),
-  //             title: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 const Text('Filter'),
-  //                 ElevatedButton(
-  //                   onPressed: (_currentFilterAccount == null &&
-  //                           _currentFilterCategory == null)
-  //                       ? null
-  //                       : () {
-  //                           setState(() {
-  //                             _currentFilterAccount = null;
-  //                             _currentFilterCategory = null;
-  //                           });
-  //                           Navigator.pop(context);
-  //                         },
-  //                   child: const Text('Reset'),
-  //                 ),
-  //               ],
-  //             ),
-  //             children: [
-  //               const Padding(
-  //                 padding: EdgeInsets.symmetric(
-  //                   horizontal: 25,
-  //                   vertical: 10,
-  //                 ),
-  //                 child: Text('By Account'),
-  //               ),
-  //               RadioListTile<Account?>(
-  //                 value: null,
-  //                 title: const Text('All Accounts'),
-  //                 visualDensity: VisualDensity.compact,
-  //                 groupValue: _currentFilterAccount,
-  //                 onChanged: (value) {
-  //                   setState(() {
-  //                     _currentFilterAccount = value;
-  //                   });
-  //                   Navigator.of(context).pop();
-  //                 },
-  //               ),
-  //               for (var account in _accountList)
-  //                 _accountFilterListTile(account),
-  //               const Divider(
-  //                 indent: 25,
-  //               ),
-  //               const Padding(
-  //                 padding: EdgeInsets.symmetric(
-  //                   horizontal: 25,
-  //                   vertical: 10,
-  //                 ),
-  //                 child: Text('By Category'),
-  //               ),
-  //               RadioListTile<TransactionCategory?>(
-  //                 value: null,
-  //                 title: const Text('All Categories'),
-  //                 visualDensity: VisualDensity.compact,
-  //                 groupValue: _currentFilterCategory,
-  //                 onChanged: (value) {
-  //                   setState(() {
-  //                     _currentFilterCategory = value;
-  //                   });
-  //                   Navigator.of(context).pop();
-  //                 },
-  //               ),
-  //               for (var category in _categoryList)
-  //                 _categoryFilterListTile(category),
-  //             ],
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void updateMonthsFuture() async {
-  //   if (mounted) {
-  //     setState(() {
-  //       monthsFuture = TransactionModel().getAllMonths();
-  //     });
-  //   }
-  // }
+  IconButton transactionFilter(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.filter_alt_sharp),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              contentPadding: const EdgeInsets.only(right: 25),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Filter'),
+                  ElevatedButton(
+                    onPressed: (_currentFilterAccount == null &&
+                            _currentFilterCategory == null)
+                        ? null
+                        : () {
+                            setState(() {
+                              _currentFilterAccount = null;
+                              _currentFilterCategory = null;
+                            });
+                            Navigator.pop(context);
+                          },
+                    child: const Text('Reset'),
+                  ),
+                ],
+              ),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 10,
+                  ),
+                  child: Text('By Account'),
+                ),
+                RadioListTile<Account?>(
+                  value: null,
+                  title: const Text('All Accounts'),
+                  visualDensity: VisualDensity.compact,
+                  groupValue: _currentFilterAccount,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentFilterAccount = value;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                for (var account in _accountList)
+                  _accountFilterListTile(account),
+                const Divider(
+                  indent: 25,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 10,
+                  ),
+                  child: Text('By Category'),
+                ),
+                RadioListTile<TransactionCategory?>(
+                  value: null,
+                  title: const Text('All Categories'),
+                  visualDensity: VisualDensity.compact,
+                  groupValue: _currentFilterCategory,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentFilterCategory = value;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                for (var category in _categoryList)
+                  _categoryFilterListTile(category),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   SingleChildScrollView _screenContent(
     Map<String, int> monthYearSnapshotData,
@@ -191,9 +183,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               date: item,
               count: monthYearSnapshotData[item]!,
               allAccounts: fullAccountList,
+              accountFilter: _currentFilterAccount,
+              categoryFilter: _currentFilterCategory,
               initiallyExpanded: monthYearSnapshotData.keys
                   .toList()
-                  .sublist(0, monthYearSnapshotData[item]! > 10 ? 1 : 2)
+                  .sublist(
+                      0,
+                      monthYearSnapshotData[monthYearSnapshotData.keys.first]! >
+                              10
+                          ? 1
+                          : 2)
                   .contains(item),
             ),
         ],

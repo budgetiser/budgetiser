@@ -1,8 +1,7 @@
-import 'dart:ffi';
-
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +11,8 @@ class TransactionExpansionTile extends StatefulWidget {
     required this.date,
     required this.count,
     required this.allAccounts,
+    required this.accountFilter,
+    required this.categoryFilter,
     this.initiallyExpanded = false,
   });
 
@@ -20,6 +21,8 @@ class TransactionExpansionTile extends StatefulWidget {
   final int count;
   final List<Account> allAccounts;
   final bool initiallyExpanded;
+  final Account? accountFilter;
+  final TransactionCategory? categoryFilter;
 
   @override
   State<TransactionExpansionTile> createState() =>
@@ -87,6 +90,8 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
     return TransactionModel().getFilteredTransactionsByMonth(
       inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
       fullAccountList: widget.allAccounts,
+      account: widget.accountFilter,
+      category: widget.categoryFilter,
     );
   }
 }

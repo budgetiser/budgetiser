@@ -248,14 +248,15 @@ class TransactionModel extends ChangeNotifier {
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       // TODO: archived ?
       // query only for account1, account2 needs to be fetched separately
-      '''SELECT *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,
-      singleTransaction.description as description, singleTransaction.id as id
+      '''SELECT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
+      singleTransaction.description AS description, singleTransaction.id AS id
 
-      from singleTransaction, category
+      FROM singleTransaction, category
 
-      where category.id = singleTransaction.category_id
-      and date >= ? and date <= ?
-      ${category != null ? "and singleTransaction.category_id = ${category.id}" : ""}
+      WHERE category.id = singleTransaction.category_id
+      AND date >= ? AND date <= ?
+      ${category != null ? "AND singleTransaction.category_id = ${category.id}" : ""}
+      ${account != null ? "AND (singleTransaction.account1_id = ${account.id} or singleTransaction.account2_id = ${account.id})" : ""}
       ''',
       [
         firstOfMonth(inMonth).millisecondsSinceEpoch,
