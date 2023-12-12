@@ -194,9 +194,14 @@ class TransactionModel extends ChangeNotifier {
   Future<List<DateTime>> getAllMonths() async {
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> dateList = await db.rawQuery(
-      'Select distinct date from SingleTransaction',
+      // "SELECT DISTINCT STRFTIME('%Y%m', ROUND(date / 1000), 'unixepoch') AS date FROM singleTransaction ORDER by date DESC;",
+      """ SELECT DISTINCT STRFTIME('%Y%m', DATETIME(ROUND(date/1000), 'unixepoch'), 'start of month') AS month, COUNT(id)
+          FROM singleTransaction
+          GROUP BY month
+          ORDER BY month DESC;
+      """,
     );
-
+    print(dateList);
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
       DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(item['date']);
@@ -208,6 +213,25 @@ class TransactionModel extends ChangeNotifier {
         (a, b) => b.compareTo(a), // reverse sort
       );
     return sorted;
+  }
+
+  Future<Map<String, int>> getMonthlyCount() async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> dateList = await db.rawQuery(
+      """ SELECT DISTINCT STRFTIME('%Y-%m', DATETIME(ROUND(date/1000), 'unixepoch'), 'start of month') AS month, COUNT(id) as amount
+          FROM singleTransaction
+          GROUP BY month
+          ORDER BY month DESC;
+      """,
+    );
+
+    Map<String, int> months = {};
+    for (int i = 0; i < dateList.length; i++) {
+      months.putIfAbsent(
+          dateList[i]['month'], () => dateList[i]['amount'] as int);
+    }
+
+    return months;
   }
 
   Future<List<SingleTransaction>> getFilteredTransactionsByMonth({
@@ -224,7 +248,7 @@ class TransactionModel extends ChangeNotifier {
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       // TODO: archived ?
       // query only for account1, account2 needs to be fetched separately
-      '''Select distinct *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,
+      '''SELECT *, category.icon as category_icon, category.color as category_color, category.id as category_id, category.name as category_name,
       singleTransaction.description as description, singleTransaction.id as id
 
       from singleTransaction, category
