@@ -191,6 +191,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               date: item,
               count: monthYearSnapshotData[item]!,
               allAccounts: fullAccountList,
+              initiallyExpanded: monthYearSnapshotData.keys
+                  .toList()
+                  .sublist(0, monthYearSnapshotData[item]! > 10 ? 1 : 2)
+                  .contains(item),
             ),
         ],
       ),

@@ -7,16 +7,19 @@ import 'package:budgetiser/shared/widgets/items/transaction_item.dart';
 import 'package:flutter/material.dart';
 
 class TransactionExpansionTile extends StatefulWidget {
-  const TransactionExpansionTile(
-      {super.key,
-      required this.date,
-      required this.count,
-      required this.allAccounts});
+  const TransactionExpansionTile({
+    super.key,
+    required this.date,
+    required this.count,
+    required this.allAccounts,
+    this.initiallyExpanded = false,
+  });
 
   // TODO: Change name
   final String date;
   final int count;
   final List<Account> allAccounts;
+  final bool initiallyExpanded;
 
   @override
   State<TransactionExpansionTile> createState() =>
@@ -28,6 +31,9 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.initiallyExpanded) {
+      _futureFunction = _future();
+    }
     return ExpansionTile(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,11 +42,12 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
           Text(widget.count.toString()),
         ],
       ),
-      onExpansionChanged: (value) {
+      onExpansionChanged: (value) async {
         setState(() {
           _futureFunction = value ? _future() : null;
         });
       },
+      initiallyExpanded: widget.initiallyExpanded,
       controller: ExpansionTileController(),
       children: [
         FutureBuilder<List<SingleTransaction>>(
@@ -78,7 +85,8 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
     List<String> yearMonth = widget.date.split('-');
 
     return TransactionModel().getFilteredTransactionsByMonth(
-        inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
-        fullAccountList: widget.allAccounts);
+      inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
+      fullAccountList: widget.allAccounts,
+    );
   }
 }
