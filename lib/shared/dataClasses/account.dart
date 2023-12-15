@@ -35,4 +35,19 @@ class Account extends Selectable {
   String toString() {
     return 'Account: ${toJsonMap()}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Account &&
+      other.runtimeType == runtimeType &&
+      other.id == id &&
+      other.name == name &&
+      other.icon == icon &&
+      other.color == color &&
+      other.description == description &&
+      other.archived == archived &&
+      other.balance == balance;
+
+  @override
+  int get hashCode => id.hashCode;
 }

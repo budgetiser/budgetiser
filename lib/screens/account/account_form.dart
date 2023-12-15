@@ -145,7 +145,10 @@ class _AccountFormState extends State<AccountForm> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => TransactionsScreen(
-                              initialAccountFilter: widget.initialAccount,
+                              initialAccountsFilter:
+                                  widget.initialAccount != null
+                                      ? [widget.initialAccount!]
+                                      : [],
                             ),
                           ),
                         );

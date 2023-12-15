@@ -6,6 +6,8 @@ import 'package:budgetiser/screens/transactions/transaction_expansion_tile.dart'
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/mixed_picker.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +17,12 @@ class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
   const TransactionsScreen({
     Key? key,
-    this.initialAccountFilter,
-    this.initialCategoryFilter,
+    this.initialAccountsFilter,
+    this.initialCategoriesFilter,
   }) : super(key: key);
 
-  final Account? initialAccountFilter;
-  final TransactionCategory? initialCategoryFilter;
+  final List<Account>? initialAccountsFilter;
+  final List<TransactionCategory>? initialCategoriesFilter;
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -30,8 +32,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   final GlobalKey _futureBuilderKey = GlobalKey();
   // Future<List<DateTime>> monthsFuture = TransactionModel().getAllMonths();
 
-  Account? _currentFilterAccount;
-  TransactionCategory? _currentFilterCategory;
+  List<Account>? _currentFilterAccounts = [];
+  List<TransactionCategory> _currentFilterCategories = [];
 
   List<Account> _accountList = <Account>[];
   List<TransactionCategory> _categoryList = <TransactionCategory>[];
@@ -43,11 +45,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     CategoryModel().getAllCategories().then((value) => _categoryList = value);
     AccountModel().getAllAccounts().then((value) => _accountList = value);
 
-    if (widget.initialAccountFilter != null) {
-      _currentFilterAccount = widget.initialAccountFilter;
+    if (widget.initialAccountsFilter != null) {
+      _currentFilterAccounts = widget.initialAccountsFilter;
     }
-    if (widget.initialCategoryFilter != null) {
-      _currentFilterCategory = widget.initialCategoryFilter;
+    if (widget.initialCategoriesFilter != null) {
+      _currentFilterCategories = widget.initialCategoriesFilter!;
     }
   }
 
@@ -63,7 +65,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       drawer: const CreateDrawer(),
       body: Consumer<TransactionModel>(builder: (context, value, child) {
         return FutureBuilder<Map<String, int>>(
-          future: TransactionModel().getMonthlyCount(),
+          future: TransactionModel().getMonthlyCount(
+            accounts: _currentFilterAccounts,
+            categories: _currentFilterCategories,
+          ),
           key: _futureBuilderKey,
           builder: (context, snapshot) {
             if (snapshot.hasData && _accountList.isNotEmpty) {
@@ -95,75 +100,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return SimpleDialog(
-              contentPadding: const EdgeInsets.only(right: 25),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Filter'),
-                  ElevatedButton(
-                    onPressed: (_currentFilterAccount == null &&
-                            _currentFilterCategory == null)
-                        ? null
-                        : () {
-                            setState(() {
-                              _currentFilterAccount = null;
-                              _currentFilterCategory = null;
-                            });
-                            Navigator.pop(context);
-                          },
-                    child: const Text('Reset'),
-                  ),
-                ],
-              ),
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                  child: Text('By Account'),
-                ),
-                RadioListTile<Account?>(
-                  value: null,
-                  title: const Text('All Accounts'),
-                  visualDensity: VisualDensity.compact,
-                  groupValue: _currentFilterAccount,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentFilterAccount = value;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                for (var account in _accountList)
-                  _accountFilterListTile(account),
-                const Divider(
-                  indent: 25,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                  child: Text('By Category'),
-                ),
-                RadioListTile<TransactionCategory?>(
-                  value: null,
-                  title: const Text('All Categories'),
-                  visualDensity: VisualDensity.compact,
-                  groupValue: _currentFilterCategory,
-                  onChanged: (value) {
-                    setState(() {
-                      _currentFilterCategory = value;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                for (var category in _categoryList)
-                  _categoryFilterListTile(category),
-              ],
-            );
+            return MixedPicker(
+                initialCategories: _currentFilterCategories,
+                initialAccounts: _currentFilterAccounts,
+                onPickedCallback: (categories, accounts) {
+                  setState(() {
+                    _currentFilterCategories = categories;
+                    _currentFilterAccounts = accounts;
+                  });
+                });
           },
         );
       },
@@ -183,8 +128,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               date: item,
               count: monthYearSnapshotData[item]!,
               allAccounts: fullAccountList,
-              accountFilter: _currentFilterAccount,
-              categoryFilter: _currentFilterCategory,
+              accountsFilter: _currentFilterAccounts,
+              categoriesFilter: _currentFilterCategories,
               initiallyExpanded: monthYearSnapshotData.keys
                   .toList()
                   .sublist(
@@ -197,36 +142,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
         ],
       ),
-    );
-  }
-
-  RadioListTile _accountFilterListTile(Account element) {
-    return RadioListTile<Account>(
-      value: element,
-      title: AccountTextWithIcon(element),
-      visualDensity: VisualDensity.compact,
-      groupValue: _currentFilterAccount,
-      onChanged: (value) {
-        setState(() {
-          _currentFilterAccount = value;
-        });
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  RadioListTile _categoryFilterListTile(TransactionCategory element) {
-    return RadioListTile<TransactionCategory>(
-      value: element,
-      title: CategoryTextWithIcon(element),
-      visualDensity: VisualDensity.compact,
-      groupValue: _currentFilterCategory,
-      onChanged: (value) {
-        setState(() {
-          _currentFilterCategory = value;
-        });
-        Navigator.of(context).pop();
-      },
     );
   }
 }

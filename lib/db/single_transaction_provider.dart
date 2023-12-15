@@ -215,11 +215,35 @@ class TransactionModel extends ChangeNotifier {
     return sorted;
   }
 
-  Future<Map<String, int>> getMonthlyCount() async {
+  Future<Map<String, int>> getMonthlyCount(
+      {List<Account>? accounts, List<TransactionCategory>? categories}) async {
     final db = await DatabaseHelper.instance.database;
+    String? accountFilter;
+    if (accounts != null) {
+      for (var i = 0; i < accounts.length; i++) {
+        if (i == 0) {
+          accountFilter = '${accounts[i].id}';
+        } else {
+          accountFilter = '${accountFilter!}, ${accounts[i].id}';
+        }
+      }
+    }
+    String? categoryFilter;
+    if (categories != null) {
+      for (var i = 0; i < categories.length; i++) {
+        if (i == 0) {
+          categoryFilter = '${categories[i].id}';
+        } else {
+          categoryFilter = '${categoryFilter!}, ${categories[i].id}';
+        }
+      }
+    }
+// ${accountFilter != null ? "WHERE (account1_id IN ($accountFilter) OR account2_id IN ($accountFilter))" : ""}
     final List<Map<String, dynamic>> dateList = await db.rawQuery(
       """ SELECT DISTINCT STRFTIME('%Y-%m', DATETIME(ROUND(date/1000), 'unixepoch'), 'start of month') AS month, COUNT(id) as amount
           FROM singleTransaction
+          ${accountFilter != null ? "WHERE (account1_id IN ($accountFilter) OR account2_id IN ($accountFilter))" : ""}
+          ${categoryFilter != null ? "${accountFilter != null ? "AND" : "WHERE"} category_id IN ($categoryFilter)" : ""}
           GROUP BY month
           ORDER BY month DESC;
       """,
@@ -236,13 +260,29 @@ class TransactionModel extends ChangeNotifier {
 
   Future<List<SingleTransaction>> getFilteredTransactionsByMonth({
     required DateTime inMonth,
-    Account? account,
-    TransactionCategory? category,
+    List<Account>? accounts,
+    List<TransactionCategory>? categories,
     required List<Account> fullAccountList,
   }) async {
     var timelineTask = TimelineTask(filterKey: 'getFilterByMonth')
       ..start('get filter by month ${dateAsYYYYMM(inMonth)}');
     final db = await DatabaseHelper.instance.database;
+
+    String? categoryFilter;
+    if (categories != null) {
+      categoryFilter = categories.fold(
+          null,
+          (previousValue, element) =>
+              '$previousValue, ${element.id.toString()}');
+    }
+
+    String? accountFilter;
+    if (accounts != null) {
+      accountFilter = accounts.fold(
+          null,
+          (previousValue, element) =>
+              '$previousValue, ${element.id.toString()}');
+    }
 
     timelineTask.start('sql');
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
@@ -255,8 +295,9 @@ class TransactionModel extends ChangeNotifier {
 
       WHERE category.id = singleTransaction.category_id
       AND date >= ? AND date <= ?
-      ${category != null ? "AND singleTransaction.category_id = ${category.id}" : ""}
-      ${account != null ? "AND (singleTransaction.account1_id = ${account.id} or singleTransaction.account2_id = ${account.id})" : ""}
+      ${accountFilter != null ? "AND (account1_id IN ($accountFilter) OR account2_id IN ($accountFilter))" : ""}
+      ${categoryFilter != null ? "AND category_id IN ($categoryFilter)" : ""}
+      
       ''',
       [
         firstOfMonth(inMonth).millisecondsSinceEpoch,

@@ -11,8 +11,8 @@ class TransactionExpansionTile extends StatefulWidget {
     required this.date,
     required this.count,
     required this.allAccounts,
-    required this.accountFilter,
-    required this.categoryFilter,
+    required this.accountsFilter,
+    required this.categoriesFilter,
     this.initiallyExpanded = false,
   });
 
@@ -21,8 +21,8 @@ class TransactionExpansionTile extends StatefulWidget {
   final int count;
   final List<Account> allAccounts;
   final bool initiallyExpanded;
-  final Account? accountFilter;
-  final TransactionCategory? categoryFilter;
+  final List<Account>? accountsFilter;
+  final List<TransactionCategory>? categoriesFilter;
 
   @override
   State<TransactionExpansionTile> createState() =>
@@ -90,8 +90,8 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
     return TransactionModel().getFilteredTransactionsByMonth(
       inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
       fullAccountList: widget.allAccounts,
-      account: widget.accountFilter,
-      category: widget.categoryFilter,
+      accounts: widget.accountsFilter,
+      categories: widget.categoriesFilter,
     );
   }
 }

@@ -19,6 +19,22 @@ class TransactionCategory extends Selectable {
     this.level = 0,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      other is TransactionCategory &&
+      other.runtimeType == runtimeType &&
+      other.id == id &&
+      other.name == name &&
+      other.icon == icon &&
+      other.color == color &&
+      other.description == description &&
+      other.archived == archived &&
+      other.parentID == parentID &&
+      other.level == level;
+
+  @override
+  int get hashCode => id.hashCode;
+
   Map<String, dynamic> toMap() => {
         'name': name.trim(),
         'icon': icon.codePoint,
