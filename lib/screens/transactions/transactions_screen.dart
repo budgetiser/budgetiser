@@ -115,33 +115,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  SingleChildScrollView _screenContent(
+  ListView _screenContent(
     Map<String, int> monthYearSnapshotData,
     List<Account> fullAccountList,
   ) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 80),
-      child: Column(
-        children: [
-          for (var item in monthYearSnapshotData.keys)
-            TransactionExpansionTile(
-              date: item,
-              count: monthYearSnapshotData[item]!,
-              allAccounts: fullAccountList,
-              accountsFilter: _currentFilterAccounts,
-              categoriesFilter: _currentFilterCategories,
-              initiallyExpanded: monthYearSnapshotData.keys
-                  .toList()
-                  .sublist(
-                      0,
-                      monthYearSnapshotData[monthYearSnapshotData.keys.first]! >
-                              10
-                          ? 1
-                          : 2)
-                  .contains(item),
-            ),
-        ],
-      ),
+    var keys = monthYearSnapshotData.keys.toList()
+      ..sort((a, b) => b.compareTo(a));
+    return ListView.builder(
+      itemCount: keys.length,
+      itemBuilder: (context, i) {
+        return TransactionExpansionTile(
+          date: keys[i],
+          count: monthYearSnapshotData[keys[i]]!,
+          allAccounts: fullAccountList,
+          accountsFilter: _currentFilterAccounts,
+          categoriesFilter: _currentFilterCategories,
+          initiallyExpanded: false,
+        );
+      },
     );
   }
 }
