@@ -51,7 +51,8 @@ List<Account> getExampleAccounts() {
     Icons.account_balance,
     Icons.show_chart,
     Icons.paypal,
-    Icons.perm_identity
+    Icons.perm_identity,
+    Icons.align_horizontal_left_outlined
   ];
   List<String> names = [
     'Wallet',
@@ -59,7 +60,8 @@ List<Account> getExampleAccounts() {
     'Savings',
     'Investment',
     'PayPal',
-    'Students ID'
+    'Students ID',
+    'The Incredibly Elongated and Remarkably Extended Account Name of Unparalleled Length and Magnitude'
   ];
 
   for (int i = 0; i < icons.length; i++) {
@@ -145,7 +147,9 @@ List<TransactionCategory> getCategoryList() {
   addCategory('Snacks', Icons.fastfood);
   // 33-34
   addCategory('Daycare', Icons.child_care);
-  addCategory('Extracurricular Activities', Icons.sports_soccer);
+  addCategory(
+      'Really long Extracurricular Activities That Enrich and Shape Personal Growth',
+      Icons.sports_soccer);
   // 35-38
   addCategory('Life Insurances', Icons.local_hospital);
   addCategory('Home Insurances', Icons.home);
@@ -278,12 +282,14 @@ List<SingleTransaction> getTransactionList() {
     amount: 3,
   );
   addTransaction(
-    title: 'Singing at Ralphs Wedding',
-    description: '',
+    title:
+        'Singing at Ralphs Wedding - A Melodic Celebration of Union, Joy, and Everlasting Commitment',
+    description:
+        'Embark on a soulful musical journey as we bring to life the enchanting melodies at Ralphs Wedding. Join us in a harmonious celebration of love, unity, and everlasting commitment. rom heartfelt ballads to joyous tunes, our carefully curated musical repertoire promises to serenade the couple and guests alike, creating unforgettable moments filled with emotion and melody. Allow the power of song to amplify the beauty of this special day, weaving a symphony of love that resonates throughout Ralphs Wedding celebration',
     accounts: [Accs.wallet],
     categories: [cats.Income.sideGigs],
     values: [50],
-    daysInBetween: [74],
+    daysInBetween: [10],
     amount: 1,
   );
   addTransaction(
@@ -343,26 +349,14 @@ List<SingleTransaction> getTransactionList() {
     amount: 40,
   );
 
-  /// Cats.Food
   addTransaction(
     title: 'snacks',
     description: '',
-    accounts: [Accs.creditCard],
+    accounts: [Accs.creditCard, Accs.wallet],
     categories: [cats.Food.groceries],
     values: [-2],
-    daysInBetween: [1],
-    amount: 4000,
-  );
-
-  /// Cats.Food
-  addTransaction(
-    title: 'gambling',
-    description: '',
-    accounts: [Accs.creditCard],
-    categories: [cats.Food.groceries],
-    values: [-2],
-    daysInBetween: [1, 0, 0, 0, 0, 0, 0],
-    amount: 4000,
+    daysInBetween: [1, 4, 2],
+    amount: 100,
   );
 
   /// Cats.Entertainment
@@ -375,6 +369,7 @@ List<SingleTransaction> getTransactionList() {
     daysInBetween: [30],
     amount: 7,
   );
+
   addTransaction(
     title: 'Pc components',
     description: '',
@@ -383,6 +378,16 @@ List<SingleTransaction> getTransactionList() {
     values: [-199.99, -589.45, -35.99, -875, 15],
     daysInBetween: [50, 4, 3, 7, 2, 1],
     amount: 6,
+  );
+
+  addTransaction(
+    title: 'gambling',
+    description: '',
+    accounts: [Accs.creditCard, Accs.savings],
+    categories: [cats.Food.groceries],
+    values: [-200, 150, 69],
+    daysInBetween: [1, 5, 8, 4],
+    amount: 10,
   );
 
   return list;
