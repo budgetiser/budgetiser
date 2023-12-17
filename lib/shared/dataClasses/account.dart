@@ -49,5 +49,13 @@ class Account extends Selectable {
       other.balance == balance;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+        id,
+        name,
+        icon,
+        color,
+        description,
+        archived,
+        balance,
+      );
 }

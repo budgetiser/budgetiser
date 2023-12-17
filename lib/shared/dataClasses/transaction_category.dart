@@ -33,7 +33,16 @@ class TransactionCategory extends Selectable {
       other.level == level;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+        id,
+        name,
+        icon,
+        color,
+        description,
+        archived,
+        parentID,
+        level,
+      );
 
   Map<String, dynamic> toMap() => {
         'name': name.trim(),

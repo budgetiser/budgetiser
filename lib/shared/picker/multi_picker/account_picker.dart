@@ -29,8 +29,8 @@ class _AccountPickerState extends State<AccountPicker> {
   Widget build(BuildContext context) {
     return GeneralMultiPicker<Account>(
       heading: 'Select Accounts',
-      callback: widget.onAccountPickedCallback,
-      allValues: _allAccounts,
+      onPickedCallback: widget.onAccountPickedCallback,
+      possibleValues: _allAccounts,
     );
   }
 }

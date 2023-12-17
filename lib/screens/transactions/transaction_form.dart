@@ -5,8 +5,8 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
-import 'package:budgetiser/shared/picker/select_account.dart';
-import 'package:budgetiser/shared/picker/select_category.dart';
+import 'package:budgetiser/shared/picker/single_picker/account_single_picker.dart';
+import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
@@ -197,6 +197,14 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
+  void setCategory(TransactionCategory c) {
+    if (mounted) {
+      setState(() {
+        selectedCategory = c;
+      });
+    }
+  }
+
   void _onAccount2checkboxClicked() {
     setState(() {
       hasAccount2 = !hasAccount2;
@@ -316,9 +324,18 @@ class _TransactionFormState extends State<TransactionForm> {
                         : const TextStyle(fontSize: 16),
                   ),
                 ),
-                SelectAccount(
-                  initialAccount: selectedAccount,
-                  callback: setAccount,
+                InkWell(
+                  child: selectedAccount != null
+                      ? selectedAccount!.getSelectableIconWidget()
+                      : const Text('Select Account'),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AccountSinglePicker(
+                              onAccountPickedCallback: setAccount);
+                        });
+                  },
                 ),
                 InkWell(
                   customBorder: RoundedRectangleBorder(
@@ -350,12 +367,23 @@ class _TransactionFormState extends State<TransactionForm> {
                     children: [
                       const Text('to '),
                       Flexible(
-                        child: SelectAccount(
-                          initialAccount: selectedAccount2,
-                          callback: setAccount2,
-                          blackListAccountId: selectedAccount?.id,
-                        ),
-                      ),
+                          child: InkWell(
+                        child: selectedAccount2 != null
+                            ? selectedAccount2!.getSelectableIconWidget()
+                            : const Text('No data'),
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AccountSinglePicker(
+                                  onAccountPickedCallback: setAccount2,
+                                  blacklistedValues: selectedAccount != null
+                                      ? [selectedAccount!]
+                                      : null,
+                                );
+                              });
+                        },
+                      )),
                     ],
                   ),
               ],
@@ -377,14 +405,18 @@ class _TransactionFormState extends State<TransactionForm> {
                         : const TextStyle(fontSize: 16),
                   ),
                 ),
-                SelectCategory(
-                  initialCategory: selectedCategory,
-                  callback: (TransactionCategory c) {
-                    setState(() {
-                      if (mounted) {
-                        selectedCategory = c;
-                      }
-                    });
+                InkWell(
+                  child: selectedCategory != null
+                      ? selectedCategory!.getSelectableIconWidget()
+                      : const Text('No data'),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CategorySinglePicker(
+                            onCategoryPickedCallback: setCategory,
+                          );
+                        });
                   },
                 ),
               ],

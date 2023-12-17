@@ -202,7 +202,7 @@ class _MixedPickerState extends State<MixedPicker> {
             setState(() {
               widget.onPickedCallback(_selectedCategories, _selectedAccounts);
             });
-            Navigator.of(context).pop(); //dismiss the color picker
+            Navigator.of(context).pop();
           },
         ),
       ],
