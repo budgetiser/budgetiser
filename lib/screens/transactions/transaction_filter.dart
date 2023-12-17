@@ -4,8 +4,9 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
 
-class MixedPicker extends StatefulWidget {
-  const MixedPicker({
+@deprecated
+class TransactionFilter extends StatefulWidget {
+  const TransactionFilter({
     Key? key,
     required this.onPickedCallback,
     this.initialCategories,
@@ -13,13 +14,13 @@ class MixedPicker extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MixedPicker> createState() => _MixedPickerState();
+  State<TransactionFilter> createState() => _TransactionFilterState();
   final Function(List<TransactionCategory>, List<Account>) onPickedCallback;
   final List<TransactionCategory>? initialCategories;
   final List<Account>? initialAccounts;
 }
 
-class _MixedPickerState extends State<MixedPicker> {
+class _TransactionFilterState extends State<TransactionFilter> {
   List<TransactionCategory> _selectedCategories = [];
   List<Account> _selectedAccounts = [];
 

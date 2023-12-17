@@ -5,6 +5,7 @@ import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/widgets/items/budget_item.dart';
 import 'package:flutter/material.dart';
 
+@deprecated
 class Budgets extends StatefulWidget {
   static String routeID = 'budgets';
 

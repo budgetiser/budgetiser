@@ -2,8 +2,8 @@ import 'package:budgetiser/db/database.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
-import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
-import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/picker/icon_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/category_multi_picker.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/recurring_form.dart';
@@ -46,6 +46,14 @@ class _BudgetFormState extends State<BudgetForm> {
       budgetCategories = widget.budgetData!.transactionCategories;
     }
     super.initState();
+  }
+
+  void setCategories(List<TransactionCategory> categories) {
+    if (mounted) {
+      setState(() {
+        budgetCategories = categories;
+      });
+    }
   }
 
   @override
@@ -144,12 +152,18 @@ class _BudgetFormState extends State<BudgetForm> {
                 ),
               ),
               const Divider(height: 32),
-              CategoryPicker(
-                initialCategories: budgetCategories,
-                onCategoryPickedCallback: (data) {
-                  setState(() {
-                    budgetCategories = data;
-                  });
+              InkWell(
+                child: const Text('Select Categories'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CategoryMultiPicker(
+                        onCategoriesPickedCallback: setCategories,
+                        initialValues: budgetCategories,
+                      );
+                    },
+                  );
                 },
               ),
               const Divider(height: 32),

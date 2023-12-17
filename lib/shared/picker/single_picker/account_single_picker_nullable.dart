@@ -1,6 +1,6 @@
 import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/picker/single_picker/nullable_general_single_picker.dart';
+import 'package:budgetiser/shared/picker/single_picker/general_single_picker_nullable.dart';
 import 'package:flutter/material.dart';
 
 class AccountSinglePickerNullable extends StatefulWidget {
@@ -34,7 +34,7 @@ class _AccountSinglePickerNullableState
           return const Text('Oops!');
         }
 
-        return NullableGeneralSinglePicker<Account>(
+        return GeneralSinglePickerNullable<Account>(
           onPickedCallback: widget.onAccountPickedCallback,
           possibleValues: snapshot.data!,
           blacklistedValues: widget.blacklistedValues,

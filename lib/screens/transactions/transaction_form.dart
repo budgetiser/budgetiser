@@ -7,7 +7,7 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/single_picker/account_single_picker.dart';
 import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
-import 'package:budgetiser/shared/picker/single_picker/nullable_account_single_picker.dart';
+import 'package:budgetiser/shared/picker/single_picker/account_single_picker_nullable.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
@@ -412,12 +412,13 @@ class _TransactionFormState extends State<TransactionForm> {
                       : const Text('No data'),
                   onTap: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CategorySinglePicker(
-                            onCategoryPickedCallback: setCategory,
-                          );
-                        });
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CategorySinglePicker(
+                          onCategoryPickedCallback: setCategory,
+                        );
+                      },
+                    );
                   },
                 ),
               ],

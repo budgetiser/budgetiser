@@ -3,13 +3,10 @@ import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_expansion_tile.dart';
+import 'package:budgetiser/screens/transactions/transaction_filter.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
-import 'package:budgetiser/shared/picker/multi_picker/mixed_picker.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/account_text_with_icon.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/category_text_with_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -100,7 +97,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return MixedPicker(
+            return TransactionFilter(
                 initialCategories: _currentFilterCategories,
                 initialAccounts: _currentFilterAccounts,
                 onPickedCallback: (categories, accounts) {

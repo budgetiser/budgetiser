@@ -1,7 +1,7 @@
 import 'package:budgetiser/screens/stats/line_chart_stat/line_chart.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/month_picker.dart';
-import 'package:budgetiser/shared/picker/multi_picker/account_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/account_multi_picker.dart';
 import 'package:flutter/material.dart';
 
 class LineChartStatScreen extends StatefulWidget {
@@ -36,14 +36,19 @@ class _LineChartStatScreenState extends State<LineChartStatScreen> {
               })
             },
           ),
-          Row(
-            children: [
-              Expanded(
-                child: AccountPicker(
-                  onAccountPickedCallback: setAccounts,
-                ),
-              ),
-            ],
+          InkWell(
+            child: const Text('Select Accounts'),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AccountMultiPicker(
+                    onAccountsPickedCallback: setAccounts,
+                    initialValues: _selectedAccounts,
+                  );
+                },
+              );
+            },
           ),
           const SizedBox(height: 16),
           if (_selectedAccounts != null)

@@ -1,8 +1,8 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:flutter/material.dart';
 
-class NullableGeneralSinglePicker<T extends Selectable> extends StatefulWidget {
-  const NullableGeneralSinglePicker({
+class GeneralSinglePickerNullable<T extends Selectable> extends StatefulWidget {
+  const GeneralSinglePickerNullable({
     Key? key,
     required this.onPickedCallback,
     required this.possibleValues,
@@ -14,12 +14,12 @@ class NullableGeneralSinglePicker<T extends Selectable> extends StatefulWidget {
   final List<T>? blacklistedValues;
 
   @override
-  State<NullableGeneralSinglePicker<T>> createState() =>
-      _NullableGeneralSinglePickerState<T>();
+  State<GeneralSinglePickerNullable<T>> createState() =>
+      _GeneralSinglePickerNullableState<T>();
 }
 
-class _NullableGeneralSinglePickerState<T extends Selectable>
-    extends State<NullableGeneralSinglePicker<T>> {
+class _GeneralSinglePickerNullableState<T extends Selectable>
+    extends State<GeneralSinglePickerNullable<T>> {
   final List<T> selectedValues = [];
 
   @override
