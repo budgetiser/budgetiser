@@ -7,6 +7,7 @@ import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/single_picker/account_single_picker.dart';
 import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
+import 'package:budgetiser/shared/picker/single_picker/nullable_account_single_picker.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
@@ -189,7 +190,7 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
-  void setAccount2(Account a) {
+  void setAccount2(Account? a) {
     if (mounted) {
       setState(() {
         selectedAccount2 = a;
@@ -375,7 +376,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AccountSinglePicker(
+                                return AccountSinglePickerNullable(
                                   onAccountPickedCallback: setAccount2,
                                   blacklistedValues: selectedAccount != null
                                       ? [selectedAccount!]

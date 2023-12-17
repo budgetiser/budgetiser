@@ -1,31 +1,25 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:flutter/material.dart';
 
-class GeneralSinglePicker<T extends Selectable> extends StatefulWidget {
-  const GeneralSinglePicker({
+class NullableGeneralSinglePicker<T extends Selectable> extends StatefulWidget {
+  const NullableGeneralSinglePicker({
     Key? key,
     required this.onPickedCallback,
     required this.possibleValues,
     this.blacklistedValues,
   }) : super(key: key);
 
-  const GeneralSinglePicker.nullable({
-    Key? key,
-    required this.onPickedCallback,
-    required this.possibleValues,
-    this.blacklistedValues,
-  }) : super(key: key);
-
-  final Function(T selected) onPickedCallback;
+  final Function(T? selected) onPickedCallback;
   final List<T> possibleValues;
   final List<T>? blacklistedValues;
 
   @override
-  State<GeneralSinglePicker<T>> createState() => _GeneralSinglePickerState<T>();
+  State<NullableGeneralSinglePicker<T>> createState() =>
+      _NullableGeneralSinglePickerState<T>();
 }
 
-class _GeneralSinglePickerState<T extends Selectable>
-    extends State<GeneralSinglePicker<T>> {
+class _NullableGeneralSinglePickerState<T extends Selectable>
+    extends State<NullableGeneralSinglePicker<T>> {
   final List<T> selectedValues = [];
 
   @override
@@ -41,6 +35,17 @@ class _GeneralSinglePickerState<T extends Selectable>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      actions: [
+        TextButton(
+          child: const Text('Select None'),
+          onPressed: () {
+            setState(() {
+              widget.onPickedCallback(null);
+            });
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {
