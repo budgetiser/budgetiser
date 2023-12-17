@@ -34,6 +34,7 @@ class _GeneralMultiPickerState<T extends Selectable>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.heading),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       actions: [
         TextButton(
           onPressed: () {

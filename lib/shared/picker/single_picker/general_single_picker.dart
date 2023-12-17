@@ -41,6 +41,7 @@ class _GeneralSinglePickerState<T extends Selectable>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {

@@ -35,6 +35,7 @@ class _GeneralSinglePickerNullableState<T extends Selectable>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       actions: [
         TextButton(
           child: const Text('Select None'),

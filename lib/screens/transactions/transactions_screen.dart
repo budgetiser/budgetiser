@@ -125,7 +125,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           allAccounts: fullAccountList,
           accountsFilter: _currentFilterAccounts,
           categoriesFilter: _currentFilterCategories,
-          initiallyExpanded: false,
+          initiallyExpanded: monthYearSnapshotData.keys
+              .toList()
+              .sublist(
+                  0,
+                  monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
+                      ? 1
+                      : 2)
+              .contains(keys[i]),
         );
       },
     );
