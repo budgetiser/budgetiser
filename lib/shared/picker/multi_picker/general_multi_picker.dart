@@ -67,25 +67,7 @@ class _GeneralMultiPickerState<T extends Selectable>
         itemCount: widget.possibleValues.length,
         itemBuilder: (context, listIndex) {
           return CheckboxListTile(
-            title: Row(
-              children: [
-                Icon(
-                  widget.possibleValues[listIndex].icon,
-                  color: widget.possibleValues[listIndex].color,
-                ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    widget.possibleValues[listIndex].name,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: widget.possibleValues[listIndex].color,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            title: widget.possibleValues[listIndex].getSelectableIconWithText(),
             value: selectedValues.contains(widget.possibleValues[listIndex]),
             onChanged: (bool? value) {
               setState(() {

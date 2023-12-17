@@ -6,9 +6,10 @@ import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
 import 'package:budgetiser/shared/picker/single_picker/account_single_picker.dart';
-import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
 import 'package:budgetiser/shared/picker/single_picker/account_single_picker_nullable.dart';
+import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
@@ -83,7 +84,16 @@ class _TransactionFormState extends State<TransactionForm> {
     }
     updateWasValueNegative(valueController.text);
 
+    setInitialSelections();
+
     super.initState();
+  }
+
+  void setInitialSelections() {
+    //TODO
+    if (selectedAccount == null) {
+      // selectedAccount = widget.initialSelectedAccount;
+    }
   }
 
   @override
@@ -102,7 +112,7 @@ class _TransactionFormState extends State<TransactionForm> {
           wasNegative: wasValueNegative,
           value: tryValueParse(valueController.text),
         ),
-        child: _transactionFormWidget(context),
+        child: _transactionFormContent(context),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -206,20 +216,7 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
-  void _onAccount2checkboxClicked() {
-    setState(() {
-      hasAccount2 = !hasAccount2;
-      if (hasAccount2) {
-        changePrefix(EnumPrefix.plus);
-      } else {
-        selectedAccount2 = null;
-      }
-    });
-    _valueKey.currentState?.validate();
-  }
-
-  Form _transactionFormWidget(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
+  Form _transactionFormContent(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
@@ -301,131 +298,70 @@ class _TransactionFormState extends State<TransactionForm> {
               setState(() {});
             },
             controller: titleController,
-            // initialValue: widget.initialName,
             decoration: InputDecoration(
               labelText: titleController.text == ''
                   ? 'Title: ${selectedCategory?.name}'
                   : 'Title',
             ),
           ),
-          // account picker
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Account',
-                    textAlign: TextAlign.left,
-                    style: themeData.inputDecorationTheme.labelStyle != null
-                        ? themeData.inputDecorationTheme.labelStyle!
-                            .copyWith(fontSize: 16)
-                        : const TextStyle(fontSize: 16),
-                  ),
-                ),
-                InkWell(
-                  child: selectedAccount != null
-                      ? selectedAccount!.getSelectableIconWidget()
-                      : const Text('Select Account'),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AccountSinglePicker(
-                              onAccountPickedCallback: setAccount);
-                        });
-                  },
-                ),
-                InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onTap: () {
-                    _onAccount2checkboxClicked();
-                  },
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: hasAccount2,
-                        onChanged: (bool? newValue) {
-                          _onAccount2checkboxClicked();
-                        },
-                      ),
-                      const Flexible(
-                        child: Text(
-                          'transfer to another account',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (hasAccount2)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text('to '),
-                      Flexible(
-                          child: InkWell(
-                        child: selectedAccount2 != null
-                            ? selectedAccount2!.getSelectableIconWidget()
-                            : const Text('No data'),
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AccountSinglePickerNullable(
-                                  onAccountPickedCallback: setAccount2,
-                                  blacklistedValues: selectedAccount != null
-                                      ? [selectedAccount!]
-                                      : null,
-                                );
-                              });
-                        },
-                      )),
-                    ],
-                  ),
-              ],
+          // category picker
+          const SizedBox(height: 8),
+          CustomInputField(
+            title: 'Category',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CategorySinglePicker(
+                  onCategoryPickedCallback: setCategory,
+                );
+              },
+            ),
+            child: InkWell(
+              child: selectedCategory != null
+                  ? selectedCategory!.getSelectableIconWithText()
+                  : const Text('Select Category'),
             ),
           ),
-          // category picker
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Category',
-                    textAlign: TextAlign.left,
-                    style: themeData.inputDecorationTheme.labelStyle != null
-                        ? themeData.inputDecorationTheme.labelStyle!
-                            .copyWith(fontSize: 16)
-                        : const TextStyle(fontSize: 16),
-                  ),
-                ),
-                InkWell(
-                  child: selectedCategory != null
-                      ? selectedCategory!.getSelectableIconWidget()
-                      : const Text('No data'),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CategorySinglePicker(
-                          onCategoryPickedCallback: setCategory,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+          // account picker
+          const SizedBox(height: 8),
+          CustomInputField(
+            title: 'Account',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AccountSinglePicker(
+                  onAccountPickedCallback: setAccount,
+                );
+              },
             ),
+            child: InkWell(
+              child: selectedAccount != null
+                  ? selectedAccount!.getSelectableIconWithText()
+                  : const Text('Select Account'),
+            ),
+          ),
+          const SizedBox(height: 8),
+          CustomInputField(
+            title: 'Account 2',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AccountSinglePickerNullable(
+                  onAccountPickedCallback: setAccount2,
+                );
+              },
+            ),
+            child: selectedAccount2 != null
+                ? selectedAccount2!.getSelectableIconWithText()
+                : const Text(
+                    'None',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
           ),
           // notes input
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           Theme(
             data: Theme.of(context).copyWith(
               dividerColor: Colors.transparent,

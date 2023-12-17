@@ -1,6 +1,5 @@
 import 'package:budgetiser/screens/budgets/budget_form.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
-import 'package:budgetiser/shared/widgets/smallStuff/linear_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class BudgetItem extends StatelessWidget {

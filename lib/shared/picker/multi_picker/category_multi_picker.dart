@@ -1,5 +1,4 @@
 import 'package:budgetiser/db/category_provider.dart';
-import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/multi_picker/general_multi_picker.dart';
 import 'package:flutter/material.dart';
