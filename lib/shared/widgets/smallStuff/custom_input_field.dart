@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// Border with the (nearly) same style as an TextInputField border for custom children
-class CustomInputField extends StatelessWidget {
-  const CustomInputField({
+class CustomInputFieldBorder extends StatelessWidget {
+  const CustomInputFieldBorder({
     required this.child,
     required this.title,
     this.onTap,

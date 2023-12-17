@@ -1,5 +1,4 @@
 import 'package:budgetiser/db/account_provider.dart';
-import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/transactions/transaction_expansion_tile.dart';
@@ -32,14 +31,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   List<Account>? _currentFilterAccounts = [];
   List<TransactionCategory> _currentFilterCategories = [];
 
-  List<Account> _accountList = <Account>[];
-  List<TransactionCategory> _categoryList = <TransactionCategory>[];
+  List<Account> _accountList =
+      <Account>[]; // used for caching all accounts in order to query the list only one time
 
   @override
   void initState() {
     super.initState();
 
-    CategoryModel().getAllCategories().then((value) => _categoryList = value);
     AccountModel().getAllAccounts().then((value) => _accountList = value);
 
     if (widget.initialAccountsFilter != null) {

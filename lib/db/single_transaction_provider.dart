@@ -14,6 +14,7 @@ import 'package:sqflite/sqflite.dart';
 
 class TransactionModel extends ChangeNotifier {
   final recentlyUsedAccount = RecentlyUsed<Account>();
+  final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
 
   void notifyTransactionUpdate() {
     notifyListeners();
@@ -134,6 +135,7 @@ class TransactionModel extends ChangeNotifier {
     }
 
     recentlyUsedAccount.addItem(transaction.account.id.toString());
+    recentlyUsedCategory.addItem(transaction.category.id.toString());
 
     return transactionId;
   }
@@ -172,8 +174,6 @@ class TransactionModel extends ChangeNotifier {
   Future<void> updateSingleTransaction(SingleTransaction transaction) async {
     await deleteSingleTransactionById(transaction.id);
     await createSingleTransaction(transaction, notify: false);
-
-    // pushGetAllTransactionsStream();
   }
 
   Future<SingleTransaction> getOneTransaction(int id) async {
@@ -194,14 +194,12 @@ class TransactionModel extends ChangeNotifier {
   Future<List<DateTime>> getAllMonths() async {
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> dateList = await db.rawQuery(
-      // "SELECT DISTINCT STRFTIME('%Y%m', ROUND(date / 1000), 'unixepoch') AS date FROM singleTransaction ORDER by date DESC;",
       """ SELECT DISTINCT STRFTIME('%Y%m', DATETIME(ROUND(date/1000), 'unixepoch'), 'start of month') AS month, COUNT(id)
           FROM singleTransaction
           GROUP BY month
           ORDER BY month DESC;
       """,
     );
-    print(dateList);
     Set<DateTime> distinctMonths = {};
     for (var item in dateList) {
       DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(item['date']);

@@ -70,7 +70,7 @@ class DatabaseHelper {
     Profiler.instance.start('fill with TMP data');
     for (var account in TMP_DATA_accountList) {
       if (i % 100 == 0) {
-        print("${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t");
+        debugPrint('${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t');
       }
       i++;
       Profiler.instance.start('create account');
@@ -79,7 +79,7 @@ class DatabaseHelper {
     }
     for (var category in TMP_DATA_categoryList) {
       if (i % 100 == 0) {
-        print("${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t");
+        debugPrint('${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t');
       }
       i++;
       Profiler.instance.start('create category');
@@ -88,7 +88,7 @@ class DatabaseHelper {
     }
     for (var transaction in TMP_DATA_transactionList) {
       if (i % 100 == 0) {
-        print("${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t");
+        debugPrint('${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t');
       }
       i++;
       Profiler.instance.start('create transaction');

@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
@@ -89,11 +90,16 @@ class _TransactionFormState extends State<TransactionForm> {
     super.initState();
   }
 
-  void setInitialSelections() {
-    //TODO
+  void setInitialSelections() async {
     if (selectedAccount == null) {
-      // selectedAccount = widget.initialSelectedAccount;
+      final recentlyUsedAccount = RecentlyUsed<Account>();
+      selectedAccount = await recentlyUsedAccount.getLastUsed();
     }
+    if (selectedCategory == null) {
+      final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
+      selectedCategory = await recentlyUsedCategory.getLastUsed();
+    }
+    setState(() {});
   }
 
   @override
@@ -196,6 +202,9 @@ class _TransactionFormState extends State<TransactionForm> {
     if (mounted) {
       setState(() {
         selectedAccount = a;
+        if (selectedAccount == selectedAccount2) {
+          selectedAccount2 = null;
+        }
       });
     }
   }
@@ -306,7 +315,7 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
           // category picker
           const SizedBox(height: 8),
-          CustomInputField(
+          CustomInputFieldBorder(
             title: 'Category',
             onTap: () => showDialog(
               context: context,
@@ -324,7 +333,7 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
           // account picker
           const SizedBox(height: 8),
-          CustomInputField(
+          CustomInputFieldBorder(
             title: 'Account',
             onTap: () => showDialog(
               context: context,
@@ -341,13 +350,15 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
           ),
           const SizedBox(height: 8),
-          CustomInputField(
+          CustomInputFieldBorder(
             title: 'Account 2',
             onTap: () => showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AccountSinglePickerNullable(
                   onAccountPickedCallback: setAccount2,
+                  blacklistedValues:
+                      selectedAccount != null ? [selectedAccount!] : null,
                 );
               },
             ),

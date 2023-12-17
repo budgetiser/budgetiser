@@ -72,10 +72,10 @@ class BudgetItem extends StatelessWidget {
                 //     color: budgetData.color,
                 //   ),
                 // ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'todo',
                       // budgetData.balance.toString(),
                       // style: TextStyle(
@@ -116,11 +116,11 @@ class BudgetItem extends StatelessWidget {
         ],
       );
     } else {
-      return Row(
+      return const Row(
         children: [
           Text('todo'),
           // "days left: ${(budgetData.calculateCurrentInterval()['end']!).difference(DateTime.now()).inDays}"),
-          const Icon(Icons.repeat)
+          Icon(Icons.repeat)
         ],
       );
     }
