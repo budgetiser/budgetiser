@@ -2,6 +2,7 @@ import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/categories/category_form.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/widgets/itemLists/item_list_container.dart';
 import 'package:budgetiser/shared/widgets/items/category_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,16 +42,10 @@ class CategoriesScreen extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   itemCount: categoryList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        CategoryItem(
-                          categoryData: categoryList[index],
-                        ),
-                        const Divider(
-                          indent: 8,
-                          endIndent: 8,
-                        )
-                      ],
+                    return ItemListContainer(
+                      child: CategoryItem(
+                        categoryData: categoryList[index],
+                      ),
                     );
                   },
                   padding: const EdgeInsets.only(bottom: 80),

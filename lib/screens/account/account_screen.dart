@@ -2,6 +2,7 @@ import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/widgets/itemLists/item_list_container.dart';
 import 'package:budgetiser/shared/widgets/items/accountItem/account_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -140,8 +141,10 @@ class _AccountScreenState extends State<AccountScreen> {
             itemCount: snapshot.data!.length,
             padding: const EdgeInsets.only(bottom: 80),
             itemBuilder: (BuildContext context, int index) {
-              return AccountItem(
-                accountData: snapshot.data![index],
+              return ItemListContainer(
+                child: AccountItem(
+                  accountData: snapshot.data![index],
+                ),
               );
             },
           );
