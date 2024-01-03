@@ -1,5 +1,4 @@
 import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +13,6 @@ class DangerZone extends StatelessWidget {
           'Danger Zone',
         ),
       ),
-      drawer: const CreateDrawer(),
       body: Center(
         child: ListView(
           children: <Widget>[

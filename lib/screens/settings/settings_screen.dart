@@ -1,6 +1,7 @@
 import 'package:budgetiser/drawer.dart';
-import 'package:budgetiser/screens/settings/about.dart';
-import 'package:budgetiser/screens/settings/danger_zone.dart';
+import 'package:budgetiser/screens/settings/sub_settings/about.dart';
+import 'package:budgetiser/screens/settings/sub_settings/danger_zone.dart';
+import 'package:budgetiser/screens/settings/sub_settings/user_preferences_screen.dart';
 import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,6 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _selectedDarkModeValue;
-  String _selectedCurrency = '€';
-  final _currencyFormKey = GlobalKey<FormState>();
-  final inputControllerCurrency = TextEditingController(text: '');
 
   @override
   void initState() {
@@ -30,11 +28,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void asyncSetStateFromPreferences() async {
     final preferences = await SharedPreferences.getInstance();
-    final awaitedCurrency = await SettingsCurrencyHandler().getCurrency();
     setState(() {
       _selectedDarkModeValue =
           preferences.getString('key-themeMode') ?? 'system';
-      _selectedCurrency = awaitedCurrency;
     });
   }
 
@@ -89,7 +85,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
-            currencyListTile(),
+            ListTile(
+              title: const Text('User Preferences'),
+              subtitle: const Text(
+                'Change the app to your own preferences',
+              ),
+              onTap: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const UserPreferencesScreen(),
+                  ),
+                );
+              },
+            ),
             ListTile(
               title: const Text(
                 'Danger Zone',
@@ -124,83 +132,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  ListTile currencyListTile() {
-    return ListTile(
-      title: Text('Change Currency: $_selectedCurrency'),
-      subtitle: const Text(
-        'No effect on values',
-      ),
-      onTap: () async {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-              title: const Text('Select Currency'),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Has no effect on values',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        key: _currencyFormKey,
-                        controller: inputControllerCurrency,
-                        maxLength: 5,
-                        onFieldSubmitted: (value) {
-                          setState(() {
-                            _selectedCurrency = value.toString();
-                          });
-                          SettingsCurrencyHandler()
-                              .setCurrency(value.toString());
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FloatingActionButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            backgroundColor: Colors.red,
-                            mini: true,
-                            child: const Icon(Icons.close),
-                          ),
-                          FloatingActionButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedCurrency =
-                                    inputControllerCurrency.text.toString();
-                              });
-                              SettingsCurrencyHandler().setCurrency(
-                                  inputControllerCurrency.text.toString());
-                              Navigator.pop(context);
-                            },
-                            backgroundColor: Colors.green,
-                            mini: true,
-                            child: const Icon(Icons.check),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
-          },
-        );
-      },
     );
   }
 }
