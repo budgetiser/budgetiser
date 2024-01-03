@@ -23,7 +23,6 @@ class BudgetForm extends StatefulWidget {
 
 class _BudgetFormState extends State<BudgetForm> {
   var nameController = TextEditingController();
-  var balanceController = TextEditingController(text: '0.00');
   var limitController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -36,7 +35,6 @@ class _BudgetFormState extends State<BudgetForm> {
   void initState() {
     if (widget.budgetData != null) {
       nameController.text = widget.budgetData!.name;
-      balanceController.text = 'todo';
       limitController.text = 'todo';
       _color = widget.budgetData!.color;
       _icon = widget.budgetData!.icon;
@@ -107,21 +105,6 @@ class _BudgetFormState extends State<BudgetForm> {
                 children: [
                   Flexible(
                     child: TextFormField(
-                      controller: balanceController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: true,
-                      ),
-                      decoration: const InputDecoration(
-                        labelText: 'Balance',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Flexible(
-                    child: TextFormField(
                       controller: limitController,
                       validator: (data) {
                         if (data == null || data == '') {
@@ -163,16 +146,6 @@ class _BudgetFormState extends State<BudgetForm> {
                   );
                 },
               ),
-              const Divider(height: 32),
-              const RecurringForm(
-                  // scrollController: _scrollController,
-                  // onRecurringDataChangedCallback: (data) {
-                  //   setState(() {
-                  //     recurringData = data;
-                  //   });
-                  // },
-                  // initialRecurringData: recurringData,
-                  ),
             ],
           ),
         ),
@@ -225,11 +198,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   description: descriptionController.text,
                   id: 0,
                   transactionCategories: budgetCategories,
-                  startDate: DateTime.now(),
-                  endDate: DateTime.now(),
                   intervalUnit: IntervalUnit.day,
-                  intervalRepetitions: 1,
-                  intervalIndex: 0,
                   maxValue: double.parse(limitController.text),
                 );
                 if (widget.budgetData != null) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:budgetiser/db/account_provider.dart';
+import 'package:budgetiser/db/budget_provider.dart';
 import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
@@ -99,7 +100,7 @@ class DatabaseHelper {
       Profiler.instance.end();
     }
     for (var budget in TMP_DATA_budgetList) {
-      await createBudget(budget);
+      await BudgetModel().createBudget(budget);
     }
     debugPrint('finished filling DB with TMP data');
     Profiler.instance.end();

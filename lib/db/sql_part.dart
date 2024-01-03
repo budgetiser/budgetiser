@@ -71,10 +71,6 @@ extension DatabaseExtensionSQL on DatabaseHelper {
         color INTEGER NOT NULL,
         max_value REAL NOT NULL,
         interval_unit TEXT NOT NULL,
-        interval_index INTEGER NOT NULL,
-        interval_repetitions INTEGER,
-        start_date INTEGER NOT NULL,
-        end_date INTEGER,
         description TEXT,
         PRIMARY KEY(id),
         CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))

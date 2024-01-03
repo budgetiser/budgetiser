@@ -18,17 +18,6 @@ extension DatabaseExtensionBudget on DatabaseHelper {
     }));
   }
 
-  Future<Budget> _getBudgetToID(int budgetID) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps =
-        await db.query('budget', where: 'id = ?', whereArgs: [budgetID]);
-    List<List<TransactionCategory>> categoryList = [];
-    for (int i = 0; i < maps.length; i++) {
-      categoryList.add(await _getCategoriesToBudget(maps[i]['id']));
-    }
-    return Budget.fromDBmap(maps[0], categoryList[0]);
-  }
-
   Future<List<TransactionCategory>> _getCategoriesToBudget(int budgetID) async {
     final db = await database;
 
