@@ -1,4 +1,5 @@
-import 'package:budgetiser/screens/settings/sub_settings/select_currency_list_tile.dart';
+import 'package:budgetiser/screens/settings/sub_settings/user_preferences/select_currency_list_tile.dart';
+import 'package:budgetiser/screens/settings/sub_settings/user_preferences/toggle_prefix_button.dart';
 import 'package:flutter/material.dart';
 
 class UserPreferencesScreen extends StatelessWidget {
@@ -14,8 +15,9 @@ class UserPreferencesScreen extends StatelessWidget {
       ),
       body: Center(
         child: ListView(
-          children: [
-            const SelectCurrencyListTile(),
+          children: const [
+            SelectCurrencyListTile(),
+            TogglePrefixButtonListTile(),
           ],
         ),
       ),

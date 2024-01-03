@@ -16,6 +16,7 @@ import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A screen that allows the user to add a transaction
 /// or edit an existing one
@@ -61,6 +62,8 @@ class _TransactionFormState extends State<TransactionForm> {
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
 
+  bool _prefixButtonVisible = true;
+
   @override
   void initState() {
     if (widget.initialBalance != null) {
@@ -99,7 +102,11 @@ class _TransactionFormState extends State<TransactionForm> {
       final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
       selectedCategory = await recentlyUsedCategory.getLastUsed();
     }
-    setState(() {});
+    final preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _prefixButtonVisible = preferences.getBool('key-prefix-button-active') ??
+          _prefixButtonVisible;
+    });
   }
 
   @override
@@ -234,20 +241,21 @@ class _TransactionFormState extends State<TransactionForm> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 70,
-                child: IconButton(
-                  icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
-                  onPressed: () {
-                    changePrefix(EnumPrefix.other);
-                  },
-                  color: wasValueNegative
-                      ? const Color.fromARGB(255, 174, 74, 99)
-                      : const Color.fromARGB(239, 29, 129, 37),
-                  splashRadius: 24,
-                  iconSize: 48,
+              if (_prefixButtonVisible)
+                SizedBox(
+                  height: 70,
+                  child: IconButton(
+                    icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
+                    onPressed: () {
+                      changePrefix(EnumPrefix.other);
+                    },
+                    color: wasValueNegative
+                        ? const Color.fromARGB(255, 174, 74, 99)
+                        : const Color.fromARGB(239, 29, 129, 37),
+                    splashRadius: 24,
+                    iconSize: 48,
+                  ),
                 ),
-              ),
               Flexible(
                 child: Form(
                   key: _valueKey,
