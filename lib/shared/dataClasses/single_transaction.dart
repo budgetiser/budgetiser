@@ -48,7 +48,7 @@ class SingleTransaction {
     var m = toMap();
     m['id'] = id;
     m['account'] = account.id;
-    m['account2'] = account2 != null ? account2!.id : null;
+    m['account2'] = account2?.id;
     return m;
   }
 
