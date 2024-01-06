@@ -79,6 +79,12 @@ class BudgetModel extends ChangeNotifier {
         whereArgs: [budget.id],
       );
 
+      await txn.delete(
+        'categoryToBudget',
+        where: 'budget_id = ?',
+        whereArgs: [budget.id],
+      );
+
       Batch batch = txn.batch();
       for (var element in budget.transactionCategories) {
         batch.insert(
