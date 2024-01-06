@@ -1,4 +1,4 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/budget_provider.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
@@ -6,9 +6,9 @@ import 'package:budgetiser/shared/picker/icon_picker.dart';
 import 'package:budgetiser/shared/picker/multi_picker/category_multi_picker.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
-import 'package:budgetiser/shared/widgets/recurring_form.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BudgetForm extends StatefulWidget {
   const BudgetForm({
@@ -35,7 +35,7 @@ class _BudgetFormState extends State<BudgetForm> {
   void initState() {
     if (widget.budgetData != null) {
       nameController.text = widget.budgetData!.name;
-      limitController.text = 'todo';
+      limitController.text = widget.budgetData!.maxValue.toString();
       _color = widget.budgetData!.color;
       _icon = widget.budgetData!.icon;
       budgetCategories = widget.budgetData!.transactionCategories;
@@ -167,7 +167,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       description:
                           "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                       onSubmitCallback: () {
-                        DatabaseHelper.instance
+                        Provider.of<BudgetModel>(context, listen: false)
                             .deleteBudget(widget.budgetData!.id);
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
@@ -203,9 +203,11 @@ class _BudgetFormState extends State<BudgetForm> {
                 );
                 if (widget.budgetData != null) {
                   a.id = widget.budgetData!.id;
-                  DatabaseHelper.instance.updateBudget(a);
+                  Provider.of<BudgetModel>(context, listen: false)
+                      .updateBudget(a);
                 } else {
-                  DatabaseHelper.instance.createBudget(a);
+                  Provider.of<BudgetModel>(context, listen: false)
+                      .createBudget(a);
                 }
                 Navigator.of(context).pop();
               }

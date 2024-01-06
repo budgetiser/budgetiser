@@ -20,7 +20,6 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-part 'budget_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
 

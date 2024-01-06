@@ -16,7 +16,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => TransactionModel()),
         ChangeNotifierProvider(create: (context) => CategoryModel()),
         ChangeNotifierProvider(create: (context) => AccountModel()),
-        ChangeNotifierProvider(create: (context) => BudgetModel())
+        ChangeNotifierProvider(create: (context) => BudgetModel()),
       ],
       child: const MyApp(),
     ),

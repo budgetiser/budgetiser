@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:budgetiser/db/budget_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/budgets/budget_form.dart';
@@ -7,17 +5,12 @@ import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BudgetScreen extends StatefulWidget {
+class BudgetScreen extends StatelessWidget {
   static String routeID = 'budgets';
   const BudgetScreen({
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<BudgetScreen> createState() => _BudgetScreenState();
-}
-
-class _BudgetScreenState extends State<BudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,24 +62,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 }
 
-class ProgressBar extends StatelessWidget {
-  const ProgressBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        width: 100,
-        height: 50,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Colors.green,
-        ),
-      ),
-    );
-  }
-}
-
 class BudgetItem extends StatelessWidget {
   const BudgetItem({super.key, required this.budget});
   final Budget budget;
@@ -95,74 +70,67 @@ class BudgetItem extends StatelessWidget {
   Widget build(BuildContext context) {
     budget.value ??= 0.0;
     double percentage = budget.value! / budget.maxValue;
-    percentage = Random().nextDouble(); //TODO: remove
-    double offset = percentage > 1
-        ? 0.95
-        : (percentage < 0.05 ? -0.95 : (-1 + (percentage * 2)) - 0.05);
-    return InkWell(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Icon(
-                budget.icon,
-                color: budget.color,
-              ),
-              Flexible(
-                child: Text(
-                  budget.name,
-                  style: const TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              //Text('${budget.maxValue}'),
-            ],
-          ),
-          Container(
-            width: 500,
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
+    // TODO: double offset = percentage > 1
+    //     ? 0.95
+    //     : (percentage < 0.05 ? -0.95 : (-1 + (percentage * 2)) - 0.05);
+    return Container(
+      // padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: InkWell(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Positioned.fill(
-                  child: LinearProgressIndicator(
-                    minHeight: 5,
-                    value: percentage,
-                    color: Colors.orange,
-                    backgroundColor: Colors.green,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
+                Flexible(
+                  child: Text(
+                    budget.name,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
-                Text(
-                  '${(percentage * 100).toStringAsFixed(1)}%',
-                  style: const TextStyle(
-                      fontSize: 13.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
+                Icon(
+                  budget.icon,
+                  color: budget.color,
                 ),
+                //Text('${budget.maxValue}'),
               ],
             ),
-          )
-        ],
-      ),
-      onTap: () => {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => BudgetForm(
-              budgetData: budget,
+            SizedBox(
+              width: double.maxFinite,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned.fill(
+                    child: LinearProgressIndicator(
+                      value: percentage,
+                      color: budget.color,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
+                  Text(
+                    '${(percentage * 100).toStringAsFixed(1)}%',
+                    style: const TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        onTap: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => BudgetForm(
+                budgetData: budget,
+              ),
             ),
-          ),
-        )
-      },
+          )
+        },
+      ),
     );
   }
 }
