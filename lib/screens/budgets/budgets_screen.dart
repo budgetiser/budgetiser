@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class BudgetScreen extends StatefulWidget {
   static String routeID = 'budgets';
   const BudgetScreen({
-    Key? key
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -18,7 +18,6 @@ class BudgetScreen extends StatefulWidget {
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,15 +88,17 @@ class ProgressBar extends StatelessWidget {
 }
 
 class BudgetItem extends StatelessWidget {
-  const BudgetItem({ super.key, required this.budget });
+  const BudgetItem({super.key, required this.budget});
   final Budget budget;
 
   @override
   Widget build(BuildContext context) {
     budget.value ??= 0.0;
-    double percentage = budget.value!/budget.maxValue;
+    double percentage = budget.value! / budget.maxValue;
     percentage = Random().nextDouble(); //TODO: remove
-    double offset = percentage > 1 ? 0.95 : (percentage < 0.05 ? -0.95 : (-1+(percentage*2))-0.05);
+    double offset = percentage > 1
+        ? 0.95
+        : (percentage < 0.05 ? -0.95 : (-1 + (percentage * 2)) - 0.05);
     return InkWell(
       child: Column(
         children: [
@@ -118,33 +119,39 @@ class BudgetItem extends StatelessWidget {
               //Text('${budget.maxValue}'),
             ],
           ),
-         Container(
-           width: 500,
-           padding: EdgeInsets.all(5),
-           decoration: BoxDecoration(
-             color: Colors.green,
-             borderRadius: BorderRadius.all(Radius.circular(20))
-           ),
-           child: Stack(
-             alignment: Alignment.center,
-             children: [
-               Positioned.fill(
-                   child: LinearProgressIndicator(
-                     minHeight: 5,
-                     value: percentage,
-                     color: Colors.orange,
-                     backgroundColor: Colors.green,
-                     borderRadius: const BorderRadius.all(Radius.circular(20)),
-                   ),
-               ),
-               Text(
-                 '${(percentage*100).toStringAsFixed(1)}%',
-                 style: TextStyle(
-                     fontSize: 13.0, color: Colors.white, fontWeight: FontWeight.w600),
-               ),
-             ],
-           ),
-         )
+          Container(
+            width: 500,
+            padding: const EdgeInsets.all(5),
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned.fill(
+                  child: LinearProgressIndicator(
+                    minHeight: 5,
+                    value: percentage,
+                    color: Colors.orange,
+                    backgroundColor: Colors.green,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                ),
+                Text(
+                  '${(percentage * 100).toStringAsFixed(1)}%',
+                  style: const TextStyle(
+                      fontSize: 13.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          )
         ],
       ),
       onTap: () => {
