@@ -4,7 +4,7 @@ import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/material.dart';
 
-@deprecated
+@Deprecated('')
 class TransactionFilter extends StatefulWidget {
   const TransactionFilter({
     Key? key,

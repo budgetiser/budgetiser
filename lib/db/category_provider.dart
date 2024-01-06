@@ -22,7 +22,7 @@ class CategoryModel extends ChangeNotifier {
       icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
       color: Color(maps[0]['color']),
       description: maps[0]['description'],
-      archived: maps[0]['is_hidden'] == 1,
+      archived: maps[0]['archived'] == 1,
     );
   }
 
