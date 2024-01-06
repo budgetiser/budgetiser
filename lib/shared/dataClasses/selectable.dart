@@ -11,8 +11,12 @@ abstract class Selectable {
     required this.color,
   });
 
-  Icon getSelectableIconWidget() {
-    return Icon(icon, color: color);
+  Icon getSelectableIconWidget({double size = 24}) {
+    return Icon(
+      icon,
+      color: color,
+      size: size,
+    );
   }
 
   Widget getSelectableIconWithText() {

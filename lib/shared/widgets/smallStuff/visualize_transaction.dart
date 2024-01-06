@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/arrow_icon.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
 import 'package:flutter/material.dart';
 
@@ -40,23 +39,19 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
           children: (widget.account2 != null)
               ? [
                   clickableAccountIcon(widget.account1!),
-                  _arrow(flipped: false),
+                  const ArrowIcon(),
                   Icon(
                     widget.category!.icon,
                     color: widget.category!.color,
                     size: 40,
                   ),
-                  _arrow(flipped: false),
+                  const ArrowIcon(),
                   clickableAccountIcon(widget.account2!),
                 ]
               : [
                   clickableAccountIcon(widget.account1!),
-                  _arrow(flipped: !widget.wasNegative),
-                  Icon(
-                    widget.category!.icon,
-                    color: widget.category!.color,
-                    size: 40,
-                  ),
+                  ArrowIcon(flipped: !widget.wasNegative),
+                  widget.category!.getSelectableIconWidget(size: 40),
                 ],
         ),
         if (widget.value != null &&
@@ -89,19 +84,5 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
         size: 40,
       ),
     );
-  }
-
-  Widget _arrow({required bool flipped}) {
-    if (flipped) {
-      return Transform.rotate(
-        angle: pi, // rotate by pi to flip the arrow
-        child: const Icon(
-          Icons.arrow_right_alt,
-          size: 60,
-        ),
-      );
-    } else {
-      return const Icon(Icons.arrow_right_alt, size: 60);
-    }
   }
 }
