@@ -71,12 +71,27 @@ class BudgetModel extends ChangeNotifier {
   Future<void> updateBudget(Budget budget) async {
     final Database db = await DatabaseHelper.instance.database;
 
-    await db.update(
-      'budget',
-      budget.toMap(),
-      where: 'id = ?',
-      whereArgs: [budget.id],
-    );
+    await db.transaction((txn) async {
+      await txn.update(
+        'budget',
+        budget.toMap(),
+        where: 'id = ?',
+        whereArgs: [budget.id],
+      );
+
+      Batch batch = txn.batch();
+      for (var element in budget.transactionCategories) {
+        batch.insert(
+          'categoryToBudget',
+          {
+            'category_id': element.id,
+            'budget_id': budget.id,
+          },
+          conflictAlgorithm: ConflictAlgorithm.ignore,
+        );
+      }
+      await batch.commit(noResult: true);
+    });
 
     notifyListeners();
   }
