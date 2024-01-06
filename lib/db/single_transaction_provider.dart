@@ -85,7 +85,7 @@ class TransactionModel extends ChangeNotifier {
       id: mapItem['id'],
       title: mapItem['title'].toString(),
       value: mapItem['value'],
-      description: mapItem['description'].toString(),
+      description: mapItem['description'],
       category: TransactionCategory(
         id: mapItem['category_id'],
         name: mapItem['category_name'],

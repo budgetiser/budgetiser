@@ -195,7 +195,9 @@ class _BudgetFormState extends State<BudgetForm> {
                   name: nameController.text,
                   icon: _icon ?? Icons.blur_on,
                   color: _color,
-                  description: descriptionController.text,
+                  description: descriptionController.text == ''
+                      ? null
+                      : descriptionController.text,
                   id: 0,
                   transactionCategories: budgetCategories,
                   intervalUnit: IntervalUnit.day,

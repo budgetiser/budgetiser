@@ -36,7 +36,7 @@ class CategoryModel extends ChangeNotifier {
         name: maps[i]['name'].toString(),
         icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
         color: Color(maps[i]['color']),
-        description: maps[i]['description'].toString(),
+        description: maps[i]['description'],
         archived: maps[i]['is_hidden'] == 1,
       );
     });

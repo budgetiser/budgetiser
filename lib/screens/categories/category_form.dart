@@ -151,7 +151,9 @@ class _CategoryFormState extends State<CategoryForm> {
                     name: nameController.text,
                     icon: _icon ?? Icons.blur_on,
                     color: _color,
-                    description: descriptionController.text,
+                    description: descriptionController.text == ''
+                        ? null
+                        : descriptionController.text,
                     archived: false,
                     id: 0);
                 if (widget.categoryData != null) {

@@ -453,7 +453,7 @@ class _TransactionFormState extends State<TransactionForm> {
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
-      description: description,
+      description: description == '' ? null : description,
       date: transactionDate,
     );
 
