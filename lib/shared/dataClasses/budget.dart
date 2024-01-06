@@ -27,7 +27,7 @@ class Budget extends Selectable {
     required this.maxValue,
     required this.intervalUnit,
     required this.transactionCategories,
-    this.value
+    this.value,
   });
 
   Budget.fromDBmap(

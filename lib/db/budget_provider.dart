@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BudgetModel extends ChangeNotifier {
-
   Future<Budget> getBudget(int id) async {
     final db = await DatabaseHelper.instance.database;
 
@@ -20,7 +19,8 @@ class BudgetModel extends ChangeNotifier {
       throw ErrorDescription('budget id:$id not found');
     }
 
-    List<TransactionCategory> categoryList = await _getBudgetCategories(budgetMap[0]['id']);
+    List<TransactionCategory> categoryList =
+        await _getBudgetCategories(budgetMap[0]['id']);
 
     Budget budget = Budget.fromDBmap(budgetMap[0], categoryList);
     budget.value = await _calculateBudgetValue(budget);
@@ -35,7 +35,8 @@ class BudgetModel extends ChangeNotifier {
     List<Budget> allBudgets = [];
 
     await Future.forEach(budgetsMap, (element) async {
-      List<TransactionCategory> categoryList = await _getBudgetCategories(element['id']);
+      List<TransactionCategory> categoryList =
+          await _getBudgetCategories(element['id']);
       Budget budget = Budget.fromDBmap(element, categoryList);
       budget.value = await _calculateBudgetValue(budget);
       allBudgets.add(budget);
@@ -55,7 +56,7 @@ class BudgetModel extends ChangeNotifier {
       );
 
       Batch batch = txn.batch();
-      for (var element in budget.transactionCategories){
+      for (var element in budget.transactionCategories) {
         batch.insert('categoryToBudget', {
           'category_id': element.id,
           'budget_id': id,
@@ -92,7 +93,7 @@ class BudgetModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<TransactionCategory>> _getBudgetCategories(int budgetID) async{
+  Future<List<TransactionCategory>> _getBudgetCategories(int budgetID) async {
     final Database db = await DatabaseHelper.instance.database;
 
     List<TransactionCategory> categoryList = [];
@@ -102,14 +103,15 @@ class BudgetModel extends ChangeNotifier {
       whereArgs: [budgetID],
     );
     await Future.forEach(categories, (element) async {
-      TransactionCategory category = await CategoryModel().getCategory(element['category_id']);
+      TransactionCategory category =
+          await CategoryModel().getCategory(element['category_id']);
       categoryList.add(category);
     });
 
     return categoryList;
   }
 
-  Future<double> _calculateBudgetValue(Budget budget) async{
+  Future<double> _calculateBudgetValue(Budget budget) async {
     final Database db = await DatabaseHelper.instance.database;
 
     final (lowerBound, upperBound) = _calculateBounds(budget.intervalUnit);
@@ -132,7 +134,7 @@ class BudgetModel extends ChangeNotifier {
       ],
     );
 
-    return valueMap[0]['value']??.0;
+    return valueMap[0]['value'] ?? .0;
   }
 
   (DateTime, DateTime) _calculateBounds(IntervalUnit type) {
@@ -140,28 +142,31 @@ class BudgetModel extends ChangeNotifier {
     final DateTime upperBound;
     final DateTime now = DateTime.now();
     final DateTime nowClean = DateTime(now.year, now.month, now.day);
-    
-    switch (type){
+
+    switch (type) {
       case IntervalUnit.day:
         lowerBound = nowClean;
         upperBound = nowClean.add(const Duration(days: 1));
       case IntervalUnit.week:
-        final int weekDiff = nowClean.weekday-1;
+        final int weekDiff = nowClean.weekday - 1;
         lowerBound = nowClean.subtract(Duration(days: weekDiff));
-        upperBound = nowClean.add(Duration(days: 7-weekDiff));
+        upperBound = nowClean.add(Duration(days: 7 - weekDiff));
       case IntervalUnit.month:
         lowerBound = DateTime(nowClean.year, nowClean.month);
-        upperBound = DateTime(nowClean.month == 12 ? nowClean.year+1 : nowClean.year, nowClean.month == 12 ? 1 : nowClean.month+1);
+        upperBound = DateTime(
+            nowClean.month == 12 ? nowClean.year + 1 : nowClean.year,
+            nowClean.month == 12 ? 1 : nowClean.month + 1);
       case IntervalUnit.quarter:
-        final int currentQuarter = ((nowClean.month-1) / 3).floor(); //max 3
-        final int lowerMonth = (currentQuarter*3)+1; //max 10
-        final int upperMonth = lowerMonth == 10 ? 1 : lowerMonth+3;
-        final int upperYear = lowerMonth == 10 ? nowClean.year+1 : nowClean.year;
+        final int currentQuarter = ((nowClean.month - 1) / 3).floor(); //max 3
+        final int lowerMonth = (currentQuarter * 3) + 1; //max 10
+        final int upperMonth = lowerMonth == 10 ? 1 : lowerMonth + 3;
+        final int upperYear =
+            lowerMonth == 10 ? nowClean.year + 1 : nowClean.year;
         lowerBound = DateTime(nowClean.year, lowerMonth);
         upperBound = DateTime(upperYear, upperMonth);
       case IntervalUnit.year:
         lowerBound = DateTime(nowClean.year);
-        upperBound = DateTime(nowClean.year+1);
+        upperBound = DateTime(nowClean.year + 1);
     }
 
     return (lowerBound, upperBound);
