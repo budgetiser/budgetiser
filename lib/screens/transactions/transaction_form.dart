@@ -479,7 +479,7 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void changePrefix(EnumPrefix prefix) {
-    /// TODO: this can be improved when e.g. having multiplications
+    /// TODO: this can be improved when e.g. having multiplications #187
     bool needsBrackets = double.tryParse(valueController.text) == null;
     double? currentValue = tryValueParse(valueController.text);
 

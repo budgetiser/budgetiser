@@ -32,7 +32,7 @@ class TransactionItem extends StatelessWidget {
           children: [
             // top row
             Row(
-              //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
+              //TODO: use common widget with transaction for vor visualisation of transaction (with arrows) #219
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(

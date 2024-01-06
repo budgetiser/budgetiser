@@ -105,7 +105,7 @@ class TransactionModel extends ChangeNotifier {
     bool notify = true,
   }) async {
     final db = await DatabaseHelper.instance.database;
-    int transactionId = 0; //TODO: fix
+    int transactionId = 0;
     await db.transaction((txn) async {
       transactionId = await txn.insert(
         'singleTransaction',
@@ -128,10 +128,7 @@ class TransactionModel extends ChangeNotifier {
     });
 
     if (notify) {
-      // getAllTransactions(); TODO: notifier
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       notifyTransactionUpdate();
-      // TODO: account notify
     }
 
     recentlyUsedAccount.addItem(transaction.account.id.toString());
