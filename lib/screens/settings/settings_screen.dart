@@ -2,7 +2,6 @@ import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/settings/sub_settings/about.dart';
 import 'package:budgetiser/screens/settings/sub_settings/danger_zone.dart';
 import 'package:budgetiser/screens/settings/sub_settings/user_preferences_screen.dart';
-import 'package:budgetiser/shared/services/setting_currency.dart';
 import 'package:budgetiser/shared/services/settings_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
