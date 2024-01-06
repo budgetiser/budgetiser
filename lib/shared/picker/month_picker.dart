@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 class MonthPicker extends StatefulWidget {
   const MonthPicker({
     required this.onDateChangedCallback,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final void Function(DateTime) onDateChangedCallback;
 
   @override

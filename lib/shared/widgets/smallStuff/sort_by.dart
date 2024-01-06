@@ -78,7 +78,6 @@ class _SortByIconWidgetState extends State<SortByIconWidget> {
       default:
         throw ArgumentError();
     }
-    print('widget init build ${widget.initialSort}');
     return IconButton(
       icon: const Icon(Icons.sort),
       onPressed: () {

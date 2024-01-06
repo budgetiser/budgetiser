@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 
 class AccountForm extends StatefulWidget {
   const AccountForm({
-    Key? key,
+    super.key,
     this.initialAccount,
-  }) : super(key: key);
+  });
   final Account? initialAccount;
 
   @override

@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 
 class GeneralSinglePicker<T extends Selectable> extends StatefulWidget {
   const GeneralSinglePicker({
-    Key? key,
+    super.key,
     required this.onPickedCallback,
     required this.possibleValues,
     this.blacklistedValues,
-  }) : super(key: key);
+  });
 
   const GeneralSinglePicker.nullable({
-    Key? key,
+    super.key,
     required this.onPickedCallback,
     required this.possibleValues,
     this.blacklistedValues,
-  }) : super(key: key);
+  });
 
   final Function(T selected) onPickedCallback;
   final List<T> possibleValues;

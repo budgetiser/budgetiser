@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class CategoriesScreen extends StatelessWidget {
   static String routeID = 'categories';
 
-  const CategoriesScreen({Key? key}) : super(key: key);
+  const CategoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

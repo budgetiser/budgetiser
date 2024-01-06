@@ -4,11 +4,11 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ColorPickerWidget extends StatefulWidget {
   const ColorPickerWidget({
-    Key? key,
+    super.key,
     required this.initialSelectedColor,
     required this.onColorChangedCallback,
     this.noPadding = false,
-  }) : super(key: key);
+  });
 
   final Color initialSelectedColor;
   final Function(Color) onColorChangedCallback;

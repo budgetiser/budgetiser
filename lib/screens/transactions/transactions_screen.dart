@@ -12,10 +12,10 @@ import 'package:provider/provider.dart';
 class TransactionsScreen extends StatefulWidget {
   static String routeID = 'transactions';
   const TransactionsScreen({
-    Key? key,
+    super.key,
     this.initialAccountsFilter,
     this.initialCategoriesFilter,
-  }) : super(key: key);
+  });
 
   final List<Account>? initialAccountsFilter;
   final List<TransactionCategory>? initialCategoriesFilter;

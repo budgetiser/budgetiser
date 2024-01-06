@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 
 class BudgetForm extends StatefulWidget {
   const BudgetForm({
-    Key? key,
+    super.key,
     this.budgetData,
-  }) : super(key: key);
+  });
   final Budget? budgetData;
 
   @override

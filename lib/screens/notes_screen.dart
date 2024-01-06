@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesScreen extends StatelessWidget {
   static String routeID = 'notes123';
-  NotesScreen({Key? key}) : super(key: key);
+  NotesScreen({super.key});
 
   final valueController = TextEditingController();
 

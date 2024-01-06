@@ -9,9 +9,9 @@ class AccountItem extends StatelessWidget {
   final Account accountData;
 
   const AccountItem({
-    Key? key,
+    super.key,
     required this.accountData,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

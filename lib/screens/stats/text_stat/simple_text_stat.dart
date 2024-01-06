@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 
 class SimpleTextStat extends StatelessWidget {
   const SimpleTextStat({
-    Key? key,
+    super.key,
     this.category,
     this.account,
-  }) : super(key: key);
+  });
 
   final Account? account;
   final TransactionCategory? category;

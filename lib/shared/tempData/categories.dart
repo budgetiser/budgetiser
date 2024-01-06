@@ -6,7 +6,7 @@ abstract class Group {
 }
 
 class Income extends Group {
-  const Income._(int idx) : super._(idx);
+  const Income._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -22,7 +22,7 @@ class Income extends Group {
 }
 
 class Transportation extends Group {
-  const Transportation._(int idx) : super._(idx);
+  const Transportation._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -36,7 +36,7 @@ class Transportation extends Group {
 }
 
 class PersonalDevelopment extends Group {
-  const PersonalDevelopment._(idx) : super._(idx);
+  const PersonalDevelopment._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -50,7 +50,7 @@ class PersonalDevelopment extends Group {
 }
 
 class Medical extends Group {
-  const Medical._(idx) : super._(idx);
+  const Medical._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -63,7 +63,7 @@ class Medical extends Group {
 }
 
 class Entertainment extends Group {
-  const Entertainment._(idx) : super._(idx);
+  const Entertainment._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -77,7 +77,7 @@ class Entertainment extends Group {
 }
 
 class Housing extends Group {
-  const Housing._(idx) : super._(idx);
+  const Housing._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -90,7 +90,7 @@ class Housing extends Group {
 }
 
 class Food extends Group {
-  const Food._(idx) : super._(idx);
+  const Food._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -102,7 +102,7 @@ class Food extends Group {
 }
 
 class Children extends Group {
-  const Children._(idx) : super._(idx);
+  const Children._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -113,7 +113,7 @@ class Children extends Group {
 }
 
 class Insurance extends Group {
-  const Insurance._(idx) : super._(idx);
+  const Insurance._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -126,7 +126,7 @@ class Insurance extends Group {
 }
 
 class Gifts extends Group {
-  const Gifts._(idx) : super._(idx);
+  const Gifts._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -138,7 +138,7 @@ class Gifts extends Group {
 }
 
 class EssentialBills extends Group {
-  const EssentialBills._(idx) : super._(idx);
+  const EssentialBills._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -152,7 +152,7 @@ class EssentialBills extends Group {
 }
 
 class PersonalCare extends Group {
-  const PersonalCare._(idx) : super._(idx);
+  const PersonalCare._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -166,7 +166,7 @@ class PersonalCare extends Group {
 }
 
 class Pets extends Group {
-  const Pets._(idx) : super._(idx);
+  const Pets._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;
@@ -178,7 +178,7 @@ class Pets extends Group {
 }
 
 class Debt extends Group {
-  const Debt._(idx) : super._(idx);
+  const Debt._(super.idx) : super._();
   @override
   int toInt() {
     return _idx;

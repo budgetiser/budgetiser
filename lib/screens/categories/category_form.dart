@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 
 class CategoryForm extends StatefulWidget {
   const CategoryForm({
-    Key? key,
+    super.key,
     this.categoryData,
-  }) : super(key: key);
+  });
   final TransactionCategory? categoryData;
 
   @override

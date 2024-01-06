@@ -12,8 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AccountScreen extends StatefulWidget {
   static String routeID = 'account';
   const AccountScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();

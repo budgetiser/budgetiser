@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class AccountItemTitle extends StatelessWidget {
   const AccountItemTitle({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.color,
-  }) : super(key: key);
+  });
 
   final String title;
   final IconData icon;

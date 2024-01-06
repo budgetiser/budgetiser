@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class RecurringForm extends StatefulWidget {
   const RecurringForm({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<RecurringForm> createState() => _RecurringFormState();

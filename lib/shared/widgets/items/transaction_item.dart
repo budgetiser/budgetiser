@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 /// Displays a transaction as widget
 class TransactionItem extends StatelessWidget {
   const TransactionItem({
-    Key? key,
+    super.key,
     required this.transactionData,
-  }) : super(key: key);
+  });
 
   final SingleTransaction transactionData;
 

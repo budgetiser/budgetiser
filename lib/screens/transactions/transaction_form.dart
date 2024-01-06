@@ -27,11 +27,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// * optional [SingleTransaction] - set initial selected account
 class TransactionForm extends StatefulWidget {
   const TransactionForm({
-    Key? key,
+    super.key,
     this.initialSingleTransactionData,
     this.initialBalance,
     this.initialSelectedAccount,
-  }) : super(key: key);
+  });
   final SingleTransaction? initialSingleTransactionData;
   final String? initialBalance;
   final Account? initialSelectedAccount;

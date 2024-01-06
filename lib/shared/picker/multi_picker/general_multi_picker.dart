@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class GeneralMultiPicker<T extends Selectable> extends StatefulWidget {
   const GeneralMultiPicker({
-    Key? key,
+    super.key,
     required this.heading,
     required this.onPickedCallback,
     required this.possibleValues,
     this.initialValues,
-  }) : super(key: key);
+  });
   final String heading;
   final Function(List<T> selected) onPickedCallback;
   final List<T> possibleValues;

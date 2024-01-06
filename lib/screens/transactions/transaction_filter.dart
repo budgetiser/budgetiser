@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 @Deprecated('')
 class TransactionFilter extends StatefulWidget {
   const TransactionFilter({
-    Key? key,
+    super.key,
     required this.onPickedCallback,
     this.initialCategories,
     this.initialAccounts,
-  }) : super(key: key);
+  });
 
   @override
   State<TransactionFilter> createState() => _TransactionFilterState();

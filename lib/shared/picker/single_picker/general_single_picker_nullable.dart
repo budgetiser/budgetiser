@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class GeneralSinglePickerNullable<T extends Selectable> extends StatefulWidget {
   const GeneralSinglePickerNullable({
-    Key? key,
+    super.key,
     required this.onPickedCallback,
     required this.possibleValues,
     this.blacklistedValues,
-  }) : super(key: key);
+  });
 
   final Function(T? selected) onPickedCallback;
   final List<T> possibleValues;

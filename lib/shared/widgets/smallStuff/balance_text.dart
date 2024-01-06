@@ -6,8 +6,8 @@ class BalanceText extends StatefulWidget {
     this.balance, {
     this.hasPrefix = true,
     this.isColored = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final double balance;
   final bool hasPrefix;

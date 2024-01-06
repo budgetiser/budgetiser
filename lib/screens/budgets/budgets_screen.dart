@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 class BudgetScreen extends StatelessWidget {
   static String routeID = 'budgets';
   const BudgetScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
