@@ -1,6 +1,5 @@
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MonthPicker extends StatefulWidget {
   const MonthPicker({
@@ -44,7 +43,7 @@ class _MonthPickerState extends State<MonthPicker> {
                 widget.onDateChangedCallback(selectedDate);
               });
             },
-            child: Text(DateFormat('yyyy, MMMM').format(selectedDate)),
+            child: Text(dateAsYYYYMM(selectedDate)),
           )),
         ),
         Center(
