@@ -2,7 +2,7 @@
 name: Feature Request
 about: Create a feature request to improve Budgetiser
 title: "[Feature Request] "
-labels: 
+labels: "triage"
 assignees: ''
 ---
 
