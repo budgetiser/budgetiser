@@ -319,11 +319,6 @@ Future<void> upgradeToV3(Database db) async {
     ''');
 
     // categoryBridge
-    await txn.execute(// TODO: remove after finished debugging DBv3
-        ''' 
-      DROP TABLE categoryBridge;
-    ''');
-
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS categoryBridge(
         ancestor_id INTEGER NOT NULL,
