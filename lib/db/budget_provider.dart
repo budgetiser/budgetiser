@@ -133,7 +133,7 @@ class BudgetModel extends ChangeNotifier {
 
     final List<Map<String, dynamic>> valueMap = await db.rawQuery(
       '''
-        SELECT SUM(value) as value 
+        SELECT -SUM(value) as value 
         FROM singleTransaction 
         WHERE category_id IN (
           SELECT category_id FROM categoryToBudget
