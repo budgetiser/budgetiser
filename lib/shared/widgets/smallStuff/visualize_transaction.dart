@@ -49,9 +49,9 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
                   clickableAccountIcon(widget.account2!),
                 ]
               : [
-                  clickableAccountIcon(widget.account1!),
-                  ArrowIcon(flipped: !widget.wasNegative),
                   widget.category!.getSelectableIconWidget(size: 40),
+                  ArrowIcon(flipped: widget.wasNegative),
+                  clickableAccountIcon(widget.account1!),
                 ],
         ),
         if (widget.value != null &&

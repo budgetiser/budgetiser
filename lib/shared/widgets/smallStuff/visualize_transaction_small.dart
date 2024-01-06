@@ -17,7 +17,7 @@ class TransactionVisualization extends StatelessWidget {
       return Row(
         children: [
           transaction.category.getSelectableIconWidget(),
-          const ArrowIcon(size: 32),
+          ArrowIcon(size: 32, flipped: transaction.value < 0),
           transaction.account.getSelectableIconWidget(),
         ],
       );
