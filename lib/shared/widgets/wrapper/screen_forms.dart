@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ScrollViewWithDeadSpace extends StatefulWidget {
-  const ScrollViewWithDeadSpace({
+class ScrollViewWithDeadSpace extends StatelessWidget {
+  ScrollViewWithDeadSpace({
     super.key,
     required this.deadSpaceContent,
-    this.deadSpaceSize = 200,
     required this.child,
+    this.deadSpaceSize = 200,
   });
   final Widget deadSpaceContent;
   final double deadSpaceSize;
   final Widget child;
 
-  @override
-  State<ScrollViewWithDeadSpace> createState() =>
-      _ScrollViewWithDeadSpaceState();
-}
-
-class _ScrollViewWithDeadSpaceState extends State<ScrollViewWithDeadSpace> {
-  ScrollController listScrollController = ScrollController();
+  final ScrollController listScrollController = ScrollController();
 
   @override
   SingleChildScrollView build(BuildContext context) {
@@ -29,11 +23,11 @@ class _ScrollViewWithDeadSpaceState extends State<ScrollViewWithDeadSpace> {
           children: [
             // dead space for visualization
             SizedBox(
-              height: widget.deadSpaceSize,
-              child: widget.deadSpaceContent,
+              height: deadSpaceSize,
+              child: deadSpaceContent,
             ),
             // content of the screen
-            widget.child
+            child
           ],
         ),
       ),
