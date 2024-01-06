@@ -74,7 +74,6 @@ class BudgetItem extends StatelessWidget {
     //     ? 0.95
     //     : (percentage < 0.05 ? -0.95 : (-1 + (percentage * 2)) - 0.05);
     return Container(
-      // padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: InkWell(
         child: Column(

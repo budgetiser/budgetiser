@@ -274,10 +274,6 @@ Future<void> upgradeToV3(Database db) async {
         color INTEGER NOT NULL,
         max_value REAL NOT NULL,
         interval_unit TEXT NOT NULL,
-        interval_index INTEGER NOT NULL,
-        interval_repetitions INTEGER,
-        start_date INTEGER NOT NULL,
-        end_date INTEGER,
         description TEXT,
         PRIMARY KEY(id),
         CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
@@ -301,8 +297,8 @@ Future<void> upgradeToV3(Database db) async {
           ? null
           : DateTime.parse(item['end_date']).millisecondsSinceEpoch;
       await txn.execute('''
-        INSERT INTO NEW_budget (id, name, icon, color, max_value, interval_unit, interval_index, interval_repetitions, start_date, end_date, description) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO NEW_budget (id, name, icon, color, max_value, interval_unit, description) 
+        VALUES (?, ?, ?, ?, ?, ?, ?);
       ''', [
         item['id'],
         item['name'],
@@ -310,10 +306,6 @@ Future<void> upgradeToV3(Database db) async {
         item['color'],
         item['limitXX'],
         item['interval_unit'],
-        0,
-        item['interval_repititions'],
-        item['start_date'],
-        item['end_date'],
         item['description'] == '' ? null : item['description']
       ]);
     }
