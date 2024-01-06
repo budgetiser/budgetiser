@@ -125,13 +125,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           allAccounts: fullAccountList,
           accountsFilter: _currentFilterAccounts,
           categoriesFilter: _currentFilterCategories,
-          initiallyExpanded: monthYearSnapshotData.keys
+          initiallyExpanded: monthYearSnapshotData
+              .keys // TODO: broken whenn only one transaction
               .toList()
               .sublist(
                   0,
                   monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
                       ? 1
-                      : 2)
+                      : 1)
               .contains(keys[i]),
         );
       },
