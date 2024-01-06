@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsScreen extends StatefulWidget {
   static String routeID = 'settings';
   const SettingsScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
