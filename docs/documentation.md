@@ -16,16 +16,19 @@ other way: configure in pubspec.yaml and then run "flutter pub run flutter_launc
 
 ![Alt text](db.drawio.svg)
 
-#### New Model
+#### Current Model
 
 ![Alt text](dbv2.drawio.svg)
 
-#### Implementation
+- Dates are stored as integer (milliseconds since UNIX)
+- archived default is 0
+  - when an account/category is archived:
+    - not visible in dropdown anymore (transaction form)
+    - listed separately in account screen
+    - still listed and used in stats/budgets
+      - multi selector with greyed out but still visible & usable
 
 Budget
-- IntervalRepititions = 1 -> no repitition
-- interval_repititions and end_date remain empty/null for endless repititions
 
-Dates are stored as integer (milliseconds since UNIX)
-
-- archived default is 0
+- interval unit : daily, weekly, monthly, quarterly, yearly, lifetime
+- shows only current interval
