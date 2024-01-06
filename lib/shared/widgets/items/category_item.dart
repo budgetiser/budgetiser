@@ -7,13 +7,13 @@ class CategoryItem extends StatelessWidget {
 
   const CategoryItem({
     required this.categoryData,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (categoryData.isHidden) {
-      return Container(); // isHidden not yet used
+    if (categoryData.archived) {
+      return Container(); // TODO: archived not yet implemented
     }
     return SizedBox(
       width: double.infinity,

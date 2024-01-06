@@ -1,19 +1,20 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
-import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/picker/icon_picker.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AccountForm extends StatefulWidget {
   const AccountForm({
-    Key? key,
+    super.key,
     this.initialAccount,
-  }) : super(key: key);
+  });
   final Account? initialAccount;
 
   @override
@@ -33,7 +34,7 @@ class _AccountFormState extends State<AccountForm> {
     if (widget.initialAccount != null) {
       nameController.text = widget.initialAccount!.name;
       balanceController.text = widget.initialAccount!.balance.toString();
-      descriptionController.text = widget.initialAccount!.description;
+      descriptionController.text = widget.initialAccount!.description ?? '';
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
     }
@@ -144,7 +145,10 @@ class _AccountFormState extends State<AccountForm> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => TransactionsScreen(
-                              initialAccountFilter: widget.initialAccount,
+                              initialAccountsFilter:
+                                  widget.initialAccount != null
+                                      ? [widget.initialAccount!]
+                                      : [],
                             ),
                           ),
                         );
@@ -172,7 +176,8 @@ class _AccountFormState extends State<AccountForm> {
                     description:
                         "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
                     onSubmitCallback: () {
-                      DatabaseHelper.instance.deleteAccount(
+                      Provider.of<AccountModel>(context, listen: false)
+                          .deleteAccount(
                         widget.initialAccount!.id,
                       );
                       Navigator.of(context).pop();
@@ -207,9 +212,11 @@ class _AccountFormState extends State<AccountForm> {
                   id: 0);
               if (widget.initialAccount != null) {
                 a.id = widget.initialAccount!.id;
-                DatabaseHelper.instance.updateAccount(a);
+                Provider.of<AccountModel>(context, listen: false)
+                    .updateAccount(a);
               } else {
-                DatabaseHelper.instance.createAccount(a);
+                Provider.of<AccountModel>(context, listen: false)
+                    .createAccount(a);
               }
               Navigator.of(context).pop();
             }

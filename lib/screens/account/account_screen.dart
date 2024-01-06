@@ -1,38 +1,52 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/account_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/widgets/itemLists/item_list_container.dart';
 import 'package:budgetiser/shared/widgets/items/accountItem/account_item.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/sort_by.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
   static String routeID = 'account';
   const AccountScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  String currentSort = 'name';
+  late SortedByEnum currentSort = SortedByEnum.numberDescending;
 
   @override
   void initState() {
-    DatabaseHelper.instance.pushGetAllAccountsStream();
+    initAsync();
     super.initState();
+  }
+
+  void initAsync() async {
+    final preferences = await SharedPreferences.getInstance();
+    setState(() {
+      if (preferences.getString('key-account-screen-sorted-by') != null) {
+        currentSort = stringToEnumSortedByEnum(
+            preferences.getString('key-account-screen-sorted-by')!);
+      }
+    });
   }
 
   int sortFunction(Account a, Account b) {
     switch (currentSort) {
-      case 'nameReverse':
+      case SortedByEnum.nameDescending:
         return b.name.compareTo(a.name);
-      case 'name':
+      case SortedByEnum.nameAscending:
         return a.name.compareTo(b.name);
-      case 'balance':
+      case SortedByEnum.numberDescending:
         return b.balance.compareTo(a.balance);
-      case 'balanceReverse':
+      case SortedByEnum.numberAscending:
         return a.balance.compareTo(b.balance);
       default:
         // by name
@@ -43,93 +57,9 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sort),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SimpleDialog(
-                    title: const Text('Sort by'),
-                    alignment: Alignment.topRight,
-                    children: <Widget>[
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            if (currentSort == 'name') {
-                              currentSort = 'nameReverse';
-                            } else {
-                              currentSort = 'name';
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            const Text('Name'),
-                            (currentSort == 'name')
-                                ? const Icon(Icons.keyboard_arrow_up)
-                                : const Icon(Icons.keyboard_arrow_down),
-                          ],
-                        ),
-                      ),
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            if (currentSort == 'balance') {
-                              currentSort = 'balanceReverse';
-                            } else {
-                              currentSort = 'balance';
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            const Text('Balance'),
-                            (currentSort == 'balance')
-                                ? const Icon(Icons.keyboard_arrow_up)
-                                : const Icon(Icons.keyboard_arrow_down),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-        ],
-        title: const Text(
-          'Accounts',
-        ),
-      ),
+      appBar: appBar(context),
       drawer: const CreateDrawer(),
-      body: StreamBuilder<List<Account>>(
-        stream: DatabaseHelper.instance.allAccountsStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Text('Oops!');
-          }
-          snapshot.data!.sort(sortFunction);
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            padding: const EdgeInsets.only(bottom: 80),
-            itemBuilder: (BuildContext context, int index) {
-              return AccountItem(
-                accountData: snapshot.data![index],
-              );
-            },
-          );
-        },
-      ),
+      body: screenContent(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -142,6 +72,59 @@ class _AccountScreenState extends State<AccountScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      actions: [
+        SortByIconWidget(
+          initialSort: currentSort,
+          onChangedCallback: (value) async {
+            setState(() {
+              currentSort = value;
+            });
+            final preferences = await SharedPreferences.getInstance();
+            preferences.setString(
+                'key-account-screen-sorted-by', currentSort.toString());
+          },
+        )
+      ],
+      title: const Text(
+        'Accounts',
+      ),
+    );
+  }
+
+  Widget screenContent() {
+    return Consumer<AccountModel>(
+      builder: (context, value, child) {
+        return FutureBuilder<List<Account>>(
+          future: AccountModel().getAllAccounts(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasError) {
+              return const Text('Oops!');
+            }
+            snapshot.data!.sort(sortFunction);
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              padding: const EdgeInsets.only(bottom: 80),
+              itemBuilder: (BuildContext context, int index) {
+                return ItemListContainer(
+                  child: AccountItem(
+                    accountData: snapshot.data![index],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

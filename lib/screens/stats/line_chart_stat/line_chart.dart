@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 class LineChartAccounts extends StatefulWidget {
   const LineChartAccounts({
-    Key? key,
+    super.key,
     required this.accounts,
     required this.startDate,
     required this.endDate,
-  }) : super(key: key);
+  });
   final List<Account> accounts;
   final DateTime startDate;
   final DateTime endDate;

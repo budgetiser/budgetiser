@@ -4,8 +4,6 @@ import 'dart:math';
 
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
-import 'package:budgetiser/shared/dataClasses/group.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/tempData/categories.dart' as cats;
@@ -53,7 +51,8 @@ List<Account> getExampleAccounts() {
     Icons.account_balance,
     Icons.show_chart,
     Icons.paypal,
-    Icons.perm_identity
+    Icons.perm_identity,
+    Icons.align_horizontal_left_outlined
   ];
   List<String> names = [
     'Wallet',
@@ -61,7 +60,8 @@ List<Account> getExampleAccounts() {
     'Savings',
     'Investment',
     'PayPal',
-    'Students ID'
+    'Students ID',
+    'The Incredibly Elongated and Remarkably Extended Account Name of Unparalleled Length and Magnitude'
   ];
 
   for (int i = 0; i < icons.length; i++) {
@@ -99,7 +99,7 @@ List<TransactionCategory> getCategoryList() {
         icon: icon,
         color: _availableColors[Random().nextInt(_availableColors.length)],
         description: '',
-        isHidden: false,
+        archived: false,
       ),
     );
     id++;
@@ -147,7 +147,9 @@ List<TransactionCategory> getCategoryList() {
   addCategory('Snacks', Icons.fastfood);
   // 33-34
   addCategory('Daycare', Icons.child_care);
-  addCategory('Extracurricular Activities', Icons.sports_soccer);
+  addCategory(
+      'Really long Extracurricular Activities That Enrich and Shape Personal Growth',
+      Icons.sports_soccer);
   // 35-38
   addCategory('Life Insurances', Icons.local_hospital);
   addCategory('Home Insurances', Icons.home);
@@ -182,80 +184,6 @@ List<TransactionCategory> getCategoryList() {
 }
 
 List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
-
-/// ************************
-///
-///     GROUP SECTION
-///
-/// ************************
-
-List<Group> getGroupList() {
-  List<Group> groups = [];
-  List<IconData> icons = [
-    Icons.add,
-    Icons.train,
-    Icons.book,
-    Icons.medical_services_outlined,
-    Icons.movie_creation_outlined,
-    Icons.house,
-    Icons.no_food,
-    Icons.child_care,
-    Icons.library_books,
-    Icons.card_giftcard,
-    Icons.electric_bolt,
-    Icons.person,
-    Icons.pets,
-    Icons.keyboard_double_arrow_down_sharp
-  ];
-  List<String> names = [
-    'Income',
-    'Transportation',
-    'Personal Development',
-    'Medical and Healthcare',
-    'Entertainment',
-    'Housing',
-    'Food',
-    'Children',
-    'Insurances',
-    'Gifts',
-    'Essential Bills',
-    'Personal Care',
-    'Pets',
-    'Debt'
-  ];
-  List<List<TransactionCategory>> categories = [
-    TMP_DATA_categoryList.sublist(0, 6 + 1),
-    TMP_DATA_categoryList.sublist(7, 11 + 1),
-    TMP_DATA_categoryList.sublist(12, 16 + 1),
-    TMP_DATA_categoryList.sublist(17, 20 + 1),
-    TMP_DATA_categoryList.sublist(21, 25 + 1),
-    TMP_DATA_categoryList.sublist(26, 29 + 1),
-    TMP_DATA_categoryList.sublist(30, 32 + 1),
-    TMP_DATA_categoryList.sublist(33, 34 + 1),
-    TMP_DATA_categoryList.sublist(35, 38 + 1),
-    TMP_DATA_categoryList.sublist(39, 41 + 1),
-    TMP_DATA_categoryList.sublist(42, 46 + 1),
-    TMP_DATA_categoryList.sublist(47, 51 + 1),
-    TMP_DATA_categoryList.sublist(52, 54 + 1),
-    TMP_DATA_categoryList.sublist(55, 57 + 1),
-  ];
-
-  for (int i = 0; i < icons.length; i++) {
-    groups.add(
-      Group(
-        id: 1,
-        name: names[i],
-        icon: icons[i],
-        color: _availableColors[Random().nextInt(_availableColors.length)],
-        description: '',
-        transactionCategories: categories[i],
-      ),
-    );
-  }
-  return groups;
-}
-
-List<Group> TMP_DATA_groupList = getGroupList();
 
 /// ************************
 ///
@@ -354,12 +282,14 @@ List<SingleTransaction> getTransactionList() {
     amount: 3,
   );
   addTransaction(
-    title: 'Singing at Ralphs Wedding',
-    description: '',
+    title:
+        'Singing at Ralphs Wedding - A Melodic Celebration of Union, Joy, and Everlasting Commitment',
+    description:
+        'Embark on a soulful musical journey as we bring to life the enchanting melodies at Ralphs Wedding. Join us in a harmonious celebration of love, unity, and everlasting commitment. rom heartfelt ballads to joyous tunes, our carefully curated musical repertoire promises to serenade the couple and guests alike, creating unforgettable moments filled with emotion and melody. Allow the power of song to amplify the beauty of this special day, weaving a symphony of love that resonates throughout Ralphs Wedding celebration',
     accounts: [Accs.wallet],
     categories: [cats.Income.sideGigs],
     values: [50],
-    daysInBetween: [74],
+    daysInBetween: [10],
     amount: 1,
   );
   addTransaction(
@@ -419,6 +349,16 @@ List<SingleTransaction> getTransactionList() {
     amount: 40,
   );
 
+  addTransaction(
+    title: 'snacks',
+    description: '',
+    accounts: [Accs.creditCard, Accs.wallet],
+    categories: [cats.Food.groceries],
+    values: [-2],
+    daysInBetween: [1, 4, 2],
+    amount: 100,
+  );
+
   /// Cats.Entertainment
   addTransaction(
     title: 'Music streaming service',
@@ -429,6 +369,7 @@ List<SingleTransaction> getTransactionList() {
     daysInBetween: [30],
     amount: 7,
   );
+
   addTransaction(
     title: 'Pc components',
     description: '',
@@ -437,6 +378,16 @@ List<SingleTransaction> getTransactionList() {
     values: [-199.99, -589.45, -35.99, -875, 15],
     daysInBetween: [50, 4, 3, 7, 2, 1],
     amount: 6,
+  );
+
+  addTransaction(
+    title: 'gambling',
+    description: '',
+    accounts: [Accs.creditCard, Accs.savings],
+    categories: [cats.Food.groceries],
+    values: [-200, 150, 69],
+    daysInBetween: [1, 5, 8, 4],
+    amount: 10,
   );
 
   return list;
@@ -457,19 +408,8 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.shopping_bag_outlined,
     color: Colors.red,
     description: '',
-    balance: 0.0,
-    intervalRepetitions: 30,
-    endDate: DateTime.now().add(
-      const Duration(days: 30 * 12),
-    ),
-    startDate: DateTime.now().subtract(
-      const Duration(days: 70),
-    ),
-    intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 100,
+    maxValue: 100,
     transactionCategories: [
       TMP_DATA_categoryList[8],
       TMP_DATA_categoryList[14],
@@ -482,19 +422,8 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.emoji_transportation,
     color: Colors.blue,
     description: '',
-    balance: 0.0,
-    intervalRepetitions: 3,
-    endDate: DateTime.now().add(
-      const Duration(days: 70),
-    ),
-    startDate: DateTime.now().add(
-      const Duration(days: 8),
-    ),
-    intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 250,
+    maxValue: 250,
     transactionCategories: [
       TMP_DATA_categoryList[17],
       TMP_DATA_categoryList[7],
@@ -507,19 +436,8 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.home,
     color: Colors.green,
     description: '',
-    balance: 0.0,
-    intervalRepetitions: 5,
-    endDate: DateTime.now().add(
-      const Duration(days: 70),
-    ),
-    startDate: DateTime.now().subtract(
-      const Duration(days: 5),
-    ),
-    intervalAmount: 3,
     intervalUnit: IntervalUnit.day,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 500,
+    maxValue: 500,
     transactionCategories: [],
   ),
   Budget(
@@ -528,12 +446,8 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.more,
     color: Colors.orange,
     description: '',
-    balance: 0,
-    startDate: DateTime.now().subtract(
-      const Duration(days: 70),
-    ),
-    isRecurring: false,
-    limit: 500,
+    maxValue: 500,
+    intervalUnit: IntervalUnit.month,
     transactionCategories: [
       TMP_DATA_categoryList[3],
       TMP_DATA_categoryList[10],
@@ -546,27 +460,8 @@ List<Budget> TMP_DATA_budgetList = [
     icon: Icons.more,
     color: Colors.orange,
     description: '',
-    balance: 0,
-    endDate: DateTime.now().add(
-      const Duration(days: 70),
-    ),
-    startDate: DateTime.now().subtract(
-      const Duration(days: 45),
-    ),
-    intervalRepetitions: 3,
-    intervalAmount: 1,
     intervalUnit: IntervalUnit.month,
-    intervalType: IntervalType.fixedInterval,
-    isRecurring: true,
-    limit: 50,
-    transactionCategories: [
-      TMP_DATA_categoryList[0],
-      TMP_DATA_categoryList[2],
-      TMP_DATA_categoryList[5],
-      TMP_DATA_categoryList[6],
-      TMP_DATA_categoryList[7],
-      TMP_DATA_categoryList[9],
-      TMP_DATA_categoryList[12],
-    ],
+    maxValue: 50,
+    transactionCategories: TMP_DATA_categoryList,
   ),
 ];

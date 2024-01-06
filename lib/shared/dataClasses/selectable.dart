@@ -14,4 +14,23 @@ abstract class Selectable {
   Icon getSelectableIconWidget() {
     return Icon(icon, color: color);
   }
+
+  Widget getSelectableIconWithText() {
+    return Row(
+      children: [
+        getSelectableIconWidget(),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            name,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              color: color,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

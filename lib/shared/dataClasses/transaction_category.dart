@@ -2,49 +2,60 @@ import 'package:budgetiser/shared/dataClasses/selectable.dart';
 
 class TransactionCategory extends Selectable {
   int id;
-  String description;
-  bool isHidden;
+  String? description;
+  bool archived;
+  // TODO: discuss how to implement bridge
+  int? parentID;
+  int level; // starts at 0 for elements without parent
 
   TransactionCategory({
     required this.id,
     required super.name,
     required super.icon,
     required super.color,
-    required this.description,
-    required this.isHidden,
+    this.description = '',
+    this.archived = false,
+    this.parentID,
+    this.level = 0,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      other is TransactionCategory &&
+      other.runtimeType == runtimeType &&
+      other.id == id &&
+      other.name == name &&
+      other.icon == icon &&
+      other.color == color &&
+      other.description == description &&
+      other.archived == archived &&
+      other.parentID == parentID &&
+      other.level == level;
+
+  @override
+  int get hashCode => Object.hash(
+        id,
+        name,
+        icon,
+        color,
+        description,
+        archived,
+        parentID,
+        level,
+      );
 
   Map<String, dynamic> toMap() => {
         'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'description': description.trim(),
-        'is_hidden': isHidden,
+        'description': description?.trim(),
+        'archived': archived,
       };
 
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
+    m['parentID'] = parentID;
     return m;
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is TransactionCategory &&
-        id == other.id &&
-        name == other.name &&
-        icon == other.icon &&
-        color == other.color &&
-        description == other.description &&
-        isHidden == other.isHidden;
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, icon, color, description, isHidden);
 }

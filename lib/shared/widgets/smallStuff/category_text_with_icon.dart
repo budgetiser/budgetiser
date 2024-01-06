@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class CategoryTextWithIcon extends StatelessWidget {
   const CategoryTextWithIcon(
     this.category, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final TransactionCategory category;
 

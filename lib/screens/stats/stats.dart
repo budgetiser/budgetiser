@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class Stats extends StatefulWidget {
   static String routeID = 'stats';
-  const Stats({Key? key}) : super(key: key);
+  const Stats({super.key});
 
   @override
   State<Stats> createState() => _StatsState();

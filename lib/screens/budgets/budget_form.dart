@@ -1,21 +1,20 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/budget_provider.dart';
 import 'package:budgetiser/shared/dataClasses/budget.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
-import 'package:budgetiser/shared/picker/multi_picker/category_picker.dart';
-import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/picker/icon_picker.dart';
+import 'package:budgetiser/shared/picker/multi_picker/category_multi_picker.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
-import 'package:budgetiser/shared/widgets/recurring_form.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BudgetForm extends StatefulWidget {
   const BudgetForm({
-    Key? key,
+    super.key,
     this.budgetData,
-  }) : super(key: key);
+  });
   final Budget? budgetData;
 
   @override
@@ -24,43 +23,33 @@ class BudgetForm extends StatefulWidget {
 
 class _BudgetFormState extends State<BudgetForm> {
   var nameController = TextEditingController();
-  var balanceController = TextEditingController(text: '0.00');
   var limitController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  RecurringData recurringData = RecurringData(
-    isRecurring: false,
-    startDate: DateTime.now(),
-  );
+
   List<TransactionCategory> budgetCategories = [];
   IconData? _icon;
   Color _color = randomColor();
-
-  // scrollController for the recurring form to scroll to the bottom
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     if (widget.budgetData != null) {
       nameController.text = widget.budgetData!.name;
-      balanceController.text = widget.budgetData!.balance.toString();
-      limitController.text = widget.budgetData!.limit.toString();
+      limitController.text = widget.budgetData!.maxValue.toString();
+      descriptionController.text = widget.budgetData!.description ?? '';
       _color = widget.budgetData!.color;
       _icon = widget.budgetData!.icon;
       budgetCategories = widget.budgetData!.transactionCategories;
-      if (widget.budgetData!.isRecurring) {
-        recurringData = RecurringData(
-          startDate: widget.budgetData!.startDate,
-          endDate: widget.budgetData!.endDate,
-          intervalType: widget.budgetData!.intervalType,
-          intervalUnit: widget.budgetData!.intervalUnit,
-          intervalAmount: widget.budgetData!.intervalAmount,
-          repetitionAmount: widget.budgetData!.intervalRepetitions,
-          isRecurring: true,
-        );
-      }
     }
     super.initState();
+  }
+
+  void setCategories(List<TransactionCategory> categories) {
+    if (mounted) {
+      setState(() {
+        budgetCategories = categories;
+      });
+    }
   }
 
   @override
@@ -117,21 +106,6 @@ class _BudgetFormState extends State<BudgetForm> {
                 children: [
                   Flexible(
                     child: TextFormField(
-                      controller: balanceController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: true,
-                      ),
-                      decoration: const InputDecoration(
-                        labelText: 'Balance',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Flexible(
-                    child: TextFormField(
                       controller: limitController,
                       validator: (data) {
                         if (data == null || data == '') {
@@ -159,23 +133,19 @@ class _BudgetFormState extends State<BudgetForm> {
                 ),
               ),
               const Divider(height: 32),
-              CategoryPicker(
-                initialCategories: budgetCategories,
-                onCategoryPickedCallback: (data) {
-                  setState(() {
-                    budgetCategories = data;
-                  });
+              InkWell(
+                child: const Text('Select Categories'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CategoryMultiPicker(
+                        onCategoriesPickedCallback: setCategories,
+                        initialValues: budgetCategories,
+                      );
+                    },
+                  );
                 },
-              ),
-              const Divider(height: 32),
-              RecurringForm(
-                scrollController: _scrollController,
-                onRecurringDataChangedCallback: (data) {
-                  setState(() {
-                    recurringData = data;
-                  });
-                },
-                initialRecurringData: recurringData,
               ),
             ],
           ),
@@ -198,7 +168,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       description:
                           "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                       onSubmitCallback: () {
-                        DatabaseHelper.instance
+                        Provider.of<BudgetModel>(context, listen: false)
                             .deleteBudget(widget.budgetData!.id);
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
@@ -226,24 +196,21 @@ class _BudgetFormState extends State<BudgetForm> {
                   name: nameController.text,
                   icon: _icon ?? Icons.blur_on,
                   color: _color,
-                  description: descriptionController.text,
+                  description: descriptionController.text == ''
+                      ? null
+                      : descriptionController.text,
                   id: 0,
-                  limit: double.parse(limitController.text),
-                  balance: double.parse(balanceController.text),
                   transactionCategories: budgetCategories,
-                  isRecurring: recurringData.isRecurring,
-                  startDate: recurringData.startDate,
-                  endDate: recurringData.endDate,
-                  intervalType: recurringData.intervalType,
-                  intervalUnit: recurringData.intervalUnit,
-                  intervalAmount: recurringData.intervalAmount,
-                  intervalRepetitions: recurringData.repetitionAmount,
+                  intervalUnit: IntervalUnit.day,
+                  maxValue: double.parse(limitController.text),
                 );
                 if (widget.budgetData != null) {
                   a.id = widget.budgetData!.id;
-                  DatabaseHelper.instance.updateBudget(a);
+                  Provider.of<BudgetModel>(context, listen: false)
+                      .updateBudget(a);
                 } else {
-                  DatabaseHelper.instance.createBudget(a);
+                  Provider.of<BudgetModel>(context, listen: false)
+                      .createBudget(a);
                 }
                 Navigator.of(context).pop();
               }

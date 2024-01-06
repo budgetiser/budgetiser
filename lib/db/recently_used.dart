@@ -1,5 +1,7 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/account_provider.dart';
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,7 +73,9 @@ class RecentlyUsed<T> {
   Future _itemFromID(String id) async {
     // TODO: support more Dataclasses
     if (T == Account) {
-      return await DatabaseHelper.instance.getOneAccount(int.parse(id));
+      return await AccountModel().getOneAccount(int.parse(id));
+    } else if (T == TransactionCategory) {
+      return await CategoryModel().getCategory(int.parse(id));
     }
   }
 }

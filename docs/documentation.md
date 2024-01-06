@@ -7,3 +7,28 @@ used: https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html
 then move the folders from the zip to android/app/src/main/res
 
 other way: configure in pubspec.yaml and then run "flutter pub run flutter_launcher_icons:main"
+
+### DB
+
+[Overview of hierarchical data modelling](https://www.databasestar.com/hierarchical-data-sql/#:~:text=specific%20use%20case-,Bridge%20Table%20or%20Closure%20Table,-The%20Bridge%20Table)
+
+#### Old Model
+
+![Alt text](db.drawio.svg)
+
+#### Current Model
+
+![Alt text](dbv2.drawio.svg)
+
+- Dates are stored as integer (milliseconds since UNIX)
+- archived default is 0
+  - when an account/category is archived:
+    - not visible in dropdown anymore (transaction form)
+    - listed separately in account screen
+    - still listed and used in stats/budgets
+      - multi selector with greyed out but still visible & usable
+
+Budget
+
+- interval unit : daily, weekly, monthly, quarterly, yearly, lifetime
+- shows only current interval

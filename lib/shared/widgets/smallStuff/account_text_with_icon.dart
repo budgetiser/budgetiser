@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class AccountTextWithIcon extends StatelessWidget {
   const AccountTextWithIcon(
     this.account, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Account account;
 

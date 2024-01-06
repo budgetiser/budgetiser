@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class IconPicker extends StatefulWidget {
   const IconPicker({
-    Key? key,
+    super.key,
     this.initialIcon,
     required this.color,
     required this.onIconChangedCallback,
-  }) : super(key: key);
+  });
 
   final IconData? initialIcon;
   final Color color;

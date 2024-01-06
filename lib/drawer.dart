@@ -51,7 +51,6 @@ class CreateDrawer extends StatelessWidget {
               context, Icons.account_balance, 'Account', 'account'),
           const Divider(thickness: 2, height: 2),
           singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
-          singleDrawerItem(context, Icons.group_work, 'Groups', 'groups'),
           const Divider(thickness: 2, height: 2),
           singleDrawerItem(context, Icons.show_chart, 'Stats', 'stats'),
           singleDrawerItem(

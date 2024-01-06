@@ -1,18 +1,22 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/recently_used.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/screens/account/account_form.dart';
 import 'package:budgetiser/screens/transactions/transactions_screen.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/recurring_data.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/date_picker.dart';
-import 'package:budgetiser/shared/picker/select_account.dart';
-import 'package:budgetiser/shared/picker/select_category.dart';
+import 'package:budgetiser/shared/picker/single_picker/account_single_picker.dart';
+import 'package:budgetiser/shared/picker/single_picker/account_single_picker_nullable.dart';
+import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A screen that allows the user to add a transaction
 /// or edit an existing one
@@ -23,11 +27,11 @@ import 'package:flutter/material.dart';
 /// * optional [SingleTransaction] - set initial selected account
 class TransactionForm extends StatefulWidget {
   const TransactionForm({
-    Key? key,
+    super.key,
     this.initialSingleTransactionData,
     this.initialBalance,
     this.initialSelectedAccount,
-  }) : super(key: key);
+  });
   final SingleTransaction? initialSingleTransactionData;
   final String? initialBalance;
   final Account? initialSelectedAccount;
@@ -58,10 +62,7 @@ class _TransactionFormState extends State<TransactionForm> {
   ScrollController listScrollController = ScrollController();
   ExpressionParser valueParser = const ExpressionParser();
 
-  RecurringData recurringData = RecurringData(
-    startDate: DateTime.now(),
-    isRecurring: false,
-  );
+  bool _prefixButtonVisible = true;
 
   @override
   void initState() {
@@ -78,7 +79,7 @@ class _TransactionFormState extends State<TransactionForm> {
       hasAccount2 = widget.initialSingleTransactionData!.account2 != null;
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
-          widget.initialSingleTransactionData!.description;
+          widget.initialSingleTransactionData!.description ?? '';
 
       transactionDate = widget.initialSingleTransactionData!.date;
     }
@@ -87,7 +88,25 @@ class _TransactionFormState extends State<TransactionForm> {
     }
     updateWasValueNegative(valueController.text);
 
+    setInitialSelections();
+
     super.initState();
+  }
+
+  void setInitialSelections() async {
+    if (selectedAccount == null) {
+      final recentlyUsedAccount = RecentlyUsed<Account>();
+      selectedAccount = await recentlyUsedAccount.getLastUsed();
+    }
+    if (selectedCategory == null) {
+      final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
+      selectedCategory = await recentlyUsedCategory.getLastUsed();
+    }
+    final preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _prefixButtonVisible = preferences.getBool('key-prefix-button-active') ??
+          _prefixButtonVisible;
+    });
   }
 
   @override
@@ -106,7 +125,7 @@ class _TransactionFormState extends State<TransactionForm> {
           wasNegative: wasValueNegative,
           value: tryValueParse(valueController.text),
         ),
-        child: _transactionFormWidget(context),
+        child: _transactionFormContent(context),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -125,9 +144,11 @@ class _TransactionFormState extends State<TransactionForm> {
                       title: 'Attention',
                       description:
                           "Are you sure to delete this Transaction? This action can't be undone!",
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.deleteSingleTransactionById(
-                            widget.initialSingleTransactionData!.id);
+                      onSubmitCallback: () async {
+                        Provider.of<TransactionModel>(context, listen: false)
+                            .deleteSingleTransactionById(
+                          widget.initialSingleTransactionData!.id,
+                        );
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
@@ -151,18 +172,20 @@ class _TransactionFormState extends State<TransactionForm> {
           ),
           // Save button
           FloatingActionButton.extended(
-            onPressed: () {
+            onPressed: () async {
               _valueKey.currentState!
                   .validate(); // will otherwise not be called if global form is also invalid
               if (_formKey.currentState!.validate() &&
                   _valueKey.currentState!.validate()) {
                 if (hasInitialData) {
-                  DatabaseHelper.instance.updateSingleTransaction(
+                  Provider.of<TransactionModel>(context, listen: false)
+                      .updateSingleTransaction(
                     _currentTransaction(),
                   );
                   Navigator.of(context).pop();
                 } else {
-                  DatabaseHelper.instance.createSingleTransaction(
+                  Provider.of<TransactionModel>(context, listen: false)
+                      .createSingleTransaction(
                     _currentTransaction(),
                   );
                   Navigator.of(context).pushAndRemoveUntil(
@@ -186,11 +209,14 @@ class _TransactionFormState extends State<TransactionForm> {
     if (mounted) {
       setState(() {
         selectedAccount = a;
+        if (selectedAccount == selectedAccount2) {
+          selectedAccount2 = null;
+        }
       });
     }
   }
 
-  void setAccount2(Account a) {
+  void setAccount2(Account? a) {
     if (mounted) {
       setState(() {
         selectedAccount2 = a;
@@ -198,20 +224,15 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
-  void _onAccount2checkboxClicked() {
-    setState(() {
-      hasAccount2 = !hasAccount2;
-      if (hasAccount2) {
-        changePrefix(EnumPrefix.plus);
-      } else {
-        selectedAccount2 = null;
-      }
-    });
-    _valueKey.currentState?.validate();
+  void setCategory(TransactionCategory c) {
+    if (mounted) {
+      setState(() {
+        selectedCategory = c;
+      });
+    }
   }
 
-  Form _transactionFormWidget(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
+  Form _transactionFormContent(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
@@ -220,20 +241,21 @@ class _TransactionFormState extends State<TransactionForm> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 70,
-                child: IconButton(
-                  icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
-                  onPressed: () {
-                    changePrefix(EnumPrefix.other);
-                  },
-                  color: wasValueNegative
-                      ? const Color.fromARGB(255, 174, 74, 99)
-                      : const Color.fromARGB(239, 29, 129, 37),
-                  splashRadius: 24,
-                  iconSize: 48,
+              if (_prefixButtonVisible)
+                SizedBox(
+                  height: 70,
+                  child: IconButton(
+                    icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
+                    onPressed: () {
+                      changePrefix(EnumPrefix.other);
+                    },
+                    color: wasValueNegative
+                        ? const Color.fromARGB(255, 174, 74, 99)
+                        : const Color.fromARGB(239, 29, 129, 37),
+                    splashRadius: 24,
+                    iconSize: 48,
+                  ),
                 ),
-              ),
               Flexible(
                 child: Form(
                   key: _valueKey,
@@ -293,106 +315,72 @@ class _TransactionFormState extends State<TransactionForm> {
               setState(() {});
             },
             controller: titleController,
-            // initialValue: widget.initialName,
             decoration: InputDecoration(
               labelText: titleController.text == ''
                   ? 'Title: ${selectedCategory?.name}'
                   : 'Title',
             ),
           ),
-          // account picker
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Account',
-                    textAlign: TextAlign.left,
-                    style: themeData.inputDecorationTheme.labelStyle != null
-                        ? themeData.inputDecorationTheme.labelStyle!
-                            .copyWith(fontSize: 16)
-                        : const TextStyle(fontSize: 16),
-                  ),
-                ),
-                SelectAccount(
-                  initialAccount: selectedAccount,
-                  callback: setAccount,
-                ),
-                InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onTap: () {
-                    _onAccount2checkboxClicked();
-                  },
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: hasAccount2,
-                        onChanged: (bool? newValue) {
-                          _onAccount2checkboxClicked();
-                        },
-                      ),
-                      const Flexible(
-                        child: Text(
-                          'transfer to another account',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (hasAccount2)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text('to '),
-                      Flexible(
-                        child: SelectAccount(
-                          initialAccount: selectedAccount2,
-                          callback: setAccount2,
-                          blackListAccountId: selectedAccount?.id,
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
+          // category picker
+          const SizedBox(height: 8),
+          CustomInputFieldBorder(
+            title: 'Category',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CategorySinglePicker(
+                  onCategoryPickedCallback: setCategory,
+                );
+              },
+            ),
+            child: InkWell(
+              child: selectedCategory != null
+                  ? selectedCategory!.getSelectableIconWithText()
+                  : const Text('Select Category'),
             ),
           ),
-          // category picker
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Category',
-                    textAlign: TextAlign.left,
-                    style: themeData.inputDecorationTheme.labelStyle != null
-                        ? themeData.inputDecorationTheme.labelStyle!
-                            .copyWith(fontSize: 16)
-                        : const TextStyle(fontSize: 16),
-                  ),
-                ),
-                SelectCategory(
-                  initialCategory: selectedCategory,
-                  callback: (TransactionCategory c) {
-                    setState(() {
-                      if (mounted) {
-                        selectedCategory = c;
-                      }
-                    });
-                  },
-                ),
-              ],
+          // account picker
+          const SizedBox(height: 8),
+          CustomInputFieldBorder(
+            title: 'Account',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AccountSinglePicker(
+                  onAccountPickedCallback: setAccount,
+                );
+              },
             ),
+            child: InkWell(
+              child: selectedAccount != null
+                  ? selectedAccount!.getSelectableIconWithText()
+                  : const Text('Select Account'),
+            ),
+          ),
+          const SizedBox(height: 8),
+          CustomInputFieldBorder(
+            title: 'Account 2',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AccountSinglePickerNullable(
+                  onAccountPickedCallback: setAccount2,
+                  blacklistedValues:
+                      selectedAccount != null ? [selectedAccount!] : null,
+                );
+              },
+            ),
+            child: selectedAccount2 != null
+                ? selectedAccount2!.getSelectableIconWithText()
+                : const Text(
+                    'None',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
           ),
           // notes input
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           Theme(
             data: Theme.of(context).copyWith(
               dividerColor: Colors.transparent,
@@ -465,7 +453,7 @@ class _TransactionFormState extends State<TransactionForm> {
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
-      description: description,
+      description: description == '' ? null : description,
       date: transactionDate,
     );
 

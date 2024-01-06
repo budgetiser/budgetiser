@@ -1,8 +1,8 @@
 import 'package:budgetiser/screens/stats/text_stat/simple_text_stat.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/picker/select_account.dart';
-import 'package:budgetiser/shared/picker/select_category.dart';
+import 'package:budgetiser/shared/picker/single_picker/account_single_picker.dart';
+import 'package:budgetiser/shared/picker/single_picker/category_single_picker.dart';
 import 'package:flutter/material.dart';
 
 class SimpleTextStatScreen extends StatefulWidget {
@@ -15,17 +15,18 @@ class SimpleTextStatScreen extends StatefulWidget {
 class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
   TransactionCategory? _selectedCategory;
   Account? _selectedAccount;
-  void setA(account) {
+
+  void setAccount(Account a) {
     if (mounted) {
       setState(() {
-        _selectedAccount = account;
+        _selectedAccount = a;
       });
     }
   }
 
-  void setCategory(TransactionCategory category) {
+  void setCategory(TransactionCategory c) {
     setState(() {
-      _selectedCategory = category;
+      _selectedCategory = c;
     });
   }
 
@@ -39,17 +40,36 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
             children: [
               const Text('Account: '),
               Expanded(
-                child: SelectAccount(
-                  initialAccount: _selectedAccount,
-                  callback: setA,
+                child: InkWell(
+                  child: _selectedAccount != null
+                      ? _selectedAccount!.getSelectableIconWidget()
+                      : const Text('Select Account'),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AccountSinglePicker(
+                              onAccountPickedCallback: setAccount);
+                        });
+                  },
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          SelectCategory(
-            initialCategory: _selectedCategory,
-            callback: setCategory,
+          InkWell(
+            child: _selectedCategory != null
+                ? _selectedCategory!.getSelectableIconWidget()
+                : const Text('No data'),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CategorySinglePicker(
+                      onCategoryPickedCallback: setCategory,
+                    );
+                  });
+            },
           ),
           const Divider(),
           if (_selectedAccount != null && _selectedCategory != null)

@@ -1,17 +1,18 @@
-import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/picker/color_picker.dart';
-import 'package:budgetiser/shared/picker/select_icon.dart';
+import 'package:budgetiser/shared/picker/icon_picker.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/wrapper/screen_forms.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryForm extends StatefulWidget {
   const CategoryForm({
-    Key? key,
+    super.key,
     this.categoryData,
-  }) : super(key: key);
+  });
   final TransactionCategory? categoryData;
 
   @override
@@ -29,7 +30,7 @@ class _CategoryFormState extends State<CategoryForm> {
   void initState() {
     if (widget.categoryData != null) {
       nameController.text = widget.categoryData!.name;
-      descriptionController.text = widget.categoryData!.description;
+      descriptionController.text = widget.categoryData!.description ?? '';
       _color = widget.categoryData!.color;
       _icon = widget.categoryData!.icon;
     }
@@ -121,7 +122,7 @@ class _CategoryFormState extends State<CategoryForm> {
                         description:
                             "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
                         onSubmitCallback: () {
-                          DatabaseHelper.instance
+                          Provider.of<CategoryModel>(context, listen: false)
                               .deleteCategory(widget.categoryData!.id);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
@@ -150,14 +151,18 @@ class _CategoryFormState extends State<CategoryForm> {
                     name: nameController.text,
                     icon: _icon ?? Icons.blur_on,
                     color: _color,
-                    description: descriptionController.text,
-                    isHidden: false,
+                    description: descriptionController.text == ''
+                        ? null
+                        : descriptionController.text,
+                    archived: false,
                     id: 0);
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
-                  DatabaseHelper.instance.updateCategory(a);
+                  Provider.of<CategoryModel>(context, listen: false)
+                      .updateCategory(a);
                 } else {
-                  DatabaseHelper.instance.createCategory(a);
+                  Provider.of<CategoryModel>(context, listen: false)
+                      .createCategory(a);
                 }
                 Navigator.of(context).pop();
               }

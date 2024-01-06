@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 /// Displays a transaction as widget
 class TransactionItem extends StatelessWidget {
   const TransactionItem({
-    Key? key,
+    super.key,
     required this.transactionData,
-  }) : super(key: key);
+  });
 
   final SingleTransaction transactionData;
 
@@ -35,7 +35,14 @@ class TransactionItem extends StatelessWidget {
               //TODO: use common widget with transaction for vor visualisation of transaction (with arrows)
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(transactionData.title),
+                Flexible(
+                  child: Text(
+                    transactionData.title,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
                 if (transactionData.account2 == null)
                   Row(
                     children: [
@@ -84,7 +91,7 @@ class TransactionItem extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      transactionData.description,
+                      transactionData.description ?? '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       textWidthBasis: TextWidthBasis.parent,

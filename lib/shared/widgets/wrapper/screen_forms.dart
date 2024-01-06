@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ScrollViewWithDeadSpace extends StatefulWidget {
   const ScrollViewWithDeadSpace({
-    Key? key,
+    super.key,
     required this.deadSpaceContent,
     this.deadSpaceSize = 200,
     required this.child,
-  }) : super(key: key);
+  });
   final Widget deadSpaceContent;
   final double deadSpaceSize;
   final Widget child;

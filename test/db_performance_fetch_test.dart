@@ -1,4 +1,6 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/database.dart';
+import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/tempData/temp_data.dart';
 import 'package:flutter/foundation.dart';
@@ -28,20 +30,16 @@ void main() {
 
     final stopwatch = Stopwatch()..start();
 
-    List<SingleTransaction>? streamContent;
-    var transactions = dbh.allTransactionStream.listen((event) {
-      streamContent = event;
-    });
-    await dbh.pushGetAllTransactionsStream();
+    List<SingleTransaction> allTransactions =
+        await TransactionModel().getAllTransactions();
 
     stopwatch.stop();
-    transactions.cancel();
 
     if (kDebugMode) {
       print('got Transaction stream in ${stopwatch.elapsed}');
     }
 
-    expect(streamContent!.length, equals(TMP_DATA_transactionList.length));
+    expect(allTransactions.length, equals(TMP_DATA_transactionList.length));
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
   test('Performance: Fetch all TMP categories', () async {
@@ -54,8 +52,7 @@ void main() {
 
     final stopwatch = Stopwatch()..start();
 
-    dbh.pushGetAllCategoriesStream();
-    var stream = await dbh.allCategoryStream.first;
+    var fetchedData = await CategoryModel().getAllCategories();
 
     stopwatch.stop();
 
@@ -63,7 +60,7 @@ void main() {
       print('got Categories stream in ${stopwatch.elapsed}');
     }
 
-    expect(stream.length, equals(TMP_DATA_categoryList.length));
+    expect(fetchedData.length, equals(TMP_DATA_categoryList.length));
     expect(stopwatch.elapsed, lessThan(const Duration(milliseconds: 100)));
   });
 }

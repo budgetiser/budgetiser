@@ -13,26 +13,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  percent_indicator: ^4.2.2
   flutter_colorpicker: ^1.0.3
-  sqflite_sqlcipher: ^2.1.1
+  sqflite: ^2.3.0
   flutter_markdown: ^0.6.9+1
-  provider: ^6.0.2
-  jiffy: ^6.2.1
+  provider: ^6.0.5
   shared_preferences: ^2.0.13
   path: ^1.8.1
   path_provider: ^2.0.15
   url_launcher: ^6.1.12
-  package_info_plus: ^4.0.2
+  package_info_plus: ^5.0.1
   equations: ^5.0.1
-  intl: ^0.18.1
 
   # MIT License
-  fl_chart: ^0.63.0
+  fl_chart: ^0.66.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
-  flutter_lints: ^2.0.1
+  flutter_lints: ^3.0.1
   sqflite_common_ffi: ^2.3.0
   test: ^1.24.4
 

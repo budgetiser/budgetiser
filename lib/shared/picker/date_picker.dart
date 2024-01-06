@@ -6,8 +6,8 @@ class DatePicker extends StatefulWidget {
     required this.label,
     this.initialDate,
     required this.onDateChangedCallback,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final String label;
   final DateTime? initialDate;
   final void Function(DateTime) onDateChangedCallback;

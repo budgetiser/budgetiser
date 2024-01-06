@@ -1,5 +1,6 @@
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
+import 'package:budgetiser/shared/widgets/itemLists/item_list_container.dart';
 import 'package:budgetiser/shared/widgets/items/accountItem/account_item.dart';
 import 'package:flutter/material.dart';
 
@@ -47,8 +48,10 @@ class AccountItemsWidget extends StatelessWidget {
             itemCount: snapshot.data!.length,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return AccountItem(
-                accountData: snapshot.data![index],
+              return ItemListContainer(
+                child: AccountItem(
+                  accountData: snapshot.data![index],
+                ),
               );
             },
           ),

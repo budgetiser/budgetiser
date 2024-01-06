@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class ConfirmationDialog extends StatefulWidget {
   const ConfirmationDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.onCancelCallback,
     required this.onSubmitCallback,
-  }) : super(key: key);
+  });
   final Function onCancelCallback;
   final Function onSubmitCallback;
   final String title;
