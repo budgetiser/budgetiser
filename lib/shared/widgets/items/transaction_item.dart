@@ -43,6 +43,7 @@ class TransactionItem extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 if (transactionData.account2 == null)
                   Row(
                     children: [
