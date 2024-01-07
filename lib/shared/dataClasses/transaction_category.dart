@@ -4,8 +4,8 @@ class TransactionCategory extends Selectable {
   int id;
   String? description;
   bool archived;
-  // TODO: discuss how to implement bridge
-  int? parentID;
+  // TODO: discuss how to implement bridge #231
+  int? parentID; // used in json export
   int level; // starts at 0 for elements without parent
 
   TransactionCategory({

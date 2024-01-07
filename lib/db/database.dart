@@ -149,31 +149,21 @@ class DatabaseHelper {
   void exportAsJson() async {
     var fullJSON = {};
 
-    // allAccountsStream.listen((event) {
-    //   fullJSON['Accounts'] =
-    //       event.map((element) => element.toJsonMap()).toList();
-    // });
-    // pushGetAllAccountsStream();
-    // await allAccountsStream.isEmpty;
+    await AccountModel().getAllAccounts().then((value) {
+      fullJSON['Accounts'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
-    // allBudgetsStream.listen((event) {
-    //   fullJSON['Budgets'] =
-    //       event.map((element) => element.toJsonMap()).toList();
-    // });
-    // pushGetAllBudgetsStream();
-    // await allBudgetsStream.first;
+    await BudgetModel().getAllBudgets().then((value) {
+      fullJSON['Budgets'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
-    // CategoryModel()
-    //     .getAllCategories()
-    //     .then((value) => fullJSON['Categories'] = value.map((element) {
-    //           element.toJsonMap();
-    //         }));
-    // TODO: broken
+    await CategoryModel().getAllCategories().then((value) {
+      fullJSON['Categories'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
-    List<SingleTransaction> allTransactions =
-        await TransactionModel().getAllTransactions();
-    fullJSON['Transactions'] =
-        allTransactions.map((element) => element.toJsonMap()).toList();
+    await TransactionModel().getAllTransactions().then((value) {
+      fullJSON['Transactions'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
     saveJsonToJsonFile(jsonEncode(fullJSON));
   }

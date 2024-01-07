@@ -34,21 +34,22 @@ class SingleTransaction {
   //   date = DateTime.now();
   // }
 
-  Map<String, dynamic> toMap() => {
-        'title': title.trim(),
-        'value': value,
-        'description': description?.trim(),
-        'category_id': category.id,
-        'date': date.millisecondsSinceEpoch,
-        'account1_id': account.id,
-        'account2_id': account2?.id,
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title.trim(),
+      'value': value,
+      'description':
+          description == 'null' ? null : description?.trim(), // for json export
+      'category_id': category.id,
+      'date': date.millisecondsSinceEpoch,
+      'account1_id': account.id,
+      'account2_id': account2?.id,
+    };
+  }
 
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['account'] = account.id;
-    m['account2'] = account2?.id;
     return m;
   }
 

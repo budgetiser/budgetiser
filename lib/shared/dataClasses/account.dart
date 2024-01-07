@@ -1,4 +1,5 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 
 class Account extends Selectable {
   int id;
@@ -20,7 +21,7 @@ class Account extends Selectable {
         'name': name.trim(),
         'icon': icon.codePoint,
         'color': color.value,
-        'balance': balance,
+        'balance': roundDouble(balance), // for json export
         'description': description?.trim(),
         'archived': archived ? 1 : 0,
       };
