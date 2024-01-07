@@ -43,6 +43,7 @@ class TransactionItem extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 TransactionVisualization(transaction: transactionData),
               ],
             ),
