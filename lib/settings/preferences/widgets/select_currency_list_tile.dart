@@ -1,4 +1,4 @@
-import 'package:budgetiser/shared/services/setting_currency.dart';
+import 'package:budgetiser/settings/services/setting_currency.dart';
 import 'package:flutter/material.dart';
 
 class SelectCurrencyListTile extends StatefulWidget {
