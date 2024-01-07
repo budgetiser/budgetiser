@@ -103,15 +103,33 @@ class TransactionModel extends ChangeNotifier {
   Future<int> createSingleTransaction(
     SingleTransaction transaction, {
     bool notify = true,
+    bool keepId = false,
   }) async {
     final db = await DatabaseHelper.instance.database;
-    int transactionId = 0; //TODO: fix
+    Map<String, dynamic> map = transaction.toMap();
+    int id = transaction.id;
     await db.transaction((txn) async {
-      transactionId = await txn.insert(
-        'singleTransaction',
-        transaction.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
+      if (!keepId) {
+        id = await txn.insert(
+          'singleTransaction',
+          map,
+          conflictAlgorithm: ConflictAlgorithm.fail,
+        );
+      } else {
+        await txn.execute('''
+        INSERT INTO singleTransaction (id, title, value, description, category_id, date, account1_id, account2_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      ''', [
+          id,
+          map['title'],
+          map['value'],
+          map['description'],
+          map['category_id'],
+          map['date'],
+          map['account1_id'],
+          map['account2_id']
+        ]);
+      }
 
       if (transaction.account2 != null) {
         await txn.rawUpdate(
@@ -137,7 +155,7 @@ class TransactionModel extends ChangeNotifier {
     recentlyUsedAccount.addItem(transaction.account.id.toString());
     recentlyUsedCategory.addItem(transaction.category.id.toString());
 
-    return transactionId;
+    return id;
   }
 
   Future<void> deleteSingleTransaction(SingleTransaction transaction) async {

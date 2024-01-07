@@ -42,22 +42,36 @@ class CategoryModel extends ChangeNotifier {
     });
   }
 
-  Future<int> createCategory(TransactionCategory category) async {
+  /// adds category to database
+  ///
+  /// if [id] is not null the id will be used
+  Future<int> createCategory(
+    TransactionCategory category, {
+    bool keepId = false,
+  }) async {
     Profiler.instance.start('createCategory');
-    var db = await DatabaseHelper.instance.database;
-    Map<String, dynamic> row = {
-      'name': category.name,
-      'icon': category.icon.codePoint,
-      'color': category.color.value,
-      'description': category.description,
-      'archived': ((category.archived) ? 1 : 0),
-    };
-
-    int id = await db.insert(
-      'category',
-      row,
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
+    final db = await DatabaseHelper.instance.database;
+    Map<String, dynamic> map = category.toMap();
+    int id = category.id;
+    if (!keepId) {
+      id = await db.insert(
+        'category',
+        map,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    } else {
+      await db.execute('''
+        INSERT INTO category (id, name, icon, color, description, archived) 
+        VALUES (?, ?, ?, ?, ?, ?);
+      ''', [
+        id,
+        map['name'],
+        map['icon'],
+        map['color'],
+        map['description'],
+        map['archived'],
+      ]);
+    }
 
     await db.insert(
       'categoryBridge',

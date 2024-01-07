@@ -72,6 +72,7 @@ class RecentlyUsed<T> {
 
   Future _itemFromID(String id) async {
     // TODO: support more Dataclasses
+    // TODO: after cat deletion -> throws error
     if (T == Account) {
       return await AccountModel().getOneAccount(int.parse(id));
     } else if (T == TransactionCategory) {

@@ -1,3 +1,4 @@
+import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 
@@ -21,18 +22,16 @@ class SingleTransaction {
     required this.description,
     required this.date,
   });
-
-  // SingleTransaction.fromDbMap( // TODO after db refactor: use common map datatype for initializing a transaction
-  //   this.category,
-  //   this.account,
-  //   this.account2,
-  // ) {
-  //   id = 1;
-  //   title = '';
-  //   value = 1;
-  //   description = '';
-  //   date = DateTime.now();
-  // }
+  SingleTransaction.fromDBmap(
+    Map<String, dynamic> map, {
+    required this.category,
+    required this.account,
+    required this.account2,
+  })  : id = map['id'],
+        title = map['title'],
+        value = map['value'],
+        description = map['description'],
+        date = DateTime.fromMillisecondsSinceEpoch(map['date']);
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,5 +1,6 @@
 import 'package:budgetiser/shared/dataClasses/selectable.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
+import 'package:flutter/material.dart';
 
 class Account extends Selectable {
   int id;
@@ -16,6 +17,17 @@ class Account extends Selectable {
     this.archived = false,
     this.description,
   });
+
+  Account.fromDBmap(Map<String, dynamic> map)
+      : id = map['id'],
+        description = map['description'],
+        balance = map['balance'],
+        archived = map['archived'] == 1,
+        super(
+          name: map['name'].toString(),
+          color: Color(map['color']),
+          icon: IconData(map['icon'], fontFamily: 'MaterialIcons'),
+        );
 
   Map<String, dynamic> toMap() => {
         'name': name.trim(),
