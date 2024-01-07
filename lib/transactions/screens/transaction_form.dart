@@ -12,6 +12,7 @@ import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/date_picker.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction.dart';
 
@@ -346,7 +347,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             child: InkWell(
               child: selectedCategory != null
-                  ? selectedCategory!.getSelectableIconWithText()
+                  ? SelectableIconWithText(selectedCategory!)
                   : const Text('Select Category'),
             ),
           ),
@@ -364,7 +365,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             child: InkWell(
               child: selectedAccount != null
-                  ? selectedAccount!.getSelectableIconWithText()
+                  ? SelectableIconWithText(selectedAccount!)
                   : const Text('Select Account'),
             ),
           ),
@@ -382,7 +383,7 @@ class _TransactionFormState extends State<TransactionForm> {
               },
             ),
             child: selectedAccount2 != null
-                ? selectedAccount2!.getSelectableIconWithText()
+                ? SelectableIconWithText(selectedAccount2!)
                 : const Text(
                     'None',
                     style: TextStyle(

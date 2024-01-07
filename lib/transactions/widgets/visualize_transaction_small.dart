@@ -1,5 +1,6 @@
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/shared/widgets/arrow_icon.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 
 /// small transaction visualization with arrow and icons for category and account/s
@@ -16,19 +17,19 @@ class TransactionVisualization extends StatelessWidget {
     if (transaction.account2 == null) {
       return Row(
         children: [
-          transaction.category.getSelectableIconWidget(),
+          SelectableIcon(transaction.category),
           ArrowIcon(size: 32, flipped: transaction.value < 0),
-          transaction.account.getSelectableIconWidget(),
+          SelectableIcon(transaction.account),
         ],
       );
     } else {
       return Row(
         children: [
-          transaction.account.getSelectableIconWidget(),
+          SelectableIcon(transaction.account),
           const ArrowIcon(size: 32),
-          transaction.category.getSelectableIconWidget(),
+          SelectableIcon(transaction.category),
           const ArrowIcon(size: 32),
-          transaction.account2!.getSelectableIconWidget(),
+          SelectableIcon(transaction.account2!),
         ],
       );
     }
