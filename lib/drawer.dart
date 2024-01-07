@@ -59,23 +59,6 @@ class CreateDrawer extends StatelessWidget {
           singleDrawerItem(context, Icons.question_mark, 'Help', 'help'),
           singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
           singleDrawerItem(context, Icons.list_alt, 'Notes', 'notes123'),
-          // ListTile for the logout button
-          ListTile(
-            title: Text(
-              'Exit',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.redAccent,
-                  ),
-            ),
-            leading: const Icon(
-              Icons.logout,
-              color: Colors.redAccent,
-            ),
-            onTap: () {
-              DatabaseHelper.instance.logout();
-              SystemNavigator.pop();
-            },
-          ),
         ],
       ),
     );
