@@ -10,6 +10,10 @@ other way: configure in pubspec.yaml and then run "flutter pub run flutter_launc
 
 ### DB
 
+Import/Export:
+
+- file path on emulator: `/storage/emulated/0/Android/data/de.budgetiser.budgetiser/files/downloads/`
+
 #### Old Model
 
 ![Alt text](db.drawio.svg)
