@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Divider with small grey text in between (shifted slightly to the left, can be adjusted with [leftWidth])
 class DividerWithText extends StatelessWidget {
   final String label;
   final double height;
