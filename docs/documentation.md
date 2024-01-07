@@ -10,8 +10,6 @@ other way: configure in pubspec.yaml and then run "flutter pub run flutter_launc
 
 ### DB
 
-[Overview of hierarchical data modelling](https://www.databasestar.com/hierarchical-data-sql/#:~:text=specific%20use%20case-,Bridge%20Table%20or%20Closure%20Table,-The%20Bridge%20Table)
-
 #### Old Model
 
 ![Alt text](db.drawio.svg)
@@ -32,3 +30,15 @@ Budget
 
 - interval unit : daily, weekly, monthly, quarterly, yearly, lifetime
 - shows only current interval
+
+Transactions:
+
+- with 1 account:
+  - account2_id: null
+  - transaction value is added to account balance
+- with 2 accounts:
+  - transaction value is only positive and subtracted from account1 and added to account2
+
+Category:
+
+see: [Overview of hierarchical data modelling](https://www.databasestar.com/hierarchical-data-sql/#:~:text=specific%20use%20case-,Bridge%20Table%20or%20Closure%20Table,-The%20Bridge%20Table)
