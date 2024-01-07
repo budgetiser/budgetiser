@@ -44,14 +44,13 @@ class AccountItemsWidget extends StatelessWidget {
               width: 1.0,
             ),
           ),
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const ItemListDivider(),
             itemCount: snapshot.data!.length,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return ItemListContainer(
-                child: AccountItem(
-                  accountData: snapshot.data![index],
-                ),
+              return AccountItem(
+                accountData: snapshot.data![index],
               );
             },
           ),

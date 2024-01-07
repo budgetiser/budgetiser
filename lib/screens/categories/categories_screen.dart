@@ -38,17 +38,15 @@ class CategoriesScreen extends StatelessWidget {
                 ..sort((a, b) => a.name.compareTo(b.name));
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
+                child: ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 80),
+                  separatorBuilder: (context, index) => const ItemListDivider(),
                   itemCount: categoryList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ItemListContainer(
-                      child: CategoryItem(
-                        categoryData: categoryList[index],
-                      ),
+                    return CategoryItem(
+                      categoryData: categoryList[index],
                     );
                   },
-                  padding: const EdgeInsets.only(bottom: 80),
                 ),
               );
             },

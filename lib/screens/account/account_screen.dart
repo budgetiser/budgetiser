@@ -111,14 +111,13 @@ class _AccountScreenState extends State<AccountScreen> {
               return const Text('Oops!');
             }
             snapshot.data!.sort(sortFunction);
-            return ListView.builder(
+            return ListView.separated(
+              separatorBuilder: (context, index) => const ItemListDivider(),
               itemCount: snapshot.data!.length,
               padding: const EdgeInsets.only(bottom: 80),
               itemBuilder: (BuildContext context, int index) {
-                return ItemListContainer(
-                  child: AccountItem(
-                    accountData: snapshot.data![index],
-                  ),
+                return AccountItem(
+                  accountData: snapshot.data![index],
                 );
               },
             );
