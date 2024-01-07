@@ -184,23 +184,4 @@ class DatabaseHelper {
     final file = File('${directory?.first.path}/budgetiser.json');
     await file.writeAsString(jsonString, mode: FileMode.write);
   }
-
-  /*
-  * All Stream Controller
-  */
-  final StreamController<List<Account>> _allAccountsStreamController =
-      StreamController<List<Account>>.broadcast();
-
-  final StreamController<List<TransactionCategory>>
-      _allCategoryStreamController =
-      StreamController<List<TransactionCategory>>.broadcast();
-
-  final StreamController<List<Budget>> _allBudgetsStreamController =
-      StreamController<List<Budget>>.broadcast();
-
-  void dispose() {
-    _allAccountsStreamController.close();
-    _allCategoryStreamController.close();
-    _allBudgetsStreamController.close();
-  }
 }
