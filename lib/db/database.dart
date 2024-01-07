@@ -8,7 +8,6 @@ import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/db/recently_used.dart';
 import 'package:budgetiser/db/single_transaction_provider.dart';
 import 'package:budgetiser/shared/dataClasses/account.dart';
-import 'package:budgetiser/shared/dataClasses/budget.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
