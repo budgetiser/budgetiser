@@ -216,7 +216,9 @@ class _AccountFormState extends State<AccountForm> {
                   icon: _icon ?? Icons.blur_on,
                   color: _color,
                   balance: double.parse(balanceController.text),
-                  description: descriptionController.text,
+                  description: descriptionController.text == ''
+                      ? null
+                      : descriptionController.text,
                   id: 0);
               if (widget.initialAccount != null) {
                 a.id = widget.initialAccount!.id;

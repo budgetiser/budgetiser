@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:budgetiser/core/database/models/account.dart';
+import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
@@ -37,13 +38,6 @@ class DatabaseHelper {
     _database = db;
   }
 
-  void logout() async {
-    final db = await database;
-    if (db.isOpen) {
-      db.close();
-    }
-  }
-
   /// Clear db and reset (TODO some) shared preferences
   // ignore: always_declare_return_types
   _resetDB(Database db, int newVersion) async {
@@ -54,7 +48,7 @@ class DatabaseHelper {
 
   /// Public method for resetting db
   // ignore: always_declare_return_types
-  resetDB({int newVersion = 1}) async {
+  resetDB({int newVersion = 3}) async {
     final Database db = await database;
     await _resetDB(db, newVersion);
   }
@@ -148,32 +142,65 @@ class DatabaseHelper {
   void exportAsJson() async {
     var fullJSON = {};
 
-    // allAccountsStream.listen((event) {
-    //   fullJSON['Accounts'] =
-    //       event.map((element) => element.toJsonMap()).toList();
-    // });
-    // pushGetAllAccountsStream();
-    // await allAccountsStream.isEmpty;
+    await AccountModel().getAllAccounts().then((value) {
+      fullJSON['Accounts'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
-    // allBudgetsStream.listen((event) {
-    //   fullJSON['Budgets'] =
-    //       event.map((element) => element.toJsonMap()).toList();
-    // });
-    // pushGetAllBudgetsStream();
-    // await allBudgetsStream.first;
+    await BudgetModel().getAllBudgets().then((value) {
+      fullJSON['Budgets'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
-    // CategoryModel()
-    //     .getAllCategories()
-    //     .then((value) => fullJSON['Categories'] = value.map((element) {
-    //           element.toJsonMap();
-    //         }));
+    await CategoryModel().getAllCategories().then((value) {
+      fullJSON['Categories'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
-    List<SingleTransaction> allTransactions =
-        await TransactionModel().getAllTransactions();
-    fullJSON['Transactions'] =
-        allTransactions.map((element) => element.toJsonMap()).toList();
+    await TransactionModel().getAllTransactions().then((value) {
+      fullJSON['Transactions'] = value.map((e) => e.toJsonMap()).toList();
+    });
 
     saveJsonToJsonFile(jsonEncode(fullJSON));
+  }
+
+  void importFromJson() async {
+    String jsonString = await readJsonFromFile();
+    Map<String, dynamic> jsonObject = jsonDecode(jsonString);
+
+    assert(jsonObject['Accounts'] is List);
+    assert(jsonObject['Budgets'] is List);
+    assert(jsonObject['Categories'] is List);
+    assert(jsonObject['Transactions'] is List);
+
+    // clear db?
+    await resetDB();
+
+    // import data
+    debugPrint('importing data from json...');
+    for (var object in jsonObject['Accounts']) {
+      Account account = Account.fromDBmap(object);
+      await AccountModel().createAccount(account, keepId: true);
+    }
+    for (var object in jsonObject['Categories']) {
+      TransactionCategory category = TransactionCategory.fromDBmap(object);
+      await CategoryModel().createCategory(category, keepId: true);
+    }
+    for (var object in jsonObject['Budgets']) {
+      Budget budget =
+          Budget.fromDBmap(object, await CategoryModel().getAllCategories());
+      await BudgetModel().createBudget(budget, keepId: true);
+    }
+    for (Map<String, dynamic> object in jsonObject['Transactions']) {
+      SingleTransaction transaction = SingleTransaction.fromDBmap(
+        object,
+        category: await CategoryModel().getCategory(object['category_id']),
+        account: await AccountModel().getOneAccount(object['account1_id']),
+        account2: object['account2_id'] == null
+            ? null
+            : await AccountModel().getOneAccount(object['account2_id']),
+      );
+      await TransactionModel()
+          .createSingleTransaction(transaction, keepId: true);
+    }
+    debugPrint('done importing data from json!');
   }
 
   void saveJsonToJsonFile(String jsonString) async {
@@ -181,5 +208,23 @@ class DatabaseHelper {
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
     final file = File('${directory?.first.path}/budgetiser.json');
     await file.writeAsString(jsonString, mode: FileMode.write);
+  }
+
+  Future<String> readJsonFromFile() async {
+    final directory =
+        await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    final file = File('${directory?.first.path}/budgetiser.json');
+
+    try {
+      if (await file.exists()) {
+        String contents = await file.readAsString();
+        return contents;
+      } else {
+        throw const FileSystemException('File not found');
+      }
+    } catch (e) {
+      // Handle exceptions, such as File not found or other I/O errors.
+      throw Exception('Error reading JSON file: $e');
+    }
   }
 }

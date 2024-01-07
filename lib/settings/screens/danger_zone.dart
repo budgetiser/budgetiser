@@ -68,6 +68,36 @@ class DangerZone extends StatelessWidget {
             ),
             ListTile(
               title: const Text(
+                'Import Database (JSON)',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              subtitle: const Text(
+                'From android/data',
+              ),
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConfirmationDialog(
+                      title: 'Attention',
+                      description:
+                          'Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.json) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!',
+                      onSubmitCallback: () {
+                        DatabaseHelper.instance.importFromJson();
+                        Navigator.of(context).pop();
+                      },
+                      onCancelCallback: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+            ListTile(
+              title: const Text(
                 'Import Database',
                 style: TextStyle(
                   color: Colors.red,

@@ -45,15 +45,35 @@ class BudgetModel extends ChangeNotifier {
     return allBudgets;
   }
 
-  Future<void> createBudget(Budget budget) async {
+  Future<void> createBudget(
+    Budget budget, {
+    bool keepId = false,
+  }) async {
     final Database db = await DatabaseHelper.instance.database;
+    Map<String, dynamic> map = budget.toMap();
+    int id = budget.id;
 
     await db.transaction((txn) async {
-      int id = await txn.insert(
-        'budget',
-        budget.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.fail,
-      );
+      if (!keepId) {
+        id = await txn.insert(
+          'budget',
+          map,
+          conflictAlgorithm: ConflictAlgorithm.fail,
+        );
+      } else {
+        await txn.execute('''
+        INSERT INTO budget (id, name, icon, color, max_value, interval_unit, description) 
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+      ''', [
+          id,
+          map['name'],
+          map['icon'],
+          map['color'],
+          map['max_value'],
+          map['interval_unit'],
+          map['description'] == '' ? null : map['description']
+        ]);
+      }
 
       Batch batch = txn.batch();
       for (var element in budget.transactionCategories) {

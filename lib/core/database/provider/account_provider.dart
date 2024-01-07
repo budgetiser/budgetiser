@@ -36,13 +36,36 @@ class AccountModel extends ChangeNotifier {
     return accounts;
   }
 
-  Future<int> createAccount(Account account) async {
+  /// adds account to database
+  ///
+  /// if [id] is not null the id will be used
+  Future<int> createAccount(
+    Account account, {
+    bool keepId = false,
+  }) async {
     final db = await DatabaseHelper.instance.database;
-    int id = await db.insert(
-      'account',
-      account.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.fail,
-    );
+    Map<String, dynamic> map = account.toMap();
+    int id = account.id;
+    if (!keepId) {
+      id = await db.insert(
+        'account',
+        map,
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+    } else {
+      await db.execute('''
+        INSERT INTO account (id, name, icon, color, balance, description, archived) 
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+      ''', [
+        id,
+        map['name'],
+        map['icon'],
+        map['color'],
+        map['balance'],
+        map['description'],
+        map['archived'],
+      ]);
+    }
 
     notifyListeners();
     return id;

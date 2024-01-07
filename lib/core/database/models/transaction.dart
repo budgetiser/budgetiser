@@ -21,34 +21,33 @@ class SingleTransaction {
     required this.description,
     required this.date,
   });
+  SingleTransaction.fromDBmap(
+    Map<String, dynamic> map, {
+    required this.category,
+    required this.account,
+    required this.account2,
+  })  : id = map['id'],
+        title = map['title'],
+        value = map['value'],
+        description = map['description'],
+        date = DateTime.fromMillisecondsSinceEpoch(map['date']);
 
-  // SingleTransaction.fromDbMap( // TODO after db refactor: use common map datatype for initializing a transaction #230
-  //   this.category,
-  //   this.account,
-  //   this.account2,
-  // ) {
-  //   id = 1;
-  //   title = '';
-  //   value = 1;
-  //   description = '';
-  //   date = DateTime.now();
-  // }
-
-  Map<String, dynamic> toMap() => {
-        'title': title.trim(),
-        'value': value,
-        'description': description?.trim(),
-        'category_id': category.id,
-        'date': date.millisecondsSinceEpoch,
-        'account1_id': account.id,
-        'account2_id': account2?.id,
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title.trim(),
+      'value': value,
+      'description':
+          description == 'null' ? null : description?.trim(), // for json export
+      'category_id': category.id,
+      'date': date.millisecondsSinceEpoch,
+      'account1_id': account.id,
+      'account2_id': account2?.id,
+    };
+  }
 
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['account'] = account.id;
-    m['account2'] = account2?.id;
     return m;
   }
 
