@@ -2,6 +2,7 @@ import 'package:budgetiser/screens/transactions/transaction_form.dart';
 import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/widgets/smallStuff/balance_text.dart';
+import 'package:budgetiser/shared/widgets/smallStuff/visualize_transaction_small.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a transaction as widget
@@ -32,7 +33,6 @@ class TransactionItem extends StatelessWidget {
           children: [
             // top row
             Row(
-              //TODO: use common widget with transaction for vor visualisation of transaction (with arrows) #219
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
@@ -43,39 +43,8 @@ class TransactionItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (transactionData.account2 == null)
-                  Row(
-                    children: [
-                      Icon(
-                        transactionData.category.icon,
-                        color: transactionData.category.color,
-                      ),
-                      const Text(' in '),
-                      Icon(
-                        transactionData.account.icon,
-                        color: transactionData.account.color,
-                      ),
-                    ],
-                  ),
-                if (transactionData.account2 != null)
-                  Row(
-                    children: [
-                      Icon(
-                        transactionData.category.icon,
-                        color: transactionData.category.color,
-                      ),
-                      const Text(' from '),
-                      Icon(
-                        transactionData.account.icon,
-                        color: transactionData.account.color,
-                      ),
-                      const Text(' to '),
-                      Icon(
-                        transactionData.account2!.icon,
-                        color: transactionData.account2!.color,
-                      ),
-                    ],
-                  ),
+                const SizedBox(width: 8),
+                TransactionVisualization(transaction: transactionData),
               ],
             ),
             const SizedBox(height: 8),
