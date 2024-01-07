@@ -6,7 +6,7 @@ import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
-import 'package:budgetiser/core/database/recently_used.dart';
+import 'package:budgetiser/shared/services/recently_used.dart';
 
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';

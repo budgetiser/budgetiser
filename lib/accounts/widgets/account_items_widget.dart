@@ -1,6 +1,6 @@
 import 'package:budgetiser/accounts/widgets/account_item.dart';
 import 'package:budgetiser/core/database/models/account.dart';
-import 'package:budgetiser/core/database/recently_used.dart';
+import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/widgets/list_views/item_list_divider.dart';
 import 'package:flutter/material.dart';
 

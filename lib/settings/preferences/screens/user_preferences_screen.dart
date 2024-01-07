@@ -1,5 +1,5 @@
-import 'package:budgetiser/settings/widgets/select_currency_list_tile.dart';
-import 'package:budgetiser/settings/widgets/toggle_prefix_button.dart';
+import 'package:budgetiser/settings/preferences/widgets/select_currency_list_tile.dart';
+import 'package:budgetiser/settings/preferences/widgets/toggle_prefix_button.dart';
 import 'package:flutter/material.dart';
 
 class UserPreferencesScreen extends StatelessWidget {

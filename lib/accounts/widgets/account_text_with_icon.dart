@@ -1,6 +1,7 @@
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:flutter/material.dart';
 
+@Deprecated('Use selectable')
 class AccountTextWithIcon extends StatelessWidget {
   const AccountTextWithIcon(
     this.account, {

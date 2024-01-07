@@ -1,7 +1,7 @@
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/settings/preferences/screens/user_preferences_screen.dart';
 import 'package:budgetiser/settings/screens/about.dart';
 import 'package:budgetiser/settings/screens/danger_zone.dart';
-import 'package:budgetiser/settings/screens/user_preferences_screen.dart';
 import 'package:budgetiser/settings/services/settings_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Center(
         child: ListView(
           children: <Widget>[
+            // TODO: refactor as separate widget
             ListTile(
               title: const Text('Appearance'),
               subtitle: const Text(
