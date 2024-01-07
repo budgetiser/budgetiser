@@ -1,6 +1,6 @@
-import 'package:budgetiser/accounts/widgets/balance_text.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
+import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction_small.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +73,8 @@ class TransactionItem extends StatelessWidget {
                 ),
                 BalanceText(
                   transactionData.value,
-                  isColored: transactionData.account2 == null,
+                  isColored: transactionData.account2 == null &&
+                      transactionData.value != 0,
                   hasPrefix: transactionData.account2 == null,
                 ),
               ],

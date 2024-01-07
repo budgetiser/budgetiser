@@ -1,6 +1,6 @@
 import 'package:budgetiser/accounts/screens/account_form.dart';
-import 'package:budgetiser/accounts/widgets/balance_text.dart';
 import 'package:budgetiser/core/database/models/account.dart';
+import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
