@@ -12,6 +12,7 @@ import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/date_picker.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction.dart';
@@ -417,28 +418,6 @@ class _TransactionFormState extends State<TransactionForm> {
     } catch (e) {
       return null;
     }
-  }
-
-  InkWell clickableAccountIcon(Account account) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(5),
-      splashColor: Colors.white10,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => AccountForm(
-              initialAccount: account,
-            ),
-          ),
-        );
-      },
-      child: Icon(
-        account.icon,
-        color: account.color,
-        size: 40,
-      ),
-    );
   }
 
   SingleTransaction _currentTransaction() {

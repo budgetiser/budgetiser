@@ -41,9 +41,8 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
               ? [
                   clickableAccountIcon(widget.account1!),
                   const ArrowIcon(),
-                  Icon(
-                    widget.category!.icon,
-                    color: widget.category!.color,
+                  SelectableIcon(
+                    widget.category!,
                     size: 40,
                   ),
                   const ArrowIcon(),
@@ -79,9 +78,8 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
           ),
         );
       },
-      child: Icon(
-        account.icon,
-        color: account.color,
+      child: SelectableIcon(
+        account,
         size: 40,
       ),
     );
