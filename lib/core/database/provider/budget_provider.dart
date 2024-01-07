@@ -55,13 +55,13 @@ class BudgetModel extends ChangeNotifier {
 
     await db.transaction((txn) async {
       if (!keepId) {
-        id = await db.insert(
+        id = await txn.insert(
           'budget',
           map,
           conflictAlgorithm: ConflictAlgorithm.fail,
         );
       } else {
-        await db.execute('''
+        await txn.execute('''
         INSERT INTO budget (id, name, icon, color, max_value, interval_unit, description) 
         VALUES (?, ?, ?, ?, ?, ?, ?);
       ''', [
