@@ -1,8 +1,8 @@
-import 'package:budgetiser/db/category_provider.dart';
-import 'package:budgetiser/db/database.dart';
-import 'package:budgetiser/db/single_transaction_provider.dart';
-import 'package:budgetiser/shared/dataClasses/single_transaction.dart';
-import 'package:budgetiser/shared/tempData/temp_data.dart';
+import 'package:budgetiser/core/database/database.dart';
+import 'package:budgetiser/core/database/models/transaction.dart';
+import 'package:budgetiser/core/database/provider/category_provider.dart';
+import 'package:budgetiser/core/database/provider/transaction_provider.dart';
+import 'package:budgetiser/core/database/temporary_data/temp_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
