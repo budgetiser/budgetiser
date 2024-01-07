@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class SelectableIcon extends StatelessWidget {
   final Selectable selectable;
-  final double size;
+  final double? size;
 
   const SelectableIcon(
     this.selectable, {

@@ -1,7 +1,7 @@
 import 'package:budgetiser/accounts/screens/account_form.dart';
-import 'package:budgetiser/accounts/widgets/account_item_title.dart';
 import 'package:budgetiser/accounts/widgets/balance_text.dart';
 import 'package:budgetiser/core/database/models/account.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
@@ -35,10 +35,10 @@ class AccountItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AccountItemTitle(
-                  title: accountData.name,
-                  icon: accountData.icon,
-                  color: accountData.color,
+                SelectableIconWithText(
+                  accountData,
+                  size: 30,
+                  coloredText: false,
                 ),
                 Row(
                   children: [

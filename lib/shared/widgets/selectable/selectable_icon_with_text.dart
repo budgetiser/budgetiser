@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 
 class SelectableIconWithText extends StatelessWidget {
   final Selectable selectable;
+  final double? size;
+  final bool coloredText;
 
   const SelectableIconWithText(
     this.selectable, {
+    this.size,
+    this.coloredText = true,
     super.key,
   });
 
@@ -14,16 +18,18 @@ class SelectableIconWithText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SelectableIcon(selectable),
+        SelectableIcon(
+          selectable,
+          size: size,
+        ),
         const SizedBox(width: 8),
-        Flexible(
-          child: Text(
-            selectable.name,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: TextStyle(
-              color: selectable.color,
-            ),
+        Text(
+          selectable.name,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: TextStyle(
+            color: coloredText ? selectable.color : null,
+            fontSize: size,
           ),
         ),
       ],
