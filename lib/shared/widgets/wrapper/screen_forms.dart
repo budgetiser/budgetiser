@@ -20,6 +20,12 @@ class _ScrollViewWithDeadSpaceState extends State<ScrollViewWithDeadSpace> {
   ScrollController listScrollController = ScrollController();
 
   @override
+  void dispose() {
+    listScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   SingleChildScrollView build(BuildContext context) {
     return SingleChildScrollView(
       controller: listScrollController,

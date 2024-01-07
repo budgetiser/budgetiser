@@ -93,6 +93,15 @@ class _TransactionFormState extends State<TransactionForm> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    valueController.dispose();
+    descriptionController.dispose();
+    listScrollController.dispose();
+    super.dispose();
+  }
+
   void setInitialSelections() async {
     if (selectedAccount == null) {
       final recentlyUsedAccount = RecentlyUsed<Account>();

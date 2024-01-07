@@ -28,6 +28,12 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
   };
 
   @override
+  void dispose() {
+    listScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.noPadding

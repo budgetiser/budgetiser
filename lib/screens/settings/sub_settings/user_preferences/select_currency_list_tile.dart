@@ -19,6 +19,12 @@ class _SelectCurrencyListTileState extends State<SelectCurrencyListTile> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    inputControllerCurrency.dispose();
+    super.dispose();
+  }
+
   void asyncSetStateFromPreferences() async {
     final awaitedCurrency = await SettingsCurrencyHandler().getCurrency();
     setState(() {
