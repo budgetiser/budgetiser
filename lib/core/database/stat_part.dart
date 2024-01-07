@@ -3,25 +3,25 @@ part of 'database.dart';
 extension DatabaseExtensionStat on DatabaseHelper {
   /// Get balance of all transactions in a category and account.
   Future<double> getSpending(
-      Account account, TransactionCategory Category) async {
+      Account account, TransactionCategory category) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         '''SELECT SUM(value) as value 
         FROM singleTransaction 
         WHERE account1_id = ? and category_id = ?''',
-        [account.id, Category.id]);
+        [account.id, category.id]);
     return maps[0]['value'] ?? 0.0;
   }
 
   /// Get amount of transactions in a category and account.
   Future<int> getTransactionCount(
-      Account account, TransactionCategory Category) async {
+      Account account, TransactionCategory category) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         '''SELECT COUNT(*) as count 
         FROM singleTransaction 
         WHERE account1_id = ? and category_id = ?''',
-        [account.id, Category.id]);
+        [account.id, category.id]);
     return maps[0]['count'];
   }
 
