@@ -16,7 +16,6 @@ class TransactionExpansionTile extends StatefulWidget {
     this.initiallyExpanded = false,
   });
 
-  // TODO: Change name
   final String date;
   final int count;
   final List<Account> allAccounts;
@@ -72,7 +71,7 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return TransactionItem(
-                    // TODO: Bug: no splash effect. probably because of colored container
+                    // TODO: Bug: no splash effect. probably because of colored container #229
                     transactionData: snapshot.data![index],
                   );
                 },

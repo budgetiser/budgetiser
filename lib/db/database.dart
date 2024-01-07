@@ -168,7 +168,6 @@ class DatabaseHelper {
     //     .then((value) => fullJSON['Categories'] = value.map((element) {
     //           element.toJsonMap();
     //         }));
-    // TODO: broken
 
     List<SingleTransaction> allTransactions =
         await TransactionModel().getAllTransactions();

@@ -22,7 +22,7 @@ class SingleTransaction {
     required this.date,
   });
 
-  // SingleTransaction.fromDbMap( // TODO after db refactor: use common map datatype for initializing a transaction
+  // SingleTransaction.fromDbMap( // TODO after db refactor: use common map datatype for initializing a transaction #230
   //   this.category,
   //   this.account,
   //   this.account2,

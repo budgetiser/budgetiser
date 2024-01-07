@@ -82,7 +82,6 @@ class AccountModel extends ChangeNotifier {
     );
   }
 
-  /// TODO: null checks
   Future<Account> getOneAccount(int id) async {
     Profiler.instance.start('getOneAccount id: $id');
     final db = await DatabaseHelper.instance.database;

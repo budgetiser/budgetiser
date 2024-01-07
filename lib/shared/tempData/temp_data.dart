@@ -197,12 +197,12 @@ List<SingleTransaction> getTransactionList() {
   void addTransaction({
     required String title,
     required String description,
-    required List<Accs> accounts,
+    required List<Accs> accounts1,
     required List<cats.Group> categories,
     required List<double> values,
     required List<int> daysInBetween,
     required int amount,
-    List<Accs>? toAccounts,
+    List<Accs>? accounts2,
   }) {
     DateTime nextOccurrence = DateTime.now().subtract(
       Duration(days: daysInBetween[0]),
@@ -216,11 +216,11 @@ List<SingleTransaction> getTransactionList() {
           category: TMP_DATA_categoryList[
               categories.elementAt(i % categories.length).toInt()],
           account: TMP_DATA_accountList[
-              accounts.elementAt(i % accounts.length).toInt()],
-          account2: toAccounts == null
+              accounts1.elementAt(i % accounts1.length).toInt()],
+          account2: accounts2 == null
               ? null
               : TMP_DATA_accountList[
-                  toAccounts.elementAt(i % toAccounts.length).toInt()],
+                  accounts2.elementAt(i % accounts2.length).toInt()],
           description: description,
           date: nextOccurrence,
         ),
@@ -239,7 +239,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Monthly Salary',
     description: '',
-    accounts: [Accs.creditCard],
+    accounts1: [Accs.creditCard],
     categories: [cats.Income.salary],
     values: [2500],
     daysInBetween: [30],
@@ -248,7 +248,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Overtime Hours',
     description: '',
-    accounts: [Accs.savings],
+    accounts1: [Accs.savings],
     categories: [cats.Income.salary],
     values: [350, 500],
     daysInBetween: [60, 60, 30, 90],
@@ -257,7 +257,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Birthday Card Gift',
     description: '',
-    accounts: [Accs.wallet],
+    accounts1: [Accs.wallet],
     categories: [cats.Income.moneyGifts],
     values: [15, 20, 15],
     daysInBetween: [10, 20, 3],
@@ -266,7 +266,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Old TV',
     description: 'Sold on Ebay',
-    accounts: [Accs.wallet],
+    accounts1: [Accs.wallet],
     categories: [cats.Income.privateSellings],
     values: [125],
     daysInBetween: [61],
@@ -275,7 +275,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Vintage Selling',
     description: '',
-    accounts: [Accs.creditCard],
+    accounts1: [Accs.creditCard],
     categories: [cats.Income.privateSellings],
     values: [17.50, 23.00, 5],
     daysInBetween: [17, 32],
@@ -286,7 +286,7 @@ List<SingleTransaction> getTransactionList() {
         'Singing at Ralphs Wedding - A Melodic Celebration of Union, Joy, and Everlasting Commitment',
     description:
         'Embark on a soulful musical journey as we bring to life the enchanting melodies at Ralphs Wedding. Join us in a harmonious celebration of love, unity, and everlasting commitment. rom heartfelt ballads to joyous tunes, our carefully curated musical repertoire promises to serenade the couple and guests alike, creating unforgettable moments filled with emotion and melody. Allow the power of song to amplify the beauty of this special day, weaving a symphony of love that resonates throughout Ralphs Wedding celebration',
-    accounts: [Accs.wallet],
+    accounts1: [Accs.wallet],
     categories: [cats.Income.sideGigs],
     values: [50],
     daysInBetween: [10],
@@ -295,8 +295,8 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Savings',
     description: '',
-    accounts: [Accs.creditCard],
-    toAccounts: [Accs.savings],
+    accounts1: [Accs.creditCard],
+    accounts2: [Accs.savings],
     categories: [cats.Income.investments],
     values: [1000],
     daysInBetween: [30],
@@ -307,7 +307,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Gas refill',
     description: '',
-    accounts: [Accs.creditCard],
+    accounts1: [Accs.creditCard],
     categories: [cats.Transportation.gas],
     values: [-28.75, -92.88, -47.26, -67.48, -82.46, -86.47, -59.31],
     daysInBetween: [12, 14, 16, 13, 15, 19, 11],
@@ -316,7 +316,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Parking ticket',
     description: '',
-    accounts: [
+    accounts1: [
       Accs.creditCard,
       Accs.wallet,
       Accs.wallet,
@@ -331,7 +331,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'New brakes',
     description: '',
-    accounts: [Accs.creditCard],
+    accounts1: [Accs.creditCard],
     categories: [cats.Transportation.bike],
     values: [-123.99],
     daysInBetween: [122],
@@ -342,7 +342,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Groceries',
     description: '',
-    accounts: [Accs.creditCard, Accs.creditCard, Accs.wallet],
+    accounts1: [Accs.creditCard, Accs.creditCard, Accs.wallet],
     categories: [cats.Food.groceries],
     values: [-28.75, -12.88, -37.26, -47.48, -32.46, -26.47, -59.31],
     daysInBetween: [4, 5, 6, 5, 7, 4, 6, 3, 2, 5, 3],
@@ -352,7 +352,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'snacks',
     description: '',
-    accounts: [Accs.creditCard, Accs.wallet],
+    accounts1: [Accs.creditCard, Accs.wallet],
     categories: [cats.Food.groceries],
     values: [-2],
     daysInBetween: [1, 4, 2],
@@ -363,7 +363,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Music streaming service',
     description: 'Student subscription',
-    accounts: [Accs.creditCard],
+    accounts1: [Accs.creditCard],
     categories: [cats.Entertainment.subscriptions],
     values: [-4.99],
     daysInBetween: [30],
@@ -373,7 +373,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'Pc components',
     description: '',
-    accounts: [Accs.payPal],
+    accounts1: [Accs.payPal],
     categories: [cats.Entertainment.hobbies],
     values: [-199.99, -589.45, -35.99, -875, 15],
     daysInBetween: [50, 4, 3, 7, 2, 1],
@@ -383,7 +383,7 @@ List<SingleTransaction> getTransactionList() {
   addTransaction(
     title: 'gambling',
     description: '',
-    accounts: [Accs.creditCard, Accs.savings],
+    accounts1: [Accs.creditCard, Accs.savings],
     categories: [cats.Food.groceries],
     values: [-200, 150, 69],
     daysInBetween: [1, 5, 8, 4],
