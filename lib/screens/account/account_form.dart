@@ -31,6 +31,7 @@ class _AccountFormState extends State<AccountForm> {
 
   @override
   void initState() {
+    super.initState();
     if (widget.initialAccount != null) {
       nameController.text = widget.initialAccount!.name;
       balanceController.text = widget.initialAccount!.balance.toString();
@@ -38,7 +39,14 @@ class _AccountFormState extends State<AccountForm> {
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
     }
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    balanceController.dispose();
+    descriptionController.dispose();
+    super.dispose();
   }
 
   @override

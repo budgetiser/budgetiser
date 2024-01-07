@@ -44,6 +44,14 @@ class _BudgetFormState extends State<BudgetForm> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    limitController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   void setCategories(List<TransactionCategory> categories) {
     if (mounted) {
       setState(() {
