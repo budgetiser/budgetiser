@@ -2,7 +2,7 @@ import 'package:budgetiser/db/category_provider.dart';
 import 'package:budgetiser/drawer.dart';
 import 'package:budgetiser/screens/categories/category_form.dart';
 import 'package:budgetiser/shared/dataClasses/transaction_category.dart';
-import 'package:budgetiser/shared/widgets/itemLists/item_list_container.dart';
+import 'package:budgetiser/shared/widgets/itemLists/item_list_divider.dart';
 import 'package:budgetiser/shared/widgets/items/category_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

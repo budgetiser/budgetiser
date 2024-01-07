@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-///
+/// Divider for use in screen lists
 class ItemListDivider extends StatelessWidget {
   const ItemListDivider({
     super.key,
