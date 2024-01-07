@@ -1,7 +1,5 @@
-import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/logo_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CreateDrawer extends StatelessWidget {
   const CreateDrawer({super.key});
