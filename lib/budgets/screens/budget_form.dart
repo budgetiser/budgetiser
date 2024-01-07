@@ -3,7 +3,7 @@ import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
-import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
@@ -162,38 +162,12 @@ class _BudgetFormState extends State<BudgetForm> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
-            heroTag: 'cancel',
-            backgroundColor: Colors.red,
-            mini: true,
-            onPressed: () {
-              if (widget.budgetData != null) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          "Are you sure to delete this category? All connected Items will deleted, too. This action can't be undone!",
-                      onSubmitCallback: () {
-                        Provider.of<BudgetModel>(context, listen: false)
-                            .deleteBudget(widget.budgetData!.id);
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
-              } else {
-                Navigator.of(context).pop();
-              }
+          CancelActionButton(
+            isDeletion: widget.budgetData != null,
+            onSubmitCallback: () {
+              Provider.of<BudgetModel>(context, listen: false)
+                  .deleteBudget(widget.budgetData!.id);
             },
-            child: widget.budgetData != null
-                ? const Icon(Icons.delete_outline)
-                : const Icon(Icons.close),
           ),
           const SizedBox(width: 5),
           FloatingActionButton.extended(

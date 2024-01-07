@@ -1,7 +1,7 @@
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
-import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
@@ -170,40 +170,13 @@ class _AccountFormState extends State<AccountForm> {
       ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-        FloatingActionButton(
-          heroTag: 'cancel',
-          backgroundColor: Colors.red,
-          mini: true,
-          onPressed: () {
-            if (widget.initialAccount != null) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return ConfirmationDialog(
-                    title: 'Attention',
-                    description:
-                        "Are you sure to delete this Account?\nALL TRANSACTIONS FROM THIS ACCOUNT WILL BE DELETED!\nThis action can't be undone!",
-                    onSubmitCallback: () {
-                      Provider.of<AccountModel>(context, listen: false)
-                          .deleteAccount(
-                        widget.initialAccount!.id,
-                      );
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                    onCancelCallback: () {
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              );
-            } else {
-              Navigator.of(context).pop();
-            }
+        CancelActionButton(
+          isDeletion: widget.initialAccount != null,
+          onSubmitCallback: () {
+            Provider.of<AccountModel>(context, listen: false).deleteAccount(
+              widget.initialAccount!.id,
+            );
           },
-          child: widget.initialAccount != null
-              ? const Icon(Icons.delete_outline)
-              : const Icon(Icons.close),
         ),
         const SizedBox(
           width: 5,

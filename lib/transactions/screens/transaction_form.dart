@@ -6,6 +6,7 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
+import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
@@ -141,46 +142,16 @@ class _TransactionFormState extends State<TransactionForm> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Cancel/ Delete button
-          FloatingActionButton(
-            heroTag: 'cancel',
-            backgroundColor: Colors.red,
-            mini: true,
-            onPressed: () {
-              if (hasInitialData) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          "Are you sure to delete this Transaction? This action can't be undone!",
-                      onSubmitCallback: () async {
-                        Provider.of<TransactionModel>(context, listen: false)
-                            .deleteSingleTransactionById(
-                          widget.initialSingleTransactionData!.id,
-                        );
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
-              } else {
-                Navigator.of(context).pop();
-              }
+          CancelActionButton(
+            isDeletion: hasInitialData,
+            onSubmitCallback: () {
+              Provider.of<TransactionModel>(context, listen: false)
+                  .deleteSingleTransactionById(
+                widget.initialSingleTransactionData!.id,
+              );
             },
-            child: hasInitialData
-                ? const Icon(Icons.delete_outline)
-                : const Icon(Icons.close),
           ),
-          // between cancel and save button
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           // Save button
           FloatingActionButton.extended(
             onPressed: () async {
