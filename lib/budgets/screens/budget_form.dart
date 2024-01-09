@@ -25,6 +25,7 @@ class _BudgetFormState extends State<BudgetForm> {
   var nameController = TextEditingController();
   var limitController = TextEditingController();
   var descriptionController = TextEditingController();
+  IntervalUnit selectedInterval = IntervalUnit.month;
   final _formKey = GlobalKey<FormState>();
 
   List<TransactionCategory> budgetCategories = [];
@@ -39,6 +40,7 @@ class _BudgetFormState extends State<BudgetForm> {
       descriptionController.text = widget.budgetData!.description ?? '';
       _color = widget.budgetData!.color;
       _icon = widget.budgetData!.icon;
+      selectedInterval = widget.budgetData!.intervalUnit;
       budgetCategories = widget.budgetData!.transactionCategories;
     }
     super.initState();
@@ -111,6 +113,7 @@ class _BudgetFormState extends State<BudgetForm> {
                 },
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: TextFormField(
@@ -130,6 +133,28 @@ class _BudgetFormState extends State<BudgetForm> {
                       ),
                     ),
                   ),
+                  Flexible(
+                    child: DropdownMenu<IntervalUnit>(
+                      initialSelection: selectedInterval,
+                      label: const Text('Interval'),
+                      leadingIcon: const Icon(Icons.event_repeat),
+                      onSelected: (IntervalUnit? unit) {
+                        setState(() {
+                          if (unit != null) {
+                            selectedInterval = unit;
+                          }
+                        });
+                      },
+                      dropdownMenuEntries: IntervalUnit.values
+                          .map<DropdownMenuEntry<IntervalUnit>>(
+                              (IntervalUnit unit) {
+                        return DropdownMenuEntry(
+                          value: unit,
+                          label: unit.label,
+                        );
+                      }).toList(),
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 16),
@@ -209,7 +234,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       : descriptionController.text,
                   id: 0,
                   transactionCategories: budgetCategories,
-                  intervalUnit: IntervalUnit.day,
+                  intervalUnit: selectedInterval,
                   maxValue: double.parse(limitController.text),
                 );
                 if (widget.budgetData != null) {
