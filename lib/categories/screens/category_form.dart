@@ -2,7 +2,6 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
-import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';

@@ -8,7 +8,6 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 
-import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/date_picker.dart';
