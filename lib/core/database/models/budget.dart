@@ -3,11 +3,14 @@ import 'package:budgetiser/core/database/models/selectable.dart';
 import 'package:flutter/material.dart';
 
 enum IntervalUnit {
-  day,
-  week,
-  month,
-  quarter,
-  year,
+  day('daily'),
+  week('weekly'),
+  month('monthly'),
+  quarter('quarterly'),
+  year('yearly');
+
+  const IntervalUnit(this.label);
+  final String label;
 }
 
 class Budget extends Selectable {
