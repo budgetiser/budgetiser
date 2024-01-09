@@ -73,7 +73,7 @@ extension DatabaseExtensionSQL on DatabaseHelper {
         interval_unit TEXT NOT NULL,
         description TEXT,
         PRIMARY KEY(id),
-        CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
+        CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year', 'IntervalUnit.endless'))
       );
     ''');
     await db.execute('''
@@ -276,7 +276,7 @@ Future<void> upgradeToV3(Database db) async {
         interval_unit TEXT NOT NULL,
         description TEXT,
         PRIMARY KEY(id),
-        CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year'))
+        CHECK(interval_unit IN ('IntervalUnit.day', 'IntervalUnit.week', 'IntervalUnit.month', 'IntervalUnit.quarter', 'IntervalUnit.year', 'IntervalUnit.endless'))
       );
     ''');
 
