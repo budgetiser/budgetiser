@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/models/selectable.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:flutter/material.dart';
 
 class GeneralMultiPicker<T extends Selectable> extends StatefulWidget {
@@ -68,7 +69,7 @@ class _GeneralMultiPickerState<T extends Selectable>
         itemCount: widget.possibleValues.length,
         itemBuilder: (context, listIndex) {
           return CheckboxListTile(
-            title: widget.possibleValues[listIndex].getSelectableIconWithText(),
+            title: SelectableIconWithText(widget.possibleValues[listIndex]),
             value: selectedValues.contains(widget.possibleValues[listIndex]),
             onChanged: (bool? value) {
               setState(() {

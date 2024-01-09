@@ -1,5 +1,6 @@
 import 'package:budgetiser/budgets/screens/budget_form.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 
 class BudgetItem extends StatelessWidget {
@@ -29,10 +30,7 @@ class BudgetItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                Icon(
-                  budget.icon,
-                  color: budget.color,
-                ),
+                SelectableIcon(budget),
                 //Text('${budget.maxValue}'),
               ],
             ),

@@ -1,4 +1,3 @@
-import 'package:budgetiser/accounts/screens/account_form.dart';
 import 'package:budgetiser/accounts/widgets/account_single_picker.dart';
 import 'package:budgetiser/accounts/widgets/account_single_picker_nullable.dart';
 import 'package:budgetiser/categories/widgets/category_single_picker.dart';
@@ -7,11 +6,12 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
+import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 
-import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/date_picker.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction.dart';
 
@@ -141,46 +141,16 @@ class _TransactionFormState extends State<TransactionForm> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Cancel/ Delete button
-          FloatingActionButton(
-            heroTag: 'cancel',
-            backgroundColor: Colors.red,
-            mini: true,
-            onPressed: () {
-              if (hasInitialData) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          "Are you sure to delete this Transaction? This action can't be undone!",
-                      onSubmitCallback: () async {
-                        Provider.of<TransactionModel>(context, listen: false)
-                            .deleteSingleTransactionById(
-                          widget.initialSingleTransactionData!.id,
-                        );
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
-              } else {
-                Navigator.of(context).pop();
-              }
+          CancelActionButton(
+            isDeletion: hasInitialData,
+            onSubmitCallback: () {
+              Provider.of<TransactionModel>(context, listen: false)
+                  .deleteSingleTransactionById(
+                widget.initialSingleTransactionData!.id,
+              );
             },
-            child: hasInitialData
-                ? const Icon(Icons.delete_outline)
-                : const Icon(Icons.close),
           ),
-          // between cancel and save button
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           // Save button
           FloatingActionButton.extended(
             onPressed: () async {
@@ -346,7 +316,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             child: InkWell(
               child: selectedCategory != null
-                  ? selectedCategory!.getSelectableIconWithText()
+                  ? SelectableIconWithText(selectedCategory!)
                   : const Text('Select Category'),
             ),
           ),
@@ -364,7 +334,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             child: InkWell(
               child: selectedAccount != null
-                  ? selectedAccount!.getSelectableIconWithText()
+                  ? SelectableIconWithText(selectedAccount!)
                   : const Text('Select Account'),
             ),
           ),
@@ -382,7 +352,7 @@ class _TransactionFormState extends State<TransactionForm> {
               },
             ),
             child: selectedAccount2 != null
-                ? selectedAccount2!.getSelectableIconWithText()
+                ? SelectableIconWithText(selectedAccount2!)
                 : const Text(
                     'None',
                     style: TextStyle(
@@ -416,28 +386,6 @@ class _TransactionFormState extends State<TransactionForm> {
     } catch (e) {
       return null;
     }
-  }
-
-  InkWell clickableAccountIcon(Account account) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(5),
-      splashColor: Colors.white10,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => AccountForm(
-              initialAccount: account,
-            ),
-          ),
-        );
-      },
-      child: Icon(
-        account.icon,
-        color: account.color,
-        size: 40,
-      ),
-    );
   }
 
   SingleTransaction _currentTransaction() {

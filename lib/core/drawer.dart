@@ -63,7 +63,11 @@ class CreateDrawer extends StatelessWidget {
   }
 
   Widget singleDrawerItem(
-      BuildContext context, IconData icon, String title, String destination) {
+    BuildContext context,
+    IconData icon,
+    String title,
+    String destination,
+  ) {
     ModalRoute? route = ModalRoute.of(context);
     String routeName = '';
     if (route != null) {

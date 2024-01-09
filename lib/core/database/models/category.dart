@@ -49,7 +49,7 @@ class TransactionCategory extends Selectable {
       : id = map['id'],
         description = map['description'],
         archived = map['archived'] == 1,
-        level = 0, // TODO: 231
+        level = 0, // TODO: #231
         super(
           name: map['name'].toString(),
           color: Color(map['color']),

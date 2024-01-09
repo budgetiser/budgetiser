@@ -2,6 +2,7 @@ import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:flutter/material.dart';
 
 @Deprecated('')
@@ -61,27 +62,7 @@ class _TransactionFilterState extends State<TransactionFilter> {
           itemBuilder: (context, j) {
             return StatefulBuilder(
               builder: (context, localSetState) => CheckboxListTile(
-                title: Row(
-                  children: [
-                    Icon(
-                      snapshot.data![j].icon,
-                      color: snapshot.data![j].color,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Flexible(
-                      child: Text(
-                        snapshot.data![j].name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: snapshot.data![j].color,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                title: SelectableIconWithText(snapshot.data![j]),
                 value: _selectedCategories.contains(snapshot.data![j]),
                 onChanged: (bool? value) {
                   localSetState(() {
@@ -123,27 +104,7 @@ class _TransactionFilterState extends State<TransactionFilter> {
           itemBuilder: (context, j) {
             return StatefulBuilder(
               builder: (context, localSetState) => CheckboxListTile(
-                title: Row(
-                  children: [
-                    Icon(
-                      snapshot.data![j].icon,
-                      color: snapshot.data![j].color,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Flexible(
-                      child: Text(
-                        snapshot.data![j].name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: snapshot.data![j].color,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                title: SelectableIconWithText(snapshot.data![j]),
                 value: _selectedAccounts.contains(snapshot.data![j]),
                 onChanged: (bool? value) {
                   localSetState(() {

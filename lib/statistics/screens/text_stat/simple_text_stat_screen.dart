@@ -2,6 +2,7 @@ import 'package:budgetiser/accounts/widgets/account_single_picker.dart';
 import 'package:budgetiser/categories/widgets/category_single_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,7 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
               Expanded(
                 child: InkWell(
                   child: _selectedAccount != null
-                      ? _selectedAccount!.getSelectableIconWidget()
+                      ? SelectableIcon(_selectedAccount!)
                       : const Text('Select Account'),
                   onTap: () {
                     showDialog(
@@ -59,7 +60,7 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
           const SizedBox(height: 16),
           InkWell(
             child: _selectedCategory != null
-                ? _selectedCategory!.getSelectableIconWidget()
+                ? SelectableIcon(_selectedCategory!)
                 : const Text('No data'),
             onTap: () {
               showDialog(

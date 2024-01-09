@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/models/selectable.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:flutter/material.dart';
 
 class GeneralSinglePickerNullable<T extends Selectable> extends StatefulWidget {
@@ -69,7 +70,7 @@ class _GeneralSinglePickerNullableState<T extends Selectable>
         itemCount: widget.possibleValues.length,
         itemBuilder: (context, listIndex) {
           return ListTile(
-            title: widget.possibleValues[listIndex].getSelectableIconWithText(),
+            title: SelectableIconWithText(widget.possibleValues[listIndex]),
             onTap: () {
               setState(() {
                 widget.onPickedCallback(widget.possibleValues[listIndex]);

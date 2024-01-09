@@ -1,8 +1,9 @@
 import 'package:budgetiser/accounts/screens/account_form.dart';
-import 'package:budgetiser/accounts/widgets/balance_text.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/shared/widgets/arrow_icon.dart';
+import 'package:budgetiser/shared/widgets/balance_text.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 
 class VisualizeTransaction extends StatefulWidget {
@@ -40,16 +41,15 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
               ? [
                   clickableAccountIcon(widget.account1!),
                   const ArrowIcon(),
-                  Icon(
-                    widget.category!.icon,
-                    color: widget.category!.color,
+                  SelectableIcon(
+                    widget.category!,
                     size: 40,
                   ),
                   const ArrowIcon(),
                   clickableAccountIcon(widget.account2!),
                 ]
               : [
-                  widget.category!.getSelectableIconWidget(size: 40),
+                  SelectableIcon(widget.category!, size: 40),
                   ArrowIcon(flipped: widget.wasNegative),
                   clickableAccountIcon(widget.account1!),
                 ],
@@ -78,9 +78,8 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
           ),
         );
       },
-      child: Icon(
-        account.icon,
-        color: account.color,
+      child: SelectableIcon(
+        account,
         size: 40,
       ),
     );

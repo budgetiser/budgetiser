@@ -1,15 +1,17 @@
 import 'package:budgetiser/settings/services/setting_currency.dart';
 import 'package:flutter/material.dart';
 
+/// Widget to display a currency number with the correct currency symbol.
+/// Number is colored based on the [value]
 class BalanceText extends StatefulWidget {
   const BalanceText(
-    this.balance, {
+    this.value, {
     this.hasPrefix = true,
     this.isColored = true,
     super.key,
   });
 
-  final double balance;
+  final double value;
   final bool hasPrefix;
   final bool isColored;
 
@@ -37,7 +39,7 @@ class _BalanceTextState extends State<BalanceText> {
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.bodyMedium!;
     String prefix = '';
-    if (widget.balance >= 0) {
+    if (widget.value >= 0) {
       if (widget.isColored) {
         textStyle = textStyle.copyWith(
           color: Colors.green,
@@ -57,7 +59,7 @@ class _BalanceTextState extends State<BalanceText> {
       }
     }
     return Text(
-      '$prefix${widget.balance.abs().toStringAsFixed(2)} $currency',
+      '$prefix${widget.value.abs().toStringAsFixed(2)} $currency',
       style: textStyle,
     );
   }
