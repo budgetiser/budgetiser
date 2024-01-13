@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BudgetScreen extends StatelessWidget {
-  static String routeID = 'budgets';
   const BudgetScreen({
     super.key,
   });
+  static String routeID = 'budgets';
 
   @override
   Widget build(BuildContext context) {

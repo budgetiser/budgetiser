@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class RadioItemClickable extends StatelessWidget {
-  final Function(dynamic) onChangedCallback;
-  final dynamic value;
-  final dynamic groupValue;
-  final String title;
-
   const RadioItemClickable({
     required this.onChangedCallback,
     required this.value,
@@ -13,6 +8,10 @@ class RadioItemClickable extends StatelessWidget {
     required this.title,
     super.key,
   });
+  final Function(dynamic) onChangedCallback;
+  final dynamic value;
+  final dynamic groupValue;
+  final String title;
 
   @override
   Widget build(BuildContext context) {

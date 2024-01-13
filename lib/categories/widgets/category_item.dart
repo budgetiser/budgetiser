@@ -4,12 +4,11 @@ import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.d
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatelessWidget {
-  final TransactionCategory categoryData;
-
   const CategoryItem({
     required this.categoryData,
     super.key,
   });
+  final TransactionCategory categoryData;
 
   @override
   Widget build(BuildContext context) {

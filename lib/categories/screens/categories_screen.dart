@@ -8,9 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  static String routeID = 'categories';
-
   const CategoriesScreen({super.key});
+  static String routeID = 'categories';
 
   @override
   Widget build(BuildContext context) {

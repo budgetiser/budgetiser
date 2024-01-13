@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TransactionsScreen extends StatefulWidget {
-  static String routeID = 'transactions';
   const TransactionsScreen({
     super.key,
     this.initialAccountsFilter,
     this.initialCategoriesFilter,
   });
+  static String routeID = 'transactions';
 
   final List<Account>? initialAccountsFilter;
   final List<TransactionCategory>? initialCategoriesFilter;

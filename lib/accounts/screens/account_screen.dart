@@ -10,10 +10,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
-  static String routeID = 'account';
   const AccountScreen({
     super.key,
   });
+  static String routeID = 'account';
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();

@@ -4,10 +4,10 @@ import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String routeID = 'home';
   const HomeScreen({
     super.key,
   });
+  static String routeID = 'home';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

@@ -6,12 +6,12 @@ import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class AccountItem extends StatelessWidget {
-  final Account accountData;
-
   const AccountItem({
     super.key,
     required this.accountData,
   });
+
+  final Account accountData;
 
   @override
   Widget build(BuildContext context) {

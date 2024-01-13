@@ -3,10 +3,6 @@ import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 
 class SelectableIconWithText extends StatelessWidget {
-  final Selectable selectable;
-  final double? size;
-  final bool coloredText;
-
   /// Colored icon of [selectable] with name to the right
   ///
   /// [size] defines the size of the icon and the textFont
@@ -18,6 +14,9 @@ class SelectableIconWithText extends StatelessWidget {
     this.coloredText = true,
     super.key,
   });
+  final Selectable selectable;
+  final double? size;
+  final bool coloredText;
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,10 @@ import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 
 class BudgetItem extends StatelessWidget {
-  const BudgetItem({super.key, required this.budget});
+  const BudgetItem({
+    super.key,
+    required this.budget,
+  });
   final Budget budget;
 
   @override
