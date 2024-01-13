@@ -1,3 +1,5 @@
+import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
+import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
@@ -5,7 +7,6 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:budgetiser/transactions/widgets/transaction_expansion_tile.dart';
-import 'package:budgetiser/transactions/widgets/transaction_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,42 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: const Text('Transactions'),
         actions: [
-          transactionFilter(context),
+          IconButton(
+            icon: const Icon(Icons.filter_alt_sharp),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return CategoryMultiPicker(
+                    onCategoriesPickedCallback: (selected) {
+                      setState(() {
+                        _currentFilterCategories = selected;
+                      });
+                    },
+                    initialValues: _currentFilterCategories,
+                  );
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_balance),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AccountMultiPicker(
+                    onAccountsPickedCallback: (selected) {
+                      setState(() {
+                        _currentFilterAccounts = selected;
+                      });
+                    },
+                    initialValues: _currentFilterAccounts,
+                  );
+                },
+              );
+            },
+          ),
         ],
       ),
       drawer: const CreateDrawer(),
@@ -84,29 +120,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
-    );
-  }
-
-  // TODO: extract as seperate widget, use general multi picker
-  IconButton transactionFilter(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.filter_alt_sharp),
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return TransactionFilter(
-                initialCategories: _currentFilterCategories,
-                initialAccounts: _currentFilterAccounts,
-                onPickedCallback: (categories, accounts) {
-                  setState(() {
-                    _currentFilterCategories = categories;
-                    _currentFilterAccounts = accounts;
-                  });
-                });
-          },
-        );
-      },
     );
   }
 
