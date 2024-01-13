@@ -6,7 +6,7 @@ import 'package:budgetiser/transactions/widgets/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class TransactionExpansionTile extends StatefulWidget {
+class TransactionExpansionTile extends StatelessWidget {
   const TransactionExpansionTile({
     super.key,
     required this.date,
@@ -25,28 +25,20 @@ class TransactionExpansionTile extends StatefulWidget {
   final List<TransactionCategory>? categoriesFilter;
 
   @override
-  State<TransactionExpansionTile> createState() =>
-      _TransactionExpansionTileState();
-}
-
-class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
-  @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(widget.date),
-          Text(widget.count.toString()),
+          Text(date),
+          Text(count.toString()),
         ],
       ),
-      onExpansionChanged: (value) async {
-        setState(() {});
-      },
-      initiallyExpanded: widget.initiallyExpanded,
+      initiallyExpanded: initiallyExpanded,
       controller: ExpansionTileController(),
       children: [
         Consumer<TransactionModel>(builder: (context, value, child) {
+          print('returning inner future $date');
           return FutureBuilder<List<SingleTransaction>>(
             future: _future(),
             builder: (context, snapshot) {
@@ -80,13 +72,13 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
   }
 
   Future<List<SingleTransaction>> _future() async {
-    List<String> yearMonth = widget.date.split('-');
+    List<String> yearMonth = date.split('-');
 
     return TransactionModel().getFilteredTransactionsByMonth(
       inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
-      fullAccountList: widget.allAccounts,
-      accounts: widget.accountsFilter,
-      categories: widget.categoriesFilter,
+      fullAccountList: allAccounts,
+      accounts: accountsFilter,
+      categories: categoriesFilter,
     );
   }
 }

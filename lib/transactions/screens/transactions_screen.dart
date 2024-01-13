@@ -117,30 +117,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     var keys = monthYearSnapshotData.keys.toList()
       ..sort((a, b) => b.compareTo(a));
 
-    return Consumer<TransactionModel>(
-      builder: (context, value, child) {
-        print("t consumer");
-        return ListView.builder(
-          itemCount: keys.length,
-          itemBuilder: (context, i) {
-            return TransactionExpansionTile(
-              date: keys[i],
-              count: monthYearSnapshotData[keys[i]]!,
-              allAccounts: fullAccountList,
-              accountsFilter: _currentFilterAccounts,
-              categoriesFilter: _currentFilterCategories,
-              initiallyExpanded: monthYearSnapshotData
-                  .keys // TODO: broken whenn only one transaction
-                  .toList()
-                  .sublist(
-                      0,
-                      monthYearSnapshotData[monthYearSnapshotData.keys.first]! >
-                              10
-                          ? 1
-                          : 1)
-                  .contains(keys[i]),
-            );
-          },
+    return ListView.builder(
+      itemCount: keys.length,
+      itemBuilder: (context, i) {
+        return TransactionExpansionTile(
+          date: keys[i],
+          count: monthYearSnapshotData[keys[i]]!,
+          allAccounts: fullAccountList,
+          accountsFilter: _currentFilterAccounts,
+          categoriesFilter: _currentFilterCategories,
+          initiallyExpanded: monthYearSnapshotData
+              .keys // TODO: broken whenn only one transaction
+              .toList()
+              .sublist(
+                  0,
+                  monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
+                      ? 1
+                      : 1)
+              .contains(keys[i]),
         );
       },
     );
