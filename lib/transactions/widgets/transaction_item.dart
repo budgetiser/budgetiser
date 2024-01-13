@@ -5,8 +5,8 @@ import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction_small.dart';
 import 'package:flutter/material.dart';
 
-/// Displays a transaction as widget
 class TransactionItem extends StatelessWidget {
+  /// Displays a transaction as widget
   const TransactionItem({
     super.key,
     required this.transactionData,

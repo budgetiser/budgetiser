@@ -20,14 +20,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// A screen that allows the user to add a transaction
-/// or edit an existing one
-///
-/// attributes:
-/// * optional [SingleTransaction] - edit this transaction
-/// * optional [initialBalance] - set initial balance
-/// * optional [SingleTransaction] - set initial selected account
 class TransactionForm extends StatefulWidget {
+  /// A screen that allows the user to add a transaction
+  /// or edit an existing one
+  ///
+  /// attributes:
+  /// * optional [SingleTransaction] - edit this transaction
+  /// * optional [initialBalance] - set initial balance
+  /// * optional [SingleTransaction] - set initial selected account
   const TransactionForm({
     super.key,
     this.initialSingleTransactionData,

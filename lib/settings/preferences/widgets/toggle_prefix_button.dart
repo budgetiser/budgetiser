@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// changes setting if the prefix button in the transaction-form is visible
 class TogglePrefixButtonListTile extends StatefulWidget {
+  /// changes setting if the prefix button in the transaction-form is visible
   const TogglePrefixButtonListTile({super.key});
 
   @override

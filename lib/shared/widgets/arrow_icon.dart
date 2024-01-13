@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-/// White arrow icon
-///
-/// if [flipped] is set the arrow points to the left
 class ArrowIcon extends StatelessWidget {
+  /// White arrow icon
+  ///
+  /// if [flipped] is set the arrow points to the left
   const ArrowIcon({
     super.key,
     this.flipped = false,

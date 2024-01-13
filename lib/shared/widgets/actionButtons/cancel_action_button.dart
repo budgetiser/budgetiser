@@ -1,12 +1,12 @@
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
-/// FloatingActionButton for canceling form or optional deleting the current form -> [isDeletion] required
 class CancelActionButton extends StatelessWidget {
   final bool isDeletion;
   final String? deletionDescription;
   final Function()? onSubmitCallback;
 
+  /// FloatingActionButton for canceling form or optional deleting the current form -> [isDeletion] required
   const CancelActionButton({
     super.key,
     this.isDeletion = false,
