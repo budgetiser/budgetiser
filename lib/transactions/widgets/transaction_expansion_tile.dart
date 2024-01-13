@@ -4,6 +4,7 @@ import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/transactions/widgets/transaction_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TransactionExpansionTile extends StatefulWidget {
   const TransactionExpansionTile({
@@ -29,13 +30,8 @@ class TransactionExpansionTile extends StatefulWidget {
 }
 
 class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
-  dynamic _futureFunction;
-
   @override
   Widget build(BuildContext context) {
-    if (widget.initiallyExpanded) {
-      _futureFunction = _future();
-    }
     return ExpansionTile(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,40 +41,40 @@ class _TransactionExpansionTileState extends State<TransactionExpansionTile> {
         ],
       ),
       onExpansionChanged: (value) async {
-        setState(() {
-          _futureFunction = value ? _future() : null;
-        });
+        setState(() {});
       },
       initiallyExpanded: widget.initiallyExpanded,
       controller: ExpansionTileController(),
       children: [
-        FutureBuilder<List<SingleTransaction>>(
-          future: _futureFunction,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
+        Consumer<TransactionModel>(builder: (context, value, child) {
+          return FutureBuilder<List<SingleTransaction>>(
+            future: _future(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.data!.isEmpty) {
+                return Container();
+              }
+              return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return TransactionItem(
+                      // TODO: Bug: no splash effect. probably because of colored container #229
+                      transactionData: snapshot.data![index],
+                    );
+                  },
+                ),
               );
-            }
-            if (snapshot.data!.isEmpty) {
-              return Container();
-            }
-            return Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return TransactionItem(
-                    // TODO: Bug: no splash effect. probably because of colored container #229
-                    transactionData: snapshot.data![index],
-                  );
-                },
-              ),
-            );
-          },
-        )
+            },
+          );
+        })
       ],
     );
   }
