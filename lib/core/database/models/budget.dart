@@ -7,7 +7,8 @@ enum IntervalUnit {
   week('weekly'),
   month('monthly'),
   quarter('quarterly'),
-  year('yearly');
+  year('yearly'),
+  endless('endless');
 
   const IntervalUnit(this.label);
   final String label;

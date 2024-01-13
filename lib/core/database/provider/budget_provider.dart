@@ -156,6 +156,15 @@ class BudgetModel extends ChangeNotifier {
     final Database db = await DatabaseHelper.instance.database;
 
     final (lowerBound, upperBound) = _calculateBounds(budget.intervalUnit);
+    String dateOption = '';
+    if (lowerBound != null && upperBound != null) {
+      dateOption =
+          'AND date BETWEEN ${lowerBound.millisecondsSinceEpoch} AND ${upperBound.millisecondsSinceEpoch}';
+    } else if (lowerBound != null && upperBound == null) {
+      dateOption = 'AND date >= ${lowerBound.millisecondsSinceEpoch}';
+    } else if (lowerBound == null && upperBound != null) {
+      'AND date <= ${upperBound.millisecondsSinceEpoch}';
+    }
 
     final List<Map<String, dynamic>> valueMap = await db.rawQuery(
       '''
@@ -166,21 +175,17 @@ class BudgetModel extends ChangeNotifier {
           WHERE budget_id = ?
         )
         AND account2_id IS NULL
-        AND date BETWEEN ? AND ?;
+        $dateOption;
         ''',
-      [
-        budget.id,
-        lowerBound.millisecondsSinceEpoch,
-        upperBound.millisecondsSinceEpoch,
-      ],
+      [budget.id],
     );
 
     return valueMap[0]['value'] ?? .0;
   }
 
-  (DateTime, DateTime) _calculateBounds(IntervalUnit type) {
-    final DateTime lowerBound;
-    final DateTime upperBound;
+  (DateTime?, DateTime?) _calculateBounds(IntervalUnit type) {
+    final DateTime? lowerBound;
+    final DateTime? upperBound;
     final DateTime now = DateTime.now();
     final DateTime nowClean = DateTime(now.year, now.month, now.day);
 
@@ -208,6 +213,9 @@ class BudgetModel extends ChangeNotifier {
       case IntervalUnit.year:
         lowerBound = DateTime(nowClean.year);
         upperBound = DateTime(nowClean.year + 1);
+      case IntervalUnit.endless:
+        lowerBound = null;
+        upperBound = null;
     }
 
     return (lowerBound, upperBound);
