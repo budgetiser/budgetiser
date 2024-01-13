@@ -53,6 +53,9 @@ class TransactionExpansionTile extends StatelessWidget {
               return Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 child: ListView.builder(
+                  prototypeItem: TransactionItem(
+                    transactionData: snapshot.data!.first,
+                  ),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: snapshot.data!.length,
