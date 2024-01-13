@@ -38,7 +38,6 @@ class TransactionExpansionTile extends StatelessWidget {
       controller: ExpansionTileController(),
       children: [
         Consumer<TransactionModel>(builder: (context, value, child) {
-          print('returning inner future $date');
           return FutureBuilder<List<SingleTransaction>>(
             future: _future(),
             builder: (context, snapshot) {
