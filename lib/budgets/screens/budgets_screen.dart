@@ -25,10 +25,18 @@ class BudgetScreen extends StatelessWidget {
         return FutureBuilder<List<Budget>>(
           future: BudgetModel().getAllBudgets(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
+            if (snapshot.connectionState != ConnectionState.done) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
+            }
+            if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No Budgets'),
+              );
+            }
+            if (snapshot.hasError) {
+              return const Text('Oops!');
             }
             return _screenContent(snapshot.data!);
           },
