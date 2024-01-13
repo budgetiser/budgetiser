@@ -110,12 +110,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  ListView _screenContent(
+  Widget _screenContent(
     Map<String, int> monthYearSnapshotData,
     List<Account> fullAccountList,
   ) {
     var keys = monthYearSnapshotData.keys.toList()
       ..sort((a, b) => b.compareTo(a));
+
     return ListView.builder(
       itemCount: keys.length,
       itemBuilder: (context, i) {

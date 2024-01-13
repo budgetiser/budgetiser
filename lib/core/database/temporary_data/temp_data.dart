@@ -202,11 +202,19 @@ List<SingleTransaction> getTransactionList() {
     required List<double> values,
     required List<int> daysInBetween,
     required int amount,
+    Duration? initialOffset,
     List<Accs>? accounts2,
   }) {
-    DateTime nextOccurrence = DateTime.now().subtract(
-      Duration(days: daysInBetween[0]),
-    );
+    late DateTime nextOccurrence;
+    if (initialOffset == null) {
+      nextOccurrence = DateTime.now().subtract(
+        Duration(days: daysInBetween[0]),
+      );
+    } else {
+      nextOccurrence = DateTime.now().subtract(
+        initialOffset,
+      );
+    }
     for (var i = 0; i < amount; i++) {
       list.add(
         SingleTransaction(
