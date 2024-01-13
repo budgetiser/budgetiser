@@ -35,10 +35,12 @@ class AccountItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SelectableIconWithText(
-                  accountData,
-                  size: 30,
-                  coloredText: false,
+                Expanded(
+                  child: SelectableIconWithText(
+                    accountData,
+                    size: 30,
+                    coloredText: false,
+                  ),
                 ),
                 Row(
                   children: [

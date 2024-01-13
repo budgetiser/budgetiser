@@ -16,26 +16,22 @@ class CategoryItem extends StatelessWidget {
     if (categoryData.archived) {
       return Container(); // TODO: archived not yet implemented #143
     }
-    return SizedBox(
-      width: double.infinity,
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => CategoryForm(
-                categoryData: categoryData,
-              ),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryForm(
+              categoryData: categoryData,
             ),
-          );
-        },
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: SelectableIconWithText(categoryData),
           ),
-        ),
+        );
+      },
+      borderRadius: const BorderRadius.all(
+        Radius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: SelectableIconWithText(categoryData),
       ),
     );
   }
