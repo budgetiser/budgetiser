@@ -6,10 +6,10 @@ import 'package:budgetiser/settings/widgets/appearance_setting_tile.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
-  static String routeID = 'settings';
   const SettingsScreen({
     super.key,
   });
+  static String routeID = 'settings';
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();

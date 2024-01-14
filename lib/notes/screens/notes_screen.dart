@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesScreen extends StatelessWidget {
-  static String routeID = 'notes123';
   NotesScreen({super.key});
 
+  static String routeID = 'notes123';
   final valueController = TextEditingController();
 
   @override

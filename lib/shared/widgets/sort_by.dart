@@ -15,22 +15,22 @@ SortedByEnum stringToEnumSortedByEnum(String stringValue) {
   );
 }
 
-/// Clickable Icon with dialog
-///
-/// calls [onChangedCallback] after a new sort is selected
-///
-/// uses [SortedByEnum]
-///
-/// TODO: find a way to not pop the dialog with every tap (currently the dialog does not update after setState)
 class SortByIconWidget extends StatefulWidget {
-  final Function(SortedByEnum) onChangedCallback;
-  final SortedByEnum initialSort;
-
+  /// Clickable Icon with dialog
+  ///
+  /// calls [onChangedCallback] after a new sort is selected
+  ///
+  /// uses [SortedByEnum]
+  ///
+  /// TODO: find a way to not pop the dialog with every tap (currently the dialog does not update after setState)
   const SortByIconWidget({
     required this.onChangedCallback,
     this.initialSort = SortedByEnum.nameAscending,
     super.key,
   });
+
+  final Function(SortedByEnum) onChangedCallback;
+  final SortedByEnum initialSort;
 
   @override
   State<SortByIconWidget> createState() => _SortByIconWidgetState();

@@ -6,12 +6,12 @@ import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class AccountItem extends StatelessWidget {
-  final Account accountData;
-
   const AccountItem({
     super.key,
     required this.accountData,
   });
+
+  final Account accountData;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,12 @@ class AccountItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SelectableIconWithText(
-                  accountData,
-                  size: 30,
-                  coloredText: false,
+                Expanded(
+                  child: SelectableIconWithText(
+                    accountData,
+                    size: 30,
+                    coloredText: false,
+                  ),
                 ),
                 Row(
                   children: [

@@ -3,8 +3,8 @@ import 'package:budgetiser/shared/widgets/arrow_icon.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 
-/// small transaction visualization with arrow and icons for category and account/s
 class TransactionVisualization extends StatelessWidget {
+  /// small transaction visualization with arrow and icons for category and account/s
   const TransactionVisualization({
     super.key,
     required this.transaction,

@@ -4,8 +4,8 @@ import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat_screen.
 import 'package:flutter/material.dart';
 
 class Stats extends StatefulWidget {
-  static String routeID = 'stats';
   const Stats({super.key});
+  static String routeID = 'stats';
 
   @override
   State<Stats> createState() => _StatsState();
