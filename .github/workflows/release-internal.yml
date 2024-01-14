@@ -10,13 +10,14 @@ jobs:
 
     steps:
       - name: "Checkout (develop)"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: "develop"
 
-      - name: Setup of JDK
-        uses: actions/setup-java@v1
+      - name: set up JDK
+        uses: actions/setup-java@v2
         with:
+          distribution: "zulu"
           java-version: "12.x"
 
       - name: Setup Flutter Environment
