@@ -26,9 +26,14 @@ class CategoriesScreen extends StatelessWidget {
           return FutureBuilder<List<TransactionCategory>>(
             future: CategoryModel().getAllCategories(),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(
                   child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Categories'),
                 );
               }
               if (snapshot.hasError) {

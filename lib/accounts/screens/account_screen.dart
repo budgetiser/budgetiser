@@ -102,9 +102,14 @@ class _AccountScreenState extends State<AccountScreen> {
         return FutureBuilder<List<Account>>(
           future: AccountModel().getAllAccounts(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
+            if (snapshot.connectionState != ConnectionState.done) {
               return const Center(
                 child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No Accounts'),
               );
             }
             if (snapshot.hasError) {
