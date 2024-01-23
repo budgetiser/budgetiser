@@ -21,9 +21,9 @@ class CategoriesScreen extends StatelessWidget {
       ),
       drawer: const CreateDrawer(),
       body: Consumer<CategoryModel>(
-        builder: (context, value, child) {
+        builder: (context, model, child) {
           return FutureBuilder<List<TransactionCategory>>(
-            future: CategoryModel().getAllCategories(),
+            future: model.getAllCategories(),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(

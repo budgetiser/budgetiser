@@ -98,9 +98,9 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Widget screenContent() {
     return Consumer<AccountModel>(
-      builder: (context, value, child) {
+      builder: (context, model, child) {
         return FutureBuilder<List<Account>>(
-          future: AccountModel().getAllAccounts(),
+          future: model.getAllAccounts(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const Center(

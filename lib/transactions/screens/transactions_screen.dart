@@ -94,9 +94,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ],
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<TransactionModel>(builder: (context, value, child) {
+      body: Consumer<TransactionModel>(builder: (context, model, child) {
         return FutureBuilder<Map<String, int>>(
-          future: TransactionModel().getMonthlyCount(
+          future: model.getMonthlyCount(
             accounts: _currentFilterAccounts,
             categories: _currentFilterCategories,
           ),
