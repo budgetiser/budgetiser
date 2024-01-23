@@ -2,6 +2,7 @@ import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/shared/widgets/picker/selectable/single_picker_nullable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AccountSinglePickerNullable extends StatefulWidget {
   const AccountSinglePickerNullable({
@@ -23,7 +24,8 @@ class _AccountSinglePickerNullableState
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Account>>(
-      future: AccountModel().getAllAccounts(),
+      future:
+          Provider.of<AccountModel>(context, listen: false).getAllAccounts(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(

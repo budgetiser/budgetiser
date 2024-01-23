@@ -27,7 +27,6 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   final GlobalKey _futureBuilderKey = GlobalKey();
-  // Future<List<DateTime>> monthsFuture = TransactionModel().getAllMonths();
 
   List<Account>? _currentFilterAccounts = [];
   List<TransactionCategory> _currentFilterCategories = [];
@@ -39,7 +38,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void initState() {
     super.initState();
 
-    AccountModel().getAllAccounts().then((value) => _accountList = value);
+    Provider.of<AccountModel>(context, listen: false)
+        .getAllAccounts()
+        .then((value) => _accountList = value);
 
     if (widget.initialAccountsFilter != null) {
       _currentFilterAccounts = widget.initialAccountsFilter;

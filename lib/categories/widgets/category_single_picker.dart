@@ -2,6 +2,7 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/widgets/picker/selectable/single_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategorySinglePicker extends StatefulWidget {
   const CategorySinglePicker({
@@ -22,14 +23,17 @@ class _CategorySinglePickerState extends State<CategorySinglePicker> {
 
   @override
   void initState() {
-    CategoryModel().getAllCategories().then((value) => _allCategories = value);
+    Provider.of<CategoryModel>(context, listen: false)
+        .getAllCategories()
+        .then((value) => _allCategories = value);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TransactionCategory>>(
-      future: CategoryModel().getAllCategories(),
+      future:
+          Provider.of<CategoryModel>(context, listen: false).getAllCategories(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
