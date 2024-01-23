@@ -102,7 +102,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
           key: _futureBuilderKey,
           builder: (context, snapshot) {
-            if (!snapshot.hasData && _accountList.isEmpty) {
+            if (!snapshot.hasData || _accountList.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.data!.isEmpty) {
