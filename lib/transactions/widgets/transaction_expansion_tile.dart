@@ -37,9 +37,9 @@ class TransactionExpansionTile extends StatelessWidget {
       initiallyExpanded: initiallyExpanded,
       controller: ExpansionTileController(),
       children: [
-        Consumer<TransactionModel>(builder: (context, value, child) {
+        Consumer<TransactionModel>(builder: (context, model, child) {
           return FutureBuilder<List<SingleTransaction>>(
-            future: _future(),
+            future: _future(model),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
@@ -73,10 +73,10 @@ class TransactionExpansionTile extends StatelessWidget {
     );
   }
 
-  Future<List<SingleTransaction>> _future() async {
+  Future<List<SingleTransaction>> _future(TransactionModel model) async {
     List<String> yearMonth = date.split('-');
 
-    return TransactionModel().getFilteredTransactionsByMonth(
+    return model.getFilteredTransactionsByMonth(
       inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
       fullAccountList: allAccounts,
       accounts: accountsFilter,

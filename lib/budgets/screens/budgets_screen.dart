@@ -21,9 +21,9 @@ class BudgetScreen extends StatelessWidget {
         actions: const [],
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<BudgetModel>(builder: (context, value, child) {
+      body: Consumer<BudgetModel>(builder: (context, model, child) {
         return FutureBuilder<List<Budget>>(
-          future: BudgetModel().getAllBudgets(),
+          future: model.getAllBudgets(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const Center(

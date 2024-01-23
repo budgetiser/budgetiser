@@ -27,7 +27,6 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   final GlobalKey _futureBuilderKey = GlobalKey();
-  // Future<List<DateTime>> monthsFuture = TransactionModel().getAllMonths();
 
   List<Account>? _currentFilterAccounts = [];
   List<TransactionCategory> _currentFilterCategories = [];
@@ -39,7 +38,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void initState() {
     super.initState();
 
-    AccountModel().getAllAccounts().then((value) => _accountList = value);
+    Provider.of<AccountModel>(context, listen: false)
+        .getAllAccounts()
+        .then((value) => _accountList = value);
 
     if (widget.initialAccountsFilter != null) {
       _currentFilterAccounts = widget.initialAccountsFilter;
@@ -94,26 +95,28 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ],
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<TransactionModel>(builder: (context, value, child) {
-        return FutureBuilder<Map<String, int>>(
-          future: TransactionModel().getMonthlyCount(
-            accounts: _currentFilterAccounts,
-            categories: _currentFilterCategories,
-          ),
-          key: _futureBuilderKey,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData && _accountList.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Transactions'),
-              );
-            }
-            return _screenContent(snapshot.data!, _accountList);
-          },
-        );
-      }),
+      body: Consumer<TransactionModel>(
+        builder: (context, model, child) {
+          return FutureBuilder<Map<String, int>>(
+            future: model.getMonthlyCount(
+              accounts: _currentFilterAccounts,
+              categories: _currentFilterCategories,
+            ),
+            key: _futureBuilderKey,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || _accountList.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Transactions'),
+                );
+              }
+              return _screenContent(snapshot.data!, _accountList);
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
