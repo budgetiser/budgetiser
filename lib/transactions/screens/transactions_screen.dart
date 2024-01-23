@@ -95,26 +95,28 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ],
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<TransactionModel>(builder: (context, model, child) {
-        return FutureBuilder<Map<String, int>>(
-          future: model.getMonthlyCount(
-            accounts: _currentFilterAccounts,
-            categories: _currentFilterCategories,
-          ),
-          key: _futureBuilderKey,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData || _accountList.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Transactions'),
-              );
-            }
-            return _screenContent(snapshot.data!, _accountList);
-          },
-        );
-      }),
+      body: Consumer<TransactionModel>(
+        builder: (context, model, child) {
+          return FutureBuilder<Map<String, int>>(
+            future: model.getMonthlyCount(
+              accounts: _currentFilterAccounts,
+              categories: _currentFilterCategories,
+            ),
+            key: _futureBuilderKey,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || _accountList.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Transactions'),
+                );
+              }
+              return _screenContent(snapshot.data!, _accountList);
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(

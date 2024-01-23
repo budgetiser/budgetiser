@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/models/account.dart';
+import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +32,6 @@ class RecentlyUsed<T> {
   Future<T?> getLastUsed() async {
     await init();
     final list = preferences.getStringList(key) ?? [];
-
     return list.isNotEmpty ? await _itemFromID(list[0]) : null;
   }
 
@@ -74,7 +74,7 @@ class RecentlyUsed<T> {
     // TODO: after cat deletion -> throws error
     if (T == Account) {
       return await AccountModel().getOneAccount(int.parse(id));
-    } else if (T == Category) {
+    } else if (T == TransactionCategory) {
       return await CategoryModel().getCategory(int.parse(id));
     }
   }
