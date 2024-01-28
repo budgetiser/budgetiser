@@ -1,7 +1,13 @@
-name: internal
+name: release internal playstore
+
+# releases to playstore internal branch
+# if the version is not changed to the previous release (done by autoincrement on develop) this failes
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
