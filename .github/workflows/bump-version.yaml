@@ -51,6 +51,6 @@ jobs:
         with:
           repository: ${{ github.repository }}
           branch_name: main
-          github_token: ${{ secrets.PAT_PUSH_PROTEDTED }}
+          github_token: ${{ secrets.PAT_CLASSIC_REPO }}
           commit_message: "bump version ${{ steps.gitversion.outputs.majorMinorPatch }}"
           files_to_commit: "pubspec.yaml"
