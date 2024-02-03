@@ -1,7 +1,7 @@
 | ||
-| |/ merge on develop -> autoincrement version
+| |/ merge on main -> autoincrement version
 | |
-|/ merge on main -> release to playstore dev branch
+|/ merge on release -> release to playstore dev branch
 |
 | manual gh release creation -> publish on playstore main branch
 |
@@ -14,7 +14,7 @@ Autoincrement changes minor and patch version
 
 For a major version bump
 
-- commit a 'major-commit' to dev
+- commit a 'major-commit' to main
 
 ## Release
 
