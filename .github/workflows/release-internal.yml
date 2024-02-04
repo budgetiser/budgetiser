@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout (develop)"
+      - name: "Checkout (release)"
         uses: actions/checkout@v3
         with:
-          ref: "develop"
+          ref: "release"
 
       - name: set up JDK
         uses: actions/setup-java@v2
