@@ -29,6 +29,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
   final recentlyUsedAccount = RecentlyUsed<Account>();
+  final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
 
   Future<Database> get database async =>
       _database ??= await initializeDatabase();
@@ -43,6 +44,7 @@ class DatabaseHelper {
   _resetDB(Database db, int newVersion) async {
     await _dropTables(db);
     await recentlyUsedAccount.removeAllItems();
+    await recentlyUsedCategory.removeAllItems();
     await _onCreate(db, newVersion);
   }
 

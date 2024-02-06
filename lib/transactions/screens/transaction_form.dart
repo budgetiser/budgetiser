@@ -49,7 +49,6 @@ class _TransactionFormState extends State<TransactionForm> {
   Account? selectedAccount2;
   TransactionCategory? selectedCategory;
   DateTime transactionDate = DateTime.now();
-  bool hasAccount2 = false;
   bool hasInitialData = false;
 
   var titleController = TextEditingController();
@@ -78,7 +77,6 @@ class _TransactionFormState extends State<TransactionForm> {
           widget.initialSingleTransactionData!.value.toString();
       selectedAccount = widget.initialSingleTransactionData!.account;
       selectedCategory = widget.initialSingleTransactionData!.category;
-      hasAccount2 = widget.initialSingleTransactionData!.account2 != null;
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
           widget.initialSingleTransactionData!.description ?? '';
@@ -260,7 +258,8 @@ class _TransactionFormState extends State<TransactionForm> {
                         return 'Please enter a value';
                       }
                       try {
-                        if (valueParser.evaluate(value) < 0 && hasAccount2) {
+                        if (selectedAccount2 != null &&
+                            valueParser.evaluate(value) < 0) {
                           return 'Only positive values with two accounts';
                         }
                         if (valueParser.evaluate(value) == double.infinity ||
