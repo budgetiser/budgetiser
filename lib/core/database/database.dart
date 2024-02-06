@@ -184,7 +184,13 @@ class DatabaseHelper {
   }
 
   void importFromJson() async {
-    String jsonString = await readJsonFromFile();
+    String jsonString = '';
+    try {
+      jsonString = await readJsonFromFile();
+    } on FileSystemException catch (e) {
+      debugPrint('Error while reading json file: $e');
+      return;
+    }
     Map<String, dynamic> jsonObject = jsonDecode(jsonString);
 
     assert(jsonObject['Accounts'] is List);
@@ -253,11 +259,21 @@ class DatabaseHelper {
   }
 
   Future<String> readJsonFromFile() async {
-    final directory =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final file = File('${directory?.first.path}/budgetiser.json');
+    const params = OpenFileDialogParams(
+      dialogType: OpenFileDialogType.document,
+      sourceType: SourceType.photoLibrary,
+    );
+    final filePath = await FlutterFileDialog.pickFile(params: params);
 
+    // final directory =
+    // await getExternalStorageDirectories(type: StorageDirectory.downloads);
+
+    if (filePath == null) {
+      throw const FileSystemException(
+          'File not found or nothing picked by Dialog');
+    }
     try {
+      final file = File(filePath);
       if (await file.exists()) {
         String contents = await file.readAsString();
         return contents;
