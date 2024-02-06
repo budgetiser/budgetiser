@@ -228,6 +228,10 @@ class DatabaseHelper {
       await TransactionModel()
           .createSingleTransaction(transaction, keepId: true);
     }
+    // after creating transactions, account balances needed to be set to correct value
+    for (Map object in jsonObject['Accounts']) {
+      await AccountModel().setAccountBalance(object['id'], object['balance']);
+    }
     debugPrint('done importing data from json!');
   }
 
