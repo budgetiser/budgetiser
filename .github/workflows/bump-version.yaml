@@ -43,6 +43,8 @@ jobs:
         run: sed -i -E "s/(version. )[0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)/\1${{ steps.gitversion.outputs.majorMinorPatch }}+$BUILD_NUMBER/g" pubspec.yaml
       - name: commit
         run: |
+          git config --local user.name github-actions
+          git config --local user.email github-actions@github.com
           git add .
           git commit -m "bump version ${{ steps.gitversion.outputs.majorMinorPatch }}"
       - name: Pushing to the protected branch 'main'
