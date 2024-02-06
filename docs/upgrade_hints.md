@@ -4,4 +4,4 @@
 
 ### Json
 
-Transactions: 'account' to 'account1_id' and 'account2' to 'account2_id'
+Transactions: `account` to `account1_id` and `account2` to `account2_id`
