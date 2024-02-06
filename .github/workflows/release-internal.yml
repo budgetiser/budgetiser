@@ -71,6 +71,11 @@ jobs:
           track: internal
           status: completed
 
+      - name: "Checkout (main)"
+        uses: actions/checkout@v3
+        with:
+          ref: "main"
+
       - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0

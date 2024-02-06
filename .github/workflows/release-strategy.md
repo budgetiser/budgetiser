@@ -1,9 +1,9 @@
 | ||
 | |/ merge on main -> autoincrement version
 | |
-|/ merge on release -> release to playstore dev branch
+|/ merge on release -> release to playstore dev branch & create tag on main & create gh-pre-release
 |
-| manual gh release creation -> publish on playstore main branch
+| manual gh release creation (change from prerelease) -> publish on playstore main branch
 |
 
 ## Autoincrement
