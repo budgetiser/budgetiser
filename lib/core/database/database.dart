@@ -15,6 +15,7 @@ import 'package:budgetiser/shared/services/profiler.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -128,6 +129,24 @@ class DatabaseHelper {
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
     final newFile = File('${externalDirectory?.first.path}/budgetiser.db');
     await newFile.writeAsBytes(fileContent);
+
+    if (!await FlutterFileDialog.isPickDirectorySupported()) {
+      debugPrint('Picking directory not supported');
+      Exception('Picking directory not supported ');
+    }
+
+    final pickedDirectory = await FlutterFileDialog.pickDirectory();
+
+    if (pickedDirectory != null) {
+      final filePath = await FlutterFileDialog.saveFileToDirectory(
+        directory: pickedDirectory,
+        data: newFile.readAsBytesSync(),
+        mimeType: 'application/db', // TODO: bug: name when file already exists
+        fileName: 'budgetiser.db',
+        replace: true,
+      );
+      debugPrint('saved db to: $filePath');
+    }
   }
 
   /// Imports the database from a file in the Download folder. Overwrites the current database.
@@ -142,6 +161,7 @@ class DatabaseHelper {
   }
 
   void exportAsJson() async {
+    debugPrint('start json export');
     var fullJSON = {};
 
     await AccountModel().getAllAccounts().then((value) {
@@ -164,7 +184,13 @@ class DatabaseHelper {
   }
 
   void importFromJson() async {
-    String jsonString = await readJsonFromFile();
+    String jsonString = '';
+    try {
+      jsonString = await readJsonFromFile();
+    } on FileSystemException catch (e) {
+      debugPrint('Error while reading json file: $e');
+      return;
+    }
     Map<String, dynamic> jsonObject = jsonDecode(jsonString);
 
     assert(jsonObject['Accounts'] is List);
@@ -206,18 +232,48 @@ class DatabaseHelper {
   }
 
   void saveJsonToJsonFile(String jsonString) async {
+    debugPrint('start saving json to file');
+
     final directory =
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
     final file = File('${directory?.first.path}/budgetiser.json');
     await file.writeAsString(jsonString, mode: FileMode.write);
+
+    if (!await FlutterFileDialog.isPickDirectorySupported()) {
+      debugPrint('Picking directory not supported');
+      Exception('Picking directory not supported ');
+    }
+
+    final pickedDirectory = await FlutterFileDialog.pickDirectory();
+
+    if (pickedDirectory != null) {
+      final filePath = await FlutterFileDialog.saveFileToDirectory(
+        directory: pickedDirectory,
+        data: file.readAsBytesSync(),
+        mimeType: 'application/json',
+        fileName: 'budgetiser.json',
+        replace: true,
+      );
+      debugPrint('saved json to: $filePath');
+    }
   }
 
   Future<String> readJsonFromFile() async {
-    final directory =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final file = File('${directory?.first.path}/budgetiser.json');
+    const params = OpenFileDialogParams(
+      dialogType: OpenFileDialogType.document,
+      sourceType: SourceType.photoLibrary,
+    );
+    final filePath = await FlutterFileDialog.pickFile(params: params);
 
+    // final directory =
+    // await getExternalStorageDirectories(type: StorageDirectory.downloads);
+
+    if (filePath == null) {
+      throw const FileSystemException(
+          'File not found or nothing picked by Dialog');
+    }
     try {
+      final file = File(filePath);
       if (await file.exists()) {
         String contents = await file.readAsString();
         return contents;
