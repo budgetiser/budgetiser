@@ -2,9 +2,9 @@ name: production
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - v*
+  # push:
+  #   tags:
+  #     - v*
 
 # todo fix: reference version from internal release published from dev-branch
 
