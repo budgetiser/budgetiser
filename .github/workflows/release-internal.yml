@@ -1,7 +1,13 @@
-name: internal
+name: release internal playstore
+
+# releases to playstore internal branch
+# if the version is not changed to the previous release (done by autoincrement on develop) this failes
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - release
 
 jobs:
   build:
@@ -9,20 +15,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout (develop)"
-        uses: actions/checkout@v2
+      - name: "Checkout (release)"
+        uses: actions/checkout@v3
         with:
-          ref: "develop"
+          ref: "release"
 
-      - name: Setup of JDK
-        uses: actions/setup-java@v1
+      - name: set up JDK
+        uses: actions/setup-java@v2
         with:
+          distribution: "zulu"
           java-version: "12.x"
 
       - name: Setup Flutter Environment
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          cache: true
 
       - name: Create Java Upload-Keystore
         env:
@@ -62,3 +70,27 @@ jobs:
           releaseFiles: build/app/outputs/bundle/release/app-release-signed.aab
           track: internal
           status: completed
+
+      - name: "Checkout (main)"
+        uses: actions/checkout@v3
+        with:
+          ref: "main"
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+
+      - name: Create tag
+        uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: "v${{ steps.gitversion.outputs.majorMinorPatch }}"
+          tag_exists_error: true
+
+      - name: Create Github pre-release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/release/app-release-signed.aab" # todo add .apk file
+          generateReleaseNotes: true
+          prerelease: true
+          tag: "v${{ steps.gitversion.outputs.majorMinorPatch }}"

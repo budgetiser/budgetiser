@@ -1,0 +1,54 @@
+name: bump version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: "5.x"
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+      - name: Print version
+        run: |
+          echo "semVer: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+      - name: get previous build number and incrment in by 1
+        # read the build number from pubspec.yaml, compare old and new version -> increase build number if different
+        run: |
+          export BUILD_NUMBER=$(sed -E -n 's/version. [0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)/\1/p' pubspec.yaml)
+
+          # Get the current version from the YAML file
+          OLD_VERSION=$(sed -E -n 's/version. ([0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/\1/p' pubspec.yaml)
+
+          # Compare the current version with GitVersion
+          if [ "$OLD_VERSION" != "${{ steps.gitversion.outputs.semVer }}" ]; then
+            # Increment BUILD_NUMBER if the versions are different
+            export BUILD_NUMBER=$((BUILD_NUMBER + 1))
+            echo "incremented!!"
+          fi
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+      - name: Update version in YAML
+        run: sed -i -E "s/(version. )[0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)/\1${{ steps.gitversion.outputs.majorMinorPatch }}+$BUILD_NUMBER/g" pubspec.yaml
+      - name: commit
+        run: |
+          git config --local user.name github-actions
+          git config --local user.email github-actions@github.com
+          git add .
+          git commit -m "bump version ${{ steps.gitversion.outputs.majorMinorPatch }} [skip ci]"
+      - name: Pushing to the protected branch 'main'
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.PAT_PUSH_PROTEDTED }}
+          branch: main

@@ -2,7 +2,7 @@ name: Lint-check
 
 on:
   push:
-    branches: ["**"]
+    branches-ignore: ["release"]
   pull_request:
     branches: ["**"]
 
@@ -15,6 +15,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          cache: true
       - name: Install dependencies
         run: dart pub get
 
