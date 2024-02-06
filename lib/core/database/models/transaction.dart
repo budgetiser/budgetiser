@@ -30,7 +30,17 @@ class SingleTransaction {
         title = map['title'],
         value = map['value'],
         description = map['description'],
-        date = DateTime.fromMillisecondsSinceEpoch(map['date']);
+        date = importDate(map['date']);
+
+  /// In Version <1.6 date was exported as readable String
+  static DateTime importDate(date) {
+    if (date.runtimeType == int) {
+      return DateTime.fromMillisecondsSinceEpoch(date);
+    } else if (date.runtimeType == String) {
+      return DateTime.parse(date);
+    }
+    throw Exception('Date field in transaction has wrong type');
+  }
 
   Map<String, dynamic> toMap() {
     return {
