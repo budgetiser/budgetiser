@@ -83,6 +83,12 @@ class _AccountFormState extends State<AccountForm> {
                       decoration: const InputDecoration(
                         labelText: 'Account Name',
                       ),
+                      validator: (data) {
+                        if (data!.isEmpty) {
+                          return 'Please enter a name';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
