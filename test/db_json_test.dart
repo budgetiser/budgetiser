@@ -98,7 +98,7 @@ void main() {
           'name': 'Shopping',
           'icon': 57522,
           'color': 4282339765,
-          'description': '',
+          'description': null,
           'archived': 0,
           'id': 1,
           'parentID': null
@@ -107,7 +107,7 @@ void main() {
           'name': 'Leisure',
           'icon': 57627,
           'color': 4294940672,
-          'description': '',
+          'description': null,
           'archived': 0,
           'id': 2,
           'parentID': null
@@ -117,7 +117,7 @@ void main() {
         {
           'title': 'snacks',
           'value': -2.0,
-          'description': '',
+          'description': null,
           'category_id': 1,
           'date': 1708366977679,
           'account1_id': 1,
@@ -127,7 +127,7 @@ void main() {
         {
           'title': 'gambling',
           'value': -200.0,
-          'description': '',
+          'description': null,
           'category_id': 2,
           'date': 1708366977672,
           'account1_id': 1,
@@ -137,7 +137,7 @@ void main() {
         {
           'title': 'Groceries',
           'value': -28.75,
-          'description': '',
+          'description': null,
           'category_id': 1,
           'date': 1708107778679,
           'account1_id': 1,
@@ -152,6 +152,6 @@ void main() {
 
     var exportedJson = await dbh.generateJson();
 
-    expect(json, exportedJson);
+    expect(json.toString(), exportedJson.toString());
   });
 }
