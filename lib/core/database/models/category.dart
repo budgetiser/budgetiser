@@ -14,7 +14,7 @@ class TransactionCategory extends Selectable {
     required super.name,
     required super.icon,
     required super.color,
-    this.description = '',
+    this.description,
     this.archived = false,
     this.parentID,
     this.level = 0,

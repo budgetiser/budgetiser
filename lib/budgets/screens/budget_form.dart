@@ -3,6 +3,7 @@ import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
@@ -200,12 +201,10 @@ class _BudgetFormState extends State<BudgetForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Budget a = Budget(
-                  name: nameController.text,
+                  name: nameController.text.trim(),
                   icon: _icon ?? Icons.blur_on,
                   color: _color,
-                  description: descriptionController.text == ''
-                      ? null
-                      : descriptionController.text,
+                  description: parseNullableString(descriptionController.text),
                   id: 0,
                   transactionCategories: budgetCategories,
                   intervalUnit: selectedInterval,
