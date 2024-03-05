@@ -22,14 +22,7 @@ class AccountModel extends ChangeNotifier {
     final List<Map<String, dynamic>> maps = await db.query('account');
 
     List<Account> accounts = List.generate(maps.length, (i) {
-      return Account(
-        id: maps[i]['id'],
-        name: maps[i]['name'].toString(),
-        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-        color: Color(maps[i]['color']),
-        balance: maps[i]['balance'],
-        description: maps[i]['description'],
-      );
+      return Account.fromDBmap(maps[i]);
     });
     lastTimeFetchedAllAccounts = DateTime.now();
     cachedAllAccounts = accounts;
@@ -118,13 +111,6 @@ class AccountModel extends ChangeNotifier {
       throw ErrorDescription('account id:$id not found');
     }
     Profiler.instance.end();
-    return Account(
-      id: maps[0]['id'],
-      name: maps[0]['name'],
-      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
-      color: Color(maps[0]['color']),
-      balance: maps[0]['balance'],
-      description: maps[0]['description'],
-    );
+    return Account.fromDBmap(maps[0]);
   }
 }

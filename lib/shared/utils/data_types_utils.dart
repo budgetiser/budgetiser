@@ -7,3 +7,15 @@ double roundDouble(double value) {
 double roundString(String value) {
   return roundDouble(double.parse(value));
 }
+
+/// if string is empty(or can be trimmed empty) null is returned, otherwise the string itself
+String? parseNullableString(String? s) {
+  if (s == null) {
+    return null;
+  }
+  s = s.trim();
+  if (s == '') {
+    return null;
+  }
+  return s;
+}

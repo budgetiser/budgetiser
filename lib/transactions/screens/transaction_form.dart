@@ -404,19 +404,18 @@ class _TransactionFormState extends State<TransactionForm> {
       title = selectedCategory!.name;
     }
 
-    SingleTransaction transaction;
-    transaction = SingleTransaction(
+    SingleTransaction transaction = SingleTransaction(
       id: 0,
       title: title,
       value: roundDouble(valueParser.evaluate(valueController.text)),
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
-      description: description == '' ? null : description,
+      description: parseNullableString(description),
       date: transactionDate,
     );
 
-    if (widget.initialSingleTransactionData != null) {
+    if (hasInitialData) {
       transaction.id = widget.initialSingleTransactionData!.id;
     }
 
