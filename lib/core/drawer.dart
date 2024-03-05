@@ -90,9 +90,11 @@ class CreateDrawer extends StatelessWidget {
       selectedTileColor: Theme.of(context).splashColor,
       leading: Icon(icon),
       onTap: () {
-        Navigator.pushReplacementNamed(
+        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(
           context,
           destination,
+          ModalRoute.withName('/'),
         );
       },
     );
