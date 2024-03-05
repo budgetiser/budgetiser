@@ -1,6 +1,7 @@
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
@@ -34,7 +35,8 @@ class _AccountFormState extends State<AccountForm> {
     super.initState();
     if (widget.initialAccount != null) {
       nameController.text = widget.initialAccount!.name;
-      balanceController.text = widget.initialAccount!.balance.toString();
+      balanceController.text =
+          widget.initialAccount!.balance.toStringAsFixed(2);
       descriptionController.text = widget.initialAccount!.description ?? '';
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
@@ -261,8 +263,8 @@ class _AccountFormState extends State<AccountForm> {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => TransactionForm(
-                        initialBalance: (double.parse(inputController.text) -
-                                double.parse(balanceController.text))
+                        initialBalance: (roundString(inputController.text) -
+                                roundString(balanceController.text))
                             .toStringAsFixed(2),
                         initialSelectedAccount: widget.initialAccount,
                       ),

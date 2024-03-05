@@ -76,7 +76,7 @@ class _TransactionFormState extends State<TransactionForm> {
       hasInitialData = true;
       titleController.text = widget.initialSingleTransactionData!.title;
       valueController.text =
-          widget.initialSingleTransactionData!.value.toString();
+          widget.initialSingleTransactionData!.value.toStringAsFixed(2);
       selectedAccount = widget.initialSingleTransactionData!.account;
       selectedCategory = widget.initialSingleTransactionData!.category;
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
@@ -457,9 +457,10 @@ class _TransactionFormState extends State<TransactionForm> {
       }
 
       if (currentValue < 0) {
-        valueController.text = roundDouble(currentValue.abs()).toString();
+        valueController.text =
+            roundDouble(currentValue.abs()).toStringAsFixed(2);
       } else {
-        valueController.text = roundDouble(-currentValue).toString();
+        valueController.text = roundDouble(-currentValue).toStringAsFixed(2);
       }
     });
     updateWasValueNegative(valueController.text);
