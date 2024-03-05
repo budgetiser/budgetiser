@@ -55,8 +55,9 @@ class _TransactionFormState extends State<TransactionForm> {
   var titleController = TextEditingController();
   var valueController = TextEditingController(text: '-');
   var descriptionController = TextEditingController();
-  bool wasValueNegative =
-      true; // remembering if value was negative to display the correct prefix button when value field is not valid
+
+  /// remembering if value was negative to display the correct prefix button when value field is not valid
+  bool wasValueNegative = true;
 
   final _formKey = GlobalKey<FormState>();
   final _valueKey = GlobalKey<FormState>();
@@ -75,7 +76,7 @@ class _TransactionFormState extends State<TransactionForm> {
       hasInitialData = true;
       titleController.text = widget.initialSingleTransactionData!.title;
       valueController.text =
-          widget.initialSingleTransactionData!.value.toString();
+          widget.initialSingleTransactionData!.value.toStringAsFixed(2);
       selectedAccount = widget.initialSingleTransactionData!.account;
       selectedCategory = widget.initialSingleTransactionData!.category;
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
@@ -227,7 +228,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   child: IconButton(
                     icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
                     onPressed: () {
-                      changePrefix(EnumPrefix.other);
+                      togglePrefix();
                     },
                     color: wasValueNegative
                         ? const Color.fromARGB(255, 174, 74, 99)
@@ -435,38 +436,30 @@ class _TransactionFormState extends State<TransactionForm> {
     });
   }
 
-  void changePrefix(EnumPrefix prefix) {
-    /// TODO: this can be improved when e.g. having multiplications #187
-    bool needsBrackets = double.tryParse(valueController.text) == null;
+  /// Toggles prefix of valueController from negative to positive or vice versa
+  ///
+  /// If value cant be parsed, prefix wont be changed
+  void togglePrefix() {
     double? currentValue = tryValueParse(valueController.text);
 
     setState(() {
-      switch (prefix) {
-        case EnumPrefix.other:
-          if (needsBrackets && currentValue != null) {
-            valueController.text = '-(${valueController.text})';
-          } else {
-            valueController.text.startsWith('-')
-                ? valueController.text = valueController.text.substring(1)
-                : valueController.text = '-${valueController.text}';
-          }
-          break;
-        case EnumPrefix.minus:
-          if (currentValue == null || currentValue < 0) break;
-          if (needsBrackets) {
-            valueController.text = '-(${valueController.text})';
-          } else {
-            valueController.text = '-${valueController.text}';
-          }
-          break;
-        case EnumPrefix.plus:
-          if (currentValue == null || currentValue >= 0) break;
-          if (needsBrackets) {
-            valueController.text = '-(${valueController.text})';
-          } else {
-            valueController.text = valueController.text.substring(1);
-          }
-          break;
+      if (currentValue == null) {
+        if (valueController.text == '-') {
+          valueController.text = '';
+        } else if (valueController.text == '') {
+          valueController.text = '-';
+        }
+        return;
+      }
+      if (!_valueKey.currentState!.validate()) {
+        return;
+      }
+
+      if (currentValue < 0) {
+        valueController.text =
+            roundDouble(currentValue.abs()).toStringAsFixed(2);
+      } else {
+        valueController.text = roundDouble(-currentValue).toStringAsFixed(2);
       }
     });
     updateWasValueNegative(valueController.text);

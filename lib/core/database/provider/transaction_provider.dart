@@ -127,14 +127,14 @@ class TransactionModel extends ChangeNotifier {
 
       if (transaction.account2 != null) {
         await txn.rawUpdate(
-            'UPDATE account SET balance = balance - ? WHERE id = ?',
+            'UPDATE account SET balance = round(balance - ?, 2) WHERE id = ?',
             [transaction.value, transaction.account.id]);
         await txn.rawUpdate(
-            'UPDATE account SET balance = balance + ? WHERE id = ?',
+            'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
             [transaction.value, transaction.account2!.id]);
       } else {
         await txn.rawUpdate(
-            'UPDATE account SET balance = balance + ? WHERE id = ?',
+            'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
             [transaction.value, transaction.account.id]);
       }
     });
