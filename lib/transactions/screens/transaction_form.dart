@@ -6,6 +6,7 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
@@ -402,20 +403,18 @@ class _TransactionFormState extends State<TransactionForm> {
       title = selectedCategory!.name;
     }
 
-    SingleTransaction transaction;
-    transaction = SingleTransaction(
+    SingleTransaction transaction = SingleTransaction(
       id: 0,
       title: title,
-      value: double.parse(
-          valueParser.evaluate(valueController.text).toStringAsFixed(2)),
+      value: roundDouble(valueParser.evaluate(valueController.text)),
       category: selectedCategory!,
       account: selectedAccount!,
       account2: selectedAccount2,
-      description: description == '' ? null : description,
+      description: parseNullableString(description),
       date: transactionDate,
     );
 
-    if (widget.initialSingleTransactionData != null) {
+    if (hasInitialData) {
       transaction.id = widget.initialSingleTransactionData!.id;
     }
 

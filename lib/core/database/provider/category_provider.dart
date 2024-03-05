@@ -16,14 +16,7 @@ class CategoryModel extends ChangeNotifier {
         await db.query('category', where: 'id = ?', whereArgs: [id]);
 
     Profiler.instance.end();
-    return TransactionCategory(
-      id: maps[0]['id'],
-      name: maps[0]['name'],
-      icon: IconData(maps[0]['icon'], fontFamily: 'MaterialIcons'),
-      color: Color(maps[0]['color']),
-      description: maps[0]['description'],
-      archived: maps[0]['archived'] == 1,
-    );
+    return TransactionCategory.fromDBmap(maps[0]);
   }
 
   Future<List<TransactionCategory>> getAllCategories() async {
@@ -31,14 +24,7 @@ class CategoryModel extends ChangeNotifier {
     final List<Map<String, dynamic>> maps = await db.query('category');
 
     return List.generate(maps.length, (i) {
-      return TransactionCategory(
-        id: maps[i]['id'],
-        name: maps[i]['name'].toString(),
-        icon: IconData(maps[i]['icon'], fontFamily: 'MaterialIcons'),
-        color: Color(maps[i]['color']),
-        description: maps[i]['description'],
-        archived: maps[i]['is_hidden'] == 1,
-      );
+      return TransactionCategory.fromDBmap(maps[i]);
     });
   }
 

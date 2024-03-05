@@ -1,6 +1,7 @@
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
@@ -191,14 +192,13 @@ class _AccountFormState extends State<AccountForm> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               Account a = Account(
-                  name: nameController.text,
-                  icon: _icon ?? Icons.blur_on,
-                  color: _color,
-                  balance: double.parse(balanceController.text),
-                  description: descriptionController.text == ''
-                      ? null
-                      : descriptionController.text,
-                  id: 0);
+                name: nameController.text.trim(),
+                icon: _icon ?? Icons.blur_on,
+                color: _color,
+                balance: double.parse(balanceController.text),
+                description: parseNullableString(descriptionController.text),
+                id: 0,
+              );
               if (widget.initialAccount != null) {
                 a.id = widget.initialAccount!.id;
                 Provider.of<AccountModel>(context, listen: false)
