@@ -82,6 +82,7 @@ class _AccountFormState extends State<AccountForm> {
                   Flexible(
                     child: TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         labelText: 'Account Name',
                       ),
