@@ -27,7 +27,7 @@ class SingleTransaction {
     required this.account,
     required this.account2,
   })  : id = map['id'],
-        title = map['title'],
+        title = map['title'].toString(),
         value = map['value'],
         description = map['description'],
         date = importDate(map['date']);

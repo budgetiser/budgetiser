@@ -1,6 +1,7 @@
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
@@ -73,6 +74,7 @@ class _CategoryFormState extends State<CategoryForm> {
                   Flexible(
                     child: TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       validator: (data) {
                         if (data == null || data == '') {
                           return 'Please enter a valid name';
@@ -123,12 +125,11 @@ class _CategoryFormState extends State<CategoryForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
-                    name: nameController.text,
+                    name: nameController.text.trim(),
                     icon: _icon ?? Icons.blur_on,
                     color: _color,
-                    description: descriptionController.text == ''
-                        ? null
-                        : descriptionController.text,
+                    description:
+                        parseNullableString(descriptionController.text),
                     archived: false,
                     id: 0);
                 if (widget.categoryData != null) {

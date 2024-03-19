@@ -162,8 +162,15 @@ class DatabaseHelper {
 
   void exportAsJson() async {
     debugPrint('start json export');
-    var fullJSON = {};
 
+    var fullJSON = await generateJson();
+
+    saveJsonToJsonFile(jsonEncode(fullJSON));
+  }
+
+  /// Returns database content as JSON object
+  Future<Map> generateJson() async {
+    var fullJSON = {};
     await AccountModel().getAllAccounts().then((value) {
       fullJSON['Accounts'] = value.map((e) => e.toJsonMap()).toList();
     });
@@ -179,8 +186,7 @@ class DatabaseHelper {
     await TransactionModel().getAllTransactions().then((value) {
       fullJSON['Transactions'] = value.map((e) => e.toJsonMap()).toList();
     });
-
-    saveJsonToJsonFile(jsonEncode(fullJSON));
+    return fullJSON;
   }
 
   void importFromJson() async {
@@ -193,12 +199,16 @@ class DatabaseHelper {
     }
     Map<String, dynamic> jsonObject = jsonDecode(jsonString);
 
+    setDatabaseContentWithJson(jsonObject);
+  }
+
+  /// Clears db and fills with json content
+  Future<void> setDatabaseContentWithJson(Map jsonObject) async {
     assert(jsonObject['Accounts'] is List);
     assert(jsonObject['Budgets'] is List);
     assert(jsonObject['Categories'] is List);
     assert(jsonObject['Transactions'] is List);
 
-    // clear db?
     await resetDB();
 
     // import data
@@ -227,6 +237,10 @@ class DatabaseHelper {
       );
       await TransactionModel()
           .createSingleTransaction(transaction, keepId: true);
+    }
+    // after creating transactions, account balances needed to be set to correct value
+    for (Map object in jsonObject['Accounts']) {
+      await AccountModel().setAccountBalance(object['id'], object['balance']);
     }
     debugPrint('done importing data from json!');
   }

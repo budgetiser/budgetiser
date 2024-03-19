@@ -45,29 +45,27 @@ class TransactionModel extends ChangeNotifier {
     return list;
   }
 
+  /// Returns Transaction object from [mapItem]
+  ///
+  /// Uses additional providers to get Category and Account Object
   Future<SingleTransaction> _mapToSingleTransactionLEGACY(
     Map<String, dynamic> mapItem,
   ) async {
     Profiler.instance.start('map to single transactionLEGACY');
-    TransactionCategory cat =
-        await CategoryModel().getCategory(mapItem['category_id']);
 
-    SingleTransaction s = SingleTransaction(
-      id: mapItem['id'],
-      title: mapItem['title'].toString(),
-      value: mapItem['value'],
-      description: mapItem['description'].toString(),
-      category: cat,
+    SingleTransaction s = SingleTransaction.fromDBmap(
+      mapItem,
+      category: await CategoryModel().getCategory(mapItem['category_id']),
       account: await AccountModel().getOneAccount(mapItem['account1_id']),
       account2: mapItem['account2_id'] == null
           ? null
           : await AccountModel().getOneAccount(mapItem['account2_id']),
-      date: DateTime.fromMillisecondsSinceEpoch(mapItem['date']),
     );
     Profiler.instance.end();
     return s;
   }
 
+  /// Uses [fullAccountList] for more efficient parsing of transactions in bulk
   Future<SingleTransaction> _mapToSingleTransaction(
     Map<String, dynamic> mapItem,
     List<Account> fullAccountList,
@@ -81,11 +79,8 @@ class TransactionModel extends ChangeNotifier {
         : fullAccountList.firstWhere((element) =>
             element.id == mapItem['account2_id']); // TODO if not found
     Profiler.instance.end();
-    SingleTransaction returnTransaction = SingleTransaction(
-      id: mapItem['id'],
-      title: mapItem['title'].toString(),
-      value: mapItem['value'],
-      description: mapItem['description'],
+    SingleTransaction returnTransaction = SingleTransaction.fromDBmap(
+      mapItem,
       category: TransactionCategory(
         id: mapItem['category_id'],
         name: mapItem['category_name'],
@@ -94,7 +89,6 @@ class TransactionModel extends ChangeNotifier {
       ),
       account: account1,
       account2: account2,
-      date: DateTime.fromMillisecondsSinceEpoch(mapItem['date']),
     );
     Profiler.instance.end();
     return returnTransaction;
@@ -133,14 +127,14 @@ class TransactionModel extends ChangeNotifier {
 
       if (transaction.account2 != null) {
         await txn.rawUpdate(
-            'UPDATE account SET balance = balance - ? WHERE id = ?',
+            'UPDATE account SET balance = round(balance - ?, 2) WHERE id = ?',
             [transaction.value, transaction.account.id]);
         await txn.rawUpdate(
-            'UPDATE account SET balance = balance + ? WHERE id = ?',
+            'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
             [transaction.value, transaction.account2!.id]);
       } else {
         await txn.rawUpdate(
-            'UPDATE account SET balance = balance + ? WHERE id = ?',
+            'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
             [transaction.value, transaction.account.id]);
       }
     });

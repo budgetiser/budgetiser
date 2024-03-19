@@ -193,6 +193,7 @@ List<TransactionCategory> TMP_DATA_categoryList = getCategoryList();
 
 List<SingleTransaction> getTransactionList() {
   List<SingleTransaction> list = [];
+  int currentId = 1;
 
   void addTransaction({
     required String title,
@@ -218,7 +219,7 @@ List<SingleTransaction> getTransactionList() {
     for (var i = 0; i < amount; i++) {
       list.add(
         SingleTransaction(
-          id: i + 1,
+          id: currentId++,
           title: title,
           value: values.elementAt(i % values.length),
           category: TMP_DATA_categoryList[

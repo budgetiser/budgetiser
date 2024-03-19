@@ -1,5 +1,5 @@
 mode: MainLine
 major-version-bump-message: "^(major)"
 minor-version-bump-message: "^(feat)"
-patch-version-bump-message: "^(build|chore|ci|docs|fix|perf|refactor|revert|design|test)"
-no-bump-message: "^(skip|wip|bump)"
+patch-version-bump-message: "^(build|fix|perf|refactor|revert|design|test)"
+no-bump-message: "^(skip|wip|bump|chore|ci|docs)"
