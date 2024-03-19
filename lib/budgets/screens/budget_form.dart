@@ -92,6 +92,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   Flexible(
                     child: TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       validator: (data) {
                         if (data == null || data == '') {
                           return 'Please enter a valid name';
