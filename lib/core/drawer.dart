@@ -50,7 +50,8 @@ class CreateDrawer extends StatelessWidget {
           const Divider(thickness: 2, height: 2),
           singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
           const Divider(thickness: 2, height: 2),
-          singleDrawerItem(context, Icons.show_chart, 'Stats', 'stats'),
+          singleDrawerItem(
+              context, Icons.show_chart, 'Stats', 'stats_overview'),
           singleDrawerItem(
               context, Icons.payment, 'Transactions', 'transactions'),
           const Divider(thickness: 2, height: 2),

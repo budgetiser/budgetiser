@@ -33,52 +33,57 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              const Text('Account: '),
-              Expanded(
-                child: InkWell(
-                  child: _selectedAccount != null
-                      ? SelectableIcon(_selectedAccount!)
-                      : const Text('Select Account'),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AccountSinglePicker(
-                              onAccountPickedCallback: setAccount);
-                        });
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Account'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Text('Account: '),
+                Expanded(
+                  child: InkWell(
+                    child: _selectedAccount != null
+                        ? SelectableIcon(_selectedAccount!)
+                        : const Text('Select Account'),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AccountSinglePicker(
+                                onAccountPickedCallback: setAccount);
+                          });
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          InkWell(
-            child: _selectedCategory != null
-                ? SelectableIcon(_selectedCategory!)
-                : const Text('No data'),
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CategorySinglePicker(
-                      onCategoryPickedCallback: setCategory,
-                    );
-                  });
-            },
-          ),
-          const Divider(),
-          if (_selectedAccount != null && _selectedCategory != null)
-            SimpleTextStat(
-              account: _selectedAccount,
-              category: _selectedCategory,
+              ],
             ),
-        ],
+            const SizedBox(height: 16),
+            InkWell(
+              child: _selectedCategory != null
+                  ? SelectableIcon(_selectedCategory!)
+                  : const Text('Select category'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CategorySinglePicker(
+                        onCategoryPickedCallback: setCategory,
+                      );
+                    });
+              },
+            ),
+            const Divider(),
+            if (_selectedAccount != null && _selectedCategory != null)
+              SimpleTextStat(
+                account: _selectedAccount,
+                category: _selectedCategory,
+              ),
+          ],
+        ),
       ),
     );
   }

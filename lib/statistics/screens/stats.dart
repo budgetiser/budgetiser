@@ -3,6 +3,7 @@ import 'package:budgetiser/statistics/screens/line_chart_stat/line_chart_stat_sc
 import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat_screen.dart';
 import 'package:flutter/material.dart';
 
+@deprecated
 class Stats extends StatefulWidget {
   const Stats({super.key});
   static String routeID = 'stats';
