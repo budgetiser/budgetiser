@@ -74,6 +74,7 @@ class _CategoryFormState extends State<CategoryForm> {
                   Flexible(
                     child: TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       validator: (data) {
                         if (data == null || data == '') {
                           return 'Please enter a valid name';

@@ -35,7 +35,8 @@ class _AccountFormState extends State<AccountForm> {
     super.initState();
     if (widget.initialAccount != null) {
       nameController.text = widget.initialAccount!.name;
-      balanceController.text = widget.initialAccount!.balance.toString();
+      balanceController.text =
+          widget.initialAccount!.balance.toStringAsFixed(2);
       descriptionController.text = widget.initialAccount!.description ?? '';
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
@@ -81,6 +82,7 @@ class _AccountFormState extends State<AccountForm> {
                   Flexible(
                     child: TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         labelText: 'Account Name',
                       ),
@@ -261,8 +263,8 @@ class _AccountFormState extends State<AccountForm> {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => TransactionForm(
-                        initialBalance: (double.parse(inputController.text) -
-                                double.parse(balanceController.text))
+                        initialBalance: (roundString(inputController.text) -
+                                roundString(balanceController.text))
                             .toStringAsFixed(2),
                         initialSelectedAccount: widget.initialAccount,
                       ),

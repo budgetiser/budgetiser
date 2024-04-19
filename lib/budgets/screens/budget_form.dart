@@ -37,7 +37,7 @@ class _BudgetFormState extends State<BudgetForm> {
   void initState() {
     if (widget.budgetData != null) {
       nameController.text = widget.budgetData!.name;
-      limitController.text = widget.budgetData!.maxValue.toString();
+      limitController.text = widget.budgetData!.maxValue.toStringAsFixed(2);
       descriptionController.text = widget.budgetData!.description ?? '';
       _color = widget.budgetData!.color;
       _icon = widget.budgetData!.icon;
@@ -92,6 +92,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   Flexible(
                     child: TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.sentences,
                       validator: (data) {
                         if (data == null || data == '') {
                           return 'Please enter a valid name';
