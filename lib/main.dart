@@ -7,6 +7,7 @@ import 'package:budgetiser/home/screens/home_screen.dart';
 import 'package:budgetiser/settings/services/settings_stream.dart';
 import 'package:budgetiser/shared/themes/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -48,6 +49,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('de', 'DE'),
+      ],
       themeMode: _currentThemeMode,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
