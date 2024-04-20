@@ -13,62 +13,144 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Categories',
-        ),
-      ),
-      drawer: const CreateDrawer(),
-      body: Consumer<CategoryModel>(
-        builder: (context, model, child) {
-          return FutureBuilder<List<TransactionCategory>>(
-            future: model.getAllCategories(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No Categories'),
-                );
-              }
-              if (snapshot.hasError) {
-                return const Text('Oops!');
-              }
-              List<TransactionCategory> categoryList = snapshot.data!
-                ..sort((a, b) => a.name.compareTo(b.name));
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 80),
-                  separatorBuilder: (context, index) => const ItemListDivider(),
-                  itemCount: categoryList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CategoryItem(
-                      categoryData: categoryList[index],
-                    );
-                  },
-                ),
+    // return buildA(context);
+    return buildB(context);
+  }
+}
+
+@override
+Widget buildB(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Categories'),
+    ),
+    drawer: const CreateDrawer(),
+    body: Consumer<CategoryModel>(
+      builder: (context, model, child) {
+        return FutureBuilder<List<TransactionCategory>>(
+          future: model.getAllCategories(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const CategoryForm(),
-            ),
-          );
-        },
-        tooltip: 'New category',
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
-      ),
+            }
+            if (snapshot.data!.isEmpty) {
+              return _NoCategories();
+            }
+            if (snapshot.hasError) {
+              return const Text('Oops!');
+            }
+
+            List<TransactionCategory> categoryList = snapshot.data!
+              ..sort((a, b) => a.name.compareTo(b.name));
+            return _CategoryList(categories: categoryList);
+          },
+        );
+      },
+    ),
+    floatingActionButton: FloatingActionButton.extended(
+      icon: const Icon(Icons.add_rounded),
+      label: const Text('Add category'),
+      tooltip: 'Create a new category',
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CategoryForm(),
+          ),
+        );
+      },
+    ),
+  );
+}
+
+class _NoCategories extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('No Categories'),
     );
   }
+}
+
+class _CategoryList extends StatelessWidget {
+  const _CategoryList({required this.categories});
+  final List<TransactionCategory> categories;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      // padding: const EdgeInsets.only(bottom: 80),
+      // separatorBuilder: (context, index) => const ItemListDivider(),
+      itemCount: categories.length,
+      itemBuilder: (BuildContext context, int index) {
+        return CategoryItem(
+          categoryData: categories[index],
+        );
+      },
+    );
+    // return Padding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 8),
+    //   child:
+    // );
+  }
+}
+
+Widget buildA(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text(
+        'Categories',
+      ),
+    ),
+    drawer: const CreateDrawer(),
+    body: Consumer<CategoryModel>(
+      builder: (context, model, child) {
+        return FutureBuilder<List<TransactionCategory>>(
+          future: model.getAllCategories(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No Categories'),
+              );
+            }
+            if (snapshot.hasError) {
+              return const Text('Oops!');
+            }
+            List<TransactionCategory> categoryList = snapshot.data!
+              ..sort((a, b) => a.name.compareTo(b.name));
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListView.separated(
+                padding: const EdgeInsets.only(bottom: 80),
+                separatorBuilder: (context, index) => const ItemListDivider(),
+                itemCount: categoryList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return CategoryItem(
+                    categoryData: categoryList[index],
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
+    ),
+    floatingActionButton: FloatingActionButton.large(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CategoryForm(),
+          ),
+        );
+      },
+      tooltip: 'New category',
+      child: const Icon(Icons.add_rounded),
+    ),
+  );
 }

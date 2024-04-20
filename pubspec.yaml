@@ -27,6 +27,8 @@ dependencies:
   # MIT License
   fl_chart: ^0.66.0
   flutter_file_dialog: ^3.0.2
+  material_color_utilities: ^0.5.0
+  flutter_adaptive_scaffold: ^0.1.10+1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
