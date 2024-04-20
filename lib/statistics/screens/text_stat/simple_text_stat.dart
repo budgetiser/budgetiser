@@ -48,8 +48,8 @@ class SimpleTextStat extends StatelessWidget {
           },
         ),
         FutureBuilder(
-          future: DatabaseHelper.instance
-              .getTransactionCount(accounts[0], categories[0]),
+          future:
+              DatabaseHelper.instance.getTransactionCount(accounts, categories),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Row(

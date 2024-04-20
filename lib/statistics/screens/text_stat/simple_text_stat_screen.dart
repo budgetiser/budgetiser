@@ -85,47 +85,10 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            // Row(
-            //   children: [
-            //     const Text('Account: '),
-            //     Expanded(
-            //       child: InkWell(
-            //         child: _selectedAccount != null
-            //             ? SelectableIcon(_selectedAccount!)
-            //             : const Text('Select Account'),
-            //         onTap: () {
-            //           showDialog(
-            //               context: context,
-            //               builder: (BuildContext context) {
-            //                 return AccountSinglePicker(
-            //                     onAccountPickedCallback: setAccount);
-            //               });
-            //         },
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: 16),
-            // InkWell(
-            //   child: _selectedCategory != null
-            //       ? SelectableIcon(_selectedCategory!)
-            //       : const Text('Select category'),
-            //   onTap: () {
-            //     showDialog(
-            //         context: context,
-            //         builder: (BuildContext context) {
-            //           return CategorySinglePicker(
-            //             onCategoryPickedCallback: setCategory,
-            //           );
-            //         });
-            //   },
-            // ),
-            // const Divider(),
-            if (_selectedAccounts.isNotEmpty && _selectedCategories.isNotEmpty)
-              SimpleTextStat(
-                accounts: _selectedAccounts,
-                categories: _selectedCategories,
-              ),
+            SimpleTextStat(
+              accounts: _selectedAccounts,
+              categories: _selectedCategories,
+            ),
           ],
         ),
       ),

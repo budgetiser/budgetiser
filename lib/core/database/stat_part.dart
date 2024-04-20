@@ -25,13 +25,22 @@ extension DatabaseExtensionStat on DatabaseHelper {
 
   /// Get amount of transactions in a category and account.
   Future<int> getTransactionCount(
-      Account account, TransactionCategory category) async {
+    List<Account> accounts,
+    List<TransactionCategory> categories,
+  ) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         '''SELECT COUNT(*) as count 
         FROM singleTransaction 
-        WHERE account1_id = ? and category_id = ?''',
-        [account.id, category.id]);
+        ${sqlWhereIn([
+          'account1_id',
+          'category_id'
+        ], [
+          accounts.map((e) => e.id).toList(),
+          categories.map((e) => e.id).toList()
+        ])}
+          ;
+          ''');
     return maps[0]['count'];
   }
 

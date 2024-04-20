@@ -1,5 +1,6 @@
 import 'package:budgetiser/settings/services/setting_currency.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class BalanceText extends StatefulWidget {
   /// Widget to display a currency number with the correct currency symbol.
@@ -58,8 +59,10 @@ class _BalanceTextState extends State<BalanceText> {
         prefix = '- ';
       }
     }
+    NumberFormat numberFormat = NumberFormat('#,##0.00', 'de_DE');
+
     return Text(
-      '$prefix${widget.value.abs().toStringAsFixed(2)} $currency',
+      '$prefix${numberFormat.format(widget.value.abs())} $currency',
       style: textStyle,
     );
   }
