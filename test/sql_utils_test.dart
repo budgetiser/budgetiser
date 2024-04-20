@@ -1,5 +1,7 @@
 // Import the test package and Counter class
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/shared/utils/sql_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +14,7 @@ void main() {
 
     String result = sqlWhereIn(attributes, values);
 
-    expect(result, 'WHERE id IN (1,3,4) AND name IN (5,6,7)');
+    expect(result, 'id IN (1,3,4) AND name IN (5,6,7)');
   });
 
   test('Test sqlWhereIn short', () {
@@ -23,7 +25,7 @@ void main() {
 
     String result = sqlWhereIn(attributes, values);
 
-    expect(result, 'WHERE id IN (1,3,4)');
+    expect(result, 'id IN (1,3,4)');
   });
 
   test('Test sqlWhereIn half empty', () {
@@ -35,7 +37,7 @@ void main() {
 
     String result = sqlWhereIn(attributes, values);
 
-    expect(result, 'WHERE id IN (1,3,4)');
+    expect(result, 'id IN (1,3,4)');
   });
 
   test('Test sqlWhereIn all empty', () {
@@ -56,5 +58,40 @@ void main() {
     expect(() {
       sqlWhereIn(attributes, values);
     }, throwsA(isA<AssertionError>()));
+  });
+
+  // sqlWhereDateRange
+  test('Test sqlWhereDateRange', () {
+    DateTime start = today();
+    DateTime end = today().add(const Duration(days: 1));
+    String result = sqlWhereDateRange(
+      'date',
+      DateTimeRange(
+        start: start,
+        end: end,
+      ),
+    );
+
+    expect(result,
+        'date BETWEEN ${start.millisecondsSinceEpoch} AND ${end.millisecondsSinceEpoch}');
+  });
+
+  test('Test sqlWhereCombined', () {
+    List<String> attributes = ['id', 'name', 'date'];
+    List<List<int>> values = [
+      [1, 3, 4],
+      [5, 6, 7]
+    ];
+    DateTime start = today();
+    DateTime end = today().add(const Duration(days: 1));
+
+    String result = sqlWhereCombined(
+      attributes,
+      values,
+      DateTimeRange(start: start, end: end),
+    );
+
+    expect(result,
+        'id IN (1,3,4) AND name IN (5,6,7) AND date BETWEEN ${start.millisecondsSinceEpoch} AND ${end.millisecondsSinceEpoch}');
   });
 }

@@ -9,10 +9,12 @@ class SimpleTextStat extends StatelessWidget {
     super.key,
     required this.categories,
     required this.accounts,
+    required this.startDate,
   });
 
   final List<Account> accounts;
   final List<TransactionCategory> categories;
+  final DateTime startDate;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,13 @@ class SimpleTextStat extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         FutureBuilder(
-          future: DatabaseHelper.instance.getSpending(accounts, categories),
+          future: DatabaseHelper.instance.getSpending(
+              accounts,
+              categories,
+              DateTimeRange(
+                start: startDate,
+                end: DateTime.now(),
+              )),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Row(
@@ -48,8 +56,14 @@ class SimpleTextStat extends StatelessWidget {
           },
         ),
         FutureBuilder(
-          future:
-              DatabaseHelper.instance.getTransactionCount(accounts, categories),
+          future: DatabaseHelper.instance.getTransactionCount(
+            accounts,
+            categories,
+            DateTimeRange(
+              start: startDate,
+              end: DateTime.now(),
+            ),
+          ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Row(

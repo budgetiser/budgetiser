@@ -6,18 +6,21 @@ extension DatabaseExtensionStat on DatabaseHelper {
   Future<double> getSpending(
     List<Account> accounts,
     List<TransactionCategory> categories,
+    DateTimeRange dateRange,
   ) async {
+    print(dateRange);
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT SUM(value) as value
-          FROM singleTransaction
-          ${sqlWhereIn([
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('''SELECT SUM(value) as value
+          FROM singleTransaction 
+          WHERE ${sqlWhereCombined([
           'account1_id',
-          'category_id'
+          'category_id',
+          'date',
         ], [
           accounts.map((e) => e.id).toList(),
           categories.map((e) => e.id).toList()
-        ])}
+        ], dateRange)}
           ;
           ''');
     return maps[0]['value'] ?? 0.0;
@@ -27,18 +30,20 @@ extension DatabaseExtensionStat on DatabaseHelper {
   Future<int> getTransactionCount(
     List<Account> accounts,
     List<TransactionCategory> categories,
+    DateTimeRange dateRange,
   ) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT COUNT(*) as count 
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('''SELECT COUNT(*) as count 
         FROM singleTransaction 
-        ${sqlWhereIn([
+        WHERE ${sqlWhereCombined([
           'account1_id',
-          'category_id'
+          'category_id',
+          'date',
         ], [
           accounts.map((e) => e.id).toList(),
           categories.map((e) => e.id).toList()
-        ])}
+        ], dateRange)}
           ;
           ''');
     return maps[0]['count'];

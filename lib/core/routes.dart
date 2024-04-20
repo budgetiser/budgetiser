@@ -5,7 +5,6 @@ import 'package:budgetiser/help/screens/help.dart';
 import 'package:budgetiser/home/screens/home_screen.dart';
 import 'package:budgetiser/notes/screens/notes_screen.dart';
 import 'package:budgetiser/settings/screens/settings_screen.dart';
-import 'package:budgetiser/statistics/screens/stats.dart';
 import 'package:budgetiser/statistics/screens/stats_overview.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 

@@ -3,6 +3,7 @@ import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
 import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
+import 'package:budgetiser/shared/widgets/picker/segmented_duration_picker.dart';
 import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class SimpleTextStatScreen extends StatefulWidget {
 class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
   List<TransactionCategory> _selectedCategories = [];
   List<Account> _selectedAccounts = [];
+  DateTime _selectedStartDate = DateTime(2000);
 
   void setAccount(List<Account> a) {
     if (mounted) {
@@ -85,9 +87,19 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
+            SegmentedDurationPicker(
+              callback: (newDate) {
+                setState(() {
+                  _selectedStartDate = newDate;
+                  print("new satrt date $_selectedStartDate");
+                });
+              },
+            ),
+            Text(_selectedStartDate.toString()),
             SimpleTextStat(
               accounts: _selectedAccounts,
               categories: _selectedCategories,
+              startDate: _selectedStartDate,
             ),
           ],
         ),
