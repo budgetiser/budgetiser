@@ -1,8 +1,8 @@
-import 'package:budgetiser/accounts/widgets/account_single_picker.dart';
-import 'package:budgetiser/categories/widgets/category_single_picker.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
+import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
-import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat.dart';
 import 'package:flutter/material.dart';
 
@@ -14,20 +14,20 @@ class SimpleTextStatScreen extends StatefulWidget {
 }
 
 class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
-  TransactionCategory? _selectedCategory;
-  Account? _selectedAccount;
+  List<TransactionCategory> _selectedCategories = [];
+  List<Account> _selectedAccounts = [];
 
-  void setAccount(Account a) {
+  void setAccount(List<Account> a) {
     if (mounted) {
       setState(() {
-        _selectedAccount = a;
+        _selectedAccounts = a;
       });
     }
   }
 
-  void setCategory(TransactionCategory c) {
+  void setCategory(List<TransactionCategory> c) {
     setState(() {
-      _selectedCategory = c;
+      _selectedCategories = c;
     });
   }
 
@@ -35,52 +35,96 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Account'),
+        title: const Text('Text stat'),
+        actions: [
+          IconButton(
+            icon: badges.Badge(
+              badgeContent: Text(
+                _selectedCategories.length.toString(),
+                style: const TextStyle(fontSize: 12),
+              ),
+              showBadge: _selectedCategories.isNotEmpty,
+              child: const Icon(Icons.filter_alt_sharp),
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return CategoryMultiPicker(
+                    onCategoriesPickedCallback: setCategory,
+                    initialValues: _selectedCategories,
+                  );
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: badges.Badge(
+              badgeContent: Text(
+                _selectedAccounts.length.toString(),
+                style: const TextStyle(fontSize: 12),
+              ),
+              showBadge: _selectedAccounts.isNotEmpty,
+              child: const Icon(Icons.account_balance),
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AccountMultiPicker(
+                    onAccountsPickedCallback: setAccount,
+                    initialValues: _selectedAccounts,
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            Row(
-              children: [
-                const Text('Account: '),
-                Expanded(
-                  child: InkWell(
-                    child: _selectedAccount != null
-                        ? SelectableIcon(_selectedAccount!)
-                        : const Text('Select Account'),
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AccountSinglePicker(
-                                onAccountPickedCallback: setAccount);
-                          });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              child: _selectedCategory != null
-                  ? SelectableIcon(_selectedCategory!)
-                  : const Text('Select category'),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CategorySinglePicker(
-                        onCategoryPickedCallback: setCategory,
-                      );
-                    });
-              },
-            ),
-            const Divider(),
-            if (_selectedAccount != null && _selectedCategory != null)
+            // Row(
+            //   children: [
+            //     const Text('Account: '),
+            //     Expanded(
+            //       child: InkWell(
+            //         child: _selectedAccount != null
+            //             ? SelectableIcon(_selectedAccount!)
+            //             : const Text('Select Account'),
+            //         onTap: () {
+            //           showDialog(
+            //               context: context,
+            //               builder: (BuildContext context) {
+            //                 return AccountSinglePicker(
+            //                     onAccountPickedCallback: setAccount);
+            //               });
+            //         },
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 16),
+            // InkWell(
+            //   child: _selectedCategory != null
+            //       ? SelectableIcon(_selectedCategory!)
+            //       : const Text('Select category'),
+            //   onTap: () {
+            //     showDialog(
+            //         context: context,
+            //         builder: (BuildContext context) {
+            //           return CategorySinglePicker(
+            //             onCategoryPickedCallback: setCategory,
+            //           );
+            //         });
+            //   },
+            // ),
+            // const Divider(),
+            if (_selectedAccounts.isNotEmpty && _selectedCategories.isNotEmpty)
               SimpleTextStat(
-                account: _selectedAccount,
-                category: _selectedCategory,
+                accounts: _selectedAccounts,
+                categories: _selectedCategories,
               ),
           ],
         ),

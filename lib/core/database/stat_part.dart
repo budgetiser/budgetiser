@@ -1,15 +1,25 @@
 part of 'database.dart';
 
 extension DatabaseExtensionStat on DatabaseHelper {
-  /// Get balance of all transactions in a category and account.
+  /// Get balance of all transactions in categories and accounts.
+  /// All accounts/categories if respective attribute is [].
   Future<double> getSpending(
-      Account account, TransactionCategory category) async {
+    List<Account> accounts,
+    List<TransactionCategory> categories,
+  ) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT SUM(value) as value 
-        FROM singleTransaction 
-        WHERE account1_id = ? and category_id = ?''',
-        [account.id, category.id]);
+        '''SELECT SUM(value) as value
+          FROM singleTransaction
+          ${sqlWhereIn([
+          'account1_id',
+          'category_id'
+        ], [
+          accounts.map((e) => e.id).toList(),
+          categories.map((e) => e.id).toList()
+        ])}
+          ;
+          ''');
     return maps[0]['value'] ?? 0.0;
   }
 

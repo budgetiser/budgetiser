@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 class SimpleTextStat extends StatelessWidget {
   const SimpleTextStat({
     super.key,
-    this.category,
-    this.account,
+    required this.categories,
+    required this.accounts,
   });
 
-  final Account? account;
-  final TransactionCategory? category;
+  final List<Account> accounts;
+  final List<TransactionCategory> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class SimpleTextStat extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         FutureBuilder(
-          future: DatabaseHelper.instance.getSpending(account!, category!),
+          future: DatabaseHelper.instance.getSpending(accounts, categories),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Row(
@@ -48,8 +48,8 @@ class SimpleTextStat extends StatelessWidget {
           },
         ),
         FutureBuilder(
-          future:
-              DatabaseHelper.instance.getTransactionCount(account!, category!),
+          future: DatabaseHelper.instance
+              .getTransactionCount(accounts[0], categories[0]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Row(
