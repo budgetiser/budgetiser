@@ -8,7 +8,6 @@ extension DatabaseExtensionStat on DatabaseHelper {
     List<TransactionCategory> categories,
     DateTimeRange dateRange,
   ) async {
-    print(dateRange);
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.rawQuery('''SELECT SUM(value) as value

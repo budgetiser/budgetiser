@@ -9,6 +9,7 @@ import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
+import 'package:budgetiser/shared/utils/sql_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -311,10 +312,6 @@ class TransactionModel extends ChangeNotifier {
         lastSecondOfMonth(inMonth)
       ],
     );
-    // timelineTask
-    //   ..finish()
-    //   ..start('get accounts for mapping');
-    // List<Account> accountList = await AccountModel().getAllAccounts();
 
     timelineTask
       ..finish()
@@ -334,6 +331,42 @@ class TransactionModel extends ChangeNotifier {
     timelineTask
       ..finish()
       ..finish();
+    return transactions;
+  }
+
+  /// Get List of transactions in a category and account inside the dateRange.
+  Future<List<SingleTransaction>> getFilteredTransactions(
+    List<Account> accounts,
+    List<TransactionCategory> categories,
+    DateTimeRange dateRange,
+  ) async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+        SELECT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
+        singleTransaction.description AS description, singleTransaction.id AS id
+        FROM singleTransaction, category
+        WHERE category.id = singleTransaction.category_id
+        AND ${sqlWhereCombined([
+          'account1_id',
+          'category_id',
+          'date',
+        ], [
+          accounts.map((e) => e.id).toList(),
+          categories.map((e) => e.id).toList()
+        ], dateRange)}
+          ;
+          ''');
+
+    List<SingleTransaction> transactions = [];
+    for (int i = 0; i < maps.length; i++) {
+      transactions.add(await _mapToSingleTransaction(
+        maps[i],
+        await AccountModel().getAllAccounts(),
+      ));
+    }
+    transactions.sort((a, b) {
+      return b.date.compareTo(a.date);
+    });
     return transactions;
   }
 }

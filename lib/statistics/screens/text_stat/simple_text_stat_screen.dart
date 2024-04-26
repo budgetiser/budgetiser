@@ -91,11 +91,11 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
               callback: (newDate) {
                 setState(() {
                   _selectedStartDate = newDate;
-                  print("new satrt date $_selectedStartDate");
                 });
               },
             ),
-            Text(_selectedStartDate.toString()),
+            Text(
+                'Showing data since ${_selectedStartDate.year}-${_selectedStartDate.month}-${_selectedStartDate.day}'),
             SimpleTextStat(
               accounts: _selectedAccounts,
               categories: _selectedCategories,

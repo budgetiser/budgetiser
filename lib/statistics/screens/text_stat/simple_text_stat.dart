@@ -1,6 +1,8 @@
-import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
+import 'package:budgetiser/core/database/models/transaction.dart';
+import 'package:budgetiser/core/database/provider/transaction_provider.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:flutter/material.dart';
 
@@ -18,75 +20,139 @@ class SimpleTextStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          'Simple Stats for all Transactions',
-          style: Theme.of(context).textTheme.bodyLarge,
+    return FutureBuilder(
+      future: TransactionModel().getFilteredTransactions(
+        accounts,
+        categories,
+        DateTimeRange(
+          start: startDate,
+          end: DateTime.now(),
         ),
-        FutureBuilder(
-          future: DatabaseHelper.instance.getSpending(
-              accounts,
-              categories,
-              DateTimeRange(
-                start: startDate,
-                end: DateTime.now(),
-              )),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Balance :',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  BalanceText(snapshot.data as double),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              throw snapshot.error!;
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-        FutureBuilder(
-          future: DatabaseHelper.instance.getTransactionCount(
-            accounts,
-            categories,
-            DateTimeRange(
-              start: startDate,
-              end: DateTime.now(),
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: FittedBox(
+                child: resultTable(snapshot.data!),
+              ),
             ),
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Amount of Transactions:',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    '${snapshot.data}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              throw snapshot.error!;
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
+          );
+        } else if (snapshot.hasError) {
+          throw snapshot.error!;
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget resultTable(List<SingleTransaction> data) {
+    double total = roundDouble(
+      data.fold(
+        0.0,
+        (previousValue, element) => previousValue + element.value,
+      ),
+    );
+    int count = data.length;
+    return Column(
+      children: [
+        DataTable(
+          columns: const [
+            DataColumn(label: Text('Stat')),
+            DataColumn(label: Text('Value')),
+          ],
+          rows: [
+            DataRow(
+              cells: [
+                const DataCell(Text('Amount of Transactions')),
+                DataCell(
+                  Text(count.toString()),
+                )
+              ],
+            ),
+            DataRow(
+              cells: [
+                const DataCell(Text('Total Value')),
+                DataCell(
+                  BalanceText(total),
+                )
+              ],
+            ),
+            DataRow(
+              cells: [
+                const DataCell(Text('Mean of Transaction Value')),
+                DataCell(
+                  BalanceText(total / count),
+                )
+              ],
+            ),
+          ],
+        ),
+        DataTable(
+          columns: const [
+            DataColumn(label: Text('Category')),
+            DataColumn(label: Text('Value')),
+          ],
+          rows: dataRowsByCategory(data),
+        ),
+        DataTable(
+          columns: const [
+            DataColumn(label: Text('Account 1')),
+            DataColumn(label: Text('Value')),
+          ],
+          rows: dataRowsByAccount1(data),
         ),
       ],
     );
+  }
+
+  List<DataRow> dataRowsByCategory(List<SingleTransaction> data) {
+    Map<String, double> groupedItems =
+        data.fold({}, (Map<String, double> map, item) {
+      map.putIfAbsent(item.category.name, () => 0);
+      map[item.category.name] = map[item.category.name]! + (item.value);
+
+      return map;
+    });
+    List<DataRow> dataRows = [];
+    groupedItems.forEach((key, value) {
+      dataRows.add(
+        DataRow(
+          cells: [
+            DataCell(Text(key)),
+            DataCell(
+              BalanceText(value),
+            )
+          ],
+        ),
+      );
+    });
+    return dataRows;
+  }
+
+  List<DataRow> dataRowsByAccount1(List<SingleTransaction> data) {
+    Map<String, double> groupedItems =
+        data.fold({}, (Map<String, double> map, item) {
+      map.putIfAbsent(item.account.name, () => 0);
+      map[item.account.name] = map[item.account.name]! + (item.value);
+
+      return map;
+    });
+    List<DataRow> dataRows = [];
+    groupedItems.forEach((key, value) {
+      dataRows.add(
+        DataRow(
+          cells: [
+            DataCell(Text(key)),
+            DataCell(
+              BalanceText(value),
+            )
+          ],
+        ),
+      );
+    });
+    return dataRows;
   }
 }
