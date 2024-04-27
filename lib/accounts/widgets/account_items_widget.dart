@@ -35,29 +35,16 @@ class AccountItemsWidget extends StatelessWidget {
               ),
             );
           }
-          return Container(
-            height:
-                snapshot.data!.length * 95 + (snapshot.data!.length - 1) * 21,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(8),
-              ),
-              border: Border.all(
-                color: Colors.grey,
-                width: 1.0,
-              ),
-            ),
-            child: ListView.separated(
-              separatorBuilder: (context, index) => const ItemListDivider(),
-              itemCount: snapshot.data!.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return AccountItem(
-                  accountData: snapshot.data![index],
-                );
-              },
-            ),
+          return ListView.separated(
+            shrinkWrap: true,
+            separatorBuilder: (context, index) => const ItemListDivider(),
+            itemCount: snapshot.data!.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return AccountItem(
+                accountData: snapshot.data![index],
+              );
+            },
           );
         },
       );

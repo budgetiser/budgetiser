@@ -1,7 +1,11 @@
 import 'package:budgetiser/accounts/widgets/account_items_widget.dart';
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/statistics/screens/stat_preview_widget.dart';
+import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat_screen.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -21,7 +25,38 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
       ),
       drawer: const CreateDrawer(),
-      body: AccountItemsWidget(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Card.filled(
+              child: AccountItemsWidget(),
+            ),
+          ),
+          Expanded(
+            child: GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(8),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              children: [
+                StatPreviewWidget(
+                  icon: Icons.abc,
+                  text: 'Text stat',
+                  onTap: () => {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SimpleTextStatScreen(),
+                      ),
+                    )
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(

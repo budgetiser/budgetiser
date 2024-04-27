@@ -1,10 +1,14 @@
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
+import 'package:budgetiser/core/database/models/selectable.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/balance_text.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class SimpleTextStat extends StatelessWidget {
   const SimpleTextStat({
@@ -67,25 +71,19 @@ class SimpleTextStat extends StatelessWidget {
             DataRow(
               cells: [
                 const DataCell(Text('Amount of Transactions')),
-                DataCell(
-                  Text(count.toString()),
-                )
+                DataCell(Text(count.toString())),
               ],
             ),
             DataRow(
               cells: [
                 const DataCell(Text('Total Value')),
-                DataCell(
-                  BalanceText(total),
-                )
+                DataCell(BalanceText(total)),
               ],
             ),
             DataRow(
               cells: [
                 const DataCell(Text('Mean of Transaction Value')),
-                DataCell(
-                  BalanceText(total / count),
-                )
+                DataCell(BalanceText(total / count)),
               ],
             ),
           ],
@@ -95,6 +93,7 @@ class SimpleTextStat extends StatelessWidget {
             DataColumn(label: Text('Category')),
             DataColumn(label: Text('Value')),
             DataColumn(label: Text('Amount')),
+            DataColumn(label: Text('Mean')),
           ],
           rows: dataRowsByCategory(data),
         ),
@@ -103,6 +102,7 @@ class SimpleTextStat extends StatelessWidget {
             DataColumn(label: Text('Account 1')),
             DataColumn(label: Text('Value')),
             DataColumn(label: Text('Amount')),
+            DataColumn(label: Text('Mean')),
           ],
           rows: dataRowsByAccount1(data),
         ),
@@ -111,13 +111,11 @@ class SimpleTextStat extends StatelessWidget {
   }
 
   List<DataRow> dataRowsByCategory(List<SingleTransaction> data) {
-    Map<String, (double, int)> groupedItems =
-        data.fold({}, (Map<String, (double, int)> map, item) {
-      map.putIfAbsent(item.category.name, () => (0.0, 0));
-      map[item.category.name] = (
-        map[item.category.name]!.$1 + (item.value),
-        map[item.category.name]!.$2 + 1
-      );
+    Map<Selectable, (double, int)> groupedItems =
+        data.fold({}, (Map<Selectable, (double, int)> map, item) {
+      map.putIfAbsent(item.category, () => (0.0, 0));
+      map[item.category] =
+          (map[item.category]!.$1 + (item.value), map[item.category]!.$2 + 1);
 
       return map;
     });
@@ -126,13 +124,18 @@ class SimpleTextStat extends StatelessWidget {
       dataRows.add(
         DataRow(
           cells: [
-            DataCell(Text(key)),
+            DataCell(
+              SelectableIconWithText(key),
+            ),
             DataCell(
               BalanceText(value.$1),
             ),
             DataCell(
               Text(value.$2.toString()),
-            )
+            ),
+            DataCell(
+              BalanceText(value.$1 / value.$2),
+            ),
           ],
         ),
       );
@@ -141,13 +144,11 @@ class SimpleTextStat extends StatelessWidget {
   }
 
   List<DataRow> dataRowsByAccount1(List<SingleTransaction> data) {
-    Map<String, (double, int)> groupedItems =
-        data.fold({}, (Map<String, (double, int)> map, item) {
-      map.putIfAbsent(item.account.name, () => (0.0, 0));
-      map[item.account.name] = (
-        map[item.account.name]!.$1 + (item.value),
-        map[item.account.name]!.$2 + 1
-      );
+    Map<Selectable, (double, int)> groupedItems =
+        data.fold({}, (Map<Selectable, (double, int)> map, item) {
+      map.putIfAbsent(item.account, () => (0.0, 0));
+      map[item.account] =
+          (map[item.account]!.$1 + (item.value), map[item.account]!.$2 + 1);
 
       return map;
     });
@@ -156,13 +157,18 @@ class SimpleTextStat extends StatelessWidget {
       dataRows.add(
         DataRow(
           cells: [
-            DataCell(Text(key)),
+            DataCell(
+              SelectableIconWithText(key),
+            ),
             DataCell(
               BalanceText(value.$1),
             ),
             DataCell(
               Text(value.$2.toString()),
-            )
+            ),
+            DataCell(
+              BalanceText(value.$1 / value.$2),
+            ),
           ],
         ),
       );
