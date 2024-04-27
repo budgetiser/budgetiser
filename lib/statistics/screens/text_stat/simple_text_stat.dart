@@ -6,9 +6,7 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SimpleTextStat extends StatelessWidget {
   const SimpleTextStat({
@@ -36,12 +34,7 @@ class SimpleTextStat extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: FittedBox(
-                child: resultTable(snapshot.data!),
-              ),
-            ),
+            child: resultTable(snapshot.data!),
           );
         } else if (snapshot.hasError) {
           throw snapshot.error!;
@@ -60,51 +53,57 @@ class SimpleTextStat extends StatelessWidget {
       ),
     );
     int count = data.length;
-    return Column(
+    return ListView(
       children: [
-        DataTable(
-          columns: const [
-            DataColumn(label: Text('Stat')),
-            DataColumn(label: Text('Value')),
-          ],
-          rows: [
-            DataRow(
-              cells: [
-                const DataCell(Text('Amount of Transactions')),
-                DataCell(Text(count.toString())),
-              ],
-            ),
-            DataRow(
-              cells: [
-                const DataCell(Text('Total Value')),
-                DataCell(BalanceText(total)),
-              ],
-            ),
-            DataRow(
-              cells: [
-                const DataCell(Text('Mean of Transaction Value')),
-                DataCell(BalanceText(total / count)),
-              ],
-            ),
-          ],
+        FittedBox(
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Stat')),
+              DataColumn(label: Text('Value')),
+            ],
+            rows: [
+              DataRow(
+                cells: [
+                  const DataCell(Text('Amount of Transactions')),
+                  DataCell(Text(count.toString())),
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(Text('Total Value')),
+                  DataCell(BalanceText(total)),
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(Text('Mean of Transaction Value')),
+                  DataCell(BalanceText(total / count)),
+                ],
+              ),
+            ],
+          ),
         ),
-        DataTable(
-          columns: const [
-            DataColumn(label: Text('Category')),
-            DataColumn(label: Text('Value')),
-            DataColumn(label: Text('Amount')),
-            DataColumn(label: Text('Mean')),
-          ],
-          rows: dataRowsByCategory(data),
+        FittedBox(
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Category')),
+              DataColumn(label: Text('Value')),
+              DataColumn(label: Text('Amount')),
+              DataColumn(label: Text('Mean')),
+            ],
+            rows: dataRowsByCategory(data),
+          ),
         ),
-        DataTable(
-          columns: const [
-            DataColumn(label: Text('Account 1')),
-            DataColumn(label: Text('Value')),
-            DataColumn(label: Text('Amount')),
-            DataColumn(label: Text('Mean')),
-          ],
-          rows: dataRowsByAccount1(data),
+        FittedBox(
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Account 1')),
+              DataColumn(label: Text('Value')),
+              DataColumn(label: Text('Amount')),
+              DataColumn(label: Text('Mean')),
+            ],
+            rows: dataRowsByAccount1(data),
+          ),
         ),
       ],
     );
