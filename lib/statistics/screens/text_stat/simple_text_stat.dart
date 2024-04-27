@@ -94,6 +94,7 @@ class SimpleTextStat extends StatelessWidget {
           columns: const [
             DataColumn(label: Text('Category')),
             DataColumn(label: Text('Value')),
+            DataColumn(label: Text('Amount')),
           ],
           rows: dataRowsByCategory(data),
         ),
@@ -101,6 +102,7 @@ class SimpleTextStat extends StatelessWidget {
           columns: const [
             DataColumn(label: Text('Account 1')),
             DataColumn(label: Text('Value')),
+            DataColumn(label: Text('Amount')),
           ],
           rows: dataRowsByAccount1(data),
         ),
@@ -109,10 +111,13 @@ class SimpleTextStat extends StatelessWidget {
   }
 
   List<DataRow> dataRowsByCategory(List<SingleTransaction> data) {
-    Map<String, double> groupedItems =
-        data.fold({}, (Map<String, double> map, item) {
-      map.putIfAbsent(item.category.name, () => 0);
-      map[item.category.name] = map[item.category.name]! + (item.value);
+    Map<String, (double, int)> groupedItems =
+        data.fold({}, (Map<String, (double, int)> map, item) {
+      map.putIfAbsent(item.category.name, () => (0.0, 0));
+      map[item.category.name] = (
+        map[item.category.name]!.$1 + (item.value),
+        map[item.category.name]!.$2 + 1
+      );
 
       return map;
     });
@@ -123,7 +128,10 @@ class SimpleTextStat extends StatelessWidget {
           cells: [
             DataCell(Text(key)),
             DataCell(
-              BalanceText(value),
+              BalanceText(value.$1),
+            ),
+            DataCell(
+              Text(value.$2.toString()),
             )
           ],
         ),
@@ -133,10 +141,13 @@ class SimpleTextStat extends StatelessWidget {
   }
 
   List<DataRow> dataRowsByAccount1(List<SingleTransaction> data) {
-    Map<String, double> groupedItems =
-        data.fold({}, (Map<String, double> map, item) {
-      map.putIfAbsent(item.account.name, () => 0);
-      map[item.account.name] = map[item.account.name]! + (item.value);
+    Map<String, (double, int)> groupedItems =
+        data.fold({}, (Map<String, (double, int)> map, item) {
+      map.putIfAbsent(item.account.name, () => (0.0, 0));
+      map[item.account.name] = (
+        map[item.account.name]!.$1 + (item.value),
+        map[item.account.name]!.$2 + 1
+      );
 
       return map;
     });
@@ -147,7 +158,10 @@ class SimpleTextStat extends StatelessWidget {
           cells: [
             DataCell(Text(key)),
             DataCell(
-              BalanceText(value),
+              BalanceText(value.$1),
+            ),
+            DataCell(
+              Text(value.$2.toString()),
             )
           ],
         ),
