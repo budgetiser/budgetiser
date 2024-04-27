@@ -110,8 +110,10 @@ class SimpleTextStat extends StatelessWidget {
   }
 
   List<DataRow> dataRowsByCategory(List<SingleTransaction> data) {
-    Map<Selectable, (double, int)> groupedItems =
-        data.fold({}, (Map<Selectable, (double, int)> map, item) {
+    Map<Selectable, (double, int)> groupedItems = data.fold({}, (
+      Map<Selectable, (double, int)> map,
+      item,
+    ) {
       map.putIfAbsent(item.category, () => (0.0, 0));
       map[item.category] =
           (map[item.category]!.$1 + (item.value), map[item.category]!.$2 + 1);
@@ -143,8 +145,10 @@ class SimpleTextStat extends StatelessWidget {
   }
 
   List<DataRow> dataRowsByAccount1(List<SingleTransaction> data) {
-    Map<Selectable, (double, int)> groupedItems =
-        data.fold({}, (Map<Selectable, (double, int)> map, item) {
+    Map<Selectable, (double, int)> groupedItems = data.fold({}, (
+      Map<Selectable, (double, int)> map,
+      item,
+    ) {
       map.putIfAbsent(item.account, () => (0.0, 0));
       map[item.account] =
           (map[item.account]!.$1 + (item.value), map[item.account]!.$2 + 1);

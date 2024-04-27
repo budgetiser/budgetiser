@@ -20,8 +20,6 @@ class _StatsOverviewState extends State<StatsOverview> {
     _controller.dispose();
     super.dispose();
   }
-  // LineChartStatScreen(),
-  // SimpleTextStatScreen(),
 
   @override
   Widget build(BuildContext context) {

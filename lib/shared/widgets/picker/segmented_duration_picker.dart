@@ -75,8 +75,6 @@ class _SegmentedDurationPickerState extends State<SegmentedDurationPicker> {
                   DateTime(startDate.year - 1, startDate.month, startDate.day);
             case DurationEnum.allTime:
               startDate = DateTime(2000);
-            default:
-            // startDate = today();
           }
           widget.callback(startDate);
         });
