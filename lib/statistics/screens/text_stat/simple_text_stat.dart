@@ -8,8 +8,8 @@ import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:flutter/material.dart';
 
-class SimpleTextStat extends StatelessWidget {
-  const SimpleTextStat({
+class SimpleTextStatTables extends StatelessWidget {
+  const SimpleTextStatTables({
     super.key,
     required this.categories,
     required this.accounts,
@@ -45,7 +45,9 @@ class SimpleTextStat extends StatelessWidget {
     );
   }
 
-  Widget resultTable(List<SingleTransaction> data) {
+  Widget resultTable(
+    List<SingleTransaction> data,
+  ) {
     double total = roundDouble(
       data.fold(
         0.0,
@@ -83,7 +85,8 @@ class SimpleTextStat extends StatelessWidget {
             ],
           ),
         ),
-        FittedBox(
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: const [
               DataColumn(label: Text('Category')),
@@ -94,7 +97,8 @@ class SimpleTextStat extends StatelessWidget {
             rows: dataRowsByCategory(data),
           ),
         ),
-        FittedBox(
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: const [
               DataColumn(label: Text('Account 1')),
@@ -109,7 +113,9 @@ class SimpleTextStat extends StatelessWidget {
     );
   }
 
-  List<DataRow> dataRowsByCategory(List<SingleTransaction> data) {
+  List<DataRow> dataRowsByCategory(
+    List<SingleTransaction> data,
+  ) {
     Map<Selectable, (double, int)> groupedItems = data.fold({}, (
       Map<Selectable, (double, int)> map,
       item,
@@ -126,7 +132,12 @@ class SimpleTextStat extends StatelessWidget {
         DataRow(
           cells: [
             DataCell(
-              SelectableIconWithText(key),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 250,
+                ), //SET max width
+                child: SelectableIconWithText(key),
+              ),
             ),
             DataCell(
               BalanceText(value.$1),
@@ -161,7 +172,12 @@ class SimpleTextStat extends StatelessWidget {
         DataRow(
           cells: [
             DataCell(
-              SelectableIconWithText(key),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 250,
+                ), //SET max width
+                child: SelectableIconWithText(key),
+              ),
             ),
             DataCell(
               BalanceText(value.$1),

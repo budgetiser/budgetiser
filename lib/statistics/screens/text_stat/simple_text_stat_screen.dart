@@ -97,7 +97,11 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
             Text(
               'Showing data since ${_selectedStartDate.year}-${_selectedStartDate.month}-${_selectedStartDate.day}',
             ),
-            SimpleTextStat(
+            const Text(
+              'Transactions with 2 Accounts not listed!',
+              style: TextStyle(color: Colors.red),
+            ),
+            SimpleTextStatTables(
               accounts: _selectedAccounts,
               categories: _selectedCategories,
               startDate: _selectedStartDate,

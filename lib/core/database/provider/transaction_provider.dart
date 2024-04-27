@@ -341,11 +341,12 @@ class TransactionModel extends ChangeNotifier {
     DateTimeRange dateRange,
   ) async {
     final db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    List<Map<String, dynamic>> maps = await db.rawQuery('''
         SELECT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
         singleTransaction.description AS description, singleTransaction.id AS id
         FROM singleTransaction, category
         WHERE category.id = singleTransaction.category_id
+        AND account2_id IS NULL
         AND ${sqlWhereCombined([
           'account1_id',
           'category_id',
@@ -354,8 +355,8 @@ class TransactionModel extends ChangeNotifier {
           accounts.map((e) => e.id).toList(),
           categories.map((e) => e.id).toList()
         ], dateRange)}
-          ;
-          ''');
+        ;
+        ''');
 
     List<SingleTransaction> transactions = [];
     for (int i = 0; i < maps.length; i++) {
