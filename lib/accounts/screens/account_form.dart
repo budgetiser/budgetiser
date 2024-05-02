@@ -85,6 +85,7 @@ class _AccountFormState extends State<AccountForm> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         labelText: 'Account Name',
+                        border: OutlineInputBorder(),
                       ),
                       validator: (data) {
                         if (data!.isEmpty) {
@@ -112,6 +113,7 @@ class _AccountFormState extends State<AccountForm> {
                 ),
                 decoration: const InputDecoration(
                   labelText: 'Balance',
+                  border: OutlineInputBorder(),
                 ),
                 validator: (data) {
                   if (data!.isEmpty) {
@@ -132,6 +134,7 @@ class _AccountFormState extends State<AccountForm> {
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
                     labelText: 'Description',
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),

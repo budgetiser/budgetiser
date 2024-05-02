@@ -3,7 +3,6 @@ import 'package:budgetiser/budgets/widgets/budget_item.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
-import 'package:budgetiser/shared/widgets/list_views/item_list_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,9 +56,8 @@ class BudgetScreen extends StatelessWidget {
   }
 
   Widget _screenContent(List<Budget> budgets) {
-    return ListView.separated(
+    return ListView.builder(
       padding: const EdgeInsets.only(bottom: 80),
-      separatorBuilder: (context, index) => const ItemListDivider(),
       itemCount: budgets.length,
       itemBuilder: (context, i) {
         return BudgetItem(budget: budgets[i]);

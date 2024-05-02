@@ -3,7 +3,6 @@ import 'package:budgetiser/accounts/widgets/account_item.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
-import 'package:budgetiser/shared/widgets/list_views/item_list_divider.dart';
 import 'package:budgetiser/shared/widgets/sort_by.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -116,8 +115,7 @@ class _AccountScreenState extends State<AccountScreen> {
               return const Text('Oops!');
             }
             snapshot.data!.sort(sortFunction);
-            return ListView.separated(
-              separatorBuilder: (context, index) => const ItemListDivider(),
+            return ListView.builder(
               itemCount: snapshot.data!.length,
               padding: const EdgeInsets.only(bottom: 80),
               itemBuilder: (BuildContext context, int index) {
