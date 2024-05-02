@@ -36,9 +36,12 @@ class _CreateDrawerState extends State<CreateDrawer> {
     setState(() {
       screenIndex = selectedScreen;
     });
-    Navigator.pushReplacementNamed(
+    // pop drawer and push in a way, that the back button first goes to the home screen and then closes the app
+    Navigator.pop(context);
+    Navigator.pushNamedAndRemoveUntil(
       context,
       routeNames[selectedScreen],
+      ModalRoute.withName('/'),
     );
   }
 
