@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
 import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
@@ -28,7 +29,7 @@ class TransactionsScreen extends StatefulWidget {
 class _TransactionsScreenState extends State<TransactionsScreen> {
   final GlobalKey _futureBuilderKey = GlobalKey();
 
-  List<Account>? _currentFilterAccounts = [];
+  List<Account> _currentFilterAccounts = [];
   List<TransactionCategory> _currentFilterCategories = [];
 
   List<Account> _accountList =
@@ -43,7 +44,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         .then((value) => _accountList = value);
 
     if (widget.initialAccountsFilter != null) {
-      _currentFilterAccounts = widget.initialAccountsFilter;
+      _currentFilterAccounts = widget.initialAccountsFilter!;
     }
     if (widget.initialCategoriesFilter != null) {
       _currentFilterCategories = widget.initialCategoriesFilter!;
@@ -57,7 +58,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         title: const Text('Transactions'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_alt_sharp),
+            icon: badges.Badge(
+              badgeContent: Text(
+                _currentFilterCategories.length.toString(),
+                style: const TextStyle(fontSize: 12),
+              ),
+              showBadge: _currentFilterCategories.isNotEmpty,
+              child: const Icon(Icons.filter_alt_sharp),
+            ),
             onPressed: () {
               showDialog(
                 context: context,
@@ -75,7 +83,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.account_balance),
+            icon: badges.Badge(
+              badgeContent: Text(
+                _currentFilterAccounts.length.toString(),
+                style: const TextStyle(fontSize: 12),
+              ),
+              showBadge: _currentFilterAccounts.isNotEmpty,
+              child: const Icon(Icons.account_balance),
+            ),
             onPressed: () {
               showDialog(
                 context: context,

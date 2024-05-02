@@ -97,6 +97,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
                     controller: nameController,
+                    textCapitalization: TextCapitalization.sentences,
                     validator: (data) {
                       if (data == null || data.trim() == '') {
                         nameController.text = '';
@@ -122,6 +123,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       labelText: 'Description',
                       alignLabelWithHint: true,
                     ),
+                    textCapitalization: TextCapitalization.sentences,
                   ),
                 ],
               ),

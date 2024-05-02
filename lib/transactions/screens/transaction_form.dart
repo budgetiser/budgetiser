@@ -297,6 +297,7 @@ class _TransactionFormState extends State<TransactionForm> {
               setState(() {});
             },
             controller: titleController,
+            textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               labelText: titleController.text == ''
                   ? 'Title: ${selectedCategory?.name}'
@@ -369,6 +370,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
             child: TextFormField(
               controller: descriptionController,
+              textCapitalization: TextCapitalization.sentences,
               maxLines: 5,
               decoration: const InputDecoration(
                 labelText: 'Notes',
