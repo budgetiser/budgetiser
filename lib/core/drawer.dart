@@ -26,7 +26,7 @@ class _CreateDrawerState extends State<CreateDrawer> {
     'account',
     'categories',
     'transactions',
-    'stats',
+    'stats_overview',
     'help',
     'settings',
     'notes123',
