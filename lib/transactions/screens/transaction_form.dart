@@ -248,6 +248,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                     decoration: const InputDecoration(
                       labelText: 'Value',
+                      border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       if (tryValueParse(valueController.text) != null) {
@@ -302,6 +303,7 @@ class _TransactionFormState extends State<TransactionForm> {
               labelText: titleController.text == ''
                   ? 'Title: ${selectedCategory?.name}'
                   : 'Title',
+              border: const OutlineInputBorder(),
             ),
           ),
           // category picker
@@ -374,6 +376,7 @@ class _TransactionFormState extends State<TransactionForm> {
               maxLines: 5,
               decoration: const InputDecoration(
                 labelText: 'Notes',
+                border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
             ),

@@ -3,7 +3,6 @@ import 'package:budgetiser/categories/widgets/category_item.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
-import 'package:budgetiser/shared/widgets/list_views/item_list_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -80,8 +79,6 @@ class _CategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      // padding: const EdgeInsets.only(bottom: 80),
-      // separatorBuilder: (context, index) => const ItemListDivider(),
       itemCount: categories.length,
       itemBuilder: (BuildContext context, int index) {
         return CategoryItem(
@@ -89,10 +86,6 @@ class _CategoryList extends StatelessWidget {
         );
       },
     );
-    // return Padding(
-    //   padding: const EdgeInsets.symmetric(horizontal: 8),
-    //   child:
-    // );
   }
 }
 
@@ -126,9 +119,8 @@ Widget buildA(BuildContext context) {
               ..sort((a, b) => a.name.compareTo(b.name));
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ListView.separated(
+              child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 80),
-                separatorBuilder: (context, index) => const ItemListDivider(),
                 itemCount: categoryList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return CategoryItem(

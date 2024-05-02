@@ -45,6 +45,7 @@ class _DatePickerState extends State<DatePicker> {
       decoration: InputDecoration(
         hintText: widget.label,
         labelText: widget.label,
+        border: const OutlineInputBorder(),
       ),
       onTap: () async {
         var date = await showDatePicker(

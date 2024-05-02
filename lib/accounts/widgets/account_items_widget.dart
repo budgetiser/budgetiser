@@ -2,7 +2,6 @@ import 'package:budgetiser/accounts/widgets/account_item.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
-import 'package:budgetiser/shared/widgets/list_views/item_list_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,8 +47,7 @@ class AccountItemsWidget extends StatelessWidget {
                 width: 1.0,
               ),
             ),
-            child: ListView.separated(
-              separatorBuilder: (context, index) => const ItemListDivider(),
+            child: ListView.builder(
               itemCount: snapshot.data!.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
