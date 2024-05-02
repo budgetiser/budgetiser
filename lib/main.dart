@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:budgetiser/constants.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
@@ -7,11 +6,8 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/routes.dart';
 import 'package:budgetiser/home/screens/home_screen.dart';
 import 'package:budgetiser/settings/services/settings_stream.dart';
-import 'package:budgetiser/shared/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'constants.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
