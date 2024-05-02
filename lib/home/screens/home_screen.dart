@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisCount: 2,
               children: [
                 StatPreviewWidget(
-                  icon: Icons.abc,
                   text: 'Text stat',
                   onTap: () => {
                     Navigator.of(context).push(
@@ -49,6 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   },
+                  child: const Icon(
+                    Icons.abc,
+                    size: 70,
+                  ),
                 ),
               ],
             ),

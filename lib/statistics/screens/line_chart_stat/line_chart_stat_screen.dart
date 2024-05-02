@@ -26,7 +26,7 @@ class _LineChartStatScreenState extends State<LineChartStatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Account')),
+      appBar: AppBar(title: const Text('Accounts Line Chart')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

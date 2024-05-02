@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/statistics/screens/account_bar_chart/account_bar_chart_screen.dart';
 import 'package:budgetiser/statistics/screens/line_chart_stat/line_chart_stat_screen.dart';
 import 'package:budgetiser/statistics/screens/stat_preview_widget.dart';
 import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat_screen.dart';
@@ -36,7 +37,6 @@ class _StatsOverviewState extends State<StatsOverview> {
         crossAxisCount: 2,
         children: [
           StatPreviewWidget(
-            icon: Icons.line_axis_rounded,
             text: 'Line chart',
             onTap: () => {
               Navigator.of(context).push(
@@ -45,9 +45,12 @@ class _StatsOverviewState extends State<StatsOverview> {
                 ),
               )
             },
+            child: const Icon(
+              Icons.line_axis_rounded,
+              size: 70,
+            ),
           ),
           StatPreviewWidget(
-            icon: Icons.abc,
             text: 'Text stat',
             onTap: () => {
               Navigator.of(context).push(
@@ -56,6 +59,24 @@ class _StatsOverviewState extends State<StatsOverview> {
                 ),
               )
             },
+            child: const Icon(
+              Icons.abc,
+              size: 70,
+            ),
+          ),
+          StatPreviewWidget(
+            text: 'Balance distribution',
+            onTap: () => {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AccountBarChartScreen(),
+                ),
+              )
+            },
+            child: const Icon(
+              Icons.bar_chart,
+              size: 70,
+            ),
           ),
         ],
       ),
