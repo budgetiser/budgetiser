@@ -56,14 +56,15 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
-        // TODO ellipsis listTile title without changing color
-        // listTileTheme: ListTileTheme.of(context).copyWith(
-        //     titleTextStyle: Theme.of(context)
-        //         .textTheme
-        //         .titleMedium
-        //         ?.copyWith(overflow: TextOverflow.ellipsis)),
-        brightness: Brightness.dark,
-      ),
+          // TODO ellipsis listTile title without changing color
+          // listTileTheme: ListTileTheme.of(context).copyWith(
+          //     titleTextStyle: Theme.of(context)
+          //         .textTheme
+          //         .titleMedium
+          //         ?.copyWith(overflow: TextOverflow.ellipsis)),
+          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.green, brightness: Brightness.dark)),
       home: const HomeScreen(),
       routes: routes,
     );

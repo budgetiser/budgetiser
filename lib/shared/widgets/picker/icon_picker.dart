@@ -24,7 +24,7 @@ class _IconPickerState extends State<IconPicker> {
   Widget build(BuildContext context) {
     _currentIcon = widget.initialIcon ?? Icons.blur_on;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
       child: InkWell(
         onTap: () {
           _searchString = null;

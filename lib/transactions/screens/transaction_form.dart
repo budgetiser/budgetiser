@@ -136,7 +136,7 @@ class _TransactionFormState extends State<TransactionForm> {
           wasNegative: wasValueNegative,
           value: tryValueParse(valueController.text),
         ),
-        child: _transactionFormContent(context),
+        children:[ _transactionFormContent(context)],
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
