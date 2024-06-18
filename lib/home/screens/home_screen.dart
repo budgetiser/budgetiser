@@ -70,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: const Icon(
           Icons.add,
         ),
-        heroTag: 'newTransaction',
       ),
     );
   }

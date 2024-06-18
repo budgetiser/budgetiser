@@ -145,7 +145,6 @@ class _CategoryFormState extends State<CategoryForm> {
             width: 5,
           ),
           FloatingActionButton.extended(
-            heroTag: 'save',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
