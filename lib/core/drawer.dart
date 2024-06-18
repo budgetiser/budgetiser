@@ -75,20 +75,18 @@ class _CreateDrawerState extends State<CreateDrawer> {
         singleDrawerItem(Icons.attach_money, 'Budgets'),
         singleDrawerItem(Icons.account_balance, 'Account'),
         singleDrawerItem(Icons.category, 'Categories'),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-          child: Text(
+        const Padding(
+          padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
+          child: const Text(
             'Transactions', // TODO better name that describes all screens that in/output data
-            style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
         singleDrawerItem(Icons.payment, 'Transactions'),
         singleDrawerItem(Icons.show_chart, 'Stats'),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
           child: Text(
             'Other',
-            style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
         singleDrawerItem(Icons.question_mark, 'Help'),

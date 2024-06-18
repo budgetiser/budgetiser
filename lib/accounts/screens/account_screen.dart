@@ -68,7 +68,6 @@ class _AccountScreenState extends State<AccountScreen> {
           );
         },
         tooltip: 'Increment',
-        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );

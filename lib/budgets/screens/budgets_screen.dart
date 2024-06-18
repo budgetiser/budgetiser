@@ -49,7 +49,6 @@ class BudgetScreen extends StatelessWidget {
             ),
           );
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add),
       ),
     );

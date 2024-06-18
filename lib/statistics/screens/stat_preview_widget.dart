@@ -15,7 +15,7 @@ class StatPreviewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card.filled(
       child: InkWell(
-        borderRadius: BorderRadius.circular(8), // TODO: from material design
+        borderRadius: BorderRadius.circular(8),
         onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -23,7 +23,7 @@ class StatPreviewWidget extends StatelessWidget {
             child,
             Text(
               text,
-              style: Theme.of(context).textTheme.titleLarge, // TODO: design
+              style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
           ],

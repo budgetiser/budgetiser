@@ -49,22 +49,18 @@ class TransactionExpansionTile extends StatelessWidget {
               if (snapshot.data!.isEmpty) {
                 return Container();
               }
-              return Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: ListView.builder(
-                  prototypeItem: TransactionItem(
-                    transactionData: snapshot.data!.first,
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return TransactionItem(
-                      // TODO: Bug: no splash effect. probably because of colored container #229
-                      transactionData: snapshot.data![index],
-                    );
-                  },
+              return ListView.builder(
+                prototypeItem: TransactionItem(
+                  transactionData: snapshot.data!.first,
                 ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return TransactionItem(
+                    transactionData: snapshot.data![index],
+                  );
+                },
               );
             },
           );
