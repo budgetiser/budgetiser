@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class ScrollViewWithDeadSpace extends StatefulWidget {
   const ScrollViewWithDeadSpace({
     super.key,
-    required this.deadSpaceContent,
-    required this.child,
+    required this.children,
+    this.deadSpaceContent,
     this.deadSpaceSize = 200,
   });
-  final Widget deadSpaceContent;
+  final Widget? deadSpaceContent;
   final double deadSpaceSize;
-  final Widget child;
+  final List<Widget> children;
 
   @override
   State<ScrollViewWithDeadSpace> createState() =>
@@ -39,7 +39,7 @@ class _ScrollViewWithDeadSpaceState extends State<ScrollViewWithDeadSpace> {
               child: widget.deadSpaceContent,
             ),
             // content of the screen
-            widget.child
+            ...widget.children
           ],
         ),
       ),

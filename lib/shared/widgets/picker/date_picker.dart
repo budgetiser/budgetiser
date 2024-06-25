@@ -45,10 +45,12 @@ class _DatePickerState extends State<DatePicker> {
       decoration: InputDecoration(
         hintText: widget.label,
         labelText: widget.label,
+        border: const OutlineInputBorder(),
       ),
       onTap: () async {
         var date = await showDatePicker(
           context: context,
+          locale: const Locale('de', 'DE'),
           initialDate: widget.initialDate ?? DateTime.now(),
           firstDate: DateTime(1900),
           lastDate: DateTime(2100),

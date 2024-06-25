@@ -20,9 +20,22 @@ String dateAsDDMMYYYY(DateTime date) {
   return '${date.day.toString().padLeft(2, "0")}.${date.month.toString().padLeft(2, "0")}.${date.year}';
 }
 
+/// Returns the first second of DateTime.now()
+DateTime today() {
+  var now = DateTime.now();
+  return DateTime(now.year, now.month, now.day);
+}
+
 /// Return the first of the month of [date]
 DateTime firstOfMonth(DateTime date) {
   return DateTime(date.year, date.month, 1);
+}
+
+/// Return millisecondsSinceEpoch of the last second of the day of [date]
+int lastSecondOfDay(DateTime date) {
+  return DateTime(date.year, date.month, date.day)
+      .subtract(const Duration(seconds: 1))
+      .millisecondsSinceEpoch;
 }
 
 /// Return millisecondsSinceEpoch of the last second of the month of [date]

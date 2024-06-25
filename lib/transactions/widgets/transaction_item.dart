@@ -38,9 +38,9 @@ class TransactionItem extends StatelessWidget {
                 Flexible(
                   child: Text(
                     transactionData.title,
-                    style: const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          overflow: TextOverflow.ellipsis,
+                        ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -54,20 +54,15 @@ class TransactionItem extends StatelessWidget {
               children: [
                 Text(
                   dateAsDDMMYYYY(transactionData.date),
-                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       transactionData.description ?? '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       textWidthBasis: TextWidthBasis.parent,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.merge(const TextStyle(fontSize: 18)),
                     ),
                   ),
                 ),

@@ -1,27 +1,50 @@
 part of 'database.dart';
 
 extension DatabaseExtensionStat on DatabaseHelper {
-  /// Get balance of all transactions in a category and account.
+  /// Get balance of all transactions in categories and accounts.
+  /// All accounts/categories if respective attribute is [].
   Future<double> getSpending(
-      Account account, TransactionCategory category) async {
+    List<Account> accounts,
+    List<TransactionCategory> categories,
+    DateTimeRange dateRange,
+  ) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT SUM(value) as value 
-        FROM singleTransaction 
-        WHERE account1_id = ? and category_id = ?''',
-        [account.id, category.id]);
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('''SELECT SUM(value) as value
+          FROM singleTransaction 
+          WHERE ${sqlWhereCombined([
+          'account1_id',
+          'category_id',
+          'date',
+        ], [
+          accounts.map((e) => e.id).toList(),
+          categories.map((e) => e.id).toList()
+        ], dateRange)}
+          ;
+          ''');
     return maps[0]['value'] ?? 0.0;
   }
 
   /// Get amount of transactions in a category and account.
   Future<int> getTransactionCount(
-      Account account, TransactionCategory category) async {
+    List<Account> accounts,
+    List<TransactionCategory> categories,
+    DateTimeRange dateRange,
+  ) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        '''SELECT COUNT(*) as count 
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery('''SELECT COUNT(*) as count 
         FROM singleTransaction 
-        WHERE account1_id = ? and category_id = ?''',
-        [account.id, category.id]);
+        WHERE ${sqlWhereCombined([
+          'account1_id',
+          'category_id',
+          'date',
+        ], [
+          accounts.map((e) => e.id).toList(),
+          categories.map((e) => e.id).toList()
+        ], dateRange)}
+          ;
+          ''');
     return maps[0]['count'];
   }
 

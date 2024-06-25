@@ -4,8 +4,7 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
-import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
+import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +23,12 @@ class _CategoryFormState extends State<CategoryForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   Color _color = randomColor();
-  IconData? _icon;
+  IconData _icon = Icons.abc;
+
+  double maxHeaderHeight = 200;
+  final ValueNotifier<double> opacity = ValueNotifier(0);
 
   @override
   void initState() {
@@ -49,63 +52,62 @@ class _CategoryFormState extends State<CategoryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.categoryData != null
-            ? const Text('Edit Category')
-            : const Text('New Category'),
+        title: const Text('Create a Category'),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: Container(),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // icon and name
-              Row(
-                children: <Widget>[
-                  IconPicker(
-                    color: _color,
+        children: [
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconColorPicker(
                     initialIcon: _icon,
-                    onIconChangedCallback: (iconData) {
+                    initialColor: _color,
+                    onSelection: (IconData selectedIcon, Color selectedColor) {
                       setState(() {
-                        _icon = iconData;
+                        _icon = selectedIcon;
+                        _color = selectedColor;
                       });
                     },
                   ),
-                  Flexible(
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
                     child: TextFormField(
                       controller: nameController,
-                      textCapitalization: TextCapitalization.sentences,
-                      validator: (data) {
-                        if (data == null || data == '') {
-                          return 'Please enter a valid name';
+                      cursorColor: _color,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter a value';
                         }
                         return null;
                       },
-                      decoration: const InputDecoration(
-                        labelText: 'Category title',
-                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
-              ColorPickerWidget(
-                initialSelectedColor: _color,
-                onColorChangedCallback: (color) {
-                  setState(() {
-                    _color = color;
-                  });
-                },
-              ),
-              TextFormField(
-                controller: descriptionController,
-                keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          TextFormField(
+            controller: descriptionController,
+            minLines: 3,
+            maxLines: 5,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: '(optional) Description',
+              alignLabelWithHint: true,
+            ),
+          )
+        ],
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -121,12 +123,11 @@ class _CategoryFormState extends State<CategoryForm> {
             width: 5,
           ),
           FloatingActionButton.extended(
-            heroTag: 'save',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
                     name: nameController.text.trim(),
-                    icon: _icon ?? Icons.blur_on,
+                    icon: _icon,
                     color: _color,
                     description:
                         parseNullableString(descriptionController.text),

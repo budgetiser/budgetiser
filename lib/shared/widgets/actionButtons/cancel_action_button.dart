@@ -21,7 +21,7 @@ class CancelActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       heroTag: 'cancel',
-      backgroundColor: Colors.red,
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
       mini: true,
       onPressed: () {
         if (isDeletion) {

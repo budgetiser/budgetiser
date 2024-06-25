@@ -134,6 +134,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -141,8 +142,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
           );
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
       ),
     );
   }

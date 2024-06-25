@@ -25,39 +25,42 @@ class _LineChartStatScreenState extends State<LineChartStatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          MonthPicker(
-            onDateChangedCallback: (DateTime time) => {
-              setState(() {
-                startDate = time;
-              })
-            },
-          ),
-          InkWell(
-            child: const Text('Select Accounts'),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AccountMultiPicker(
-                    onAccountsPickedCallback: setAccounts,
-                    initialValues: _selectedAccounts,
-                  );
-                },
-              );
-            },
-          ),
-          const SizedBox(height: 16),
-          if (_selectedAccounts != null)
-            LineChartAccounts(
-              accounts: _selectedAccounts!,
-              startDate: DateTime(startDate.year, startDate.month, 1),
-              endDate: DateTime(startDate.year, startDate.month + 1, 0),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Accounts Line Chart')),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            MonthPicker(
+              onDateChangedCallback: (DateTime time) => {
+                setState(() {
+                  startDate = time;
+                })
+              },
             ),
-        ],
+            InkWell(
+              child: const Text('Select Accounts'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AccountMultiPicker(
+                      onAccountsPickedCallback: setAccounts,
+                      initialValues: _selectedAccounts,
+                    );
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            if (_selectedAccounts != null)
+              LineChartAccounts(
+                accounts: _selectedAccounts!,
+                startDate: DateTime(startDate.year, startDate.month, 1),
+                endDate: DateTime(startDate.year, startDate.month + 1, 0),
+              ),
+          ],
+        ),
       ),
     );
   }
