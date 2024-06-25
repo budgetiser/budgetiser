@@ -2,9 +2,12 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
-
 class ColorList extends StatefulWidget {
-  ColorList({super.key, this.initialColor, required this.onColorSelected});
+  ColorList({
+    super.key,
+    this.initialColor,
+    required this.onColorSelected,
+  });
 
   Color? initialColor;
   final ValueChanged<Color> onColorSelected;
@@ -15,7 +18,6 @@ class ColorList extends StatefulWidget {
 
 class _ColorListState extends State<ColorList>
     with AutomaticKeepAliveClientMixin {
-
   // Required for keeping scroll position when used in Tabs
   @override
   bool get wantKeepAlive => true;
@@ -30,20 +32,21 @@ class _ColorListState extends State<ColorList>
     final int itemCount = mainAxisCount * crossAxisCount;
 
     return GridView.builder(
-      shrinkWrap: true,
-      primary: false,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount, // number of items in each row
-        mainAxisSpacing: 16.0, // spacing between rows
-        crossAxisSpacing: 8.0, // spacing between columns
-      ),
-      itemCount: mainAxisCount,
-      itemBuilder: (context, itemIndex) {
-        int mainAxisIndex = (itemIndex % itemCount);
-        int crossAxisIndex = (itemIndex / itemCount).floor();
-        return ColorItem(
+        shrinkWrap: true,
+        primary: false,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount, // number of items in each row
+          mainAxisSpacing: 16.0, // spacing between rows
+          crossAxisSpacing: 8.0, // spacing between columns
+        ),
+        itemCount: mainAxisCount,
+        itemBuilder: (context, itemIndex) {
+          int mainAxisIndex = (itemIndex % itemCount);
+          int crossAxisIndex = (itemIndex / itemCount).floor();
+          return ColorItem(
             color: colors[mainAxisIndex][crossAxisIndex],
-            selected: colors[mainAxisIndex][crossAxisIndex] == widget.initialColor,
+            selected:
+                colors[mainAxisIndex][crossAxisIndex] == widget.initialColor,
             onSelection: (Color selectedColor) {
               setState(() {
                 widget.initialColor = selectedColor;
@@ -51,13 +54,17 @@ class _ColorListState extends State<ColorList>
               });
             },
           );
-        }
-    );
+        });
   }
 }
 
 class ColorItem extends StatelessWidget {
-  const ColorItem({super.key, required this.color, this.selected = false, required this.onSelection});
+  const ColorItem({
+    super.key,
+    required this.color,
+    this.selected = false,
+    required this.onSelection,
+  });
 
   final Color color;
   final bool selected;
@@ -65,7 +72,7 @@ class ColorItem extends StatelessWidget {
   final ValueChanged<Color> onSelection;
 
   BoxDecoration? get foregroundDecoration {
-    if (selected){
+    if (selected) {
       return BoxDecoration(
         border: Border.all(color: Colors.grey, width: 4),
         borderRadius: BorderRadius.circular(40),
@@ -92,8 +99,10 @@ class ColorItem extends StatelessWidget {
   }
 }
 
-
-List<List<Color>> createThemeMatchingColors(BuildContext context, {bool harmonized = true}) {
+List<List<Color>> createThemeMatchingColors(
+  BuildContext context, {
+  bool harmonized = true,
+}) {
   final List<Color> baseColors = [
     Colors.pink,
     Colors.red,

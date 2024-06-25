@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 class IconList extends StatefulWidget {
-  IconList({super.key, this.initialIcon, required this.onIconSelected});
+  IconList({
+    super.key,
+    this.initialIcon,
+    required this.onIconSelected,
+  });
 
   IconData? initialIcon;
   final ValueChanged<IconData> onIconSelected;
@@ -13,7 +16,6 @@ class IconList extends StatefulWidget {
 
 class _IconListState extends State<IconList>
     with AutomaticKeepAliveClientMixin {
-
   // Required for keeping scroll position when used in Tabs
   @override
   bool get wantKeepAlive => true;
@@ -45,7 +47,12 @@ class _IconListState extends State<IconList>
 }
 
 class IconItem extends StatelessWidget {
-  const IconItem({super.key, required this.icon, this.selected = false, required this.onSelection});
+  const IconItem({
+    super.key,
+    required this.icon,
+    this.selected = false,
+    required this.onSelection,
+  });
 
   final IconData icon;
   final bool selected;
@@ -75,7 +82,6 @@ class IconItem extends StatelessWidget {
     return iconButton;
   }
 }
-
 
 final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'abc', 'icon': Icons.abc},
@@ -132,10 +138,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'agriculture', 'icon': Icons.agriculture},
   {'name': 'air', 'icon': Icons.air},
   {'name': 'airline_seat_flat', 'icon': Icons.airline_seat_flat},
-  {
-    'name': 'airline_seat_flat_angled',
-    'icon': Icons.airline_seat_flat_angled
-  },
+  {'name': 'airline_seat_flat_angled', 'icon': Icons.airline_seat_flat_angled},
   {
     'name': 'airline_seat_individual_suite',
     'icon': Icons.airline_seat_individual_suite
@@ -623,10 +626,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   },
   {'name': 'directions_run', 'icon': Icons.directions_run},
   {'name': 'directions_subway', 'icon': Icons.directions_subway},
-  {
-    'name': 'directions_subway_filled',
-    'icon': Icons.directions_subway_filled
-  },
+  {'name': 'directions_subway_filled', 'icon': Icons.directions_subway_filled},
   {'name': 'directions_train', 'icon': Icons.directions_train},
   {'name': 'directions_transit', 'icon': Icons.directions_transit},
   {
@@ -923,15 +923,9 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'format_italic', 'icon': Icons.format_italic},
   {'name': 'format_line_spacing', 'icon': Icons.format_line_spacing},
   {'name': 'format_list_bulleted', 'icon': Icons.format_list_bulleted},
-  {
-    'name': 'format_list_bulleted_add',
-    'icon': Icons.format_list_bulleted_add
-  },
+  {'name': 'format_list_bulleted_add', 'icon': Icons.format_list_bulleted_add},
   {'name': 'format_list_numbered', 'icon': Icons.format_list_numbered},
-  {
-    'name': 'format_list_numbered_rtl',
-    'icon': Icons.format_list_numbered_rtl
-  },
+  {'name': 'format_list_numbered_rtl', 'icon': Icons.format_list_numbered_rtl},
   {'name': 'format_overline', 'icon': Icons.format_overline},
   {'name': 'format_paint', 'icon': Icons.format_paint},
   {'name': 'format_quote', 'icon': Icons.format_quote},
@@ -1113,10 +1107,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'insights', 'icon': Icons.insights},
   {'name': 'install_desktop', 'icon': Icons.install_desktop},
   {'name': 'install_mobile', 'icon': Icons.install_mobile},
-  {
-    'name': 'integration_instructions',
-    'icon': Icons.integration_instructions
-  },
+  {'name': 'integration_instructions', 'icon': Icons.integration_instructions},
   {'name': 'interests', 'icon': Icons.interests},
   {'name': 'interpreter_mode', 'icon': Icons.interpreter_mode},
   {'name': 'inventory', 'icon': Icons.inventory},
@@ -1159,10 +1150,7 @@ final List<Map<String, dynamic>> _fullIconList = [
     'name': 'keyboard_double_arrow_right',
     'icon': Icons.keyboard_double_arrow_right
   },
-  {
-    'name': 'keyboard_double_arrow_up',
-    'icon': Icons.keyboard_double_arrow_up
-  },
+  {'name': 'keyboard_double_arrow_up', 'icon': Icons.keyboard_double_arrow_up},
   {'name': 'keyboard_hide', 'icon': Icons.keyboard_hide},
   {'name': 'keyboard_option_key', 'icon': Icons.keyboard_option_key},
   {'name': 'keyboard_return', 'icon': Icons.keyboard_return},
@@ -1521,10 +1509,7 @@ final List<Map<String, dynamic>> _fullIconList = [
     'icon': Icons.panorama_photosphere_select
   },
   {'name': 'panorama_vertical', 'icon': Icons.panorama_vertical},
-  {
-    'name': 'panorama_vertical_select',
-    'icon': Icons.panorama_vertical_select
-  },
+  {'name': 'panorama_vertical_select', 'icon': Icons.panorama_vertical_select},
   {'name': 'panorama_wide_angle', 'icon': Icons.panorama_wide_angle},
   {
     'name': 'panorama_wide_angle_select',
@@ -1608,10 +1593,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'photo_camera_front', 'icon': Icons.photo_camera_front},
   {'name': 'photo_filter', 'icon': Icons.photo_filter},
   {'name': 'photo_library', 'icon': Icons.photo_library},
-  {
-    'name': 'photo_size_select_actual',
-    'icon': Icons.photo_size_select_actual
-  },
+  {'name': 'photo_size_select_actual', 'icon': Icons.photo_size_select_actual},
   {'name': 'photo_size_select_large', 'icon': Icons.photo_size_select_large},
   {'name': 'photo_size_select_small', 'icon': Icons.photo_size_select_small},
   {'name': 'php', 'icon': Icons.php},
@@ -1860,10 +1842,7 @@ final List<Map<String, dynamic>> _fullIconList = [
     'name': 'sentiment_very_dissatisfied',
     'icon': Icons.sentiment_very_dissatisfied
   },
-  {
-    'name': 'sentiment_very_satisfied',
-    'icon': Icons.sentiment_very_satisfied
-  },
+  {'name': 'sentiment_very_satisfied', 'icon': Icons.sentiment_very_satisfied},
   {'name': 'set_meal', 'icon': Icons.set_meal},
   {'name': 'settings', 'icon': Icons.settings},
   {'name': 'settings_accessibility', 'icon': Icons.settings_accessibility},
@@ -1875,14 +1854,8 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'settings_display', 'icon': Icons.settings_display},
   {'name': 'settings_ethernet', 'icon': Icons.settings_ethernet},
   {'name': 'settings_input_antenna', 'icon': Icons.settings_input_antenna},
-  {
-    'name': 'settings_input_component',
-    'icon': Icons.settings_input_component
-  },
-  {
-    'name': 'settings_input_composite',
-    'icon': Icons.settings_input_composite
-  },
+  {'name': 'settings_input_component', 'icon': Icons.settings_input_component},
+  {'name': 'settings_input_composite', 'icon': Icons.settings_input_composite},
   {'name': 'settings_input_hdmi', 'icon': Icons.settings_input_hdmi},
   {'name': 'settings_input_svideo', 'icon': Icons.settings_input_svideo},
   {'name': 'settings_overscan', 'icon': Icons.settings_overscan},
@@ -1890,10 +1863,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'settings_power', 'icon': Icons.settings_power},
   {'name': 'settings_remote', 'icon': Icons.settings_remote},
   {'name': 'settings_suggest', 'icon': Icons.settings_suggest},
-  {
-    'name': 'settings_system_daydream',
-    'icon': Icons.settings_system_daydream
-  },
+  {'name': 'settings_system_daydream', 'icon': Icons.settings_system_daydream},
   {'name': 'settings_voice', 'icon': Icons.settings_voice},
   {'name': 'seven_k', 'icon': Icons.seven_k},
   {'name': 'seven_k_plus', 'icon': Icons.seven_k_plus},
@@ -2087,10 +2057,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'stroller', 'icon': Icons.stroller},
   {'name': 'style', 'icon': Icons.style},
   {'name': 'subdirectory_arrow_left', 'icon': Icons.subdirectory_arrow_left},
-  {
-    'name': 'subdirectory_arrow_right',
-    'icon': Icons.subdirectory_arrow_right
-  },
+  {'name': 'subdirectory_arrow_right', 'icon': Icons.subdirectory_arrow_right},
   {'name': 'subject', 'icon': Icons.subject},
   {'name': 'subscript', 'icon': Icons.subscript},
   {'name': 'subscriptions', 'icon': Icons.subscriptions},

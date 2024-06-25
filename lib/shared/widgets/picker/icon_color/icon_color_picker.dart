@@ -20,13 +20,17 @@ class IconColorPicker extends StatefulWidget {
 class _IconColorPickerState extends State<IconColorPicker> {
   @override
   Widget build(BuildContext context) {
-    String tab = 'icon';
-
     return SizedBox(
       width: 40,
       height: 40,
       child: InkWell(
-        onTap: () => {_showFullScreenDialog(context, widget.selectedIcon, widget.selectedColor)},
+        onTap: () => {
+          _showFullScreenDialog(
+            context,
+            widget.selectedIcon,
+            widget.selectedColor,
+          )
+        },
         borderRadius: BorderRadius.circular(20),
         child: Container(
           height: 48,
@@ -39,13 +43,19 @@ class _IconColorPickerState extends State<IconColorPicker> {
     );
   }
 
-
-  void _showFullScreenDialog(BuildContext context, IconData initialIcon, Color initialColor) {
+  void _showFullScreenDialog(
+    BuildContext context,
+    IconData initialIcon,
+    Color initialColor,
+  ) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         fullscreenDialog: true,
         builder: (BuildContext context) {
-          return IconColorDialog(currentIcon: initialIcon, currentColor: initialColor,);
+          return IconColorDialog(
+            initialIcon: initialIcon,
+            initialColor: initialColor,
+          );
         },
       ),
     );
