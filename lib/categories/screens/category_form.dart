@@ -64,8 +64,8 @@ class _CategoryFormState extends State<CategoryForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconColorPicker(
-                    selectedIcon: _icon,
-                    selectedColor: _color,
+                    initialIcon: _icon,
+                    initialColor: _color,
                     onSelection: (IconData selectedIcon, Color selectedColor) {
                       setState(() {
                         _icon = selectedIcon;

@@ -1,16 +1,17 @@
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/dialog.dart';
 import 'package:flutter/material.dart';
 
 class IconColorPicker extends StatefulWidget {
   const IconColorPicker({
     super.key,
-    required this.selectedIcon,
-    required this.selectedColor,
+    this.initialIcon,
+    this.initialColor,
     required this.onSelection,
   });
 
-  final IconData selectedIcon;
-  final Color selectedColor;
+  final IconData? initialIcon;
+  final Color? initialColor;
   final Function(IconData selectedIcon, Color selectedColor) onSelection;
 
   @override
@@ -20,12 +21,14 @@ class IconColorPicker extends StatefulWidget {
 class _IconColorPickerState extends State<IconColorPicker> {
   @override
   Widget build(BuildContext context) {
+    var color = widget.initialColor ?? randomColor();
+    var iconData = widget.initialIcon ?? Icons.abc;
     return InkWell(
       onTap: () => {
         _showFullScreenDialog(
           context,
-          widget.selectedIcon,
-          widget.selectedColor,
+          iconData,
+          color,
         )
       },
       borderRadius: BorderRadius.circular(20),
@@ -35,13 +38,13 @@ class _IconColorPickerState extends State<IconColorPicker> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
           border: Border.all(
-            color: widget.selectedColor,
+            color: color,
             width: 2,
           ),
         ),
         child: Icon(
-          widget.selectedIcon,
-          color: widget.selectedColor,
+          iconData,
+          color: color,
           size: 30,
         ),
       ),
