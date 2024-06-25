@@ -7,10 +7,12 @@ class IconColorDialog extends StatefulWidget {
     super.key,
     required this.initialIcon,
     required this.initialColor,
+    required this.onSelection,
   });
 
   final IconData initialIcon;
   final Color initialColor;
+  final Function(IconData selectedIcon, Color selectedColor) onSelection;
 
   @override
   State<IconColorDialog> createState() => _IconColorDialogState();
@@ -37,7 +39,10 @@ class _IconColorDialogState extends State<IconColorDialog> {
           title: const Text('Choose Appearance'),
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                widget.onSelection(currentIcon, currentColor);
+                Navigator.of(context).pop();
+              },
               child: const Text('Save'),
             ),
           ],
@@ -47,41 +52,48 @@ class _IconColorDialogState extends State<IconColorDialog> {
           ),
           bottom: TabBar(tabs: [
             Tab(
-              icon: Icon(widget.initialIcon),
+              icon: Icon(
+                currentIcon,
+                color: currentColor,
+              ),
               text: 'Icon',
             ),
             Tab(
               icon: Icon(
                 Icons.color_lens_rounded,
-                color: widget.initialColor,
+                color: currentColor,
               ),
               text: 'Color',
             ),
           ]),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: TabBarView(
-            children: [
-              IconList(
-                initialIcon: widget.initialIcon,
-                onIconSelected: (IconData newIcon) {
-                  setState(() {
-                    currentIcon = newIcon;
-                  });
-                },
-              ),
-              ColorList(
-                initialColor: widget.initialColor,
-                onColorSelected: (Color newColor) {
-                  setState(() {
-                    currentColor = newColor;
-                  });
-                },
-              ),
-            ],
+        body: _tabContents(),
+      ),
+    );
+  }
+
+  Widget _tabContents() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: TabBarView(
+        children: [
+          IconList(
+            initialIcon: currentIcon,
+            onIconSelected: (IconData newIcon) {
+              setState(() {
+                currentIcon = newIcon;
+              });
+            },
           ),
-        ),
+          ColorList(
+            initialColor: currentColor,
+            onColorSelected: (Color newColor) {
+              setState(() {
+                currentColor = newColor;
+              });
+            },
+          ),
+        ],
       ),
     );
   }

@@ -1,15 +1,14 @@
-import 'package:dynamic_color/dynamic_color.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:material_color_utilities/material_color_utilities.dart';
 
 class ColorList extends StatefulWidget {
-  ColorList({
+  const ColorList({
     super.key,
-    this.initialColor,
+    required this.initialColor,
     required this.onColorSelected,
   });
 
-  Color? initialColor;
+  final Color initialColor;
   final ValueChanged<Color> onColorSelected;
 
   @override
@@ -22,39 +21,44 @@ class _ColorListState extends State<ColorList>
   @override
   bool get wantKeepAlive => true;
 
+  late Color currentColor;
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentColor = widget.initialColor;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    final List<List<Color>> colors = createThemeMatchingColors(context);
-    final int crossAxisCount = colors[0].length;
-    final int mainAxisCount = colors.length;
-    final int itemCount = mainAxisCount * crossAxisCount;
+    final List<List<Color>> colors2d = createThemeMatchingColors(context);
+    final List<Color> colors = colors2d.expand((i) => i).toList();
 
     return GridView.builder(
-        shrinkWrap: true,
-        primary: false,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount, // number of items in each row
-          mainAxisSpacing: 16.0, // spacing between rows
-          crossAxisSpacing: 8.0, // spacing between columns
-        ),
-        itemCount: mainAxisCount,
-        itemBuilder: (context, itemIndex) {
-          int mainAxisIndex = (itemIndex % itemCount);
-          int crossAxisIndex = (itemIndex / itemCount).floor();
-          return ColorItem(
-            color: colors[mainAxisIndex][crossAxisIndex],
-            selected:
-                colors[mainAxisIndex][crossAxisIndex] == widget.initialColor,
-            onSelection: (Color selectedColor) {
-              setState(() {
-                widget.initialColor = selectedColor;
-                widget.onColorSelected(selectedColor);
-              });
-            },
-          );
-        });
+      shrinkWrap: true,
+      primary: false,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4, // number of items in each row
+        mainAxisSpacing: 16.0, // spacing between rows
+        crossAxisSpacing: 8.0, // spacing between columns
+      ),
+      itemCount: colors.length,
+      itemBuilder: (context, itemIndex) {
+        return ColorItem(
+          color: colors[itemIndex],
+          selected: colors[itemIndex] == currentColor,
+          onSelection: (Color selectedColor) {
+            setState(() {
+              currentColor = selectedColor;
+              widget.onColorSelected(selectedColor);
+            });
+          },
+        );
+      },
+    );
   }
 }
 
@@ -74,8 +78,9 @@ class ColorItem extends StatelessWidget {
   BoxDecoration? get foregroundDecoration {
     if (selected) {
       return BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 4),
+        border: Border.all(color: Colors.grey, width: 5),
         borderRadius: BorderRadius.circular(40),
+        // TODO: checkbox on selected icon
       );
     }
     return null;
@@ -97,46 +102,4 @@ class ColorItem extends StatelessWidget {
       },
     );
   }
-}
-
-List<List<Color>> createThemeMatchingColors(
-  BuildContext context, {
-  bool harmonized = true,
-}) {
-  final List<Color> baseColors = [
-    Colors.pink,
-    Colors.red,
-    Colors.deepOrange,
-    Colors.orange,
-    Colors.amber,
-    Colors.yellow,
-    Colors.lime,
-    Colors.lightGreen,
-    Colors.green,
-    Colors.teal,
-    Colors.cyan,
-    Colors.lightBlue,
-    Colors.blue,
-    Colors.indigo,
-    Colors.deepPurple,
-    Colors.purple,
-    Colors.brown,
-  ];
-  List<List<Color>> resultColors = [];
-
-  for (var base in baseColors) {
-    List<Color> variants = [];
-    base = base.harmonizeWith(Theme.of(context).colorScheme.primary);
-    final hct = Hct.fromInt(base.value);
-    TonalPalette palette = TonalPalette.of(hct.hue, hct.chroma);
-    variants
-      ..add(base)
-      ..add(Color(palette.get(65)))
-      ..add(Color(palette.get(75)))
-      ..add(Color(palette.get(85)));
-
-    resultColors.add(variants);
-  }
-
-  return resultColors;
 }

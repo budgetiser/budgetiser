@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class IconList extends StatefulWidget {
-  IconList({
+  const IconList({
     super.key,
-    this.initialIcon,
+    required this.initialIcon,
     required this.onIconSelected,
   });
 
-  IconData? initialIcon;
+  final IconData initialIcon;
   final ValueChanged<IconData> onIconSelected;
 
   @override
@@ -19,6 +19,15 @@ class _IconListState extends State<IconList>
   // Required for keeping scroll position when used in Tabs
   @override
   bool get wantKeepAlive => true;
+
+  late IconData currentIcon;
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentIcon = widget.initialIcon;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,7 @@ class _IconListState extends State<IconList>
           icon: _fullIconList[index]['icon'],
           selected: _fullIconList[index]['icon'] == widget.initialIcon,
           onSelection: (IconData newIcon) {
-            setState(() => widget.initialIcon = newIcon);
+            setState(() => currentIcon = newIcon);
             widget.onIconSelected(newIcon);
           },
         );

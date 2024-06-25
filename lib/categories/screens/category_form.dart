@@ -4,11 +4,8 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_color/dialog.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
-import 'package:dynamic_color/dynamic_color.dart';
+import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:provider/provider.dart';
 
 class CategoryForm extends StatefulWidget {
@@ -59,39 +56,45 @@ class _CategoryFormState extends State<CategoryForm> {
       ),
       body: ScrollViewWithDeadSpace(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-            child: Row(
-              children: [
-                IconPicker(
-                  color: Colors.red,
-                  onIconChangedCallback: (a) => {},
-                ),
-                // IconColorPicker(
-                //   selectedIcon: _icon,
-                //   selectedColor: _color,
-                //   onSelection: (IconData selectedIcon, Color selectedColor) {
-                //     setState(() {
-                //       _icon = selectedIcon;
-                //       _color = selectedColor;
-                //     });
-                //   },
-                // ),
-                Expanded(
-                  child: TextFormField(
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconColorPicker(
+                    selectedIcon: _icon,
+                    selectedColor: _color,
+                    onSelection: (IconData selectedIcon, Color selectedColor) {
+                      setState(() {
+                        _icon = selectedIcon;
+                        _color = selectedColor;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: TextFormField(
                       controller: nameController,
                       cursorColor: _color,
                       autofocus: true,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: _color),
-                        ),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: 'Name',
-                        floatingLabelStyle: TextStyle(color: _color),
-                      )),
-                )
-              ],
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter a value';
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           TextFormField(
@@ -101,6 +104,7 @@ class _CategoryFormState extends State<CategoryForm> {
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: '(optional) Description',
+              alignLabelWithHint: true,
             ),
           )
         ],
@@ -123,7 +127,7 @@ class _CategoryFormState extends State<CategoryForm> {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
                     name: nameController.text.trim(),
-                    icon: _icon ?? Icons.blur_on,
+                    icon: _icon,
                     color: _color,
                     description:
                         parseNullableString(descriptionController.text),
