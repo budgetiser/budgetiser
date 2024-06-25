@@ -62,7 +62,7 @@ class _AccountFormState extends State<AccountForm> {
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
         deadSpaceSize: 150,
-        child: Form(
+        children: [Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -178,7 +178,7 @@ class _AccountFormState extends State<AccountForm> {
                 ),
             ],
           ),
-        ),
+        ),]
       ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [

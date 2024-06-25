@@ -74,7 +74,7 @@ class _BudgetFormState extends State<BudgetForm> {
       body: ScrollViewWithDeadSpace(
         deadSpaceContent: Container(),
         deadSpaceSize: 150,
-        child: Form(
+        children: [Form(
           key: _formKey,
           child: Column(
             children: [
@@ -187,7 +187,7 @@ class _BudgetFormState extends State<BudgetForm> {
               ),
             ],
           ),
-        ),
+        ),]
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
