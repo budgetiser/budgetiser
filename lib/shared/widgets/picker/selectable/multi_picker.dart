@@ -61,27 +61,70 @@ class _GeneralMultiPickerState<T extends Selectable>
     );
   }
 
-  SizedBox dialogContent(StateSetter setState, BuildContext context) {
+  bool? allCheckboxState() {
+    if (selectedValues.isEmpty) return false;
+    if (selectedValues.length != widget.possibleValues.length) {
+      return null;
+    } else {
+      return true;
+    }
+  }
+
+  Widget dialogContent(StateSetter setState, BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.possibleValues.length,
-        itemBuilder: (context, listIndex) {
-          return CheckboxListTile(
-            title: SelectableIconWithText(widget.possibleValues[listIndex]),
-            value: selectedValues.contains(widget.possibleValues[listIndex]),
-            onChanged: (bool? value) {
-              setState(() {
-                if (value == true) {
-                  selectedValues.add(widget.possibleValues[listIndex]);
-                } else {
-                  selectedValues.remove(widget.possibleValues[listIndex]);
-                }
-              });
-            },
-          );
-        },
+      child: SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('All'),
+                  Checkbox(
+                    tristate: true,
+                    value: allCheckboxState(),
+                    onChanged: (value) {
+                      setState(() {
+                        if (selectedValues.isEmpty) {
+                          selectedValues = [
+                            ...widget.possibleValues
+                          ]; // clone data. otherwise deselecting single item would .remove() from both lists
+                        } else {
+                          selectedValues = [];
+                        }
+                      });
+                    },
+                  )
+                ],
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: widget.possibleValues.length,
+              itemBuilder: (context, listIndex) {
+                return CheckboxListTile(
+                  title:
+                      SelectableIconWithText(widget.possibleValues[listIndex]),
+                  value:
+                      selectedValues.contains(widget.possibleValues[listIndex]),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value == true) {
+                        selectedValues.add(widget.possibleValues[listIndex]);
+                      } else {
+                        selectedValues.remove(widget.possibleValues[listIndex]);
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,78 +1,197 @@
-import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
+import 'package:budgetiser/core/database/models/selectable.dart';
+import 'package:budgetiser/core/database/models/transaction.dart';
+import 'package:budgetiser/core/database/provider/transaction_provider.dart';
+import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/balance_text.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:flutter/material.dart';
 
-class SimpleTextStat extends StatelessWidget {
-  const SimpleTextStat({
+class SimpleTextStatTables extends StatelessWidget {
+  const SimpleTextStatTables({
     super.key,
-    this.category,
-    this.account,
+    required this.categories,
+    required this.accounts,
+    required this.startDate,
   });
 
-  final Account? account;
-  final TransactionCategory? category;
+  final List<Account> accounts;
+  final List<TransactionCategory> categories;
+  final DateTime startDate;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return FutureBuilder(
+      future: TransactionModel().getFilteredTransactions(
+        accounts,
+        categories,
+        DateTimeRange(
+          start: startDate,
+          end: DateTime.now(),
+        ),
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Expanded(
+            child: resultTable(snapshot.data!),
+          );
+        } else if (snapshot.hasError) {
+          throw snapshot.error!;
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget resultTable(
+    List<SingleTransaction> data,
+  ) {
+    double total = roundDouble(
+      data.fold(
+        0.0,
+        (previousValue, element) => previousValue + element.value,
+      ),
+    );
+    int count = data.length;
+    return ListView(
       children: [
-        Text(
-          'Simple Stats for all Transactions',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        FutureBuilder(
-          future: DatabaseHelper.instance.getSpending(account!, category!),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Balance :',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  BalanceText(snapshot.data as double),
+        FittedBox(
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Stat')),
+              DataColumn(label: Text('Value')),
+            ],
+            rows: [
+              DataRow(
+                cells: [
+                  const DataCell(Text('Amount of Transactions')),
+                  DataCell(Text(count.toString())),
                 ],
-              );
-            } else if (snapshot.hasError) {
-              throw snapshot.error!;
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-        FutureBuilder(
-          future:
-              DatabaseHelper.instance.getTransactionCount(account!, category!),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Amount of Transactions:',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    '${snapshot.data}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(Text('Total Value')),
+                  DataCell(BalanceText(total)),
                 ],
-              );
-            } else if (snapshot.hasError) {
-              throw snapshot.error!;
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(Text('Mean of Transaction Value')),
+                  DataCell(BalanceText(total / count)),
+                ],
+              ),
+            ],
+          ),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Category')),
+              DataColumn(label: Text('Value')),
+              DataColumn(label: Text('Amount')),
+              DataColumn(label: Text('Mean')),
+            ],
+            rows: dataRowsByCategory(data),
+          ),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Account 1')),
+              DataColumn(label: Text('Value')),
+              DataColumn(label: Text('Amount')),
+              DataColumn(label: Text('Mean')),
+            ],
+            rows: dataRowsByAccount1(data),
+          ),
         ),
       ],
     );
+  }
+
+  List<DataRow> dataRowsByCategory(
+    List<SingleTransaction> data,
+  ) {
+    Map<Selectable, (double, int)> groupedItems = data.fold({}, (
+      Map<Selectable, (double, int)> map,
+      item,
+    ) {
+      map.putIfAbsent(item.category, () => (0.0, 0));
+      map[item.category] =
+          (map[item.category]!.$1 + (item.value), map[item.category]!.$2 + 1);
+
+      return map;
+    });
+    List<DataRow> dataRows = [];
+    groupedItems.forEach((key, value) {
+      dataRows.add(
+        DataRow(
+          cells: [
+            DataCell(
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 250,
+                ), //SET max width
+                child: SelectableIconWithText(key),
+              ),
+            ),
+            DataCell(
+              BalanceText(value.$1),
+            ),
+            DataCell(
+              Text(value.$2.toString()),
+            ),
+            DataCell(
+              BalanceText(value.$1 / value.$2),
+            ),
+          ],
+        ),
+      );
+    });
+    return dataRows;
+  }
+
+  List<DataRow> dataRowsByAccount1(List<SingleTransaction> data) {
+    Map<Selectable, (double, int)> groupedItems = data.fold({}, (
+      Map<Selectable, (double, int)> map,
+      item,
+    ) {
+      map.putIfAbsent(item.account, () => (0.0, 0));
+      map[item.account] =
+          (map[item.account]!.$1 + (item.value), map[item.account]!.$2 + 1);
+
+      return map;
+    });
+    List<DataRow> dataRows = [];
+    groupedItems.forEach((key, value) {
+      dataRows.add(
+        DataRow(
+          cells: [
+            DataCell(
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 250,
+                ), //SET max width
+                child: SelectableIconWithText(key),
+              ),
+            ),
+            DataCell(
+              BalanceText(value.$1),
+            ),
+            DataCell(
+              Text(value.$2.toString()),
+            ),
+            DataCell(
+              BalanceText(value.$1 / value.$2),
+            ),
+          ],
+        ),
+      );
+    });
+    return dataRows;
   }
 }

@@ -14,39 +14,40 @@ class CustomInputFieldBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
-    return Column(
+    return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: SizedBox(
-            width: double.infinity,
-            child: Text(
-              title,
-              textAlign: TextAlign.left,
-              style: themeData.inputDecorationTheme.labelStyle != null
-                  ? themeData.inputDecorationTheme.labelStyle!
-                      .copyWith(fontSize: 16)
-                  : const TextStyle(fontSize: 16),
+          padding: const EdgeInsets.only(top: 10),
+          child: InkWell(
+            onTap: onTap,
+            splashFactory: NoSplash.splashFactory,
+            child: Container(
+              width: double.maxFinite,
+              height: 55,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.centerLeft,
+              child: child,
             ),
           ),
         ),
-        InkWell(
-          onTap: onTap,
-          splashFactory: NoSplash.splashFactory,
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
           child: Container(
-            width: double.maxFinite,
-            height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-                width: 1,
+            color: Theme.of(context).colorScheme.surface,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                title,
+                textAlign: TextAlign.left,
               ),
-              borderRadius: BorderRadius.circular(4),
             ),
-            alignment: Alignment.centerLeft,
-            child: child,
           ),
         ),
       ],

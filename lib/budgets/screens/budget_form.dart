@@ -6,8 +6,7 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
-import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
+import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +29,7 @@ class _BudgetFormState extends State<BudgetForm> {
   final _formKey = GlobalKey<FormState>();
 
   List<TransactionCategory> budgetCategories = [];
-  IconData? _icon;
+  IconData _icon = Icons.abc;
   Color _color = randomColor();
 
   @override
@@ -72,120 +71,123 @@ class _BudgetFormState extends State<BudgetForm> {
             : const Text('New Budget'),
       ),
       body: ScrollViewWithDeadSpace(
-        deadSpaceContent: Container(),
-        deadSpaceSize: 150,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Row(
-                children: <Widget>[
-                  IconPicker(
-                    color: _color,
-                    initialIcon: _icon ?? Icons.blur_on,
-                    onIconChangedCallback: (iconData) {
-                      setState(() {
-                        _icon = iconData;
-                      });
-                    },
-                  ),
-                  Flexible(
-                    child: TextFormField(
-                      controller: nameController,
-                      textCapitalization: TextCapitalization.sentences,
-                      validator: (data) {
-                        if (data == null || data == '') {
-                          return 'Please enter a valid name';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Budget title',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              ColorPickerWidget(
-                initialSelectedColor: _color,
-                onColorChangedCallback: (color) {
-                  setState(() {
-                    _color = color;
-                  });
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          deadSpaceContent: Container(),
+          deadSpaceSize: 150,
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
                 children: [
-                  Flexible(
-                    child: TextFormField(
-                      controller: limitController,
-                      validator: (data) {
-                        if (data == null || data == '') {
-                          return 'Please enter a number';
-                        }
-                        return null;
-                      },
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: true,
+                  Row(
+                    children: [
+                      IconColorPicker(
+                        initialIcon: _icon,
+                        initialColor: _color,
+                        onSelection: (iconData, color) {
+                          setState(() {
+                            _icon = iconData;
+                            _color = color;
+                          });
+                        },
                       ),
-                      decoration: const InputDecoration(
-                        labelText: 'Limit',
+                      const SizedBox(
+                        width: 16,
                       ),
+                      Flexible(
+                        child: TextFormField(
+                          controller: nameController,
+                          textCapitalization: TextCapitalization.sentences,
+                          validator: (data) {
+                            if (data == null || data == '') {
+                              return 'Please enter a valid name';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Budget title',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: TextFormField(
+                          controller: limitController,
+                          validator: (data) {
+                            if (data == null || data == '') {
+                              return 'Please enter a number';
+                            }
+                            return null;
+                          },
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                            signed: true,
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: 'Limit',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        child: DropdownMenu<IntervalUnit>(
+                          initialSelection: selectedInterval,
+                          label: const Text('Interval'),
+                          leadingIcon: const Icon(Icons.event_repeat),
+                          onSelected: (IntervalUnit? unit) {
+                            setState(() {
+                              if (unit != null) {
+                                selectedInterval = unit;
+                              }
+                            });
+                          },
+                          dropdownMenuEntries: IntervalUnit.values
+                              .map<DropdownMenuEntry<IntervalUnit>>(
+                                  (IntervalUnit unit) {
+                            return DropdownMenuEntry(
+                              value: unit,
+                              label: unit.label,
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(),
                     ),
                   ),
-                  Flexible(
-                    child: DropdownMenu<IntervalUnit>(
-                      initialSelection: selectedInterval,
-                      label: const Text('Interval'),
-                      leadingIcon: const Icon(Icons.event_repeat),
-                      onSelected: (IntervalUnit? unit) {
-                        setState(() {
-                          if (unit != null) {
-                            selectedInterval = unit;
-                          }
-                        });
-                      },
-                      dropdownMenuEntries: IntervalUnit.values
-                          .map<DropdownMenuEntry<IntervalUnit>>(
-                              (IntervalUnit unit) {
-                        return DropdownMenuEntry(
-                          value: unit,
-                          label: unit.label,
-                        );
-                      }).toList(),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: descriptionController,
-                keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                ),
-              ),
-              const Divider(height: 32),
-              InkWell(
-                child: const Text('Select Categories'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CategoryMultiPicker(
-                        onCategoriesPickedCallback: setCategories,
-                        initialValues: budgetCategories,
+                  const Divider(height: 32),
+                  InkWell(
+                    child: const Text('Select Categories'),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CategoryMultiPicker(
+                            onCategoriesPickedCallback: setCategories,
+                            initialValues: budgetCategories,
+                          );
+                        },
                       );
                     },
-                  );
-                },
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          ]),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -198,12 +200,11 @@ class _BudgetFormState extends State<BudgetForm> {
           ),
           const SizedBox(width: 5),
           FloatingActionButton.extended(
-            heroTag: 'save',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 Budget a = Budget(
                   name: nameController.text.trim(),
-                  icon: _icon ?? Icons.blur_on,
+                  icon: _icon,
                   color: _color,
                   description: parseNullableString(descriptionController.text),
                   id: 0,

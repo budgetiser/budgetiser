@@ -25,56 +25,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       drawer: const CreateDrawer(),
-      body: Center(
-        child: ListView(
-          children: <Widget>[
-            const AppearanceSettingTile(),
-            ListTile(
-              title: const Text('User Preferences'),
-              subtitle: const Text(
-                'Change the app to your own preferences',
-              ),
-              onTap: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const UserPreferencesScreen(),
-                  ),
-                );
-              },
+      body: ListView(
+        children: <Widget>[
+          const AppearanceSettingTile(),
+          ListTile(
+            title: const Text('User Preferences'),
+            subtitle: const Text(
+              'Change the app to your own preferences',
             ),
-            ListTile(
-              title: const Text(
-                'Danger Zone',
-                style: TextStyle(
-                  color: Colors.red,
+            onTap: () async {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const UserPreferencesScreen(),
                 ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text(
+              'Danger Zone',
+              style: TextStyle(
+                color: Colors.red,
               ),
-              subtitle: const Text(
-                'Manage stored data (im-/export)',
-              ),
-              onTap: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const DangerZone(),
-                  ),
-                );
-              },
             ),
-            ListTile(
-              title: const Text('About'),
-              subtitle: const Text(
-                'Version, Source code, Website',
-              ),
-              onTap: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const AboutScreen(),
-                  ),
-                );
-              },
+            subtitle: const Text(
+              'Manage stored data (im-/export)',
             ),
-          ],
-        ),
+            onTap: () async {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DangerZone(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('About'),
+            subtitle: const Text(
+              'Version, Source code, Website',
+            ),
+            onTap: () async {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AboutScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

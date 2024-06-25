@@ -136,7 +136,7 @@ class _TransactionFormState extends State<TransactionForm> {
           wasNegative: wasValueNegative,
           value: tryValueParse(valueController.text),
         ),
-        child: _transactionFormContent(context),
+        children: [_transactionFormContent(context)],
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -223,19 +223,16 @@ class _TransactionFormState extends State<TransactionForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (_prefixButtonVisible)
-                SizedBox(
-                  height: 70,
-                  child: IconButton(
-                    icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
-                    onPressed: () {
-                      togglePrefix();
-                    },
-                    color: wasValueNegative
-                        ? const Color.fromARGB(255, 174, 74, 99)
-                        : const Color.fromARGB(239, 29, 129, 37),
-                    splashRadius: 24,
-                    iconSize: 48,
-                  ),
+                IconButton(
+                  icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
+                  onPressed: () {
+                    togglePrefix();
+                  },
+                  color: wasValueNegative
+                      ? const Color.fromARGB(255, 174, 74, 99)
+                      : const Color.fromARGB(239, 29, 129, 37),
+                  splashRadius: 24,
+                  iconSize: 40,
                 ),
               Flexible(
                 child: Form(
@@ -248,6 +245,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                     decoration: const InputDecoration(
                       labelText: 'Value',
+                      border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       if (tryValueParse(valueController.text) != null) {
@@ -302,6 +300,7 @@ class _TransactionFormState extends State<TransactionForm> {
               labelText: titleController.text == ''
                   ? 'Title: ${selectedCategory?.name}'
                   : 'Title',
+              border: const OutlineInputBorder(),
             ),
           ),
           // category picker
@@ -363,19 +362,15 @@ class _TransactionFormState extends State<TransactionForm> {
                   ),
           ),
           // notes input
-          const SizedBox(height: 24),
-          Theme(
-            data: Theme.of(context).copyWith(
-              dividerColor: Colors.transparent,
-            ),
-            child: TextFormField(
-              controller: descriptionController,
-              textCapitalization: TextCapitalization.sentences,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                labelText: 'Notes',
-                alignLabelWithHint: true,
-              ),
+          const SizedBox(height: 18),
+          TextFormField(
+            controller: descriptionController,
+            textCapitalization: TextCapitalization.sentences,
+            maxLines: 5,
+            decoration: const InputDecoration(
+              labelText: 'Notes',
+              border: OutlineInputBorder(),
+              alignLabelWithHint: true,
             ),
           ),
         ],

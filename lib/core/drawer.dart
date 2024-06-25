@@ -1,102 +1,108 @@
 import 'package:budgetiser/core/logo_icon.dart';
 import 'package:flutter/material.dart';
 
-class CreateDrawer extends StatelessWidget {
+class CreateDrawer extends StatefulWidget {
   const CreateDrawer({super.key});
 
   @override
+  State<CreateDrawer> createState() => _CreateDrawerState();
+}
+
+/// For some reason the drawer class ignores class constructor arguments to give the index of wich page it was selected (bad practice anyway)
+/// using a global to remember the current screen works the most reliable any easiest
+/// Documentation does not explain how to set this variable otherwise, when screens are split between different files.
+int screenIndex = 0;
+
+class _CreateDrawerState extends State<CreateDrawer> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  /// list off all routes in same order as in drawer
+  List<String> routeNames = [
+    'home',
+    'budgets',
+    'account',
+    'categories',
+    'transactions',
+    'stats_overview',
+    'help',
+    'settings',
+    'notes123',
+  ];
+
+  void handleScreenChanged(int selectedScreen) {
+    setState(() {
+      screenIndex = selectedScreen;
+    });
+    // pop drawer and push in a way, that the back button first goes to the home screen and then closes the app
+    Navigator.pop(context);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      routeNames[selectedScreen],
+      ModalRoute.withName('/'),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            margin: EdgeInsets.zero,
-            padding: EdgeInsets.zero,
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  bottom: 12.0,
-                  left: 16.0,
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 4),
-                        child: Icon(
-                          LogoIcon.budgetiserIcon,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // TODO: Bug: Text clips with big system font size
-                      Text(
-                        'Budgetiser',
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+    return NavigationDrawer(
+      onDestinationSelected: handleScreenChanged,
+      selectedIndex: screenIndex,
+      children: [
+        DrawerHeader(
+          decoration: const BoxDecoration(
+            color: Colors.blue,
           ),
-          singleDrawerItem(context, Icons.home, 'Home', 'home'),
-          singleDrawerItem(context, Icons.attach_money, 'Budgets', 'budgets'),
-          singleDrawerItem(
-              context, Icons.account_balance, 'Account', 'account'),
-          const Divider(thickness: 2, height: 2),
-          singleDrawerItem(context, Icons.category, 'Categories', 'categories'),
-          const Divider(thickness: 2, height: 2),
-          singleDrawerItem(context, Icons.show_chart, 'Stats', 'stats'),
-          singleDrawerItem(
-              context, Icons.payment, 'Transactions', 'transactions'),
-          const Divider(thickness: 2, height: 2),
-          singleDrawerItem(context, Icons.question_mark, 'Help', 'help'),
-          singleDrawerItem(context, Icons.settings, 'Settings', 'settings'),
-          singleDrawerItem(context, Icons.list_alt, 'Notes', 'notes123'),
-        ],
-      ),
+          child: Row(
+            children: [
+              const Icon(
+                LogoIcon.budgetiserIcon,
+                color: Colors.white,
+                size: 40,
+              ),
+              const SizedBox(width: 8),
+              // TODO: Bug: Text clips with big system font size
+              Text(
+                'Budgetiser',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ],
+          ),
+        ),
+        singleDrawerItem(Icons.home, 'Home'),
+        singleDrawerItem(Icons.attach_money, 'Budgets'),
+        singleDrawerItem(Icons.account_balance, 'Account'),
+        singleDrawerItem(Icons.category, 'Categories'),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
+          child: Text(
+            'Transactions', // TODO better name that describes all screens that in/output data
+          ),
+        ),
+        singleDrawerItem(Icons.payment, 'Transactions'),
+        singleDrawerItem(Icons.show_chart, 'Stats'),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
+          child: Text(
+            'Other',
+          ),
+        ),
+        singleDrawerItem(Icons.question_mark, 'Help'),
+        singleDrawerItem(Icons.settings, 'Settings'),
+        singleDrawerItem(Icons.list_alt, 'Notes'),
+      ],
     );
   }
 
   Widget singleDrawerItem(
-    BuildContext context,
     IconData icon,
     String title,
-    String destination,
   ) {
-    ModalRoute? route = ModalRoute.of(context);
-    String routeName = '';
-    if (route != null) {
-      if (route.settings.name != null) {
-        routeName = route.settings.name!;
-      } else {
-        routeName = 'transactions';
-      }
-      // when pressing back in transactions  after getting pushed from home->new_transaction (and getting to home screen) routeName is "/" when reentering app
-      if (routeName == '/') {
-        routeName = 'home';
-      }
-    }
-    return ListTile(
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      selected: destination == routeName,
-      selectedTileColor: Theme.of(context).splashColor,
-      leading: Icon(icon),
-      onTap: () {
-        Navigator.pop(context);
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          destination,
-          ModalRoute.withName('/'),
-        );
-      },
+    return NavigationDrawerDestination(
+      label: Text(title),
+      icon: Icon(icon),
     );
   }
 }
