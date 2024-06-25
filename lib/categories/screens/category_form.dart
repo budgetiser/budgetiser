@@ -29,11 +29,11 @@ class _CategoryFormState extends State<CategoryForm> {
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   Color _color = randomColor();
-  IconData? _icon;
+  IconData _icon = Icons.abc;
 
   double maxHeaderHeight = 200;
-  late ScrollController _scrollController;
   final ValueNotifier<double> opacity = ValueNotifier(0);
 
   @override
@@ -45,20 +45,6 @@ class _CategoryFormState extends State<CategoryForm> {
       _icon = widget.categoryData!.icon;
     }
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(scrollListener);
-  }
-
-  scrollListener() {
-    if (maxHeaderHeight > _scrollController.offset &&
-        _scrollController.offset > 1) {
-      opacity.value = 1 - _scrollController.offset / maxHeaderHeight;
-    } else if (_scrollController.offset > maxHeaderHeight &&
-        opacity.value != 1) {
-      opacity.value = 0;
-    } else if (_scrollController.offset < 0 && opacity.value != 0) {
-      opacity.value = 1;
-    }
   }
 
   @override
@@ -82,9 +68,11 @@ class _CategoryFormState extends State<CategoryForm> {
               children: [
                 // IconPicker(color: Colors.red, onIconChangedCallback: (a) => {}),
                 IconColorPicker(
+                  selectedIcon: _icon,
                   selectedColor: _color,
-                  onSelection: (Color selectedColor) {
+                  onSelection: (IconData selectedIcon, Color selectedColor) {
                     setState(() {
+                      _icon = selectedIcon;
                       _color = selectedColor;
                     });
                   },
@@ -127,16 +115,16 @@ class _CategoryFormState extends State<CategoryForm> {
 }
 
 class IconColorPicker extends StatefulWidget {
-  const IconColorPicker({
+  IconColorPicker({
     super.key,
-    this.selectedIcon = Icons.abc,
-    this.selectedColor = Colors.grey,
+    required this.selectedIcon,
+    required this.selectedColor,
     required this.onSelection,
   });
 
-  final IconData selectedIcon;
-  final Color selectedColor;
-  final Function(Color color) onSelection;
+  IconData selectedIcon;
+  Color selectedColor;
+  final Function(IconData selectedIcon, Color selectedColor) onSelection;
 
   @override
   State<IconColorPicker> createState() => _IconColorPickerState();
@@ -145,15 +133,13 @@ class IconColorPicker extends StatefulWidget {
 class _IconColorPickerState extends State<IconColorPicker> {
   @override
   Widget build(BuildContext context) {
-    Color _color = Colors.red;
-    IconData _icon = Icons.abc;
-    String tab = "icon";
+    String tab = 'icon';
 
     return SizedBox(
       width: 40,
       height: 40,
       child: InkWell(
-        onTap: () => {_showFullScreenDialog(context)},
+        onTap: () => {_showFullScreenDialog(context, widget.selectedIcon, widget.selectedColor)},
         borderRadius: BorderRadius.circular(20),
         child: Container(
           height: 48,
@@ -163,6 +149,66 @@ class _IconColorPickerState extends State<IconColorPicker> {
           ),
         ),
       ),
+    );
+  }
+
+
+  void _showFullScreenDialog(BuildContext context, IconData initialIcon, Color initialColor) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (BuildContext context) {
+          return IconColorDialog(currentIcon: initialIcon, currentColor: initialColor,);
+        },
+      ),
+    );
+  }
+}
+
+class IconColorDialog extends StatefulWidget {
+  IconColorDialog({super.key, required this.currentIcon, required this.currentColor});
+
+  IconData currentIcon;
+  Color currentColor;
+
+  @override
+  State<IconColorDialog> createState() => _IconColorDialogState();
+}
+
+class _IconColorDialogState extends State<IconColorDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final List<Color> colors = _createColors(context, harmonized: false);
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Choose Appearance'),
+            actions: [TextButton(onPressed: () {}, child: const Text('Save'))],
+            leading: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            bottom: TabBar(tabs: [
+              Tab(icon: Icon(widget.currentIcon)),
+              Tab(icon: Icon(Icons.color_lens_rounded, color: widget.currentColor,)),
+            ]),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(16),
+            child: TabBarView(
+                children: [IconList(
+                  onIconChanged: (IconData new_icon) {
+                    setState(() {
+                      widget.currentIcon = new_icon;
+                    });
+                  },
+                ), ColorList(colors: colors, initialColor: widget.currentColor,onColorChanged: (Color new_color) {
+                  setState(() {
+                    widget.currentColor = new_color;
+                  });
+                },),]),
+          )),
     );
   }
 
@@ -202,42 +248,15 @@ class _IconColorPickerState extends State<IconColorPicker> {
     return resultColors;
   }
 
-  void _showFullScreenDialog(BuildContext context) {
-    final List<Color> colors = _createColors(context, harmonized: false);
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (BuildContext context) {
-          return DefaultTabController(
-            length: 2,
-            child: Scaffold(
-                appBar: AppBar(
-                  title: Text('Full Screen Dialog'),
-                  actions: [TextButton(onPressed: () {}, child: Text("Save"))],
-                  leading: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  bottom: const TabBar(tabs: [
-                    Tab(icon: Icon(Icons.abc)),
-                    Tab(icon: Icon(Icons.chair)),
-                  ]),
-                ),
-                body: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: TabBarView(
-                      children: [IconList(), ColorList(colors: colors)]),
-                )),
-          );
-        },
-      ),
-    );
-  }
 }
 
+
 class ColorList extends StatefulWidget {
-  const ColorList({super.key, required this.colors});
+  ColorList({super.key, required this.colors, this.initialColor, required this.onColorChanged});
   final List<Color> colors;
+  Color? initialColor;
+
+  final ValueChanged<Color> onColorChanged;
 
   @override
   State<ColorList> createState() => _ColorListState();
@@ -261,6 +280,31 @@ class _ColorListState extends State<ColorList>
       ),
       itemCount: widget.colors.length,
       itemBuilder: (context, index) {
+        if (widget.colors[index] == widget.initialColor) {
+          return InkWell(
+            borderRadius: BorderRadius.circular(40),
+            child: Container(
+              foregroundDecoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 4),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: widget.colors[index],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Icon(Icons.check),
+            ),
+            onTap: () {
+              widget.onColorChanged(widget.colors[index]);
+            },
+          );
+        }
         return InkWell(
           borderRadius: BorderRadius.circular(40),
           child: Container(
@@ -270,7 +314,7 @@ class _ColorListState extends State<ColorList>
             ),
           ),
           onTap: () {
-            setState(() {});
+            widget.onColorChanged(widget.colors[index]);
           },
         );
       },
@@ -279,7 +323,10 @@ class _ColorListState extends State<ColorList>
 }
 
 class IconList extends StatefulWidget {
-  const IconList({super.key});
+  IconList({super.key, this.selectedIcon, required this.onIconChanged});
+
+  IconData? selectedIcon;
+  final ValueChanged<IconData> onIconChanged;
 
   @override
   State<IconList> createState() => _IconListState();
@@ -302,8 +349,25 @@ class _IconListState extends State<IconList>
       ),
       itemCount: _fullIconList.length,
       itemBuilder: (context, index) {
+        if (_fullIconList[index]['icon'] == widget.selectedIcon) {
+          return Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              color: Colors.green,
+            ),
+            child: IconButton(
+              onPressed: () {},
+              icon: Icon(_fullIconList[index]['icon']),
+            ),
+          );
+        }
         return IconButton(
-          onPressed: () {},
+          onPressed: () {
+            // set it as the current icon and
+            setState(() => widget.selectedIcon = _fullIconList[index]['icon']);
+            // notify with a callback.
+            widget.onIconChanged(_fullIconList[index]['icon']);
+          },
           icon: Icon(_fullIconList[index]['icon']),
         );
       },
