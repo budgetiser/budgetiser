@@ -77,7 +77,7 @@ class _CreateDrawerState extends State<CreateDrawer> {
         singleDrawerItem(Icons.category, 'Categories'),
         const Padding(
           padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
-          child: const Text(
+          child: Text(
             'Transactions', // TODO better name that describes all screens that in/output data
           ),
         ),

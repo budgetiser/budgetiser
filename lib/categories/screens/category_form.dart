@@ -1,18 +1,13 @@
-import 'dart:math';
-
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
-import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
+import 'package:provider/provider.dart';
 
 class CategoryForm extends StatefulWidget {
   const CategoryForm({
