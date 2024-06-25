@@ -4,9 +4,7 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
-import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +197,7 @@ class _AccountFormState extends State<AccountForm> {
             if (_formKey.currentState!.validate()) {
               Account a = Account(
                 name: nameController.text.trim(),
-                icon: _icon ?? Icons.blur_on,
+                icon: _icon,
                 color: _color,
                 balance: double.parse(balanceController.text),
                 description: parseNullableString(descriptionController.text),

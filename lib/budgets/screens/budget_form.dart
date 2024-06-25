@@ -6,9 +6,7 @@ import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
-import 'package:budgetiser/shared/widgets/picker/color_picker.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/icon_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -206,7 +204,7 @@ class _BudgetFormState extends State<BudgetForm> {
               if (_formKey.currentState!.validate()) {
                 Budget a = Budget(
                   name: nameController.text.trim(),
-                  icon: _icon ?? Icons.blur_on,
+                  icon: _icon,
                   color: _color,
                   description: parseNullableString(descriptionController.text),
                   id: 0,

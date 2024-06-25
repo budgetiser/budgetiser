@@ -23,7 +23,7 @@ class CustomInputFieldBorder extends StatelessWidget {
             splashFactory: NoSplash.splashFactory,
             child: Container(
               width: double.maxFinite,
-              height: 70,
+              height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
                 border: Border.all(
