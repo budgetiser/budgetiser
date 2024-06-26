@@ -25,7 +25,7 @@ class BudgetItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
+                Expanded(
                   child: Text(
                     budget.name,
                     style: const TextStyle(
@@ -33,8 +33,16 @@ class BudgetItem extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  budget.intervalUnit.label,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
                 SelectableIcon(budget),
-                //Text('${budget.maxValue}'),
               ],
             ),
             SizedBox(
@@ -52,9 +60,10 @@ class BudgetItem extends StatelessWidget {
                   Text(
                     '${(percentage * 100).toStringAsFixed(1)}%',
                     style: const TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
+                      fontSize: 13.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
