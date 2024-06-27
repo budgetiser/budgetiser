@@ -69,6 +69,7 @@ class _AccountFormState extends State<AccountForm> {
                 children: [
                   // icon and name
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       IconColorPicker(
                         initialIcon: _icon,
