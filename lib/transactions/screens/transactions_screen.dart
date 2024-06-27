@@ -119,9 +119,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             key: _futureBuilderKey,
             builder: (context, snapshot) {
-              if (!snapshot.hasData || _accountList.isEmpty) {
-                // TODO: bug when no account is created #264
-                return const Center(child: CircularProgressIndicator());
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               if (snapshot.data!.isEmpty) {
                 return const Center(
