@@ -1,3 +1,4 @@
+import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/widgets/picker/selectable/single_picker.dart';
@@ -48,6 +49,22 @@ class _CategorySinglePickerState extends State<CategorySinglePicker> {
           onPickedCallback: widget.onCategoryPickedCallback,
           possibleValues: _allCategories,
           blacklistedValues: widget.blacklistedValues,
+          noDataButton: snapshot.data!.isEmpty
+              ? TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(); // pop dialog, so that after creation the not reloaded dialog is not visible (todo: reload dialog directly)
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CategoryForm(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Create a Category',
+                  ),
+                )
+              : null,
         );
       },
     );

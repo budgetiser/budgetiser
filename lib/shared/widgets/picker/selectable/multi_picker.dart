@@ -9,11 +9,15 @@ class GeneralMultiPicker<T extends Selectable> extends StatefulWidget {
     required this.onPickedCallback,
     required this.possibleValues,
     this.initialValues,
+    this.noDataButton,
   });
   final String heading;
   final Function(List<T> selected) onPickedCallback;
   final List<T> possibleValues;
   final List<T>? initialValues;
+
+  /// Optional button for dialog. Displayed if no data is available.
+  final TextButton? noDataButton;
 
   @override
   State<GeneralMultiPicker<T>> createState() => _GeneralMultiPickerState<T>();
@@ -37,6 +41,9 @@ class _GeneralMultiPickerState<T extends Selectable>
       title: Text(widget.heading),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       actions: [
+        Container(
+          child: widget.noDataButton ?? widget.noDataButton,
+        ),
         TextButton(
           onPressed: () {
             setState(() {
@@ -50,9 +57,14 @@ class _GeneralMultiPickerState<T extends Selectable>
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {
-            return const SizedBox(
-              width: double.maxFinite,
-              child: Text('No data!'),
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                height: 30,
+                child: Center(
+                  child: Text('Nothing to select!'),
+                ),
+              ),
             );
           }
           return dialogContent(setState, context);

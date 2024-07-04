@@ -79,6 +79,7 @@ class _BudgetFormState extends State<BudgetForm> {
               child: Column(
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       IconColorPicker(
                         initialIcon: _icon,
@@ -116,6 +117,7 @@ class _BudgetFormState extends State<BudgetForm> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(
                         child: TextFormField(
