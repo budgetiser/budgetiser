@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "de.budgetiser.budgetiser"
-        minSdkVersion 34
+        minSdkVersion 30 // see: https://apilevels.com/
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
