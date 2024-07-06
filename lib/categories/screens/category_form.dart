@@ -1,4 +1,5 @@
 import 'package:budgetiser/categories/widgets/category_single_picker.dart';
+import 'package:budgetiser/categories/widgets/category_single_picker_nullable.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
@@ -106,9 +107,11 @@ class _CategoryFormState extends State<CategoryForm> {
             onTap: () => showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CategorySinglePicker(
+                return CategorySinglePickerNullable(
+                  blacklistedValues:
+                      widget.categoryData == null ? [] : [widget.categoryData!],
                   onCategoryPickedCallback:
-                      (TransactionCategory selectedCategory) {
+                      (TransactionCategory? selectedCategory) {
                     setState(() {
                       _ancestor = selectedCategory;
                     });

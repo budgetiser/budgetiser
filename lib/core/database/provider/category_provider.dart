@@ -115,7 +115,7 @@ class CategoryModel extends ChangeNotifier {
   Future<void> updateCategory(TransactionCategory category) async {
     var db = await DatabaseHelper.instance.database;
     // Get old ancestor
-    List<Map<String, dynamic>> ancestor = await db.query(
+    List<Map<String, dynamic>> oldAncestor = await db.query(
       'categoryBridge',
       where: 'descendent_id = ? AND distance = 1',
       whereArgs: [category.id],
@@ -128,8 +128,8 @@ class CategoryModel extends ChangeNotifier {
       whereArgs: [category.id],
     );
     // Update bridge
-    if (ancestor.length == 1 && category.ancestorID != null) {
-      int oldAncestorId = ancestor[0]['id'];
+    if (oldAncestor.length == 1 && category.ancestorID != null) {
+      // move inside the tree
       await db.execute('''
         DELETE FROM categoryBridge
         WHERE descendent_id IN (
@@ -143,7 +143,7 @@ class CategoryModel extends ChangeNotifier {
           WHERE descendent_id = ?
           AND ancestor_id != descendent_id
         );
-      ''', [oldAncestorId, oldAncestorId]);
+      ''', [category.id, category.id]);
       await db.execute('''
         INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
         SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1
@@ -152,8 +152,8 @@ class CategoryModel extends ChangeNotifier {
         WHERE a.descendent_id = ?
         AND b.ancestor_id = ?;
         ''', [category.ancestorID, category.id]);
-    } else if (ancestor.length == 1 && category.ancestorID == null) {
-      int oldAncestorId = ancestor[0]['id'];
+    } else if (oldAncestor.length == 1 && category.ancestorID == null) {
+      // move from tree to toplevel
       await db.execute('''
         DELETE FROM categoryBridge
         WHERE descendent_id IN (
@@ -167,15 +167,26 @@ class CategoryModel extends ChangeNotifier {
           WHERE descendent_id = ?
           AND ancestor_id != descendent_id
         );
-      ''', [oldAncestorId, oldAncestorId]);
-      await db.execute('''
+      ''', [
+        category.id,
+        category.id
+      ]); // TODO: check why other args then in "move inside the tree"
+    } else if (oldAncestor.isEmpty && category.ancestorID != null) {
+      // move from top level to inside the tree
+      await db.rawInsert('''
         INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
         SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1
         FROM categoryBridge a
         CROSS JOIN categoryBridge b
         WHERE a.descendent_id = ?
         AND b.ancestor_id = ?;
-        ''', [category.ancestorID, category.id]);
+        ''', [category.ancestorID, category.id],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } else if (oldAncestor.isEmpty && category.ancestorID == null) {
+      // no tree moving required (keep on toplevel)
+      // TODO: (performance) no moving inside the tree
+    } else {
+      throw Exception('Unhandled path while moving category inside the tree');
     }
     _notifyCategoryUpdate();
   }
