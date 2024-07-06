@@ -188,6 +188,7 @@ class _BudgetFormState extends State<BudgetForm> {
                       label: const Text('Interval'),
                       leadingIcon: const Icon(Icons.event_repeat),
                       onSelected: (IntervalUnit? unit) {
+                        FocusManager.instance.primaryFocus?.unfocus();
                         setState(() {
                           if (unit != null) {
                             selectedInterval = unit;

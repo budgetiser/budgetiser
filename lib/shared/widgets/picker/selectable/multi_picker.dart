@@ -9,11 +9,15 @@ class GeneralMultiPicker<T extends Selectable> extends StatefulWidget {
     required this.onPickedCallback,
     required this.possibleValues,
     this.initialValues,
+    this.noDataButton,
   });
   final String heading;
   final Function(List<T> selected) onPickedCallback;
   final List<T> possibleValues;
   final List<T>? initialValues;
+
+  /// Optional button for dialog. Displayed if no data is available.
+  final TextButton? noDataButton;
 
   @override
   State<GeneralMultiPicker<T>> createState() => _GeneralMultiPickerState<T>();
@@ -37,6 +41,9 @@ class _GeneralMultiPickerState<T extends Selectable>
       title: Text(widget.heading),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       actions: [
+        Container(
+          child: widget.noDataButton ?? widget.noDataButton,
+        ),
         TextButton(
           onPressed: () {
             setState(() {
@@ -50,9 +57,14 @@ class _GeneralMultiPickerState<T extends Selectable>
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {
-            return const SizedBox(
-              width: double.maxFinite,
-              child: Text('No data!'),
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                height: 30,
+                child: Center(
+                  child: Text('Nothing to select!'),
+                ),
+              ),
             );
           }
           return dialogContent(setState, context);
@@ -71,34 +83,45 @@ class _GeneralMultiPickerState<T extends Selectable>
   }
 
   Widget dialogContent(StateSetter setState, BuildContext context) {
+    void onAllClicked() {
+      setState(() {
+        if (selectedValues.isEmpty) {
+          selectedValues = [
+            ...widget.possibleValues
+          ]; // clone data. otherwise deselecting single item would .remove() from both lists
+        } else {
+          selectedValues = [];
+        }
+      });
+    }
+
     return SizedBox(
       width: double.maxFinite,
       child: SingleChildScrollView(
         physics: const ScrollPhysics(),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('All'),
-                  Checkbox(
-                    tristate: true,
-                    value: allCheckboxState(),
-                    onChanged: (value) {
-                      setState(() {
-                        if (selectedValues.isEmpty) {
-                          selectedValues = [
-                            ...widget.possibleValues
-                          ]; // clone data. otherwise deselecting single item would .remove() from both lists
-                        } else {
-                          selectedValues = [];
-                        }
-                      });
-                    },
-                  )
-                ],
+            InkWell(
+              onTap: onAllClicked,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'All',
+                      style: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.titleMedium?.fontSize,
+                      ),
+                    ),
+                    Checkbox(
+                      tristate: true,
+                      value: allCheckboxState(),
+                      onChanged: (value) => onAllClicked,
+                    )
+                  ],
+                ),
               ),
             ),
             ListView.builder(
@@ -107,10 +130,12 @@ class _GeneralMultiPickerState<T extends Selectable>
               itemCount: widget.possibleValues.length,
               itemBuilder: (context, listIndex) {
                 return CheckboxListTile(
-                  title:
-                      SelectableIconWithText(widget.possibleValues[listIndex]),
-                  value:
-                      selectedValues.contains(widget.possibleValues[listIndex]),
+                  title: SelectableIconWithText(
+                    widget.possibleValues[listIndex],
+                  ),
+                  value: selectedValues.contains(
+                    widget.possibleValues[listIndex],
+                  ),
                   onChanged: (bool? value) {
                     setState(() {
                       if (value == true) {
