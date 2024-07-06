@@ -173,15 +173,23 @@ class CategoryModel extends ChangeNotifier {
       ]); // TODO: check why other args then in "move inside the tree"
     } else if (oldAncestor.isEmpty && category.ancestorID != null) {
       // move from top level to inside the tree
-      await db.rawInsert('''
-        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
-        SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1
+      var map = await db.rawQuery(
+        '''
+        SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1 as distance
         FROM categoryBridge a
         CROSS JOIN categoryBridge b
         WHERE a.descendent_id = ?
         AND b.ancestor_id = ?;
-        ''', [category.ancestorID, category.id],
-          conflictAlgorithm: ConflictAlgorithm.replace);
+        ''',
+        [category.ancestorID, category.id],
+      );
+      for (var row in map) {
+        await db.insert(
+          'categoryBridge',
+          row,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
     } else if (oldAncestor.isEmpty && category.ancestorID == null) {
       // no tree moving required (keep on toplevel)
       // TODO: (performance) no moving inside the tree
