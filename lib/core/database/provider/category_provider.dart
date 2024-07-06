@@ -50,6 +50,7 @@ class CategoryModel extends ChangeNotifier {
         INSERT INTO category (id, name, icon, color, description, archived) 
         VALUES (?, ?, ?, ?, ?, ?);
       ''', [
+        // TODO: why map
         id,
         map['name'],
         map['icon'],
@@ -57,6 +58,24 @@ class CategoryModel extends ChangeNotifier {
         map['description'],
         map['archived'],
       ]);
+    }
+    if (category.ancestorID != null) {
+      // List<Map<String, dynamic>> ancestors = await db.rawQuery('''
+      //   SELECT ancestor_id, descendant_id, distance
+      //   FROM categoryBridge
+      //   WHERE descendant_id = ?
+      // ''', [category.ancestorID]);
+      // ancestors.map((e) {
+      //   e['descendent_id'] = category.id;
+      //   e['distance'] += 1;
+      // });
+      // await db.update('categoryBridge', values)
+      await db.execute('''
+        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
+        SELECT ancestor_id, ?, distance + 1
+        FROM categoryBridge
+        WHERE descendent_id = ?;
+        ''', [id, category.ancestorID]);
     }
 
     await db.insert(
@@ -81,18 +100,83 @@ class CategoryModel extends ChangeNotifier {
       where: 'ancestor_id = ? OR descendent_id = ?',
       whereArgs: [categoryID, categoryID],
     );
+    await db.execute('''
+      DELETE FROM categoryBridge
+      WHERE descendent_id IN (
+        SELECT descendent_id
+        FROM categoryBridge
+        WHERE ancestor_id = ?
+      )
+    ''');
 
     _notifyCategoryUpdate();
   }
 
   Future<void> updateCategory(TransactionCategory category) async {
     var db = await DatabaseHelper.instance.database;
+    // Get old ancestor
+    List<Map<String, dynamic>> ancestor = await db.query(
+      'categoryBridge',
+      where: 'descendent_id = ? AND distance = 1',
+      whereArgs: [category.id],
+    );
+    // Normal update
     await db.update(
       'category',
       category.toMap(),
       where: 'id = ?',
       whereArgs: [category.id],
     );
+    // Update bridge
+    if (ancestor.length == 1 && category.ancestorID != null) {
+      int oldAncestorId = ancestor[0]['id'];
+      await db.execute('''
+        DELETE FROM categoryBridge
+        WHERE descendent_id IN (
+          SELECT descendent_id
+          FROM categoryBridge
+          WHERE ancestor_id = ?
+        )
+        AND ancestor_id IN (
+          SELECT ancestor_id
+          FROM categoryBridge
+          WHERE descendent_id = ?
+          AND ancestor_id != descendent_id
+        );
+      ''', [oldAncestorId, oldAncestorId]);
+      await db.execute('''
+        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
+        SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1
+        FROM categoryBridge a
+        CROSS JOIN categoryBridge b
+        WHERE a.descendent_id = ?
+        AND b.ancestor_id = ?;
+        ''', [category.ancestorID, category.id]);
+    } else if (ancestor.length == 1 && category.ancestorID == null) {
+      int oldAncestorId = ancestor[0]['id'];
+      await db.execute('''
+        DELETE FROM categoryBridge
+        WHERE descendent_id IN (
+          SELECT descendent_id
+          FROM categoryBridge
+          WHERE ancestor_id = ?
+        )
+        AND ancestor_id IN (
+          SELECT ancestor_id
+          FROM categoryBridge
+          WHERE descendent_id = ?
+          AND ancestor_id != descendent_id
+        );
+      ''', [oldAncestorId, oldAncestorId]);
+      await db.execute('''
+        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
+        SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1
+        FROM categoryBridge a
+        CROSS JOIN categoryBridge b
+        WHERE a.descendent_id = ?
+        AND b.ancestor_id = ?;
+        ''', [category.ancestorID, category.id]);
+    }
     _notifyCategoryUpdate();
   }
 }

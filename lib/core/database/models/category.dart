@@ -6,7 +6,7 @@ class TransactionCategory extends Selectable {
   String? description;
   bool archived;
   // TODO: discuss how to implement bridge #231
-  int? parentID; // used in json export
+  int? ancestorID; // used in json export
   int level; // starts at 0 for elements without parent
 
   TransactionCategory({
@@ -16,7 +16,7 @@ class TransactionCategory extends Selectable {
     required super.color,
     this.description,
     this.archived = false,
-    this.parentID,
+    this.ancestorID,
     this.level = 0,
   });
 
@@ -30,7 +30,7 @@ class TransactionCategory extends Selectable {
       other.color == color &&
       other.description == description &&
       other.archived == archived &&
-      other.parentID == parentID &&
+      other.ancestorID == ancestorID &&
       other.level == level;
 
   @override
@@ -41,7 +41,7 @@ class TransactionCategory extends Selectable {
         color,
         description,
         archived,
-        parentID,
+        ancestorID,
         level,
       );
 
@@ -67,7 +67,7 @@ class TransactionCategory extends Selectable {
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['parentID'] = parentID;
+    m['ancestorID'] = ancestorID;
     return m;
   }
 }

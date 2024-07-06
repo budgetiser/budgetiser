@@ -1,10 +1,13 @@
+import 'package:budgetiser/categories/widgets/category_single_picker.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
+import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
+import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +29,7 @@ class _CategoryFormState extends State<CategoryForm> {
 
   Color _color = randomColor();
   IconData _icon = Icons.abc;
+  TransactionCategory? _ancestor;
 
   double maxHeaderHeight = 200;
   final ValueNotifier<double> opacity = ValueNotifier(0);
@@ -97,6 +101,29 @@ class _CategoryFormState extends State<CategoryForm> {
               ),
             ),
           ),
+          CustomInputFieldBorder(
+            title: 'Ancestor',
+            onTap: () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CategorySinglePicker(
+                  onCategoryPickedCallback:
+                      (TransactionCategory selectedCategory) {
+                    setState(() {
+                      _ancestor = selectedCategory;
+                    });
+                  },
+                );
+              },
+            ),
+            child: InkWell(
+                child: _ancestor != null
+                    ? SelectableIconWithText(_ancestor!)
+                    : const Text('Select Ancestor')),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
           TextFormField(
             controller: descriptionController,
             minLines: 3,
@@ -113,7 +140,8 @@ class _CategoryFormState extends State<CategoryForm> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CancelActionButton(
-            isDeletion: widget.categoryData != null,
+            isDeletion: (widget.categoryData != null) &&
+                (widget.categoryData?.ancestorID == null),
             onSubmitCallback: () {
               Provider.of<CategoryModel>(context, listen: false)
                   .deleteCategory(widget.categoryData!.id);
@@ -132,6 +160,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     description:
                         parseNullableString(descriptionController.text),
                     archived: false,
+                    ancestorID: _ancestor?.id,
                     id: 0);
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
