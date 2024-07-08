@@ -10,6 +10,7 @@ class CategoryModel extends ChangeNotifier {
   }
 
   Future<TransactionCategory> getCategory(int id) async {
+    // TODO: hierarchical
     Profiler.instance.start('getCategory $id');
     var db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps =
@@ -21,10 +22,39 @@ class CategoryModel extends ChangeNotifier {
 
   Future<List<TransactionCategory>> getAllCategories() async {
     var db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> maps = await db.query('category');
+    // final List<Map<String, dynamic>> map = await db.query('category');
+    var map = await db.rawQuery('''
+    WITH max_distance AS (
+        SELECT 
+            descendent_id,
+            MAX(distance) AS max_distance
+        FROM 
+            categoryBridge
+        GROUP BY 
+            descendent_id
+    )
+    SELECT 
+        c.id,
+        c.name,
+        c.icon,
+        c.color,
+        c.description,
+        c.archived,
+        cb.ancestor_id AS ancestorID,
+        cb.distance AS level
+    FROM 
+        category c
+    LEFT JOIN 
+        categoryBridge cb 
+        ON c.id = cb.descendent_id 
+        AND NOT (cb.ancestor_id = c.id AND cb.distance = 0)
+        AND cb.distance = (SELECT max_distance FROM max_distance WHERE max_distance.descendent_id = c.id);
+    ''');
 
-    return List.generate(maps.length, (i) {
-      return TransactionCategory.fromDBmap(maps[i]);
+    return List.generate(map.length, (i) {
+      return TransactionCategory.fromDBmap(
+        map[i],
+      );
     });
   }
 

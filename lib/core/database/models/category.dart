@@ -45,11 +45,14 @@ class TransactionCategory extends Selectable {
         level,
       );
 
-  TransactionCategory.fromDBmap(Map<String, dynamic> map)
-      : id = map['id'],
+  TransactionCategory.fromDBmap(
+    Map<String, dynamic> map,
+  )    // TODO: #231
+  : id = map['id'],
         description = map['description'],
         archived = map['archived'] == 1,
-        level = 0, // TODO: #231
+        level = map['level'] ?? 0,
+        ancestorID = map['ancestorID'],
         super(
           name: map['name'].toString(),
           color: Color(map['color']),

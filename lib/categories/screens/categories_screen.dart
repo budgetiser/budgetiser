@@ -41,9 +41,7 @@ Widget buildB(BuildContext context) {
               return const Text('Oops!');
             }
 
-            List<TransactionCategory> categoryList = snapshot.data!
-              ..sort((a, b) => a.name.compareTo(b.name));
-            return _CategoryList(categories: categoryList);
+            return _screenContent(snapshot);
           },
         );
       },
@@ -59,6 +57,35 @@ Widget buildB(BuildContext context) {
           ),
         );
       },
+    ),
+  );
+}
+
+Widget _screenContent(AsyncSnapshot<List<TransactionCategory>> snapshot) {
+  List<TransactionCategory> categoryList = snapshot.data!
+    ..sort((a, b) => a.name.compareTo(b.name));
+
+  List<TransactionCategory> onlyTopLevelCategoryList =
+      categoryList.where((element) => element.level == 0).toList();
+
+  return SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 400,
+          child: _CategoryList(categories: categoryList),
+        ),
+        const SizedBox(
+          height: 8,
+          width: 8,
+        ),
+        const Text('top level:'),
+        SizedBox(
+          height: 400,
+          child: _CategoryList(categories: onlyTopLevelCategoryList),
+        ),
+      ],
     ),
   );
 }

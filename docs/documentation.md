@@ -45,4 +45,4 @@ Transactions:
 
 Category:
 
-see: [Overview of hierarchical data modelling](https://www.databasestar.com/hierarchical-data-sql/#:~:text=specific%20use%20case-,Bridge%20Table%20or%20Closure%20Table,-The%20Bridge%20Table)
+see: [Bridge Table or Closure Table](https://www.databasestar.com/hierarchical-data-sql/#:~:text=specific%20use%20case-,Bridge%20Table%20or%20Closure%20Table,-The%20Bridge%20Table)

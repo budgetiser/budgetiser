@@ -143,8 +143,7 @@ class _CategoryFormState extends State<CategoryForm> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CancelActionButton(
-            isDeletion: (widget.categoryData != null) &&
-                (widget.categoryData?.ancestorID == null),
+            isDeletion: widget.categoryData != null,
             onSubmitCallback: () {
               Provider.of<CategoryModel>(context, listen: false)
                   .deleteCategory(widget.categoryData!.id);
