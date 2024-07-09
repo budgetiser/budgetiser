@@ -195,7 +195,7 @@ void main() {
 }
 
 void connectCategories(TransactionCategory parent, TransactionCategory child) {
-  child.ancestorID = parent.id;
+  child.parentID = parent.id;
 }
 
 List<Map<String, int>> getMissingRelations(

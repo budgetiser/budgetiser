@@ -83,7 +83,7 @@ class CategoryModel extends ChangeNotifier {
         map['archived'],
       ]);
     }
-    if (category.ancestorID != null) {
+    if (category.parentID != null) {
       // List<Map<String, dynamic>> ancestors = await db.rawQuery('''
       //   SELECT parent_id, descendant_id, distance
       //   FROM categoryBridge
@@ -99,7 +99,7 @@ class CategoryModel extends ChangeNotifier {
         SELECT parent_id, ?, distance + 1
         FROM categoryBridge
         WHERE child_id = ?;
-        ''', [id, category.ancestorID]);
+        ''', [id, category.parentID]);
     }
 
     await db.insert(
@@ -152,7 +152,7 @@ class CategoryModel extends ChangeNotifier {
       whereArgs: [category.id],
     );
     // Update bridge
-    if (oldAncestor.length == 1 && category.ancestorID != null) {
+    if (oldAncestor.length == 1 && category.parentID != null) {
       // move inside the tree
       await db.execute('''
         DELETE FROM categoryBridge
@@ -175,8 +175,8 @@ class CategoryModel extends ChangeNotifier {
         CROSS JOIN categoryBridge b
         WHERE a.child_id = ?
         AND b.parent_id = ?;
-        ''', [category.ancestorID, category.id]);
-    } else if (oldAncestor.length == 1 && category.ancestorID == null) {
+        ''', [category.parentID, category.id]);
+    } else if (oldAncestor.length == 1 && category.parentID == null) {
       // move from tree to toplevel
       await db.execute('''
         DELETE FROM categoryBridge
@@ -195,7 +195,7 @@ class CategoryModel extends ChangeNotifier {
         category.id,
         category.id
       ]); // TODO: check why other args then in "move inside the tree"
-    } else if (oldAncestor.isEmpty && category.ancestorID != null) {
+    } else if (oldAncestor.isEmpty && category.parentID != null) {
       // move from top level to inside the tree
       var map = await db.rawQuery(
         '''
@@ -205,7 +205,7 @@ class CategoryModel extends ChangeNotifier {
         WHERE a.child_id = ?
         AND b.parent_id = ?;
         ''',
-        [category.ancestorID, category.id],
+        [category.parentID, category.id],
       );
       for (var row in map) {
         await db.insert(
@@ -214,7 +214,7 @@ class CategoryModel extends ChangeNotifier {
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
-    } else if (oldAncestor.isEmpty && category.ancestorID == null) {
+    } else if (oldAncestor.isEmpty && category.parentID == null) {
       // no tree moving required (keep on toplevel)
       // TODO: (performance) no moving inside the tree
     } else {

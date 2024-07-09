@@ -62,7 +62,7 @@ Widget _screenContent(AsyncSnapshot<List<TransactionCategory>> snapshot) {
 
   List<TransactionCategory> onlyTopLevelCategoryList = categoryList
       .where(
-        (element) => element.ancestorID == null,
+        (element) => element.parentID == null,
       )
       .toList();
 

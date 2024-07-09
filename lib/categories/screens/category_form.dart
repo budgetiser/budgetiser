@@ -1,4 +1,3 @@
-import 'package:budgetiser/categories/widgets/category_single_picker.dart';
 import 'package:budgetiser/categories/widgets/category_single_picker_nullable.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
@@ -42,6 +41,11 @@ class _CategoryFormState extends State<CategoryForm> {
       descriptionController.text = widget.categoryData!.description ?? '';
       _color = widget.categoryData!.color;
       _icon = widget.categoryData!.icon;
+      if (widget.categoryData!.parentID != null) {
+        CategoryModel().getCategory(widget.categoryData!.parentID!).then(
+              (value) => _ancestor = value,
+            );
+      }
     }
     super.initState();
   }
@@ -60,6 +64,7 @@ class _CategoryFormState extends State<CategoryForm> {
         title: const Text('Create a Category'),
       ),
       body: ScrollViewWithDeadSpace(
+        deadSpaceContent: _deadSpaceContent(),
         children: [
           Form(
             key: _formKey,
@@ -162,7 +167,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     description:
                         parseNullableString(descriptionController.text),
                     archived: false,
-                    ancestorID: _ancestor?.id,
+                    parentID: _ancestor?.id,
                     id: 0);
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
@@ -177,6 +182,29 @@ class _CategoryFormState extends State<CategoryForm> {
             },
             label: const Text('Save'),
             icon: const Icon(Icons.check),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _deadSpaceContent() {
+    if (_ancestor == null) {
+      return const Center(
+        child: Text('No parent'),
+      );
+    }
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Parent:'),
+          SizedBox(
+            width: 100,
+            child: SelectableIconWithText(
+              _ancestor!,
+              size: 30,
+            ),
           ),
         ],
       ),

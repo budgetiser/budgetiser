@@ -5,7 +5,7 @@ class TransactionCategory extends Selectable {
   int id;
   String? description;
   bool archived;
-  int? ancestorID; // used in json export
+  int? parentID; // used in json export
   List<int> children = [];
 
   TransactionCategory({
@@ -15,7 +15,7 @@ class TransactionCategory extends Selectable {
     required super.color,
     this.description,
     this.archived = false,
-    this.ancestorID,
+    this.parentID,
     List<int>? children,
   }) {
     this.children = children ?? [];
@@ -31,7 +31,7 @@ class TransactionCategory extends Selectable {
       other.color == color &&
       other.description == description &&
       other.archived == archived &&
-      other.ancestorID == ancestorID &&
+      other.parentID == parentID &&
       other.children == children;
 
   @override
@@ -42,7 +42,7 @@ class TransactionCategory extends Selectable {
         color,
         description,
         archived,
-        ancestorID,
+        parentID,
         children,
       );
 
@@ -58,7 +58,7 @@ class TransactionCategory extends Selectable {
                 .map((e) => int.parse(e))
                 .toList()
             : [],
-        ancestorID = map['parent_id'],
+        parentID = map['parent_id'],
         super(
           name: map['name'].toString(),
           color: Color(map['color']),
@@ -76,7 +76,7 @@ class TransactionCategory extends Selectable {
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['parent_id'] = ancestorID;
+    m['parent_id'] = parentID;
     m['children'] = children;
     return m;
   }
