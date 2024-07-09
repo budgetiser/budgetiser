@@ -83,7 +83,7 @@ class _GeneralMultiPickerState<T extends Selectable>
   }
 
   Widget dialogContent(StateSetter setState, BuildContext context) {
-    void onAllClicked() {
+    void onAllClicked(bool? value) {
       setState(() {
         if (selectedValues.isEmpty) {
           selectedValues = [
@@ -101,27 +101,15 @@ class _GeneralMultiPickerState<T extends Selectable>
         physics: const ScrollPhysics(),
         child: Column(
           children: [
-            InkWell(
-              onTap: onAllClicked,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'All',
-                      style: TextStyle(
-                        fontSize:
-                            Theme.of(context).textTheme.titleMedium?.fontSize,
-                      ),
-                    ),
-                    Checkbox(
-                      tristate: true,
-                      value: allCheckboxState(),
-                      onChanged: (value) => onAllClicked,
-                    )
-                  ],
-                ),
+            CheckboxListTile(
+              tristate: true,
+              onChanged: onAllClicked,
+              value: allCheckboxState(),
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('All'),
+                ],
               ),
             ),
             ListView.builder(
