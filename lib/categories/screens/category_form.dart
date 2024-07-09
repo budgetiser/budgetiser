@@ -29,7 +29,7 @@ class _CategoryFormState extends State<CategoryForm> {
 
   Color _color = randomColor();
   IconData _icon = Icons.abc;
-  TransactionCategory? _ancestor;
+  TransactionCategory? _parentCategory;
 
   double maxHeaderHeight = 200;
   final ValueNotifier<double> opacity = ValueNotifier(0);
@@ -42,9 +42,14 @@ class _CategoryFormState extends State<CategoryForm> {
       _color = widget.categoryData!.color;
       _icon = widget.categoryData!.icon;
       if (widget.categoryData!.parentID != null) {
+        // fetch full parent if category has one
         CategoryModel().getCategory(widget.categoryData!.parentID!).then(
-              (value) => _ancestor = value,
-            );
+          (value) {
+            setState(() {
+              _parentCategory = value;
+            });
+          },
+        );
       }
     }
     super.initState();
@@ -118,16 +123,17 @@ class _CategoryFormState extends State<CategoryForm> {
                   onCategoryPickedCallback:
                       (TransactionCategory? selectedCategory) {
                     setState(() {
-                      _ancestor = selectedCategory;
+                      _parentCategory = selectedCategory;
                     });
                   },
                 );
               },
             ),
             child: InkWell(
-                child: _ancestor != null
-                    ? SelectableIconWithText(_ancestor!)
-                    : const Text('Select Ancestor')),
+              child: _parentCategory != null
+                  ? SelectableIconWithText(_parentCategory!)
+                  : const Text('Select Ancestor'),
+            ),
           ),
           const SizedBox(
             height: 16,
@@ -141,6 +147,12 @@ class _CategoryFormState extends State<CategoryForm> {
               labelText: '(optional) Description',
               alignLabelWithHint: true,
             ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Center(
+            child: Text('Children: ${widget.categoryData?.children}'),
           )
         ],
       ),
@@ -148,7 +160,8 @@ class _CategoryFormState extends State<CategoryForm> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CancelActionButton(
-            isDeletion: widget.categoryData != null,
+            isDeletion: widget.categoryData != null &&
+                widget.categoryData!.children.isEmpty,
             onSubmitCallback: () {
               Provider.of<CategoryModel>(context, listen: false)
                   .deleteCategory(widget.categoryData!.id);
@@ -164,10 +177,11 @@ class _CategoryFormState extends State<CategoryForm> {
                     name: nameController.text.trim(),
                     icon: _icon,
                     color: _color,
-                    description:
-                        parseNullableString(descriptionController.text),
+                    description: parseNullableString(
+                      descriptionController.text,
+                    ),
                     archived: false,
-                    parentID: _ancestor?.id,
+                    parentID: _parentCategory?.id,
                     id: 0);
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
@@ -189,7 +203,7 @@ class _CategoryFormState extends State<CategoryForm> {
   }
 
   Widget _deadSpaceContent() {
-    if (_ancestor == null) {
+    if (_parentCategory == null) {
       return const Center(
         child: Text('No parent'),
       );
@@ -202,7 +216,7 @@ class _CategoryFormState extends State<CategoryForm> {
           SizedBox(
             width: 100,
             child: SelectableIconWithText(
-              _ancestor!,
+              _parentCategory!,
               size: 30,
             ),
           ),
