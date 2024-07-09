@@ -13,7 +13,8 @@ class StatPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card.filled(
+    return Card.outlined(
+      color: Theme.of(context).hoverColor,
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
         onTap: onTap,

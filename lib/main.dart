@@ -5,6 +5,7 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/routes.dart';
 import 'package:budgetiser/home/screens/home_screen.dart';
 import 'package:budgetiser/settings/services/settings_stream.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -48,23 +49,36 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  static final _defaultLightColorScheme = ColorScheme.fromSwatch(
+    primarySwatch: Colors.blue,
+  );
+
+  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
+    primarySwatch: Colors.blue,
+    brightness: Brightness.dark,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Budgetiser',
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      supportedLocales: const [
-        Locale('de', 'DE'),
-      ],
-      themeMode: _themeMode,
-      theme: ThemeData(
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-      ),
-      home: const HomeScreen(),
-      routes: routes,
+    return DynamicColorBuilder(
+      builder: (lightColorScheme, darkColorScheme) {
+        return MaterialApp(
+          title: 'Budgetiser',
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
+          supportedLocales: const [
+            Locale('de', 'DE'),
+          ],
+          themeMode: _themeMode,
+          theme: ThemeData(
+            colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
+          ),
+          home: const HomeScreen(),
+          routes: routes,
+        );
+      },
     );
   }
 }
