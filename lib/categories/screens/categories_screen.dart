@@ -12,61 +12,59 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return buildA(context);
-    return buildB(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Categories'),
+      ),
+      drawer: const CreateDrawer(),
+      body: Consumer<CategoryModel>(
+        builder: (context, model, child) {
+          return FutureBuilder<List<TransactionCategory>>(
+            future: model.getAllCategories(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Categories'),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Text('Oops!');
+              }
+              return _screenContent(snapshot);
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Add category'),
+        tooltip: 'Create a new category',
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const CategoryForm(),
+            ),
+          );
+        },
+      ),
+    );
   }
-}
-
-@override
-Widget buildB(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Categories'),
-    ),
-    drawer: const CreateDrawer(),
-    body: Consumer<CategoryModel>(
-      builder: (context, model, child) {
-        return FutureBuilder<List<TransactionCategory>>(
-          future: model.getAllCategories(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.data!.isEmpty) {
-              return _NoCategories();
-            }
-            if (snapshot.hasError) {
-              return const Text('Oops!');
-            }
-
-            return _screenContent(snapshot);
-          },
-        );
-      },
-    ),
-    floatingActionButton: FloatingActionButton.extended(
-      icon: const Icon(Icons.add_rounded),
-      label: const Text('Add category'),
-      tooltip: 'Create a new category',
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const CategoryForm(),
-          ),
-        );
-      },
-    ),
-  );
 }
 
 Widget _screenContent(AsyncSnapshot<List<TransactionCategory>> snapshot) {
   List<TransactionCategory> categoryList = snapshot.data!
     ..sort((a, b) => a.name.compareTo(b.name));
 
-  List<TransactionCategory> onlyTopLevelCategoryList =
-      categoryList.where((element) => element.level == 0).toList();
+  List<TransactionCategory> onlyTopLevelCategoryList = categoryList
+      .where(
+        (element) => element.ancestorID == null,
+      )
+      .toList();
 
   return SingleChildScrollView(
     child: Column(
@@ -90,15 +88,6 @@ Widget _screenContent(AsyncSnapshot<List<TransactionCategory>> snapshot) {
   );
 }
 
-class _NoCategories extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('No Categories'),
-    );
-  }
-}
-
 class _CategoryList extends StatelessWidget {
   const _CategoryList({required this.categories});
   final List<TransactionCategory> categories;
@@ -114,62 +103,4 @@ class _CategoryList extends StatelessWidget {
       },
     );
   }
-}
-
-Widget buildA(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text(
-        'Categories',
-      ),
-    ),
-    drawer: const CreateDrawer(),
-    body: Consumer<CategoryModel>(
-      builder: (context, model, child) {
-        return FutureBuilder<List<TransactionCategory>>(
-          future: model.getAllCategories(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Categories'),
-              );
-            }
-            if (snapshot.hasError) {
-              return const Text('Oops!');
-            }
-            List<TransactionCategory> categoryList = snapshot.data!
-              ..sort((a, b) => a.name.compareTo(b.name));
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80),
-                itemCount: categoryList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return CategoryItem(
-                    categoryData: categoryList[index],
-                  );
-                },
-              ),
-            );
-          },
-        );
-      },
-    ),
-    floatingActionButton: FloatingActionButton.large(
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const CategoryForm(),
-          ),
-        );
-      },
-      tooltip: 'New category',
-      child: const Icon(Icons.add_rounded),
-    ),
-  );
 }

@@ -24,15 +24,6 @@ class CategoryModel extends ChangeNotifier {
     var db = await DatabaseHelper.instance.database;
     // final List<Map<String, dynamic>> map = await db.query('category');
     var map = await db.rawQuery('''
-    WITH max_distance AS (
-        SELECT 
-            descendent_id,
-            MAX(distance) AS max_distance
-        FROM 
-            categoryBridge
-        GROUP BY 
-            descendent_id
-    )
     SELECT 
         c.id,
         c.name,
@@ -40,15 +31,18 @@ class CategoryModel extends ChangeNotifier {
         c.color,
         c.description,
         c.archived,
-        cb.ancestor_id AS ancestorID,
-        cb.distance AS level
+        cb.ancestor_id,
+        GROUP_CONCAT(cb2.descendent_id) AS children
     FROM 
         category c
     LEFT JOIN 
-        categoryBridge cb 
-        ON c.id = cb.descendent_id 
-        AND NOT (cb.ancestor_id = c.id AND cb.distance = 0)
-        AND cb.distance = (SELECT max_distance FROM max_distance WHERE max_distance.descendent_id = c.id);
+        categoryBridge cb ON c.id = cb.descendent_id
+        AND cb.distance = 1
+    LEFT JOIN 
+        categoryBridge cb2 ON c.id = cb2.ancestor_id
+        AND cb2.distance = 1
+    GROUP BY 
+        c.id, c.name, c.icon, c.color, c.description, c.archived, cb.ancestor_id;
     ''');
 
     return List.generate(map.length, (i) {
