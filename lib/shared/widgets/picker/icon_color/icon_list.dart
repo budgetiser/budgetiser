@@ -19,6 +19,7 @@ class _IconListState extends State<IconList>
   // Required for keeping scroll position when used in Tabs
   @override
   bool get wantKeepAlive => true;
+  String _searchString = '';
 
   late IconData currentIcon;
 
@@ -33,24 +34,52 @@ class _IconListState extends State<IconList>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return GridView.builder(
-      primary: false,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 6, // number of items in each row
-        mainAxisSpacing: 8.0, // spacing between rows
-        crossAxisSpacing: 8.0, // spacing between columns
-      ),
-      itemCount: _fullIconList.length,
-      itemBuilder: (context, index) {
-        return IconItem(
-          icon: _fullIconList[index]['icon'],
-          selected: _fullIconList[index]['icon'] == widget.initialIcon,
-          onSelection: (IconData newIcon) {
-            setState(() => currentIcon = newIcon);
-            widget.onIconSelected(newIcon);
-          },
-        );
+    List<Map<String, dynamic>> filteredIconList = _fullIconList.where(
+      (element) {
+        return element['name'].toString().contains(_searchString);
       },
+    ).toList();
+
+    return Column(
+      children: [
+        TextField(
+          decoration: const InputDecoration(
+            hintText: 'Search',
+            prefixIcon: Icon(
+              Icons.search,
+            ),
+          ),
+          onChanged: (String value) {
+            setState(() {
+              _searchString = value;
+            });
+          },
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Expanded(
+          child: GridView.builder(
+            primary: false,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 6, // number of items in each row
+              mainAxisSpacing: 8.0, // spacing between rows
+              crossAxisSpacing: 8.0, // spacing between columns
+            ),
+            itemCount: filteredIconList.length,
+            itemBuilder: (context, index) {
+              return IconItem(
+                icon: filteredIconList[index]['icon'],
+                selected: filteredIconList[index]['icon'] == widget.initialIcon,
+                onSelection: (IconData newIcon) {
+                  setState(() => currentIcon = newIcon);
+                  widget.onIconSelected(newIcon);
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
@@ -81,9 +110,9 @@ class IconItem extends StatelessWidget {
   Widget build(BuildContext context) {
     if (selected) {
       return Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(6)),
-          color: Colors.green,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          color: Theme.of(context).focusColor,
         ),
         child: iconButton,
       );
