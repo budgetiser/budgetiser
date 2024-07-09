@@ -53,7 +53,7 @@ class _IconColorDialogState extends State<IconColorDialog> {
                   widget.onSelection(currentIcon, currentColor);
                   Navigator.of(context).pop();
                 },
-                child: const Text('Save'),
+                child: const Text('Confirm'),
               ),
             ],
             leading: IconButton(
