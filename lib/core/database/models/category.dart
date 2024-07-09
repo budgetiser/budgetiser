@@ -5,9 +5,8 @@ class TransactionCategory extends Selectable {
   int id;
   String? description;
   bool archived;
-  // TODO: discuss how to implement bridge #231
   int? ancestorID; // used in json export
-  int level; // starts at 0 for elements without parent
+  List<int> children = [];
 
   TransactionCategory({
     required this.id,
@@ -17,8 +16,10 @@ class TransactionCategory extends Selectable {
     this.description,
     this.archived = false,
     this.ancestorID,
-    this.level = 0,
-  });
+    List<int>? children,
+  }) {
+    this.children = children ?? [];
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -31,7 +32,7 @@ class TransactionCategory extends Selectable {
       other.description == description &&
       other.archived == archived &&
       other.ancestorID == ancestorID &&
-      other.level == level;
+      other.children == children;
 
   @override
   int get hashCode => Object.hash(
@@ -42,17 +43,22 @@ class TransactionCategory extends Selectable {
         description,
         archived,
         ancestorID,
-        level,
+        children,
       );
 
   TransactionCategory.fromDBmap(
     Map<String, dynamic> map,
-  )    // TODO: #231
-  : id = map['id'],
+  )   : id = map['id'],
         description = map['description'],
         archived = map['archived'] == 1,
-        level = map['level'] ?? 0,
-        ancestorID = map['ancestorID'],
+        // children = map['children'] ?? [],
+        children = map['children'] != null
+            ? (map['children'] as String)
+                .split(',')
+                .map((e) => int.parse(e))
+                .toList()
+            : [],
+        ancestorID = map['ancestor_id'],
         super(
           name: map['name'].toString(),
           color: Color(map['color']),
@@ -70,7 +76,8 @@ class TransactionCategory extends Selectable {
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['ancestorID'] = ancestorID;
+    m['ancestor_id'] = ancestorID;
+    m['children'] = children;
     return m;
   }
 }
