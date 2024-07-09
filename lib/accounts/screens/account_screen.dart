@@ -114,18 +114,53 @@ class _AccountScreenState extends State<AccountScreen> {
               return const Text('Oops!');
             }
             snapshot.data!.sort(sortFunction);
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              padding: const EdgeInsets.only(bottom: 80),
-              itemBuilder: (BuildContext context, int index) {
-                return AccountItem(
-                  accountData: snapshot.data![index],
-                );
-              },
+            var accountList =
+                snapshot.data!.where((element) => !element.archived).toList();
+            var archivedAccountList =
+                snapshot.data!.where((element) => element.archived).toList();
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: accountList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return AccountItem(
+                        accountData: accountList[index],
+                      );
+                    },
+                  ),
+                  ...archivedAccounts(archivedAccountList),
+                ],
+              ),
             );
           },
         );
       },
     );
+  }
+
+  List<Widget> archivedAccounts(List<Account> archivedAccountList) {
+    if (archivedAccountList.isEmpty) return [];
+    return [
+      const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text('Archived'),
+      ),
+      ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: archivedAccountList.length,
+        padding: const EdgeInsets.only(bottom: 80),
+        itemBuilder: (BuildContext context, int index) {
+          return AccountItem(
+            accountData: archivedAccountList[index],
+          );
+        },
+      )
+    ];
   }
 }
