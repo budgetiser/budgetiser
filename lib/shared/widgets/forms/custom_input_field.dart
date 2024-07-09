@@ -6,11 +6,13 @@ class CustomInputFieldBorder extends StatelessWidget {
     required this.child,
     required this.title,
     this.onTap,
+    this.height = 55,
     super.key,
   });
   final Widget child;
   final String title;
   final void Function()? onTap;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class CustomInputFieldBorder extends StatelessWidget {
             splashFactory: NoSplash.splashFactory,
             child: Container(
               width: double.maxFinite,
-              height: 55,
+              height: height,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
                 border: Border.all(
