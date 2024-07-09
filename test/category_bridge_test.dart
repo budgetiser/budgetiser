@@ -58,8 +58,8 @@ abstract class TestCase {
   void _createZeroDistanceRelations() {
     for (var category in categories) {
       relations.add({
-        'ancestor_id': category.id,
-        'descendent_id': category.id,
+        'parent_id': category.id,
+        'child_id': category.id,
         'distance': 0,
       });
     }
@@ -108,9 +108,9 @@ class TestCaseLevel1 extends TestCase {
   @override
   void _createComplexRelations() {
     relations.addAll([
-      {'ancestor_id': 0, 'descendent_id': 1, 'distance': 1},
-      {'ancestor_id': 2, 'descendent_id': 3, 'distance': 1},
-      {'ancestor_id': 4, 'descendent_id': 5, 'distance': 1},
+      {'parent_id': 0, 'child_id': 1, 'distance': 1},
+      {'parent_id': 2, 'child_id': 3, 'distance': 1},
+      {'parent_id': 4, 'child_id': 5, 'distance': 1},
     ]);
   }
 
@@ -133,11 +133,11 @@ class TestCaseLevel2 extends TestCase {
   @override
   void _createComplexRelations() {
     relations.addAll([
-      {'ancestor_id': 0, 'descendent_id': 1, 'distance': 1},
-      {'ancestor_id': 0, 'descendent_id': 2, 'distance': 2},
-      {'ancestor_id': 1, 'descendent_id': 2, 'distance': 1},
-      {'ancestor_id': 0, 'descendent_id': 3, 'distance': 1},
-      {'ancestor_id': 4, 'descendent_id': 5, 'distance': 1},
+      {'parent_id': 0, 'child_id': 1, 'distance': 1},
+      {'parent_id': 0, 'child_id': 2, 'distance': 2},
+      {'parent_id': 1, 'child_id': 2, 'distance': 1},
+      {'parent_id': 0, 'child_id': 3, 'distance': 1},
+      {'parent_id': 4, 'child_id': 5, 'distance': 1},
     ]);
   }
 
