@@ -34,6 +34,8 @@ class DatabaseHelper {
   final recentlyUsedAccount = RecentlyUsed<Account>();
   final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
 
+  static const int currentDatabaseVersion = 4;
+
   Future<Database> get database async =>
       _database ??= await initializeDatabase();
 
@@ -53,7 +55,7 @@ class DatabaseHelper {
 
   /// Public method for resetting db
   // ignore: always_declare_return_types
-  resetDB({int newVersion = 3}) async {
+  resetDB({int newVersion = currentDatabaseVersion}) async {
     final Database db = await database;
     await _resetDB(db, newVersion);
   }
@@ -107,7 +109,7 @@ class DatabaseHelper {
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
-        version: 3,
+        version: currentDatabaseVersion,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {

@@ -58,7 +58,7 @@ class TransactionCategory extends Selectable {
                 .map((e) => int.parse(e))
                 .toList()
             : [],
-        ancestorID = map['ancestor_id'],
+        ancestorID = map['parent_id'],
         super(
           name: map['name'].toString(),
           color: Color(map['color']),
@@ -76,7 +76,7 @@ class TransactionCategory extends Selectable {
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['ancestor_id'] = ancestorID;
+    m['parent_id'] = ancestorID;
     m['children'] = children;
     return m;
   }

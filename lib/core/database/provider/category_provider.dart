@@ -31,18 +31,18 @@ class CategoryModel extends ChangeNotifier {
         c.color,
         c.description,
         c.archived,
-        cb.ancestor_id,
-        GROUP_CONCAT(cb2.descendent_id) AS children
+        cb.parent_id,
+        GROUP_CONCAT(cb2.child_id) AS children
     FROM 
         category c
     LEFT JOIN 
-        categoryBridge cb ON c.id = cb.descendent_id
+        categoryBridge cb ON c.id = cb.child_id
         AND cb.distance = 1
     LEFT JOIN 
-        categoryBridge cb2 ON c.id = cb2.ancestor_id
+        categoryBridge cb2 ON c.id = cb2.parent_id
         AND cb2.distance = 1
     GROUP BY 
-        c.id, c.name, c.icon, c.color, c.description, c.archived, cb.ancestor_id;
+        c.id, c.name, c.icon, c.color, c.description, c.archived, cb.parent_id;
     ''');
 
     return List.generate(map.length, (i) {
@@ -85,26 +85,26 @@ class CategoryModel extends ChangeNotifier {
     }
     if (category.ancestorID != null) {
       // List<Map<String, dynamic>> ancestors = await db.rawQuery('''
-      //   SELECT ancestor_id, descendant_id, distance
+      //   SELECT parent_id, descendant_id, distance
       //   FROM categoryBridge
       //   WHERE descendant_id = ?
       // ''', [category.ancestorID]);
       // ancestors.map((e) {
-      //   e['descendent_id'] = category.id;
+      //   e['child_id'] = category.id;
       //   e['distance'] += 1;
       // });
       // await db.update('categoryBridge', values)
       await db.execute('''
-        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
-        SELECT ancestor_id, ?, distance + 1
+        INSERT INTO categoryBridge (parent_id, child_id, distance)
+        SELECT parent_id, ?, distance + 1
         FROM categoryBridge
-        WHERE descendent_id = ?;
+        WHERE child_id = ?;
         ''', [id, category.ancestorID]);
     }
 
     await db.insert(
       'categoryBridge',
-      {'ancestor_id': id, 'descendent_id': id, 'distance': 0},
+      {'parent_id': id, 'child_id': id, 'distance': 0},
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
     _notifyCategoryUpdate();
@@ -121,15 +121,15 @@ class CategoryModel extends ChangeNotifier {
     );
     await db.delete(
       'categoryBridge',
-      where: 'ancestor_id = ? OR descendent_id = ?',
+      where: 'parent_id = ? OR child_id = ?',
       whereArgs: [categoryID, categoryID],
     );
     await db.execute('''
       DELETE FROM categoryBridge
-      WHERE descendent_id IN (
-        SELECT descendent_id
+      WHERE child_id IN (
+        SELECT child_id
         FROM categoryBridge
-        WHERE ancestor_id = ?
+        WHERE parent_id = ?
       )
     ''');
 
@@ -141,7 +141,7 @@ class CategoryModel extends ChangeNotifier {
     // Get old ancestor
     List<Map<String, dynamic>> oldAncestor = await db.query(
       'categoryBridge',
-      where: 'descendent_id = ? AND distance = 1',
+      where: 'child_id = ? AND distance = 1',
       whereArgs: [category.id],
     );
     // Normal update
@@ -156,40 +156,40 @@ class CategoryModel extends ChangeNotifier {
       // move inside the tree
       await db.execute('''
         DELETE FROM categoryBridge
-        WHERE descendent_id IN (
-          SELECT descendent_id
+        WHERE child_id IN (
+          SELECT child_id
           FROM categoryBridge
-          WHERE ancestor_id = ?
+          WHERE parent_id = ?
         )
-        AND ancestor_id IN (
-          SELECT ancestor_id
+        AND parent_id IN (
+          SELECT parent_id
           FROM categoryBridge
-          WHERE descendent_id = ?
-          AND ancestor_id != descendent_id
+          WHERE child_id = ?
+          AND parent_id != child_id
         );
       ''', [category.id, category.id]);
       await db.execute('''
-        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance)
-        SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1
+        INSERT INTO categoryBridge (parent_id, child_id, distance)
+        SELECT a.parent_id, b.child_id, a.distance+b.distance+1
         FROM categoryBridge a
         CROSS JOIN categoryBridge b
-        WHERE a.descendent_id = ?
-        AND b.ancestor_id = ?;
+        WHERE a.child_id = ?
+        AND b.parent_id = ?;
         ''', [category.ancestorID, category.id]);
     } else if (oldAncestor.length == 1 && category.ancestorID == null) {
       // move from tree to toplevel
       await db.execute('''
         DELETE FROM categoryBridge
-        WHERE descendent_id IN (
-          SELECT descendent_id
+        WHERE child_id IN (
+          SELECT child_id
           FROM categoryBridge
-          WHERE ancestor_id = ?
+          WHERE parent_id = ?
         )
-        AND ancestor_id IN (
-          SELECT ancestor_id
+        AND parent_id IN (
+          SELECT parent_id
           FROM categoryBridge
-          WHERE descendent_id = ?
-          AND ancestor_id != descendent_id
+          WHERE child_id = ?
+          AND parent_id != child_id
         );
       ''', [
         category.id,
@@ -199,11 +199,11 @@ class CategoryModel extends ChangeNotifier {
       // move from top level to inside the tree
       var map = await db.rawQuery(
         '''
-        SELECT a.ancestor_id, b.descendent_id, a.distance+b.distance+1 as distance
+        SELECT a.parent_id, b.child_id, a.distance+b.distance+1 as distance
         FROM categoryBridge a
         CROSS JOIN categoryBridge b
-        WHERE a.descendent_id = ?
-        AND b.ancestor_id = ?;
+        WHERE a.child_id = ?
+        AND b.parent_id = ?;
         ''',
         [category.ancestorID, category.id],
       );
