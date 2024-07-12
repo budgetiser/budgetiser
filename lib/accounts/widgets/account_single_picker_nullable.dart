@@ -9,10 +9,12 @@ class AccountSinglePickerNullable extends StatefulWidget {
     super.key,
     required this.onAccountPickedCallback,
     this.blacklistedValues,
+    this.ignoreArchived = false,
   });
 
   final Function(Account? selected) onAccountPickedCallback;
   final List<Account>? blacklistedValues;
+  final bool ignoreArchived;
 
   @override
   State<AccountSinglePickerNullable> createState() =>
@@ -24,8 +26,9 @@ class _AccountSinglePickerNullableState
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Account>>(
-      future:
-          Provider.of<AccountModel>(context, listen: false).getAllAccounts(),
+      future: Provider.of<AccountModel>(context, listen: false).getAllAccounts(
+        ignoreArchived: widget.ignoreArchived,
+      ),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
