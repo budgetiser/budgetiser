@@ -16,7 +16,7 @@ class StatPreviewWidget extends StatelessWidget {
     return Card.outlined(
       color: Theme.of(context).hoverColor,
       child: InkWell(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(15),
         onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

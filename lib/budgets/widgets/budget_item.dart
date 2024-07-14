@@ -18,8 +18,9 @@ class BudgetItem extends StatelessWidget {
     //     ? 0.95
     //     : (percentage < 0.05 ? -0.95 : (-1 + (percentage * 2)) - 0.05);
     return InkWell(
+      borderRadius: BorderRadius.circular(15),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
         child: Column(
           children: [
             Row(
@@ -45,6 +46,9 @@ class BudgetItem extends StatelessWidget {
                 SelectableIcon(budget),
               ],
             ),
+            const SizedBox(
+              height: 4,
+            ),
             SizedBox(
               width: double.maxFinite,
               child: Stack(
@@ -57,14 +61,7 @@ class BudgetItem extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
                   ),
-                  Text(
-                    '${(percentage * 100).toStringAsFixed(1)}%',
-                    style: const TextStyle(
-                      fontSize: 13.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  Text('${(percentage * 100).toStringAsFixed(1)}%'),
                 ],
               ),
             )

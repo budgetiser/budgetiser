@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
@@ -5,6 +7,7 @@ import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
+import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
@@ -216,39 +219,14 @@ class _BudgetFormState extends State<BudgetForm> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const Divider(height: 32),
-              InkWell(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Select Categories'),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    SizedBox(
-                      height: (budgetCategories.length / 10).ceil() *
-                          38, // estimated height for every row
-                      width: double.infinity,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        primary: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 10, // number of items in each row
-                          mainAxisSpacing: 8.0, // spacing between rows
-                          crossAxisSpacing: 8.0, // spacing between columns
-                        ),
-                        itemCount: budgetCategories.length,
-                        itemBuilder: (context, index) {
-                          return SelectableIcon(
-                            budgetCategories[index],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(
+                height: 8,
+              ),
+              CustomInputFieldBorder(
+                height: max(
+                  (budgetCategories.length / 10).ceil() * 38 + 15,
+                  55,
+                ), // estimated height for every row,
                 onTap: () {
                   showDialog(
                     context: context,
@@ -260,6 +238,32 @@ class _BudgetFormState extends State<BudgetForm> {
                     },
                   );
                 },
+                title: 'Select Categories',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      primary: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 10, // number of items in each row
+                        mainAxisSpacing: 8.0, // spacing between rows
+                        crossAxisSpacing: 8.0, // spacing between columns
+                      ),
+                      itemCount: budgetCategories.length,
+                      itemBuilder: (context, index) {
+                        return SelectableIcon(
+                          budgetCategories[index],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

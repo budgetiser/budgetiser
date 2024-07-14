@@ -71,14 +71,24 @@ class _MyAppState extends State<MyApp> {
           themeMode: _themeMode,
           theme: ThemeData(
             colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+            listTileTheme: customListTimeTheme(),
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
+            listTileTheme: customListTimeTheme(),
           ),
           home: const HomeScreen(),
           routes: routes,
         );
       },
+    );
+  }
+
+  ListTileThemeData customListTimeTheme() {
+    return ListTileThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
     );
   }
 }
