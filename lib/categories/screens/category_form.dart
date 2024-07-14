@@ -113,7 +113,7 @@ class _CategoryFormState extends State<CategoryForm> {
             ),
           ),
           CustomInputFieldBorder(
-            title: 'Ancestor',
+            title: 'Parent',
             onTap: () => showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -132,7 +132,7 @@ class _CategoryFormState extends State<CategoryForm> {
             child: InkWell(
               child: _parentCategory != null
                   ? SelectableIconWithText(_parentCategory!)
-                  : const Text('Select Ancestor'),
+                  : const Text('Select Parent'),
             ),
           ),
           const SizedBox(

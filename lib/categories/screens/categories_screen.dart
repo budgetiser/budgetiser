@@ -27,13 +27,13 @@ class CategoriesScreen extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
               if (snapshot.data!.isEmpty) {
                 return const Center(
                   child: Text('No Categories'),
                 );
-              }
-              if (snapshot.hasError) {
-                return const Text('Oops!');
               }
               return _screenContent(snapshot);
             },

@@ -44,10 +44,26 @@ class CategoryModel extends ChangeNotifier {
     GROUP BY 
         c.id, c.name, c.icon, c.color, c.description, c.archived, cb.parent_id;
     ''');
+    var newMap = map.map(
+      (e) {
+        return Map.of(e);
+      },
+    ).toList();
+    for (var i = 0; i < map.length; i++) {
+      if (map[i]['children'] != null) {
+        newMap[i]['children'] = map[i]['children']
+            .toString()
+            .split(',')
+            .map((e) => int.parse(e))
+            .toList();
+      } else {
+        newMap[i]['children'] = List<int>.empty();
+      }
+    }
 
-    return List.generate(map.length, (i) {
+    return List.generate(newMap.length, (i) {
       return TransactionCategory.fromDBmap(
-        map[i],
+        newMap[i],
       );
     });
   }

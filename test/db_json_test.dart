@@ -101,7 +101,8 @@ void main() {
           'description': null,
           'archived': 0,
           'id': 1,
-          'parentID': null
+          'parent_id': null,
+          'children': List<int>.empty(),
         },
         {
           'name': 'Leisure',
@@ -110,7 +111,8 @@ void main() {
           'description': null,
           'archived': 0,
           'id': 2,
-          'parentID': null
+          'parent_id': null,
+          'children': List<int>.empty(),
         },
       ],
       'Transactions': [

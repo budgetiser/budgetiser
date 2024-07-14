@@ -51,13 +51,7 @@ class TransactionCategory extends Selectable {
   )   : id = map['id'],
         description = map['description'],
         archived = map['archived'] == 1,
-        // children = map['children'] ?? [],
-        children = map['children'] != null
-            ? (map['children'] as String)
-                .split(',')
-                .map((e) => int.parse(e))
-                .toList()
-            : [],
+        children = map['children'] ?? [],
         parentID = map['parent_id'],
         super(
           name: map['name'].toString(),
