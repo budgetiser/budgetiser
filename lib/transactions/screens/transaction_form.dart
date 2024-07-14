@@ -329,6 +329,7 @@ class _TransactionFormState extends State<TransactionForm> {
               context: context,
               builder: (BuildContext context) {
                 return AccountSinglePicker(
+                  ignoreArchived: true,
                   onAccountPickedCallback: setAccount,
                 );
               },
@@ -346,6 +347,7 @@ class _TransactionFormState extends State<TransactionForm> {
               context: context,
               builder: (BuildContext context) {
                 return AccountSinglePickerNullable(
+                  ignoreArchived: true,
                   onAccountPickedCallback: setAccount2,
                   blacklistedValues:
                       selectedAccount != null ? [selectedAccount!] : null,
