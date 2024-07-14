@@ -28,6 +28,7 @@ class _AccountFormState extends State<AccountForm> {
   final _formKey = GlobalKey<FormState>();
   Color _color = randomColor();
   IconData _icon = Icons.abc;
+  bool _isArchived = false;
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _AccountFormState extends State<AccountForm> {
       descriptionController.text = widget.initialAccount!.description ?? '';
       _color = widget.initialAccount!.color;
       _icon = widget.initialAccount!.icon;
+      _isArchived = widget.initialAccount!.archived;
     }
   }
 
@@ -127,15 +129,15 @@ class _AccountFormState extends State<AccountForm> {
                       return null;
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: TextFormField(
-                      controller: descriptionController,
-                      keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        labelText: 'Description',
-                        border: OutlineInputBorder(),
-                      ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    controller: descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(),
                     ),
                   ),
                   // account action buttons
@@ -143,6 +145,14 @@ class _AccountFormState extends State<AccountForm> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        SwitchListTile(
+                          title: const Text('Archive'),
+                          value: _isArchived,
+                          onChanged: archiveToggle,
+                        ),
                         const SizedBox(
                           height: 16,
                         ),
@@ -203,6 +213,7 @@ class _AccountFormState extends State<AccountForm> {
                 balance: double.parse(balanceController.text),
                 description: parseNullableString(descriptionController.text),
                 id: 0,
+                archived: _isArchived,
               );
               if (widget.initialAccount != null) {
                 a.id = widget.initialAccount!.id;
@@ -220,6 +231,43 @@ class _AccountFormState extends State<AccountForm> {
         ),
       ]),
     );
+  }
+
+  void archiveToggle(value) {
+    if (value == true) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Archive'),
+            content: const Text(
+              'Archiving an account removes the account from selections in the Transactions forms.\nThis does not affect any statistics.',
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    _isArchived = true;
+                  });
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      setState(() {
+        _isArchived = false;
+      });
+    }
   }
 
   Future showBalanceDialog(BuildContext context) {
