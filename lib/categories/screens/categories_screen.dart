@@ -87,6 +87,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     return ListView.builder(
       shrinkWrap: true,
+      padding: EdgeInsets.only(bottom: 75),
       itemCount: (categoryTree.length * 2),
       itemBuilder: (BuildContext context, int index) {
         if (index == 0) {
@@ -133,11 +134,12 @@ class RecursiveCategoryModel {
 }
 
 class RecursiveWidget extends StatefulWidget {
-  const RecursiveWidget(
-      {super.key,
-      required this.model,
-      required this.level,
-      required this.parentWasCollapsed});
+  const RecursiveWidget({
+    super.key,
+    required this.model,
+    required this.level,
+    required this.parentWasCollapsed,
+  });
 
   final RecursiveCategoryModel model;
   final int level;
@@ -170,26 +172,23 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
         child: Padding(
           padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 0, 0),
           child: ExpansionTile(
+            tilePadding: EdgeInsets.fromLTRB(0, 0, 8, 0),
             initiallyExpanded: isExpanded,
-            onExpansionChanged: (bool expanded) {
-              setState(() {
-                isExpanded = expanded;
-              });
-            },
             iconColor: Colors.grey,
-            leading: Icon(
-              widget.model.current.icon,
-              color: widget.model.current.color,
+            title: CategoryItem(
+              categoryData: widget.model.current,
             ),
-            title: Text(
-              '${widget.model.current.name} (${widget.model.children!.length})',
-              style: TextStyle(color: widget.model.current.color),
-            ),
-            trailing: Icon(
-              isExpanded
-                  ? Icons.arrow_circle_up_outlined
-                  : Icons.arrow_circle_down_outlined,
-              color: Colors.white,
+            trailing: InkWell(
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: Icon(
+                  isExpanded
+                      ? Icons.arrow_circle_up_outlined
+                      : Icons.arrow_circle_down_outlined,
+                  color: Colors.white,
+                ),
+              ),
             ),
             children: [
               Column(
