@@ -24,29 +24,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         title: const Text('Categories'),
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<CategoryModel>(
-        builder: (context, model, child) {
-          return FutureBuilder<List<TransactionCategory>>(
-            future: model.getAllCategories(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No Categories'),
-                );
-              }
-              return _screenContent(snapshot);
-            },
-          );
-        },
-      ),
+      body: _screenContent(),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add_rounded),
         label: const Text('Add category'),
@@ -62,7 +40,62 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
-  Widget _screenContent(AsyncSnapshot<List<TransactionCategory>> snapshot) {
+  Padding _screenContent() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              filled: true,
+              hintText: 'Search',
+              prefixIcon: const Icon(
+                Icons.search,
+              ),
+            ),
+            onChanged: (String value) {
+              setState(() {
+                _searchString = value;
+              });
+            },
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Expanded(
+            child: Consumer<CategoryModel>(
+              builder: (context, model, child) {
+                return FutureBuilder<List<TransactionCategory>>(
+                  future: model.getAllCategories(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    if (snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('No Categories'),
+                      );
+                    }
+                    return categoryListView(snapshot);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget categoryListView(AsyncSnapshot<List<TransactionCategory>> snapshot) {
     final List<TransactionCategory> fullCategoryList = snapshot.data!
       ..sort((a, b) {
         if (a.children.isNotEmpty && b.children.isNotEmpty ||
@@ -82,45 +115,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       },
     ).toList();
 
-    final List<RecursiveCategoryModel> categoryTree =
-        getCategoryTree(filteredCategoryList, null);
+    final List<RecursiveCategoryModel> categoryTree = getCategoryTree(
+      filteredCategoryList,
+      null,
+    );
 
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(bottom: 75),
-      itemCount: (categoryTree.length * 2),
+      itemCount: (categoryTree.length),
       itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return Padding(
-            padding: EdgeInsets.fromLTRB(8, 16, 8, 24),
-            child: TextField(
-              style: TextStyle(color: Colors.grey),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                filled: true,
-                hintText: 'Search',
-                prefixIcon: Icon(
-                  Icons.search,
-                ),
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  _searchString = value;
-                });
-              },
-            ),
-          );
-        } else if (index % 2 == 1) {
-          return RecursiveWidget(
-            model: categoryTree[(index / 2).floor()],
-            level: 0,
-            parentWasCollapsed: true,
-          );
-        } else {
-          return const Divider();
-        }
+        return RecursiveWidget(
+          model: categoryTree[index],
+          level: 0,
+          parentWasCollapsed: true,
+        );
       },
     );
   }
