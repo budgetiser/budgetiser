@@ -20,6 +20,85 @@ class CategoryModel extends ChangeNotifier {
     return TransactionCategory.fromDBmap(maps[0]);
   }
 
+  Future<List<TransactionCategory>> getCategories(List<int> ids) async {
+    var db = await DatabaseHelper.instance.database;
+    if (ids.isEmpty) {
+      return [];
+    }
+    final List<Map<String, dynamic>> maps =
+        await db.query('category', where: 'id IN (${ids.join(",")})');
+
+    return List.generate(maps.length, (i) {
+      return TransactionCategory.fromDBmap(
+        maps[i],
+      );
+    });
+  }
+
+  Future<void> moveCategory(
+      TransactionCategory category, TransactionCategory? newParent) async {
+    await moveCategoryByID(category.id, newParent?.id);
+  }
+
+  Future<void> moveCategoryByID(int category, int? newParent) async {
+    var db = await DatabaseHelper.instance.database;
+    await db.transaction((txn) async {
+      // Unlink all links not coming from us or our children to
+      // us or our children.
+      String unlinkQuery = ('''
+      DELETE FROM categoryBridge
+      WHERE child_id IN(
+        SELECT child_id
+        FROM categoryBridge
+        WHERE parent_id=?
+      )
+      AND parent_id IN(
+        SELECT parent_id
+        FROM categoryBridge
+        WHERE child_id=?
+        AND parent_id != child_id
+      );
+      ''');
+      await txn.rawDelete(unlinkQuery, [category, category]);
+
+      if (newParent != null) {
+        // If newParent==null, we do not need to link us or our childs
+        // to any other parents.
+        String relinkQuery = ('''
+        INSERT INTO categoryBridge
+        SELECT a.parent_id, b.child_id, (a.distance+b.distance+1)
+        FROM categoryBridge a
+        CROSS JOIN categoryBridge b
+        WHERE a.child_id=?
+        AND b.parent_id=?;
+        ''');
+        await txn.rawInsert(relinkQuery, [newParent, category]);
+      }
+    });
+  }
+
+  Future<void> removeFromCategoryBridgeByID(int category) async {
+    var db = await DatabaseHelper.instance.database;
+    String unlinkQuery = ('''
+      DELETE FROM categoryBridge
+      WHERE child_id IN (
+        SELECT child_id
+        FROM categoryBridge
+        WHERE parent_id = ?
+      )
+      AND NOT EXISTS(
+        SELECT NULL
+        FROM categoryBridge
+        WHERE parent_id = ?
+        AND child_id != parent_id
+      );
+      ''');
+    int deletedRows = await db.rawDelete(unlinkQuery, [category, category]);
+    if (deletedRows == 0) {
+      throw Exception();
+    }
+  }
+
   Future<List<TransactionCategory>> getAllCategories() async {
     var db = await DatabaseHelper.instance.database;
     // final List<Map<String, dynamic>> map = await db.query('category');
@@ -135,19 +214,7 @@ class CategoryModel extends ChangeNotifier {
       where: 'id = ?',
       whereArgs: [categoryID],
     );
-    await db.delete(
-      'categoryBridge',
-      where: 'parent_id = ? OR child_id = ?',
-      whereArgs: [categoryID, categoryID],
-    );
-    await db.execute('''
-      DELETE FROM categoryBridge
-      WHERE child_id IN (
-        SELECT child_id
-        FROM categoryBridge
-        WHERE parent_id = ?
-      )
-    ''');
+    await removeFromCategoryBridgeByID(categoryID);
 
     _notifyCategoryUpdate();
   }
@@ -168,73 +235,11 @@ class CategoryModel extends ChangeNotifier {
       whereArgs: [category.id],
     );
     // Update bridge
-    if (oldAncestor.length == 1 && category.parentID != null) {
-      // move inside the tree
-      await db.execute('''
-        DELETE FROM categoryBridge
-        WHERE child_id IN (
-          SELECT child_id
-          FROM categoryBridge
-          WHERE parent_id = ?
-        )
-        AND parent_id IN (
-          SELECT parent_id
-          FROM categoryBridge
-          WHERE child_id = ?
-          AND parent_id != child_id
-        );
-      ''', [category.id, category.id]);
-      await db.execute('''
-        INSERT INTO categoryBridge (parent_id, child_id, distance)
-        SELECT a.parent_id, b.child_id, a.distance+b.distance+1
-        FROM categoryBridge a
-        CROSS JOIN categoryBridge b
-        WHERE a.child_id = ?
-        AND b.parent_id = ?;
-        ''', [category.parentID, category.id]);
-    } else if (oldAncestor.length == 1 && category.parentID == null) {
-      // move from tree to toplevel
-      await db.execute('''
-        DELETE FROM categoryBridge
-        WHERE child_id IN (
-          SELECT child_id
-          FROM categoryBridge
-          WHERE parent_id = ?
-        )
-        AND parent_id IN (
-          SELECT parent_id
-          FROM categoryBridge
-          WHERE child_id = ?
-          AND parent_id != child_id
-        );
-      ''', [
-        category.id,
-        category.id
-      ]); // TODO: check why other args then in "move inside the tree"
-    } else if (oldAncestor.isEmpty && category.parentID != null) {
-      // move from top level to inside the tree
-      var map = await db.rawQuery(
-        '''
-        SELECT a.parent_id, b.child_id, a.distance+b.distance+1 as distance
-        FROM categoryBridge a
-        CROSS JOIN categoryBridge b
-        WHERE a.child_id = ?
-        AND b.parent_id = ?;
-        ''',
-        [category.parentID, category.id],
-      );
-      for (var row in map) {
-        await db.insert(
-          'categoryBridge',
-          row,
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-      }
-    } else if (oldAncestor.isEmpty && category.parentID == null) {
+    if (oldAncestor.isEmpty && category.parentID == null) {
       // no tree moving required (keep on toplevel)
       // TODO: (performance) no moving inside the tree
     } else {
-      throw Exception('Unhandled path while moving category inside the tree');
+      await moveCategoryByID(category.id, category.parentID);
     }
     _notifyCategoryUpdate();
   }
