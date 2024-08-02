@@ -4,8 +4,8 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 
 abstract class DemoDataset {
-  List<Account> generateAccounts();
-  List<TransactionCategory> generateCategories();
-  List<Budget> generateBudgets();
-  List<SingleTransaction> generateTransactions();
+  List<Account> getAccounts();
+  List<TransactionCategory> getCategories();
+  List<Budget> getBudgets();
+  List<SingleTransaction> getTransactions();
 }
