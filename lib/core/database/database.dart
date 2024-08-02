@@ -86,7 +86,7 @@ class DatabaseHelper {
       }
       i++;
       Profiler.instance.start('create category');
-      await CategoryModel().createCategory(category);
+      await CategoryModel().createCategory(category, keepId: true);
       Profiler.instance.end();
     }
     for (var transaction in transactions) {
