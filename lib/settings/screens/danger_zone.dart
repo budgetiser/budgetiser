@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/database.dart';
+import 'package:budgetiser/core/database/temporary_data/datasets/old.dart';
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -177,7 +178,7 @@ class DangerZone extends StatelessWidget {
                           'This action cannot be undone! All current data will be lost.',
                       onSubmitCallback: () async {
                         await DatabaseHelper.instance.resetDB();
-                        DatabaseHelper.instance.fillDBwithTMPdata();
+                        DatabaseHelper.instance.fillDBwithTMPdata(OldDataset());
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pop();
                       },

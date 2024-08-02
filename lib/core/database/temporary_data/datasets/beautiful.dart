@@ -6,25 +6,25 @@ import 'package:budgetiser/core/database/temporary_data/dataset.dart';
 
 class BeautifulDataset extends DemoDataset {
   @override
-  List<Account> generateAccounts() {
+  List<Account> getAccounts() {
     // TODO: implement generateAccounts
     throw UnimplementedError();
   }
 
   @override
-  List<Budget> generateBudgets() {
+  List<Budget> getBudgets() {
     // TODO: implement generateBudgets
     throw UnimplementedError();
   }
 
   @override
-  List<TransactionCategory> generateCategories() {
+  List<TransactionCategory> getCategories() {
     // TODO: implement generateCategories
     throw UnimplementedError();
   }
 
   @override
-  List<SingleTransaction> generateTransactions() {
+  List<SingleTransaction> getTransactions() {
     // TODO: implement generateTransactions
     throw UnimplementedError();
   }
