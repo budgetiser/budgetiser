@@ -4,6 +4,7 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -111,7 +112,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     List<TransactionCategory> filteredCategoryList = fullCategoryList.where(
       (element) {
-        return element.name.contains(_searchString);
+        if (_searchString.isEmpty) return true;
+        return (partialRatio(
+              element.name.toLowerCase(),
+              _searchString.toLowerCase(),
+            ) >
+            80);
       },
     ).toList();
 
