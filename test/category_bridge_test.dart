@@ -97,6 +97,28 @@ class TestCaseLevel0 extends TestCase {
   void _connectCategories() {}
 }
 
+class TestCaseLevel0_missing_5 extends TestCase {
+  // Cat0
+  // Cat1
+  // Cat2
+  // Cat3
+  // Cat4
+
+  List<TransactionCategory> categories = [
+    category0,
+    category1,
+    category2,
+    category3,
+    category4,
+  ];
+
+  @override
+  void _createComplexRelations() {}
+
+  @override
+  void _connectCategories() {}
+}
+
 class TestCaseLevel1 extends TestCase {
   // Cat0
   //  - Cat1
@@ -150,6 +172,36 @@ class TestCaseLevel2 extends TestCase {
   }
 }
 
+class TestCaseLevel3 extends TestCase {
+  // Cat0
+  //  - Cat1
+  //    - Cat2
+  //      - Cat3
+  // Cat4
+  //  - Cat5
+
+  @override
+  void _createComplexRelations() {
+    relations.addAll([
+      {'parent_id': 0, 'child_id': 1, 'distance': 1},
+      {'parent_id': 0, 'child_id': 2, 'distance': 2},
+      {'parent_id': 0, 'child_id': 3, 'distance': 3},
+      {'parent_id': 1, 'child_id': 2, 'distance': 1},
+      {'parent_id': 1, 'child_id': 3, 'distance': 2},
+      {'parent_id': 2, 'child_id': 3, 'distance': 1},
+      {'parent_id': 4, 'child_id': 5, 'distance': 1},
+    ]);
+  }
+
+  @override
+  void _connectCategories() {
+    connectCategories(categories[0], categories[1]);
+    connectCategories(categories[1], categories[2]);
+    connectCategories(categories[2], categories[3]);
+    connectCategories(categories[4], categories[5]);
+  }
+}
+
 void main() {
   // Setup sqflite_common_ffi for flutter test
   setUpAll(() {
@@ -165,7 +217,8 @@ void main() {
     List<TestCase> testcases = [
       TestCaseLevel0(),
       TestCaseLevel1(),
-      TestCaseLevel2()
+      TestCaseLevel2(),
+      TestCaseLevel3(),
     ];
     for (var testcase in testcases) {
       test('$testcase', () async {
@@ -191,6 +244,161 @@ void main() {
         expect(categroyBridgeResults.length, expectedResult.length);
       });
     }
+  });
+
+  test('Nested->Root', () async {
+    var db = await openDatabase(inMemoryDatabasePath);
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+
+    var root_cats = TestCaseLevel0();
+    var l1_cats = TestCaseLevel1();
+
+    await l1_cats.insertCategories();
+    await CategoryModel().moveCategory(category1, null);
+    await CategoryModel().moveCategory(category3, null);
+    await CategoryModel().moveCategory(category5, null);
+    var expectedResult = root_cats.getRelations();
+
+    List<Map<String, dynamic>> categoryBridgeTable =
+        await db.query('categoryBridge');
+    categoryBridgeTable = categoryBridgeTable.toList();
+    List<Map<String, int>> categroyBridgeResults = [];
+    for (var element in categoryBridgeTable) {
+      categroyBridgeResults.add(Map<String, int>.from(element));
+    }
+
+    var missingRelations =
+        getMissingRelations(expectedResult, categroyBridgeResults);
+    expect(missingRelations, [],
+        reason: 'Missing Relations: $missingRelations');
+    expect(categroyBridgeResults.length, expectedResult.length);
+  });
+
+  test('Root->Nested', () async {
+    var db = await openDatabase(inMemoryDatabasePath);
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+
+    var root_cats = TestCaseLevel0();
+    var l1_cats = TestCaseLevel1();
+
+    await root_cats.insertCategories();
+    await CategoryModel().moveCategory(category1, category0);
+    await CategoryModel().moveCategory(category3, category2);
+    await CategoryModel().moveCategory(category5, category4);
+    var expectedResult = l1_cats.getRelations();
+
+    List<Map<String, dynamic>> categoryBridgeTable =
+        await db.query('categoryBridge');
+    categoryBridgeTable = categoryBridgeTable.toList();
+    List<Map<String, int>> categroyBridgeResults = [];
+    for (var element in categoryBridgeTable) {
+      categroyBridgeResults.add(Map<String, int>.from(element));
+    }
+
+    var missingRelations =
+        getMissingRelations(expectedResult, categroyBridgeResults);
+    expect(missingRelations, [],
+        reason: 'Missing Relations: $missingRelations');
+    expect(categroyBridgeResults.length, expectedResult.length);
+  });
+
+  test('Deep Nested->Nested Root', () async {
+    var db = await openDatabase(inMemoryDatabasePath);
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+
+    var l1_cats = TestCaseLevel1();
+    var l3_cats = TestCaseLevel3();
+
+    await l3_cats.insertCategories();
+    await CategoryModel().moveCategory(category2, null);
+    var expectedResult = l1_cats.getRelations();
+
+    List<Map<String, dynamic>> categoryBridgeTable =
+        await db.query('categoryBridge');
+    categoryBridgeTable = categoryBridgeTable.toList();
+    List<Map<String, int>> categroyBridgeResults = [];
+    for (var element in categoryBridgeTable) {
+      categroyBridgeResults.add(Map<String, int>.from(element));
+    }
+
+    var missingRelations =
+        getMissingRelations(expectedResult, categroyBridgeResults);
+    expect(missingRelations, [],
+        reason: 'Missing Relations: $missingRelations');
+    expect(categroyBridgeResults.length, expectedResult.length);
+  });
+
+  test('Nested Root->Deep Nested', () async {
+    var db = await openDatabase(inMemoryDatabasePath);
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+
+    var l1_cats = TestCaseLevel1();
+    var l3_cats = TestCaseLevel3();
+
+    await l1_cats.insertCategories();
+    await CategoryModel().moveCategory(category2, category1);
+    var expectedResult = l3_cats.getRelations();
+
+    List<Map<String, dynamic>> categoryBridgeTable =
+        await db.query('categoryBridge');
+    categoryBridgeTable = categoryBridgeTable.toList();
+    List<Map<String, int>> categroyBridgeResults = [];
+    for (var element in categoryBridgeTable) {
+      categroyBridgeResults.add(Map<String, int>.from(element));
+    }
+
+    var missingRelations =
+        getMissingRelations(expectedResult, categroyBridgeResults);
+    expect(missingRelations, [],
+        reason: 'Missing Relations: $missingRelations');
+    expect(categroyBridgeResults.length, expectedResult.length);
+  });
+
+  test('Removing wo. Childs', () async {
+    var db = await openDatabase(inMemoryDatabasePath);
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+
+    var root_cats = TestCaseLevel0();
+    var root_cats_short = TestCaseLevel0_missing_5();
+
+    await root_cats.insertCategories();
+    await CategoryModel().removeFromCategoryBridgeByID(category5.id);
+    var expectedResult = root_cats_short.getRelations();
+
+    List<Map<String, dynamic>> categoryBridgeTable =
+        await db.query('categoryBridge');
+    categoryBridgeTable = categoryBridgeTable.toList();
+    List<Map<String, int>> categroyBridgeResults = [];
+    for (var element in categoryBridgeTable) {
+      categroyBridgeResults.add(Map<String, int>.from(element));
+    }
+
+    var missingRelations =
+        getMissingRelations(expectedResult, categroyBridgeResults);
+    expect(missingRelations, [],
+        reason: 'Missing Relations: $missingRelations');
+    expect(categroyBridgeResults.length, expectedResult.length);
+  });
+
+  test('Removing w. Childs', () async {
+    var db = await openDatabase(inMemoryDatabasePath);
+    var dbh = DatabaseHelper.instance..setDatabase(db);
+    await dbh.resetDB();
+
+    var l1_cats = TestCaseLevel1();
+    await l1_cats.insertCategories();
+
+    try {
+      await CategoryModel().removeFromCategoryBridgeByID(category2.id);
+    } catch (e) {
+      return;
+    }
+    fail("exception not thrown");
   });
 }
 
