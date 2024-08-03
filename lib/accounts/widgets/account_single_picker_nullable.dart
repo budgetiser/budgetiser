@@ -27,7 +27,7 @@ class _AccountSinglePickerNullableState
   Widget build(BuildContext context) {
     return FutureBuilder<List<Account>>(
       future: Provider.of<AccountModel>(context, listen: false).getAllAccounts(
-        ignoreArchived: widget.ignoreArchived,
+        excludeArchived: widget.ignoreArchived,
       ),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
