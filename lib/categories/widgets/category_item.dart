@@ -1,4 +1,3 @@
-import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +5,10 @@ class CategoryItem extends StatelessWidget {
   const CategoryItem({
     required this.categoryData,
     super.key,
+    this.onTap,
   });
   final TransactionCategory categoryData;
+  final ValueChanged<TransactionCategory>? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +16,12 @@ class CategoryItem extends StatelessWidget {
       return Container(); // TODO: archived not yet implemented #143
     }
     return ListTile(
-        leading: Icon(categoryData.icon),
-        title: Text(categoryData.name),
-        iconColor: categoryData.color,
-        textColor: categoryData.color,
-        contentPadding: EdgeInsets.fromLTRB(8, 0, -8, 0),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => CategoryForm(
-                categoryData: categoryData,
-              ),
-            ),
-          );
-        });
+      leading: Icon(categoryData.icon),
+      title: Text(categoryData.name),
+      iconColor: categoryData.color,
+      textColor: categoryData.color,
+      contentPadding: const EdgeInsets.fromLTRB(8, 0, -8, 0),
+      onTap: () => onTap?.call(categoryData),
+    );
   }
 }

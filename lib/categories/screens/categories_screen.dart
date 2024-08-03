@@ -1,6 +1,5 @@
 import 'package:budgetiser/categories/screens/category_form.dart';
-import 'package:budgetiser/categories/widgets/category_item.dart';
-import 'package:budgetiser/categories/widgets/tree_expansion.dart';
+import 'package:budgetiser/categories/widgets/category_tree.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
@@ -122,122 +121,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       },
     ).toList();
 
-    final List<RecursiveCategoryModel> categoryTree = getCategoryTree(
-      filteredCategoryList,
-      null,
-    );
-
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.only(bottom: 75),
-      itemCount: (categoryTree.length),
-      itemBuilder: (BuildContext context, int index) {
-        return RecursiveWidget(
-          model: categoryTree[index],
-          level: 0,
-          parentWasCollapsed: true,
+    return CategoryTree(
+      categories: filteredCategoryList,
+      onTap: (value) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryForm(
+              categoryData: value,
+            ),
+          ),
         );
       },
-      separatorBuilder: (BuildContext context, int index) {
-        return Divider();
-      },
     );
   }
-}
-
-class RecursiveCategoryModel {
-  final TransactionCategory current;
-  final List<RecursiveCategoryModel>? children;
-
-  RecursiveCategoryModel({required this.current, this.children});
-}
-
-class RecursiveWidget extends StatefulWidget {
-  const RecursiveWidget({
-    super.key,
-    required this.model,
-    required this.level,
-    required this.parentWasCollapsed,
-  });
-
-  final RecursiveCategoryModel model;
-  final int level;
-  final bool parentWasCollapsed; // state of the parent
-
-  @override
-  State<RecursiveWidget> createState() => _RecursiveWidgetState();
-}
-
-class _RecursiveWidgetState extends State<RecursiveWidget> {
-  late bool isExpanded;
-
-  @override
-  void initState() {
-    super.initState();
-    isExpanded = !widget.parentWasCollapsed;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.model.children == null || widget.model.children!.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 0, 0),
-        child: CategoryItem(categoryData: widget.model.current),
-      );
-    } else {
-      return Theme(
-        // Theme override needed to hide divider bars: https://github.com/flutter/flutter/issues/67459
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 0, 0),
-          child: TreeExpansionTile(
-            tilePadding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-            initiallyExpanded: isExpanded,
-            iconColor: Colors.grey,
-            categoryData: widget.model.current,
-            trailing: const InkWell(
-              child: SizedBox(
-                height: 40,
-                width: 40,
-                child: Icon(
-                  Icons.expand_more,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            children: [
-              Column(
-                children: widget.model.children!.map((child) {
-                  return RecursiveWidget(
-                    model: child,
-                    level: widget.level + 1,
-                    parentWasCollapsed: isExpanded,
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-  }
-}
-
-List<RecursiveCategoryModel> getCategoryTree(
-    List<TransactionCategory> categories, int? parentID) {
-  List<RecursiveCategoryModel> categoryModel = [];
-
-  List<TransactionCategory> topLevelCategories = categories
-      .where(
-        (element) => element.parentID == parentID,
-      )
-      .toList();
-
-  for (var topLevelCategory in topLevelCategories) {
-    categoryModel.add(RecursiveCategoryModel(
-        current: topLevelCategory,
-        children: getCategoryTree(categories, topLevelCategory.id)));
-  }
-
-  return categoryModel;
 }
