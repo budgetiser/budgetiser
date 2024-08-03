@@ -10,6 +10,8 @@ other way: configure in pubspec.yaml and then run "flutter pub run flutter_launc
 
 ### DB
 
+The database start with 1 as start index for all ID's.
+
 Import/Export:
 
 - file path on emulator: `/storage/emulated/0/Android/data/de.budgetiser.budgetiser/files/downloads/`
