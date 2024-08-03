@@ -19,6 +19,7 @@ class CategoryItem extends StatelessWidget {
         title: Text(categoryData.name),
         iconColor: categoryData.color,
         textColor: categoryData.color,
+        contentPadding: EdgeInsets.fromLTRB(8, 0, -8, 0),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(

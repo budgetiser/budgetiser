@@ -1,5 +1,6 @@
 import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/categories/widgets/category_item.dart';
+import 'package:budgetiser/categories/widgets/tree_expansion.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
@@ -126,7 +127,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       null,
     );
 
-    return ListView.builder(
+    return ListView.separated(
       shrinkWrap: true,
       padding: EdgeInsets.only(bottom: 75),
       itemCount: (categoryTree.length),
@@ -136,6 +137,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           level: 0,
           parentWasCollapsed: true,
         );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider();
       },
     );
   }
@@ -186,21 +190,17 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: Padding(
           padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 0, 0),
-          child: ExpansionTile(
+          child: TreeExpansionTile(
             tilePadding: EdgeInsets.fromLTRB(0, 0, 8, 0),
             initiallyExpanded: isExpanded,
             iconColor: Colors.grey,
-            title: CategoryItem(
-              categoryData: widget.model.current,
-            ),
-            trailing: InkWell(
+            categoryData: widget.model.current,
+            trailing: const InkWell(
               child: SizedBox(
                 height: 40,
                 width: 40,
                 child: Icon(
-                  isExpanded
-                      ? Icons.arrow_circle_up_outlined
-                      : Icons.arrow_circle_down_outlined,
+                  Icons.expand_more,
                   color: Colors.white,
                 ),
               ),
