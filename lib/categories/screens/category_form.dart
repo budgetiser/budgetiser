@@ -15,8 +15,13 @@ class CategoryForm extends StatefulWidget {
   const CategoryForm({
     super.key,
     this.categoryData,
-  });
+  }) : initialParentID = null;
+  const CategoryForm.prefilledParent({
+    super.key,
+    required this.initialParentID,
+  }) : categoryData = null;
   final TransactionCategory? categoryData;
+  final int? initialParentID;
 
   @override
   State<CategoryForm> createState() => _CategoryFormState();
@@ -30,6 +35,7 @@ class _CategoryFormState extends State<CategoryForm> {
   Color _color = randomColor();
   IconData _icon = Icons.abc;
   TransactionCategory? _parentCategory;
+  List<int>? _childrenList;
 
   double maxHeaderHeight = 200;
   final ValueNotifier<double> opacity = ValueNotifier(0);
@@ -41,18 +47,26 @@ class _CategoryFormState extends State<CategoryForm> {
       descriptionController.text = widget.categoryData!.description ?? '';
       _color = widget.categoryData!.color;
       _icon = widget.categoryData!.icon;
+      _childrenList = widget.categoryData!.children;
       if (widget.categoryData!.parentID != null) {
         // fetch full parent if category has one
-        CategoryModel().getCategory(widget.categoryData!.parentID!).then(
-          (value) {
-            setState(() {
-              _parentCategory = value;
-            });
-          },
-        );
+        fetchParentCategory(widget.categoryData!.parentID!);
       }
     }
+    if (widget.initialParentID != null) {
+      fetchParentCategory(widget.initialParentID!);
+    }
     super.initState();
+  }
+
+  void fetchParentCategory(int parentID) {
+    CategoryModel().getCategory(parentID).then(
+      (value) {
+        setState(() {
+          _parentCategory = value;
+        });
+      },
+    );
   }
 
   @override
@@ -104,7 +118,12 @@ class _CategoryFormState extends State<CategoryForm> {
                   Provider.of<CategoryModel>(context, listen: false)
                       .createCategory(a);
                 }
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  'categories',
+                  ModalRoute.withName('/'),
+                );
               }
             },
             label: const Text('Save'),
@@ -229,7 +248,7 @@ class _CategoryFormState extends State<CategoryForm> {
       return Container(); // new category
     }
     return FutureBuilder(
-      future: CategoryModel().getCategories(widget.categoryData!.children),
+      future: CategoryModel().getCategories(_childrenList!),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(
@@ -240,12 +259,8 @@ class _CategoryFormState extends State<CategoryForm> {
           return Text('Error: ${snapshot.error}');
         }
         if (snapshot.data!.isEmpty) {
-          return const Center(
-            child: Chip(
-              avatar: Icon(Icons.add),
-              label: Text('Add child'),
-            ),
-            // TODO: inkwell to other categories with alert: unsaved changes,
+          return Center(
+            child: addChildChip(),
           );
         }
         return Column(
@@ -262,17 +277,34 @@ class _CategoryFormState extends State<CategoryForm> {
                       avatar: Icon(child.icon, color: child.color),
                       label: Text(child.name),
                     ),
-                  const Chip(
-                    avatar: Icon(Icons.add),
-                    label: Text('Add child'),
-                  ),
-                  // TODO: inkwell to other categories with alert: unsaved changes
+                  addChildChip(),
                 ],
               ),
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget addChildChip() {
+    /// Chip that acts like a button for a creation of a new category with a parent preselected.
+    // TODO: inkwell to other categories with alert: unsaved changes
+    // TODO: just pop new form and update current child list
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryForm.prefilledParent(
+              initialParentID: widget.categoryData!.id,
+            ),
+          ),
+        );
+      },
+      child: const Chip(
+        avatar: Icon(Icons.add),
+        label: Text('Add child'),
+      ),
     );
   }
 }
