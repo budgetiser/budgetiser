@@ -97,13 +97,14 @@ class TestCaseLevel0 extends TestCase {
   void _connectCategories() {}
 }
 
-class TestCaseLevel0_missing_5 extends TestCase {
+class TestCaseLevel0missing5 extends TestCase {
   // Cat0
   // Cat1
   // Cat2
   // Cat3
   // Cat4
 
+  @override
   List<TransactionCategory> categories = [
     category0,
     category1,
@@ -213,35 +214,35 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
 
-  group('All Testcases should succeed', () {
-    List<TestCase> testcases = [
+  group('All Test cases should succeed', () {
+    List<TestCase> testCases = [
       TestCaseLevel0(),
       TestCaseLevel1(),
       TestCaseLevel2(),
       TestCaseLevel3(),
     ];
-    for (var testcase in testcases) {
-      test('$testcase', () async {
+    for (var testCase in testCases) {
+      test('$testCase', () async {
         var db = await openDatabase(inMemoryDatabasePath);
         var dbh = DatabaseHelper.instance..setDatabase(db);
         await dbh.resetDB();
 
-        await testcase.insertCategories();
-        var expectedResult = testcase.getRelations();
+        await testCase.insertCategories();
+        var expectedResult = testCase.getRelations();
 
         List<Map<String, dynamic>> categoryBridgeTable =
             await db.query('categoryBridge');
         categoryBridgeTable = categoryBridgeTable.toList();
-        List<Map<String, int>> categroyBridgeResults = [];
+        List<Map<String, int>> categoryBridgeResults = [];
         for (var element in categoryBridgeTable) {
-          categroyBridgeResults.add(Map<String, int>.from(element));
+          categoryBridgeResults.add(Map<String, int>.from(element));
         }
 
         var missingRelations =
-            getMissingRelations(expectedResult, categroyBridgeResults);
+            getMissingRelations(expectedResult, categoryBridgeResults);
         expect(missingRelations, [],
-            reason: 'Missing Relations for $testcase: $missingRelations');
-        expect(categroyBridgeResults.length, expectedResult.length);
+            reason: 'Missing Relations for $testCase: $missingRelations');
+        expect(categoryBridgeResults.length, expectedResult.length);
       });
     }
   });
@@ -251,28 +252,28 @@ void main() {
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
 
-    var root_cats = TestCaseLevel0();
-    var l1_cats = TestCaseLevel1();
+    var rootCats = TestCaseLevel0();
+    var l1Cats = TestCaseLevel1();
 
-    await l1_cats.insertCategories();
+    await l1Cats.insertCategories();
     await CategoryModel().moveCategory(category1, null);
     await CategoryModel().moveCategory(category3, null);
     await CategoryModel().moveCategory(category5, null);
-    var expectedResult = root_cats.getRelations();
+    var expectedResult = rootCats.getRelations();
 
     List<Map<String, dynamic>> categoryBridgeTable =
         await db.query('categoryBridge');
     categoryBridgeTable = categoryBridgeTable.toList();
-    List<Map<String, int>> categroyBridgeResults = [];
+    List<Map<String, int>> categoryBridgeResults = [];
     for (var element in categoryBridgeTable) {
-      categroyBridgeResults.add(Map<String, int>.from(element));
+      categoryBridgeResults.add(Map<String, int>.from(element));
     }
 
     var missingRelations =
-        getMissingRelations(expectedResult, categroyBridgeResults);
+        getMissingRelations(expectedResult, categoryBridgeResults);
     expect(missingRelations, [],
         reason: 'Missing Relations: $missingRelations');
-    expect(categroyBridgeResults.length, expectedResult.length);
+    expect(categoryBridgeResults.length, expectedResult.length);
   });
 
   test('Root->Nested', () async {
@@ -280,28 +281,28 @@ void main() {
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
 
-    var root_cats = TestCaseLevel0();
-    var l1_cats = TestCaseLevel1();
+    var rootCats = TestCaseLevel0();
+    var l1Cats = TestCaseLevel1();
 
-    await root_cats.insertCategories();
+    await rootCats.insertCategories();
     await CategoryModel().moveCategory(category1, category0);
     await CategoryModel().moveCategory(category3, category2);
     await CategoryModel().moveCategory(category5, category4);
-    var expectedResult = l1_cats.getRelations();
+    var expectedResult = l1Cats.getRelations();
 
     List<Map<String, dynamic>> categoryBridgeTable =
         await db.query('categoryBridge');
     categoryBridgeTable = categoryBridgeTable.toList();
-    List<Map<String, int>> categroyBridgeResults = [];
+    List<Map<String, int>> categoryBridgeResults = [];
     for (var element in categoryBridgeTable) {
-      categroyBridgeResults.add(Map<String, int>.from(element));
+      categoryBridgeResults.add(Map<String, int>.from(element));
     }
 
     var missingRelations =
-        getMissingRelations(expectedResult, categroyBridgeResults);
+        getMissingRelations(expectedResult, categoryBridgeResults);
     expect(missingRelations, [],
         reason: 'Missing Relations: $missingRelations');
-    expect(categroyBridgeResults.length, expectedResult.length);
+    expect(categoryBridgeResults.length, expectedResult.length);
   });
 
   test('Deep Nested->Nested Root', () async {
@@ -309,26 +310,26 @@ void main() {
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
 
-    var l1_cats = TestCaseLevel1();
-    var l3_cats = TestCaseLevel3();
+    var l1Cats = TestCaseLevel1();
+    var l3Cats = TestCaseLevel3();
 
-    await l3_cats.insertCategories();
+    await l3Cats.insertCategories();
     await CategoryModel().moveCategory(category2, null);
-    var expectedResult = l1_cats.getRelations();
+    var expectedResult = l1Cats.getRelations();
 
     List<Map<String, dynamic>> categoryBridgeTable =
         await db.query('categoryBridge');
     categoryBridgeTable = categoryBridgeTable.toList();
-    List<Map<String, int>> categroyBridgeResults = [];
+    List<Map<String, int>> categoryBridgeResults = [];
     for (var element in categoryBridgeTable) {
-      categroyBridgeResults.add(Map<String, int>.from(element));
+      categoryBridgeResults.add(Map<String, int>.from(element));
     }
 
     var missingRelations =
-        getMissingRelations(expectedResult, categroyBridgeResults);
+        getMissingRelations(expectedResult, categoryBridgeResults);
     expect(missingRelations, [],
         reason: 'Missing Relations: $missingRelations');
-    expect(categroyBridgeResults.length, expectedResult.length);
+    expect(categoryBridgeResults.length, expectedResult.length);
   });
 
   test('Nested Root->Deep Nested', () async {
@@ -336,69 +337,69 @@ void main() {
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
 
-    var l1_cats = TestCaseLevel1();
-    var l3_cats = TestCaseLevel3();
+    var l1Cats = TestCaseLevel1();
+    var l3Cats = TestCaseLevel3();
 
-    await l1_cats.insertCategories();
+    await l1Cats.insertCategories();
     await CategoryModel().moveCategory(category2, category1);
-    var expectedResult = l3_cats.getRelations();
+    var expectedResult = l3Cats.getRelations();
 
     List<Map<String, dynamic>> categoryBridgeTable =
         await db.query('categoryBridge');
     categoryBridgeTable = categoryBridgeTable.toList();
-    List<Map<String, int>> categroyBridgeResults = [];
+    List<Map<String, int>> categoryBridgeResults = [];
     for (var element in categoryBridgeTable) {
-      categroyBridgeResults.add(Map<String, int>.from(element));
+      categoryBridgeResults.add(Map<String, int>.from(element));
     }
 
     var missingRelations =
-        getMissingRelations(expectedResult, categroyBridgeResults);
+        getMissingRelations(expectedResult, categoryBridgeResults);
     expect(missingRelations, [],
         reason: 'Missing Relations: $missingRelations');
-    expect(categroyBridgeResults.length, expectedResult.length);
+    expect(categoryBridgeResults.length, expectedResult.length);
   });
 
-  test('Removing wo. Childs', () async {
+  test('Removing wo. children', () async {
     var db = await openDatabase(inMemoryDatabasePath);
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
 
-    var root_cats = TestCaseLevel0();
-    var root_cats_short = TestCaseLevel0_missing_5();
+    var rootCats = TestCaseLevel0();
+    var rootCatsShort = TestCaseLevel0missing5();
 
-    await root_cats.insertCategories();
+    await rootCats.insertCategories();
     await CategoryModel().removeFromCategoryBridgeByID(category5.id);
-    var expectedResult = root_cats_short.getRelations();
+    var expectedResult = rootCatsShort.getRelations();
 
     List<Map<String, dynamic>> categoryBridgeTable =
         await db.query('categoryBridge');
     categoryBridgeTable = categoryBridgeTable.toList();
-    List<Map<String, int>> categroyBridgeResults = [];
+    List<Map<String, int>> categoryBridgeResults = [];
     for (var element in categoryBridgeTable) {
-      categroyBridgeResults.add(Map<String, int>.from(element));
+      categoryBridgeResults.add(Map<String, int>.from(element));
     }
 
     var missingRelations =
-        getMissingRelations(expectedResult, categroyBridgeResults);
+        getMissingRelations(expectedResult, categoryBridgeResults);
     expect(missingRelations, [],
         reason: 'Missing Relations: $missingRelations');
-    expect(categroyBridgeResults.length, expectedResult.length);
+    expect(categoryBridgeResults.length, expectedResult.length);
   });
 
-  test('Removing w. Childs', () async {
+  test('Removing with children', () async {
     var db = await openDatabase(inMemoryDatabasePath);
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
 
-    var l1_cats = TestCaseLevel1();
-    await l1_cats.insertCategories();
+    var l1Cats = TestCaseLevel1();
+    await l1Cats.insertCategories();
 
     try {
       await CategoryModel().removeFromCategoryBridgeByID(category2.id);
     } catch (e) {
       return;
     }
-    fail("exception not thrown");
+    fail('Exception not thrown');
   });
 }
 
