@@ -84,7 +84,6 @@ class _CategoryPickerSingleState<T extends Selectable>
             }
             return SizedBox(
               width: double.maxFinite,
-              height: double.maxFinite,
               child: CategoryTree(
                 categories: snapshot.data ?? [],
                 onTap: (value) {

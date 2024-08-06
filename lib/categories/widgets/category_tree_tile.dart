@@ -1,4 +1,3 @@
-import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -203,10 +202,14 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
                     )
                   : null,
               subtitleTextStyle: const TextStyle(color: Colors.white),
-              trailing: InkWell(
-                borderRadius: BorderRadius.circular(40),
-                onTap: () => _toggleExpansion(),
-                child: _buildTrailingIcon(context),
+              trailing: SizedBox(
+                height: 50,
+                width: 50,
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => _toggleExpansion(),
+                  child: _buildTrailingIcon(context),
+                ),
               ),
             ),
           ),
