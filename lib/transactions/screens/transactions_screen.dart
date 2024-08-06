@@ -1,6 +1,6 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
-import 'package:budgetiser/categories/widgets/category_multi_picker_old.dart';
+import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';

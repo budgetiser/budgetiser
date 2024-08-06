@@ -1,36 +1,25 @@
 import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
-import 'package:budgetiser/shared/widgets/picker/category_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/selectable/single_picker.dart';
+import 'package:budgetiser/shared/widgets/picker/selectable/multi_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CategorySinglePicker extends StatefulWidget {
-  const CategorySinglePicker({
+class CategoryMultiPicker extends StatefulWidget {
+  const CategoryMultiPicker({
     super.key,
-    required this.onCategoryPickedCallback,
-    this.blacklistedValues,
+    required this.onCategoriesPickedCallback,
+    this.initialValues,
   });
 
-  final Function(TransactionCategory) onCategoryPickedCallback;
-  final List<TransactionCategory>? blacklistedValues;
+  final Function(List<TransactionCategory> selected) onCategoriesPickedCallback;
+  final List<TransactionCategory>? initialValues;
 
   @override
-  State<CategorySinglePicker> createState() => _CategorySinglePickerState();
+  State<CategoryMultiPicker> createState() => _CategoryMultiPickerState();
 }
 
-class _CategorySinglePickerState extends State<CategorySinglePicker> {
-  late List<TransactionCategory> _allCategories = [];
-
-  @override
-  void initState() {
-    Provider.of<CategoryModel>(context, listen: false)
-        .getAllCategories()
-        .then((value) => _allCategories = value);
-    super.initState();
-  }
-
+class _CategoryMultiPickerState extends State<CategoryMultiPicker> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TransactionCategory>>(
@@ -46,10 +35,11 @@ class _CategorySinglePickerState extends State<CategorySinglePicker> {
           return const Text('Oops!');
         }
 
-        return CategoryPickerSingle(
-          onPickedCallback: widget.onCategoryPickedCallback,
-          possibleValues: _allCategories,
-          blacklistedValues: widget.blacklistedValues,
+        return GeneralMultiPicker<TransactionCategory>(
+          heading: 'Select Categories',
+          onPickedCallback: widget.onCategoriesPickedCallback,
+          possibleValues: snapshot.data!,
+          initialValues: widget.initialValues,
           noDataButton: snapshot.data!.isEmpty
               ? TextButton(
                   onPressed: () {
