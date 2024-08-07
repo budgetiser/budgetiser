@@ -104,14 +104,9 @@ class TestCaseLevel0missing5 extends TestCase {
   // Cat3
   // Cat4
 
-  @override
-  List<TransactionCategory> categories = [
-    category0,
-    category1,
-    category2,
-    category3,
-    category4,
-  ];
+  TestCaseLevel0missing5() {
+    categories.removeAt(categories.length - 1);
+  }
 
   @override
   void _createComplexRelations() {}
