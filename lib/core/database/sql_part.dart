@@ -15,6 +15,9 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     if (newVersion >= 3 && oldVersion < 3) {
       await upgradeToV3(db);
     }
+    if (newVersion >= 4 && oldVersion < 4) {
+      await upgradeToV4(db);
+    }
   }
 
   _onCreate(Database db, int version) async {
@@ -87,12 +90,12 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     ''');
     await db.execute('''
       CREATE TABLE IF NOT EXISTS categoryBridge(
-        ancestor_id INTEGER NOT NULL,
-        descendent_id INTEGER NOT NULL,
+        parent_id INTEGER NOT NULL,
+        child_id INTEGER NOT NULL,
         distance INTEGER NOT NULL,
-        PRIMARY KEY(ancestor_id, descendent_id),
-        FOREIGN KEY(ancestor_id) REFERENCES category ON DELETE CASCADE,
-        FOREIGN KEY(descendent_id) REFERENCES category ON DELETE CASCADE
+        PRIMARY KEY(parent_id, child_id),
+        FOREIGN KEY(parent_id) REFERENCES category ON DELETE CASCADE,
+        FOREIGN KEY(child_id) REFERENCES category ON DELETE CASCADE
         );
     ''');
     if (kDebugMode) {
@@ -321,12 +324,12 @@ Future<void> upgradeToV3(Database db) async {
     // categoryBridge
     await txn.execute('''
       CREATE TABLE IF NOT EXISTS categoryBridge(
-        ancestor_id INTEGER NOT NULL,
-        descendent_id INTEGER NOT NULL,
+        parent_id INTEGER NOT NULL,
+        child_id INTEGER NOT NULL,
         distance INTEGER NOT NULL,
-        PRIMARY KEY(ancestor_id, descendent_id),
-        FOREIGN KEY(ancestor_id) REFERENCES category ON DELETE CASCADE,
-        FOREIGN KEY(descendent_id) REFERENCES category ON DELETE CASCADE
+        PRIMARY KEY(parent_id, child_id),
+        FOREIGN KEY(parent_id) REFERENCES category ON DELETE CASCADE,
+        FOREIGN KEY(child_id) REFERENCES category ON DELETE CASCADE
         );
     ''');
 
@@ -338,7 +341,7 @@ Future<void> upgradeToV3(Database db) async {
     for (Map<String, dynamic> item in mapBridge) {
       item = Map.of(item);
       await txn.execute('''
-        INSERT INTO categoryBridge (ancestor_id, descendent_id, distance) 
+        INSERT INTO categoryBridge (parent_id, child_id, distance) 
         VALUES (?, ?, ?);
       ''', [item['id'], item['id'], 0]);
     }
@@ -355,4 +358,15 @@ Future<void> upgradeToV3(Database db) async {
   if (kDebugMode) {
     print('upgrade to DB V3 done!');
   }
+}
+
+Future<void> upgradeToV4(Database db) async {
+  debugPrint('upgrading to db V4!');
+  await db.execute('''
+    ALTER TABLE categoryBridge RENAME COLUMN ancestor_id TO parent_id;
+  ''');
+  await db.execute('''
+    ALTER TABLE categoryBridge RENAME COLUMN descendent_id TO child_id;
+  ''');
+  debugPrint('Done.');
 }

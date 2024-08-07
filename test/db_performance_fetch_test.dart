@@ -2,7 +2,7 @@ import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
-import 'package:budgetiser/core/database/temporary_data/temp_data.dart';
+import 'package:budgetiser/core/database/temporary_data/datasets/old.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +26,7 @@ void main() {
     );
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
-    await dbh.fillDBwithTMPdata();
+    await dbh.fillDBwithTMPdata(OldDataset());
 
     final stopwatch = Stopwatch()..start();
 
@@ -39,7 +39,8 @@ void main() {
       print('got Transaction stream in ${stopwatch.elapsed}');
     }
 
-    expect(allTransactions.length, equals(TMP_DATA_transactionList.length));
+    expect(
+        allTransactions.length, equals(OldDataset().getTransactions().length));
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
   test('Performance: Fetch all TMP categories', () async {
@@ -48,7 +49,7 @@ void main() {
     );
     var dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
-    await dbh.fillDBwithTMPdata();
+    await dbh.fillDBwithTMPdata(OldDataset());
 
     final stopwatch = Stopwatch()..start();
 
@@ -60,7 +61,7 @@ void main() {
       print('got Categories stream in ${stopwatch.elapsed}');
     }
 
-    expect(fetchedData.length, equals(TMP_DATA_categoryList.length));
+    expect(fetchedData.length, equals(OldDataset().getCategories().length));
     expect(stopwatch.elapsed, lessThan(const Duration(milliseconds: 100)));
   });
 }

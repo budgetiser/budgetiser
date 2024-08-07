@@ -5,9 +5,8 @@ class TransactionCategory extends Selectable {
   int id;
   String? description;
   bool archived;
-  // TODO: discuss how to implement bridge #231
   int? parentID; // used in json export
-  int level; // starts at 0 for elements without parent
+  List<int> children = [];
 
   TransactionCategory({
     required this.id,
@@ -17,8 +16,10 @@ class TransactionCategory extends Selectable {
     this.description,
     this.archived = false,
     this.parentID,
-    this.level = 0,
-  });
+    List<int>? children,
+  }) {
+    this.children = children ?? [];
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -31,7 +32,7 @@ class TransactionCategory extends Selectable {
       other.description == description &&
       other.archived == archived &&
       other.parentID == parentID &&
-      other.level == level;
+      other.children == children;
 
   @override
   int get hashCode => Object.hash(
@@ -42,14 +43,16 @@ class TransactionCategory extends Selectable {
         description,
         archived,
         parentID,
-        level,
+        children,
       );
 
-  TransactionCategory.fromDBmap(Map<String, dynamic> map)
-      : id = map['id'],
+  TransactionCategory.fromDBmap(
+    Map<String, dynamic> map,
+  )   : id = map['id'],
         description = map['description'],
         archived = map['archived'] == 1,
-        level = 0, // TODO: #231
+        children = map['children'] ?? [],
+        parentID = map['parent_id'],
         super(
           name: map['name'].toString(),
           color: Color(map['color']),
@@ -67,7 +70,8 @@ class TransactionCategory extends Selectable {
   Map<String, dynamic> toJsonMap() {
     var m = toMap();
     m['id'] = id;
-    m['parentID'] = parentID;
+    m['parent_id'] = parentID;
+    m['children'] = children;
     return m;
   }
 }

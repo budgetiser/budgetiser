@@ -9,11 +9,11 @@ import 'package:sqflite/sqflite.dart';
 class AccountModel extends ChangeNotifier {
   final recentlyUsedAccount = RecentlyUsed<Account>();
 
-  Future<List<Account>> getAllAccounts({bool ignoreArchived = false}) async {
+  Future<List<Account>> getAllAccounts({bool excludeArchived = false}) async {
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'account',
-      where: ignoreArchived ? 'archived != 0' : 'true',
+      where: excludeArchived ? 'archived = 0' : 'true',
     );
 
     List<Account> accounts = List.generate(maps.length, (i) {

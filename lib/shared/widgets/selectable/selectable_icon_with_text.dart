@@ -21,13 +21,14 @@ class SelectableIconWithText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SelectableIcon(
           selectable,
           size: size,
         ),
         const SizedBox(width: 8),
-        Expanded(
+        Flexible(
           child: Text(
             selectable.name,
             overflow: TextOverflow.ellipsis,

@@ -10,6 +10,7 @@ class CategoryModel extends ChangeNotifier {
   }
 
   Future<TransactionCategory> getCategory(int id) async {
+    // TODO: hierarchical
     Profiler.instance.start('getCategory $id');
     var db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps =
@@ -19,12 +20,130 @@ class CategoryModel extends ChangeNotifier {
     return TransactionCategory.fromDBmap(maps[0]);
   }
 
-  Future<List<TransactionCategory>> getAllCategories() async {
+  Future<List<TransactionCategory>> getCategories(List<int> ids) async {
     var db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> maps = await db.query('category');
+    if (ids.isEmpty) {
+      return [];
+    }
+    final List<Map<String, dynamic>> maps =
+        await db.query('category', where: 'id IN (${ids.join(",")})');
 
     return List.generate(maps.length, (i) {
-      return TransactionCategory.fromDBmap(maps[i]);
+      return TransactionCategory.fromDBmap(
+        maps[i],
+      );
+    });
+  }
+
+  Future<void> moveCategory(
+      TransactionCategory category, TransactionCategory? newParent) async {
+    await moveCategoryByID(category.id, newParent?.id);
+  }
+
+  Future<void> moveCategoryByID(int category, int? newParent) async {
+    var db = await DatabaseHelper.instance.database;
+    await db.transaction((txn) async {
+      // Unlink all links not coming from us or our children to
+      // us or our children.
+      String unlinkQuery = ('''
+      DELETE FROM categoryBridge
+      WHERE child_id IN(
+        SELECT child_id
+        FROM categoryBridge
+        WHERE parent_id=?
+      )
+      AND parent_id IN(
+        SELECT parent_id
+        FROM categoryBridge
+        WHERE child_id=?
+        AND parent_id != child_id
+      );
+      ''');
+      await txn.rawDelete(unlinkQuery, [category, category]);
+
+      if (newParent != null) {
+        // If newParent==null, we do not need to link us or our childs
+        // to any other parents.
+        String relinkQuery = ('''
+        INSERT INTO categoryBridge
+        SELECT a.parent_id, b.child_id, (a.distance+b.distance+1)
+        FROM categoryBridge a
+        CROSS JOIN categoryBridge b
+        WHERE a.child_id=?
+        AND b.parent_id=?;
+        ''');
+        await txn.rawInsert(relinkQuery, [newParent, category]);
+      }
+    });
+  }
+
+  Future<void> removeFromCategoryBridgeByID(int category) async {
+    var db = await DatabaseHelper.instance.database;
+    String unlinkQuery = ('''
+      DELETE FROM categoryBridge
+      WHERE child_id IN (
+        SELECT child_id
+        FROM categoryBridge
+        WHERE parent_id = ?
+      )
+      AND NOT EXISTS(
+        SELECT NULL
+        FROM categoryBridge
+        WHERE parent_id = ?
+        AND child_id != parent_id
+      );
+      ''');
+    int deletedRows = await db.rawDelete(unlinkQuery, [category, category]);
+    if (deletedRows == 0) {
+      throw Exception();
+    }
+  }
+
+  Future<List<TransactionCategory>> getAllCategories() async {
+    var db = await DatabaseHelper.instance.database;
+    // final List<Map<String, dynamic>> map = await db.query('category');
+    var map = await db.rawQuery('''
+    SELECT 
+        c.id,
+        c.name,
+        c.icon,
+        c.color,
+        c.description,
+        c.archived,
+        cb.parent_id,
+        GROUP_CONCAT(cb2.child_id) AS children
+    FROM 
+        category c
+    LEFT JOIN 
+        categoryBridge cb ON c.id = cb.child_id
+        AND cb.distance = 1
+    LEFT JOIN 
+        categoryBridge cb2 ON c.id = cb2.parent_id
+        AND cb2.distance = 1
+    GROUP BY 
+        c.id, c.name, c.icon, c.color, c.description, c.archived, cb.parent_id;
+    ''');
+    var newMap = map.map(
+      (e) {
+        return Map.of(e);
+      },
+    ).toList();
+    for (var i = 0; i < map.length; i++) {
+      if (map[i]['children'] != null) {
+        newMap[i]['children'] = map[i]['children']
+            .toString()
+            .split(',')
+            .map((e) => int.parse(e))
+            .toList();
+      } else {
+        newMap[i]['children'] = List<int>.empty();
+      }
+    }
+
+    return List.generate(newMap.length, (i) {
+      return TransactionCategory.fromDBmap(
+        newMap[i],
+      );
     });
   }
 
@@ -50,6 +169,7 @@ class CategoryModel extends ChangeNotifier {
         INSERT INTO category (id, name, icon, color, description, archived) 
         VALUES (?, ?, ?, ?, ?, ?);
       ''', [
+        // TODO: why map
         id,
         map['name'],
         map['icon'],
@@ -58,10 +178,28 @@ class CategoryModel extends ChangeNotifier {
         map['archived'],
       ]);
     }
+    if (category.parentID != null) {
+      // List<Map<String, dynamic>> ancestors = await db.rawQuery('''
+      //   SELECT parent_id, descendant_id, distance
+      //   FROM categoryBridge
+      //   WHERE descendant_id = ?
+      // ''', [category.ancestorID]);
+      // ancestors.map((e) {
+      //   e['child_id'] = category.id;
+      //   e['distance'] += 1;
+      // });
+      // await db.update('categoryBridge', values)
+      await db.execute('''
+        INSERT INTO categoryBridge (parent_id, child_id, distance)
+        SELECT parent_id, ?, distance + 1
+        FROM categoryBridge
+        WHERE child_id = ?;
+        ''', [id, category.parentID]);
+    }
 
     await db.insert(
       'categoryBridge',
-      {'ancestor_id': id, 'descendent_id': id, 'distance': 0},
+      {'parent_id': id, 'child_id': id, 'distance': 0},
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
     _notifyCategoryUpdate();
@@ -76,23 +214,33 @@ class CategoryModel extends ChangeNotifier {
       where: 'id = ?',
       whereArgs: [categoryID],
     );
-    await db.delete(
-      'categoryBridge',
-      where: 'ancestor_id = ? OR descendent_id = ?',
-      whereArgs: [categoryID, categoryID],
-    );
+    await removeFromCategoryBridgeByID(categoryID);
 
     _notifyCategoryUpdate();
   }
 
   Future<void> updateCategory(TransactionCategory category) async {
     var db = await DatabaseHelper.instance.database;
+    // Get old ancestor
+    List<Map<String, dynamic>> oldAncestor = await db.query(
+      'categoryBridge',
+      where: 'child_id = ? AND distance = 1',
+      whereArgs: [category.id],
+    );
+    // Normal update
     await db.update(
       'category',
       category.toMap(),
       where: 'id = ?',
       whereArgs: [category.id],
     );
+    // Update bridge
+    if (oldAncestor.isEmpty && category.parentID == null) {
+      // no tree moving required (keep on toplevel)
+      // TODO: (performance) no moving inside the tree
+    } else {
+      await moveCategoryByID(category.id, category.parentID);
+    }
     _notifyCategoryUpdate();
   }
 }
