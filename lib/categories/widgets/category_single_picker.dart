@@ -1,7 +1,7 @@
 import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
-import 'package:budgetiser/shared/widgets/picker/selectable/single_picker.dart';
+import 'package:budgetiser/shared/widgets/picker/category_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +45,7 @@ class _CategorySinglePickerState extends State<CategorySinglePicker> {
           return const Text('Oops!');
         }
 
-        return GeneralSinglePicker<TransactionCategory>(
+        return CategoryPickerSingle(
           onPickedCallback: widget.onCategoryPickedCallback,
           possibleValues: _allCategories,
           blacklistedValues: widget.blacklistedValues,

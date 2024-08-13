@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/database.dart';
+import 'package:budgetiser/core/database/temporary_data/dataset.dart';
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -171,19 +172,54 @@ class DangerZone extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          'This action cannot be undone! All current data will be lost.',
-                      onSubmitCallback: () async {
-                        await DatabaseHelper.instance.resetDB();
-                        DatabaseHelper.instance.fillDBwithTMPdata();
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
+                    return AlertDialog(
+                      title: const Text('Select dataset'),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('cancel')),
+                      ],
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 16),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                              'This action cannot be undone! All current data will be lost.',
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Flexible(
+                            child: SizedBox(
+                              width: double.maxFinite,
+                              child: ListView.builder(
+                                itemCount: allDataSets.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(
+                                      allDataSets[index].runtimeType.toString(),
+                                    ),
+                                    onTap: () async {
+                                      await DatabaseHelper.instance.resetDB();
+                                      DatabaseHelper.instance.fillDBwithTMPdata(
+                                          allDataSets[index]);
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                  // return Text('Nothing to select!');
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );

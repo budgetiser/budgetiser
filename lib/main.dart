@@ -71,11 +71,11 @@ class _MyAppState extends State<MyApp> {
           themeMode: _themeMode,
           theme: ThemeData(
             colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-            listTileTheme: customListTimeTheme(),
+            listTileTheme: customListTileTheme(),
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-            listTileTheme: customListTimeTheme(),
+            listTileTheme: customListTileTheme(),
           ),
           home: const HomeScreen(),
           routes: routes,
@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  ListTileThemeData customListTimeTheme() {
+  ListTileThemeData customListTileTheme() {
     return ListTileThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
