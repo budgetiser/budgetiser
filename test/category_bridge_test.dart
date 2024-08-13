@@ -1,6 +1,4 @@
 import 'package:budgetiser/core/database/database.dart';
-import 'package:budgetiser/core/database/models/category.dart';
-import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
