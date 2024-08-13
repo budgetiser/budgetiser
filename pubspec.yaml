@@ -5,7 +5,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
-version: 2.4.4+29
+version: 2.10.1+37
 
 environment:
   sdk: ^3.3.1
@@ -27,24 +27,18 @@ dependencies:
   url_launcher: ^6.2.6
   package_info_plus: ^8.0.0
   equations: ^5.0.1
-  material_color_utilities: ^0.8.0
+  material_color_utilities: ^0.11.1
 
   # MIT License
   fl_chart: ^0.68.0
   flutter_file_dialog: ^3.0.2
   badges: ^3.1.2
+  fuzzywuzzy: ^1.1.6
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^4.0.0
   sqflite_common_ffi: ^2.3.3
-  test: ^1.24.4
-
-flutter_icons:
-  android: true
-  image_path: "assets/images/logo_white_background.png"
-  adaptive_icon_foreground: "assets/images/logo_white_foreground.png"
-  adaptive_icon_background: "#3282b8"
+  test: ^1.25.7
 
 flutter:
   # The following line ensures that the Material Icons font is

@@ -8,24 +8,18 @@ import 'package:sqflite/sqflite.dart';
 
 class AccountModel extends ChangeNotifier {
   final recentlyUsedAccount = RecentlyUsed<Account>();
-  DateTime lastTimeFetchedAllAccounts = DateTime(0);
-  List<Account> cachedAllAccounts = [];
 
-  Future<List<Account>> getAllAccounts() async {
-    debugPrint(
-        'since last cache ${DateTime.now().difference(lastTimeFetchedAllAccounts).inMilliseconds}');
-    if (DateTime.now().difference(lastTimeFetchedAllAccounts) <
-        const Duration(milliseconds: 200)) {
-      return cachedAllAccounts;
-    }
+  Future<List<Account>> getAllAccounts({bool excludeArchived = false}) async {
     final db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> maps = await db.query('account');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'account',
+      where: excludeArchived ? 'archived = 0' : 'true',
+    );
 
     List<Account> accounts = List.generate(maps.length, (i) {
       return Account.fromDBmap(maps[i]);
     });
-    lastTimeFetchedAllAccounts = DateTime.now();
-    cachedAllAccounts = accounts;
+    debugPrint('Fetched ${accounts.length} accounts');
     return accounts;
   }
 

@@ -27,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Card.filled(
+            child: Card.outlined(
+              color: Theme.of(context).hoverColor,
               child: AccountItemsWidget(),
             ),
           ),

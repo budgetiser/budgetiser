@@ -7,7 +7,7 @@ import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
-import 'package:budgetiser/core/database/temporary_data/temp_data.dart';
+import 'package:budgetiser/core/database/temporary_data/datasets/old.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -27,7 +27,7 @@ void main() {
     );
     dbh = DatabaseHelper.instance..setDatabase(db);
     await dbh.resetDB();
-    await dbh.fillDBwithTMPdata();
+    await dbh.fillDBwithTMPdata(OldDataset());
   });
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
@@ -38,9 +38,9 @@ void main() {
     await dbh.setDatabaseContentWithJson(fullJSON1);
 
     await dbh.resetDB();
-    await dbh.fillDBwithTMPdata();
+    await dbh.fillDBwithTMPdata(OldDataset());
 
-    for (Account a in TMP_DATA_accountList) {
+    for (Account a in OldDataset().getAccounts()) {
       // cant check balance, because it is changed in the db after inserting transactions
       expect(a.name, (await AccountModel().getOneAccount(a.id)).name);
       expect(a.description,
@@ -52,14 +52,14 @@ void main() {
       expect(a.archived, (await AccountModel().getOneAccount(a.id)).archived);
     }
 
-    for (SingleTransaction t in TMP_DATA_transactionList) {
+    for (SingleTransaction t in OldDataset().getTransactions()) {
       expect(t.toString(),
           (await TransactionModel().getOneTransaction(t.id)).toString());
     }
-    for (Budget b in TMP_DATA_budgetList) {
+    for (Budget b in OldDataset().getBudgets()) {
       expect(b.toString(), (await BudgetModel().getBudget(b.id)).toString());
     }
-    for (TransactionCategory t in TMP_DATA_categoryList) {
+    for (TransactionCategory t in OldDataset().getCategories()) {
       expect(
           t.toString(), (await CategoryModel().getCategory(t.id)).toString());
     }
@@ -101,7 +101,8 @@ void main() {
           'description': null,
           'archived': 0,
           'id': 1,
-          'parentID': null
+          'parent_id': null,
+          'children': List<int>.empty(),
         },
         {
           'name': 'Leisure',
@@ -110,7 +111,8 @@ void main() {
           'description': null,
           'archived': 0,
           'id': 2,
-          'parentID': null
+          'parent_id': null,
+          'children': List<int>.empty(),
         },
       ],
       'Transactions': [

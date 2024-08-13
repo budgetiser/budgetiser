@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/database.dart';
+import 'package:budgetiser/core/database/temporary_data/datasets/old.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +26,7 @@ void main() {
     final stopwatch = Stopwatch()..start();
 
     await dbh.resetDB();
-    await dbh.fillDBwithTMPdata();
+    await dbh.fillDBwithTMPdata(OldDataset());
 
     stopwatch.stop();
 

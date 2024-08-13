@@ -83,33 +83,32 @@ class _GeneralMultiPickerState<T extends Selectable>
   }
 
   Widget dialogContent(StateSetter setState, BuildContext context) {
+    void onAllClicked(bool? value) {
+      setState(() {
+        if (selectedValues.isEmpty) {
+          selectedValues = [
+            ...widget.possibleValues
+          ]; // clone data. otherwise deselecting single item would .remove() from both lists
+        } else {
+          selectedValues = [];
+        }
+      });
+    }
+
     return SizedBox(
       width: double.maxFinite,
       child: SingleChildScrollView(
         physics: const ScrollPhysics(),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
+            CheckboxListTile(
+              tristate: true,
+              onChanged: onAllClicked,
+              value: allCheckboxState(),
+              title: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('All'),
-                  Checkbox(
-                    tristate: true,
-                    value: allCheckboxState(),
-                    onChanged: (value) {
-                      setState(() {
-                        if (selectedValues.isEmpty) {
-                          selectedValues = [
-                            ...widget.possibleValues
-                          ]; // clone data. otherwise deselecting single item would .remove() from both lists
-                        } else {
-                          selectedValues = [];
-                        }
-                      });
-                    },
-                  )
+                  Text('All'),
                 ],
               ),
             ),
@@ -119,10 +118,12 @@ class _GeneralMultiPickerState<T extends Selectable>
               itemCount: widget.possibleValues.length,
               itemBuilder: (context, listIndex) {
                 return CheckboxListTile(
-                  title:
-                      SelectableIconWithText(widget.possibleValues[listIndex]),
-                  value:
-                      selectedValues.contains(widget.possibleValues[listIndex]),
+                  title: SelectableIconWithText(
+                    widget.possibleValues[listIndex],
+                  ),
+                  value: selectedValues.contains(
+                    widget.possibleValues[listIndex],
+                  ),
                   onChanged: (bool? value) {
                     setState(() {
                       if (value == true) {

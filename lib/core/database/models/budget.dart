@@ -2,6 +2,7 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/selectable.dart';
 import 'package:flutter/material.dart';
 
+/// Use .label for a readable string representation
 enum IntervalUnit {
   day('daily'),
   week('weekly'),

@@ -10,7 +10,7 @@ import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
-import 'package:budgetiser/core/database/temporary_data/temp_data.dart';
+import 'package:budgetiser/core/database/temporary_data/dataset.dart';
 import 'package:budgetiser/shared/services/profiler.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
@@ -34,6 +34,8 @@ class DatabaseHelper {
   final recentlyUsedAccount = RecentlyUsed<Account>();
   final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
 
+  static const int currentDatabaseVersion = 4;
+
   Future<Database> get database async =>
       _database ??= await initializeDatabase();
 
@@ -53,19 +55,23 @@ class DatabaseHelper {
 
   /// Public method for resetting db
   // ignore: always_declare_return_types
-  resetDB({int newVersion = 3}) async {
+  resetDB({int newVersion = currentDatabaseVersion}) async {
     final Database db = await database;
     await _resetDB(db, newVersion);
   }
 
-  Future fillDBwithTMPdata() async {
-    var length = TMP_DATA_accountList.length +
-        TMP_DATA_categoryList.length +
-        TMP_DATA_transactionList.length +
-        TMP_DATA_budgetList.length;
+  Future fillDBwithTMPdata(DemoDataset dataset) async {
+    var accounts = dataset.getAccounts();
+    var budgets = dataset.getBudgets();
+    var categories = dataset.getCategories();
+    var transactions = dataset.getTransactions();
+    var length = accounts.length +
+        budgets.length +
+        categories.length +
+        transactions.length;
     var i = 0;
     Profiler.instance.start('fill with TMP data');
-    for (var account in TMP_DATA_accountList) {
+    for (var account in accounts) {
       if (i % 100 == 0) {
         debugPrint('${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t');
       }
@@ -74,16 +80,16 @@ class DatabaseHelper {
       await AccountModel().createAccount(account);
       Profiler.instance.end();
     }
-    for (var category in TMP_DATA_categoryList) {
+    for (var category in categories) {
       if (i % 100 == 0) {
         debugPrint('${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t');
       }
       i++;
       Profiler.instance.start('create category');
-      await CategoryModel().createCategory(category);
+      await CategoryModel().createCategory(category, keepId: true);
       Profiler.instance.end();
     }
-    for (var transaction in TMP_DATA_transactionList) {
+    for (var transaction in transactions) {
       if (i % 100 == 0) {
         debugPrint('${num.parse(((i * 100) / length).toStringAsFixed(2))}\t\t');
       }
@@ -95,7 +101,7 @@ class DatabaseHelper {
       );
       Profiler.instance.end();
     }
-    for (var budget in TMP_DATA_budgetList) {
+    for (var budget in budgets) {
       await BudgetModel().createBudget(budget);
     }
     debugPrint('finished filling DB with TMP data');
@@ -107,7 +113,7 @@ class DatabaseHelper {
     try {
       return await openDatabase(
         join(databasesPath, databaseName),
-        version: 3,
+        version: currentDatabaseVersion,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onDowngrade: (db, oldVersion, newVersion) async {
