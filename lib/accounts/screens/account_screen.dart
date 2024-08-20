@@ -126,6 +126,9 @@ class _AccountScreenState extends State<AccountScreen> {
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
+                    padding: archivedAccountList.isEmpty
+                        ? const EdgeInsets.only(bottom: 80)
+                        : null,
                     itemCount: accountList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return AccountItem(

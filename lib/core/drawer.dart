@@ -51,22 +51,25 @@ class _CreateDrawerState extends State<CreateDrawer> {
       onDestinationSelected: handleScreenChanged,
       selectedIndex: screenIndex,
       children: [
-        DrawerHeader(
-          decoration: const BoxDecoration(
+        const DrawerHeader(
+          decoration: BoxDecoration(
             color: Colors.blue,
           ),
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 LogoIcon.budgetiserIcon,
                 color: Colors.white,
                 size: 40,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               // TODO: Bug: Text clips with big system font size
               Text(
                 'Budgetiser',
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                ),
               ),
             ],
           ),

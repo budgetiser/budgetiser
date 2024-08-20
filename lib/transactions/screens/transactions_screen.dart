@@ -156,6 +156,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return ListView.builder(
       itemCount: keys.length,
+      padding: const EdgeInsets.only(bottom: 80),
       itemBuilder: (context, i) {
         return TransactionExpansionTile(
           date: keys[i],
