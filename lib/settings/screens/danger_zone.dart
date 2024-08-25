@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/database/temporary_data/dataset.dart';
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/divider_with_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 
 class DangerZone extends StatelessWidget {
   const DangerZone({super.key});
@@ -49,7 +53,17 @@ class DangerZone extends StatelessWidget {
               subtitle: const Text(
                 'Generates a \'.json\' file with all app data.',
               ),
-              onTap: () {},
+              onTap: () async {
+                Map data = await DatabaseHelper.instance.generateJson();
+                String? outputFile = await FilePicker.platform.saveFile(
+                  dialogTitle: 'Please select an output file:',
+                  fileName: 'output-file.pdf',
+                );
+
+                if (outputFile == null) {
+                  // User canceled the picker
+                }
+              },
             ),
             ListTile(
               title: const Text('Export data (JSON)'),
