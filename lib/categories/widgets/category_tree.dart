@@ -83,6 +83,7 @@ class _CategoryTreeState extends State<CategoryTree> {
       BuildContext context, List<RecursiveCategoryModel> categoryTree) {
     return ListView.builder(
       shrinkWrap: true,
+      padding: const EdgeInsets.only(bottom: 80),
       itemCount: (categoryTree.length),
       itemBuilder: (BuildContext context, int index) {
         return RecursiveWidget(

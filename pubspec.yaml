@@ -5,7 +5,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
-version: 2.10.1+37
+version: 2.10.4+40
 
 environment:
   sdk: ^3.3.1
@@ -28,6 +28,7 @@ dependencies:
   package_info_plus: ^8.0.0
   equations: ^5.0.1
   material_color_utilities: ^0.11.1
+  file_picker: ^8.0.0
 
   # MIT License
   fl_chart: ^0.68.0

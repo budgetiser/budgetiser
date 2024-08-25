@@ -3,9 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:budgetiser/core/database/models/account.dart';
-import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
-import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
@@ -18,10 +16,12 @@ import 'package:budgetiser/shared/utils/sql_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+part 'json_part.dart';
 part 'sql_part.dart';
 part 'stat_part.dart';
 
@@ -157,154 +157,17 @@ class DatabaseHelper {
     }
   }
 
+  Future<Uint8List> getDatabaseContent() async {
+    final File db = File('${await getDatabasesPath()}/$databaseName');
+    final fileContent = await db.readAsBytes();
+
+    return fileContent;
+  }
+
   /// Imports the database from a file in the Download folder. Overwrites the current database.
-  void importDB() async {
-    final externalDirectory =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final externalFile = File('${externalDirectory?.first.path}/budgetiser.db');
-    final fileContent = await externalFile.readAsBytes();
-
-    final db = File('${await getDatabasesPath()}/$databaseName');
-    await db.writeAsBytes(fileContent);
-  }
-
-  void exportAsJson() async {
-    debugPrint('start json export');
-
-    var fullJSON = await generateJson();
-
-    saveJsonToJsonFile(jsonEncode(fullJSON));
-  }
-
-  /// Returns database content as JSON object
-  Future<Map> generateJson() async {
-    var fullJSON = {};
-    await AccountModel().getAllAccounts().then((value) {
-      fullJSON['Accounts'] = value.map((e) => e.toJsonMap()).toList();
-    });
-
-    await BudgetModel().getAllBudgets().then((value) {
-      fullJSON['Budgets'] = value.map((e) => e.toJsonMap()).toList();
-    });
-
-    await CategoryModel().getAllCategories().then((value) {
-      fullJSON['Categories'] = value.map((e) => e.toJsonMap()).toList();
-    });
-
-    await TransactionModel().getAllTransactions().then((value) {
-      fullJSON['Transactions'] = value.map((e) => e.toJsonMap()).toList();
-    });
-    return fullJSON;
-  }
-
-  void importFromJson() async {
-    String jsonString = '';
-    try {
-      jsonString = await readJsonFromFile();
-    } on FileSystemException catch (e) {
-      debugPrint('Error while reading json file: $e');
-      return;
-    }
-    Map<String, dynamic> jsonObject = jsonDecode(jsonString);
-
-    setDatabaseContentWithJson(jsonObject);
-  }
-
-  /// Clears db and fills with json content
-  Future<void> setDatabaseContentWithJson(Map jsonObject) async {
-    assert(jsonObject['Accounts'] is List);
-    assert(jsonObject['Budgets'] is List);
-    assert(jsonObject['Categories'] is List);
-    assert(jsonObject['Transactions'] is List);
-
-    await resetDB();
-
-    // import data
-    debugPrint('importing data from json...');
-    for (var object in jsonObject['Accounts']) {
-      Account account = Account.fromDBmap(object);
-      await AccountModel().createAccount(account, keepId: true);
-    }
-    for (var object in jsonObject['Categories']) {
-      TransactionCategory category = TransactionCategory.fromDBmap(object);
-      await CategoryModel().createCategory(category, keepId: true);
-    }
-    for (var object in jsonObject['Budgets']) {
-      Budget budget =
-          Budget.fromDBmap(object, await CategoryModel().getAllCategories());
-      await BudgetModel().createBudget(budget, keepId: true);
-    }
-    for (Map<String, dynamic> object in jsonObject['Transactions']) {
-      SingleTransaction transaction = SingleTransaction.fromDBmap(
-        object,
-        category: await CategoryModel().getCategory(object['category_id']),
-        account: await AccountModel().getOneAccount(object['account1_id']),
-        account2: object['account2_id'] == null
-            ? null
-            : await AccountModel().getOneAccount(object['account2_id']),
-      );
-      await TransactionModel()
-          .createSingleTransaction(transaction, keepId: true);
-    }
-    // after creating transactions, account balances needed to be set to correct value
-    for (Map object in jsonObject['Accounts']) {
-      await AccountModel().setAccountBalance(object['id'], object['balance']);
-    }
-    debugPrint('done importing data from json!');
-  }
-
-  void saveJsonToJsonFile(String jsonString) async {
-    debugPrint('start saving json to file');
-
-    final directory =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final file = File('${directory?.first.path}/budgetiser.json');
-    await file.writeAsString(jsonString, mode: FileMode.write);
-
-    if (!await FlutterFileDialog.isPickDirectorySupported()) {
-      debugPrint('Picking directory not supported');
-      Exception('Picking directory not supported ');
-    }
-
-    final pickedDirectory = await FlutterFileDialog.pickDirectory();
-
-    if (pickedDirectory != null) {
-      final filePath = await FlutterFileDialog.saveFileToDirectory(
-        directory: pickedDirectory,
-        data: file.readAsBytesSync(),
-        mimeType: 'application/json',
-        fileName: 'budgetiser.json',
-        replace: true,
-      );
-      debugPrint('saved json to: $filePath');
-    }
-  }
-
-  Future<String> readJsonFromFile() async {
-    const params = OpenFileDialogParams(
-      dialogType: OpenFileDialogType.document,
-      sourceType: SourceType.photoLibrary,
-    );
-    final filePath = await FlutterFileDialog.pickFile(params: params);
-
-    // final directory =
-    // await getExternalStorageDirectories(type: StorageDirectory.downloads);
-
-    if (filePath == null) {
-      throw const FileSystemException(
-          'File not found or nothing picked by Dialog');
-    }
-    try {
-      final file = File(filePath);
-      if (await file.exists()) {
-        String contents = await file.readAsString();
-        return contents;
-      } else {
-        throw const FileSystemException('File not found');
-      }
-    } catch (e) {
-      // Handle exceptions, such as File not found or other I/O errors.
-      throw Exception('Error reading JSON file: $e');
-    }
+  void importDatabaseFromPath(String path) async {
+    Uint8List fileContent = await File(path).readAsBytes();
+    final dbPath = File('${await getDatabasesPath()}/$databaseName');
+    await dbPath.writeAsBytes(fileContent);
   }
 }
