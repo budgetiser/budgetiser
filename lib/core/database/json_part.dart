@@ -1,6 +1,12 @@
 part of 'database.dart';
 
 extension DatabaseExtensionJSON on DatabaseHelper {
+  Future<Map> addMetadataToJson(Map json) async {
+    json['date'] = DateTime.now().toIso8601String();
+    json['budgetiser-version'] = (await PackageInfo.fromPlatform()).version;
+    return json;
+  }
+
   Future<Map> getRobustJSON() async {
     final db = await DatabaseHelper.instance.database;
     final List<String> relations = [
@@ -20,14 +26,15 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     return fullJSON;
   }
 
-  void exportAsJson() async {
+  void exportAsPrettyJson() async {
     debugPrint('start json export');
-    var fullJSON = await generateJson();
+    var fullJSON = await generatePrettyJson();
+    fullJSON = await addMetadataToJson(fullJSON);
     saveJsonToJsonFile(jsonEncode(fullJSON));
   }
 
   /// Returns database content as JSON object
-  Future<Map> generateJson() async {
+  Future<Map> generatePrettyJson() async {
     var fullJSON = {};
     await AccountModel().getAllAccounts().then((value) {
       fullJSON['Accounts'] = value.map((e) => e.toJsonMap()).toList();

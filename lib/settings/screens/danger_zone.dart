@@ -54,7 +54,7 @@ class DangerZone extends StatelessWidget {
                 'Generates a \'.json\' file with all app data.',
               ),
               onTap: () async {
-                Map data = await DatabaseHelper.instance.generateJson();
+                Map data = await DatabaseHelper.instance.generatePrettyJson();
                 String? outputFile = await FilePicker.platform.saveFile(
                   dialogTitle: 'Please select an output file:',
                   fileName: 'output-file.pdf',
@@ -79,7 +79,7 @@ class DangerZone extends StatelessWidget {
                       description:
                           'Are you sure? This will potentially override existing budgetiser.json file in the App folder!',
                       onSubmitCallback: () {
-                        DatabaseHelper.instance.exportAsJson();
+                        DatabaseHelper.instance.exportAsPrettyJson();
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
