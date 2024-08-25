@@ -33,9 +33,9 @@ void main() {
   SharedPreferences.setMockInitialValues({});
 
   test('Test JSON Ex- and Import', () async {
-    var fullJSON1 = await dbh.generatePrettyJson();
+    var fullJSON1 = await dbh.generateRobustJSON();
 
-    await dbh.setDatabaseContentWithJson(fullJSON1);
+    await dbh.importJSONdata(fullJSON1);
 
     await dbh.resetDB();
     await dbh.fillDBwithTMPdata(OldDataset());
@@ -64,95 +64,135 @@ void main() {
           t.toString(), (await CategoryModel().getCategory(t.id)).toString());
     }
 
-    var fullJSON2 = await dbh.generatePrettyJson();
+    var fullJSON2 = await dbh.generateRobustJSON();
     expect(fullJSON1, fullJSON2);
   });
 
   test('Test JSON Im- and Export', () async {
     var json = {
-      'Accounts': [
+      'account': [
         {
+          'id': 1,
           'name': 'Wallet',
           'icon': 985044,
-          'color': 4278228616,
+          'color': 4283215696,
           'balance': -336.41,
-          'description': null,
-          'archived': 0,
-          'id': 1
+          'description': '',
+          'archived': 0
+        },
+        {
+          'id': 2,
+          'name': 'Card',
+          'icon': 985044,
+          'color': 4283215696,
+          'balance': 0.0,
+          'description': '',
+          'archived': 1
         }
       ],
-      'Budgets': [
+      'budget': [
         {
+          'id': 1,
           'name': 'shopping',
           'icon': 62333,
           'color': 4294198070,
-          'description': null,
           'max_value': 100.0,
           'interval_unit': 'IntervalUnit.month',
-          'id': 1,
-          'transactionCategories': [1, 2]
+          'description': ''
         },
       ],
-      'Categories': [
+      'category': [
         {
-          'name': 'Shopping',
+          'id': 1,
+          'name': 'Salary',
           'icon': 57522,
-          'color': 4282339765,
-          'description': null,
-          'archived': 0,
-          'id': 1,
-          'parent_id': null,
-          'children': List<int>.empty(),
+          'color': 4280391411,
+          'description': '',
+          'archived': 0
         },
         {
-          'name': 'Leisure',
-          'icon': 57627,
-          'color': 4294940672,
-          'description': null,
-          'archived': 0,
           'id': 2,
-          'parent_id': null,
-          'children': List<int>.empty(),
+          'name': 'Business Income',
+          'icon': 57627,
+          'color': 4294198070,
+          'description': '',
+          'archived': 0
+        },
+        {
+          'id': 3,
+          'name': 'Other Income',
+          'icon': 57627,
+          'color': 4294198070,
+          'description': '',
+          'archived': 1
         },
       ],
-      'Transactions': [
+      'categoryBridge': [
         {
+          'parent_id': 1,
+          'child_id': 1,
+          'distance': 0,
+        },
+        {
+          'parent_id': 2,
+          'child_id': 2,
+          'distance': 0,
+        },
+        {
+          'parent_id': 3,
+          'child_id': 3,
+          'distance': 0,
+        },
+        {
+          'parent_id': 2,
+          'child_id': 3,
+          'distance': 1,
+        },
+      ],
+      'categoryToBudget': [
+        {
+          'category_id': 1,
+          'budget_id': 1,
+        },
+      ],
+      'singleTransaction': [
+        {
+          'id': 1,
           'title': 'snacks',
           'value': -2.0,
           'description': null,
           'category_id': 1,
-          'date': 1708366977679,
+          'date': 1721983891492,
           'account1_id': 1,
-          'account2_id': null,
-          'id': 2
+          'account2_id': null
         },
         {
+          'id': 2,
           'title': 'gambling',
-          'value': -200.0,
-          'description': null,
-          'category_id': 2,
-          'date': 1708366977672,
-          'account1_id': 1,
-          'account2_id': null,
-          'id': 1
+          'value': 200.0,
+          'description': '',
+          'category_id': 1,
+          'date': 1719391891492,
+          'account1_id': 2,
+          'account2_id': 1
         },
         {
-          'title': 'Groceries',
-          'value': -28.75,
-          'description': null,
+          'id': 3,
+          'title': 'Monthly Salary',
+          'value': 2500.0,
+          'description': '',
           'category_id': 1,
-          'date': 1708107778679,
-          'account1_id': 1,
-          'account2_id': null,
-          'id': 3
+          'date': 1716799891492,
+          'account1_id': 2,
+          'account2_id': null
         },
       ],
     };
     // for some reason this transaction list order works
 
-    await dbh.setDatabaseContentWithJson(json);
+    await dbh.importJSONdata(json);
 
-    var exportedJson = await dbh.generatePrettyJson();
+    var exportedJson = await dbh.generateRobustJSON();
 
     expect(json.toString(), exportedJson.toString());
   });

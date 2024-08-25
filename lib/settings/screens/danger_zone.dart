@@ -35,7 +35,7 @@ class DangerZone extends StatelessWidget {
                     await DatabaseHelper.instance.getDatabaseContentAsJson();
 
                 String? outputFile = await FilePicker.platform.saveFile(
-                  fileName: 'budgetiser_${dtSuffix}.json',
+                  fileName: 'budgetiser_$dtSuffix.json',
                   bytes: databaseContent,
                 );
 
@@ -56,7 +56,7 @@ class DangerZone extends StatelessWidget {
                     .getDatabaseContentAsPrettyJson();
 
                 String? outputFile = await FilePicker.platform.saveFile(
-                  fileName: 'budgetiser_data_${dtSuffix}.json',
+                  fileName: 'budgetiser_data_$dtSuffix.json',
                   bytes: databaseContent,
                 );
 
@@ -77,7 +77,7 @@ class DangerZone extends StatelessWidget {
                     await DatabaseHelper.instance.getDatabaseContent();
 
                 String? outputFile = await FilePicker.platform.saveFile(
-                  fileName: 'budgetiser_${dtSuffix}.db',
+                  fileName: 'budgetiser_$dtSuffix.db',
                   bytes: databaseContent,
                 );
 

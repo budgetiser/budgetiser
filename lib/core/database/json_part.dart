@@ -67,6 +67,10 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     String fileData = await file.readAsString();
     Map jsonData = jsonDecode(fileData);
 
+    await importJSONdata(jsonData);
+  }
+
+  Future<void> importJSONdata(Map<dynamic, dynamic> jsonData) async {
     await resetDB();
 
     // import data
