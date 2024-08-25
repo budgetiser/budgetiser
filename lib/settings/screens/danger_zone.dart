@@ -124,6 +124,7 @@ class DangerZone extends StatelessWidget {
 
                         DatabaseHelper.instance
                             .setDatabaseContentWithJson(filePath);
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
@@ -166,11 +167,13 @@ class DangerZone extends StatelessWidget {
                         }
                         String? filePath = filesPickerResult.files.first.path;
                         if (filePath == null || !filePath.endsWith('.db')) {
+                          // ignore: use_build_context_synchronously
                           Navigator.of(context).pop();
                           return; // Invalid file
                         }
                         DatabaseHelper.instance
                             .importDatabaseFromPath(filePath);
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
