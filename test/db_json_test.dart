@@ -33,7 +33,7 @@ void main() {
   SharedPreferences.setMockInitialValues({});
 
   test('Test JSON Ex- and Import', () async {
-    var fullJSON1 = await dbh.generateJson();
+    var fullJSON1 = await dbh.generatePrettyJson();
 
     await dbh.setDatabaseContentWithJson(fullJSON1);
 
@@ -64,7 +64,7 @@ void main() {
           t.toString(), (await CategoryModel().getCategory(t.id)).toString());
     }
 
-    var fullJSON2 = await dbh.generateJson();
+    var fullJSON2 = await dbh.generatePrettyJson();
     expect(fullJSON1, fullJSON2);
   });
 
@@ -152,7 +152,7 @@ void main() {
 
     await dbh.setDatabaseContentWithJson(json);
 
-    var exportedJson = await dbh.generateJson();
+    var exportedJson = await dbh.generatePrettyJson();
 
     expect(json.toString(), exportedJson.toString());
   });

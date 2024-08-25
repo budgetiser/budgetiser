@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:budgetiser/core/database/database.dart';
@@ -31,21 +29,14 @@ class DangerZone extends StatelessWidget {
                 'Generates a \'.json\' file with all app data.',
               ),
               onTap: () async {
-                Map data = await DatabaseHelper.instance.getRobustJSON();
                 DateTime now = DateTime.now();
                 String dtSuffix = DateFormat('yyyyMMdd_HHmm').format(now);
-
-                String jsonData = jsonEncode(data);
-                Uint8List byteData = utf8.encode(jsonData);
-
-                if (byteData.isEmpty) {
-                  // Invalid data to store
-                  return;
-                }
+                Uint8List databaseContent =
+                    await DatabaseHelper.instance.getDatabaseContentAsJson();
 
                 String? outputFile = await FilePicker.platform.saveFile(
                   fileName: 'budgetiser_${dtSuffix}.json',
-                  bytes: byteData,
+                  bytes: databaseContent,
                 );
 
                 if (outputFile == null) {
@@ -61,8 +52,8 @@ class DangerZone extends StatelessWidget {
               onTap: () async {
                 DateTime now = DateTime.now();
                 String dtSuffix = DateFormat('yyyyMMdd_HHmm').format(now);
-                Uint8List databaseContent =
-                    await DatabaseHelper.instance.getDatabaseContentAsJson();
+                Uint8List databaseContent = await DatabaseHelper.instance
+                    .getDatabaseContentAsPrettyJson();
 
                 String? outputFile = await FilePicker.platform.saveFile(
                   fileName: 'budgetiser_data_${dtSuffix}.json',
@@ -130,11 +121,9 @@ class DangerZone extends StatelessWidget {
                         if (filePath == null) {
                           return; // Invalid file
                         }
-                        File file = File(filePath);
-                        String fileData = await file.readAsString();
-                        Map jsonData = jsonDecode(fileData);
+
                         DatabaseHelper.instance
-                            .setDatabaseContentWithJson(jsonData);
+                            .setDatabaseContentWithJson(filePath);
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {

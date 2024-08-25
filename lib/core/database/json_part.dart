@@ -1,7 +1,13 @@
 part of 'database.dart';
 
 extension DatabaseExtensionJSON on DatabaseHelper {
-  Future<Map> getRobustJSON() async {
+  Future<Map> addMetadataToJson(Map json) async {
+    json['date'] = DateTime.now().toIso8601String();
+    json['budgetiser-version'] = (await PackageInfo.fromPlatform()).version;
+    return json;
+  }
+
+  Future<Map> generateRobustJSON() async {
     final db = await DatabaseHelper.instance.database;
     final List<String> relations = [
       'account',
@@ -20,20 +26,8 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     return fullJSON;
   }
 
-  void exportAsJson() async {
-    debugPrint('start json export');
-    var fullJSON = await generateJson();
-    saveJsonToJsonFile(jsonEncode(fullJSON));
-  }
-
-  Future<Uint8List> getDatabaseContentAsJson() async {
-    Map fullJSON = await generateJson();
-    String jsonData = jsonEncode(fullJSON);
-    return utf8.encode(jsonData);
-  }
-
   /// Returns database content as JSON object
-  Future<Map> generateJson() async {
+  Future<Map> generatePrettyJson() async {
     var fullJSON = {};
     await AccountModel().getAllAccounts().then((value) {
       fullJSON['Accounts'] = value.map((e) => e.toJsonMap()).toList();
@@ -53,21 +47,26 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     return fullJSON;
   }
 
-  void importFromJson() async {
-    String jsonString = '';
-    try {
-      jsonString = await readJsonFromFile();
-    } on FileSystemException catch (e) {
-      debugPrint('Error while reading json file: $e');
-      return;
-    }
-    Map<String, dynamic> jsonObject = jsonDecode(jsonString);
+  Future<Uint8List> getDatabaseContentAsJson() async {
+    Map fullJSON = await generateRobustJSON();
+    fullJSON = await addMetadataToJson(fullJSON);
+    String jsonData = jsonEncode(fullJSON);
+    return utf8.encode(jsonData);
+  }
 
-    setDatabaseContentWithJson(jsonObject);
+  Future<Uint8List> getDatabaseContentAsPrettyJson() async {
+    Map fullJSON = await generatePrettyJson();
+    fullJSON = await addMetadataToJson(fullJSON);
+    String jsonData = jsonEncode(fullJSON);
+    return utf8.encode(jsonData);
   }
 
   /// Clears db and fills with json content
-  Future<void> setDatabaseContentWithJson(Map jsonObject) async {
+  Future<void> setDatabaseContentWithJson(String jsonPath) async {
+    File file = File(jsonPath);
+    String fileData = await file.readAsString();
+    Map jsonData = jsonDecode(fileData);
+
     await resetDB();
 
     // import data
@@ -82,69 +81,10 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     ];
     debugPrint('importing data from json...');
     for (String relation in relations) {
-      for (Map<String, dynamic> row in jsonObject[relation]) {
+      for (Map<String, dynamic> row in jsonData[relation]) {
         await db.insert(relation, row);
       }
     }
     debugPrint('done importing data from json!');
-  }
-
-  void saveJsonToJsonFile(String jsonString) async {
-    debugPrint('start saving json to file');
-
-    final directory =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    DateTime now = DateTime.now();
-    String formattedNow = DateFormat('yyyyMMdd_HHmmss').format(now);
-    final file =
-        File('${directory?.first.path}/budgetiser_${formattedNow}.json');
-    await file.writeAsString(jsonString, mode: FileMode.write);
-
-    if (!await FlutterFileDialog.isPickDirectorySupported()) {
-      debugPrint('Picking directory not supported');
-      Exception('Picking directory not supported ');
-    }
-
-    final pickedDirectory = await FlutterFileDialog.pickDirectory();
-
-    if (pickedDirectory != null) {
-      final filePath = await FlutterFileDialog.saveFileToDirectory(
-        directory: pickedDirectory,
-        data: file.readAsBytesSync(),
-        mimeType: 'application/json',
-        fileName: 'budgetiser.json',
-        replace: true,
-      );
-      debugPrint('saved json to: $filePath');
-    }
-  }
-
-  Future<String> readJsonFromFile() async {
-    const params = OpenFileDialogParams(
-      dialogType: OpenFileDialogType.document,
-      sourceType: SourceType.photoLibrary,
-      fileExtensionsFilter: ['json'],
-    );
-    final filePath = await FlutterFileDialog.pickFile(params: params);
-
-    // final directory =
-    // await getExternalStorageDirectories(type: StorageDirectory.downloads);
-
-    if (filePath == null) {
-      throw const FileSystemException(
-          'File not found or nothing picked by Dialog');
-    }
-    try {
-      final file = File(filePath);
-      if (await file.exists()) {
-        String contents = await file.readAsString();
-        return contents;
-      } else {
-        throw const FileSystemException('File not found');
-      }
-    } catch (e) {
-      // Handle exceptions, such as File not found or other I/O errors.
-      throw Exception('Error reading JSON file: $e');
-    }
   }
 }
