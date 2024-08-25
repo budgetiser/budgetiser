@@ -85,6 +85,9 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     ];
     debugPrint('importing data from json...');
     for (String relation in relations) {
+      if (!jsonData.containsKey(relation)) {
+        continue; // Skipping not present keys
+      }
       for (Map<String, dynamic> row in jsonData[relation]) {
         await db.insert(relation, row);
       }
