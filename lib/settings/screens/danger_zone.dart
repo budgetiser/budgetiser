@@ -124,8 +124,9 @@ class DangerZone extends StatelessWidget {
 
                         DatabaseHelper.instance
                             .setDatabaseContentWithJson(filePath);
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).pop();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                       onCancelCallback: () {
                         Navigator.pop(context);
@@ -167,13 +168,13 @@ class DangerZone extends StatelessWidget {
                         }
                         String? filePath = filesPickerResult.files.first.path;
                         if (filePath == null || !filePath.endsWith('.db')) {
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pop();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                           return; // Invalid file
                         }
                         DatabaseHelper.instance
                             .importDatabaseFromPath(filePath);
-                        // ignore: use_build_context_synchronously
                         if (context.mounted) {
                           Navigator.of(context).pop();
                         }
@@ -207,8 +208,10 @@ class DangerZone extends StatelessWidget {
                           'This action cannot be undone! All data will be lost.',
                       onSubmitCallback: () async {
                         await DatabaseHelper.instance.resetDB();
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).pop();
+
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                       onCancelCallback: () {
                         Navigator.pop(context);
@@ -269,8 +272,9 @@ class DangerZone extends StatelessWidget {
                                       await DatabaseHelper.instance.resetDB();
                                       DatabaseHelper.instance.fillDBwithTMPdata(
                                           allDataSets[index]);
-                                      // ignore: use_build_context_synchronously
-                                      Navigator.of(context).pop();
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                   );
                                   // return Text('Nothing to select!');
