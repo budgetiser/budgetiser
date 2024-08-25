@@ -1,6 +1,7 @@
 import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/database/temporary_data/dataset.dart';
 import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
+import 'package:budgetiser/shared/widgets/divider_with_text.dart';
 import 'package:flutter/material.dart';
 
 class DangerZone extends StatelessWidget {
@@ -16,11 +17,12 @@ class DangerZone extends StatelessWidget {
       ),
       body: Center(
         child: ListView(
-          children: <Widget>[
+          children: [
+            const DividerWithText('Backup'),
             ListTile(
-              title: const Text('Export Database'),
+              title: const Text('Backup database'),
               subtitle: const Text(
-                'Into android/data',
+                'Exports the database file. No app settings included.',
               ),
               onTap: () async {
                 showDialog(
@@ -43,16 +45,16 @@ class DangerZone extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Backup Data'),
+              title: const Text('Backup data'),
               subtitle: const Text(
-                'Generates a \'.json\' file with all app content.',
+                'Generates a \'.json\' file with all app data.',
               ),
               onTap: () {},
             ),
             ListTile(
-              title: const Text('Export Database (JSON)'),
+              title: const Text('Export data (JSON)'),
               subtitle: const Text(
-                'Into android/data',
+                'Export app data to easy to read json format. (no import supported)',
               ),
               onTap: () async {
                 showDialog(
@@ -74,15 +76,16 @@ class DangerZone extends StatelessWidget {
                 );
               },
             ),
+            const DividerWithText('Restore'),
             ListTile(
               title: const Text(
-                'Import Database (JSON)',
+                'Restore from JSON',
                 style: TextStyle(
                   color: Colors.red,
                 ),
               ),
               subtitle: const Text(
-                'From android/data',
+                'Imports a \'.json\' data file. App settings included.',
               ),
               onTap: () async {
                 showDialog(
@@ -106,13 +109,13 @@ class DangerZone extends StatelessWidget {
             ),
             ListTile(
               title: const Text(
-                'Import Database',
+                'Restore from database-file',
                 style: TextStyle(
                   color: Colors.red,
                 ),
               ),
               subtitle: const Text(
-                'From android/data',
+                'Imports database-file.',
               ),
               onTap: () async {
                 showDialog(
@@ -134,6 +137,7 @@ class DangerZone extends StatelessWidget {
                 );
               },
             ),
+            const DividerWithText('Reset app'),
             ListTile(
               title: const Text(
                 'Reset DB',
