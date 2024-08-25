@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:budgetiser/core/database/database.dart';
 import 'package:budgetiser/core/database/temporary_data/dataset.dart';
@@ -6,7 +8,7 @@ import 'package:budgetiser/shared/widgets/dialogs/confirmation_dialog.dart';
 import 'package:budgetiser/shared/widgets/divider_with_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:intl/intl.dart';
 
 class DangerZone extends StatelessWidget {
   const DangerZone({super.key});
@@ -24,40 +26,26 @@ class DangerZone extends StatelessWidget {
           children: [
             const DividerWithText('Backup'),
             ListTile(
-              title: const Text('Backup database'),
-              subtitle: const Text(
-                'Exports the database file. No app settings included.',
-              ),
-              onTap: () async {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          'Are you sure? This will potentially override existing budgetiser.db file in the Download folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.exportDB();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-            ListTile(
               title: const Text('Backup data'),
               subtitle: const Text(
                 'Generates a \'.json\' file with all app data.',
               ),
               onTap: () async {
-                Map data = await DatabaseHelper.instance.generateJson();
+                Map data = await DatabaseHelper.instance.getRobustJSON();
+                DateTime now = DateTime.now();
+                String dtSuffix = DateFormat('yyyyMMdd_HHmm').format(now);
+
+                String jsonData = jsonEncode(data);
+                Uint8List byteData = utf8.encode(jsonData);
+
+                if (byteData.isEmpty) {
+                  // Invalid data to store
+                  return;
+                }
+
                 String? outputFile = await FilePicker.platform.saveFile(
-                  dialogTitle: 'Please select an output file:',
-                  fileName: 'output-file.pdf',
+                  fileName: 'budgetiser_${dtSuffix}.json',
+                  bytes: byteData,
                 );
 
                 if (outputFile == null) {
@@ -71,35 +59,52 @@ class DangerZone extends StatelessWidget {
                 'Export app data to easy to read json format. (no import supported)',
               ),
               onTap: () async {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConfirmationDialog(
-                      title: 'Attention',
-                      description:
-                          'Are you sure? This will potentially override existing budgetiser.json file in the App folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.exportAsJson();
-                        Navigator.of(context).pop();
-                      },
-                      onCancelCallback: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
+                DateTime now = DateTime.now();
+                String dtSuffix = DateFormat('yyyyMMdd_HHmm').format(now);
+                Uint8List databaseContent =
+                    await DatabaseHelper.instance.getDatabaseContentAsJson();
+
+                String? outputFile = await FilePicker.platform.saveFile(
+                  fileName: 'budgetiser_data_${dtSuffix}.json',
+                  bytes: databaseContent,
                 );
+
+                if (outputFile == null) {
+                  // User canceled the picker
+                }
+              },
+            ),
+            ListTile(
+              title: const Text('Backup database'),
+              subtitle: const Text(
+                'Exports the database file. No app settings included. Also works with corrupted data.',
+              ),
+              onTap: () async {
+                DateTime now = DateTime.now();
+                String dtSuffix = DateFormat('yyyyMMdd_HHmm').format(now);
+                Uint8List databaseContent =
+                    await DatabaseHelper.instance.getDatabaseContent();
+
+                String? outputFile = await FilePicker.platform.saveFile(
+                  fileName: 'budgetiser_${dtSuffix}.db',
+                  bytes: databaseContent,
+                );
+
+                if (outputFile == null) {
+                  // User canceled the picker
+                }
               },
             ),
             const DividerWithText('Restore'),
             ListTile(
               title: const Text(
-                'Restore from JSON',
+                'Restore data',
                 style: TextStyle(
                   color: Colors.red,
                 ),
               ),
               subtitle: const Text(
-                'Imports a \'.json\' data file. App settings included.',
+                'Imports a compatible \'.json\' data file. App settings included.',
               ),
               onTap: () async {
                 showDialog(
@@ -108,9 +113,28 @@ class DangerZone extends StatelessWidget {
                     return ConfirmationDialog(
                       title: 'Attention',
                       description:
-                          'Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.json) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.importFromJson();
+                          'Importing a json file will overwrite all existing data in the app. This action cannot be undone!',
+                      onSubmitCallback: () async {
+                        FilePickerResult? filesPickerResult =
+                            await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          allowedExtensions: ['json'],
+                          type: FileType.custom,
+                        );
+
+                        if (filesPickerResult == null ||
+                            filesPickerResult.count != 1) {
+                          return; // Invalid selection
+                        }
+                        String? filePath = filesPickerResult.files.first.path;
+                        if (filePath == null) {
+                          return; // Invalid file
+                        }
+                        File file = File(filePath);
+                        String fileData = await file.readAsString();
+                        Map jsonData = jsonDecode(fileData);
+                        DatabaseHelper.instance
+                            .setDatabaseContentWithJson(jsonData);
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {
@@ -129,7 +153,7 @@ class DangerZone extends StatelessWidget {
                 ),
               ),
               subtitle: const Text(
-                'Imports database-file.',
+                'Imports a database-file.',
               ),
               onTap: () async {
                 showDialog(
@@ -138,9 +162,25 @@ class DangerZone extends StatelessWidget {
                     return ConfirmationDialog(
                       title: 'Attention',
                       description:
-                          'Are you sure? This will override current state of the app! This cannot be undone! A correct DB file (budgetiser.db) must be present in Android/data/de.budgetiser.budgetiser/files/downloads folder!',
-                      onSubmitCallback: () {
-                        DatabaseHelper.instance.importDB();
+                          'Importing a database file will overwrite all existing data in the app '
+                          '(excluding some preferencial settings). This action cannot be undone!',
+                      onSubmitCallback: () async {
+                        FilePickerResult? filesPickerResult =
+                            await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          type: FileType.any,
+                        );
+
+                        if (filesPickerResult == null ||
+                            filesPickerResult.count != 1) {
+                          return; // Invalid selection
+                        }
+                        String? filePath = filesPickerResult.files.first.path;
+                        if (filePath == null) {
+                          return; // Invalid file
+                        }
+                        DatabaseHelper.instance
+                            .importDatabaseFromPath(filePath);
                         Navigator.of(context).pop();
                       },
                       onCancelCallback: () {

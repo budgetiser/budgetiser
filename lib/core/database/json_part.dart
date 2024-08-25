@@ -26,6 +26,12 @@ extension DatabaseExtensionJSON on DatabaseHelper {
     saveJsonToJsonFile(jsonEncode(fullJSON));
   }
 
+  Future<Uint8List> getDatabaseContentAsJson() async {
+    Map fullJSON = await generateJson();
+    String jsonData = jsonEncode(fullJSON);
+    return utf8.encode(jsonData);
+  }
+
   /// Returns database content as JSON object
   Future<Map> generateJson() async {
     var fullJSON = {};

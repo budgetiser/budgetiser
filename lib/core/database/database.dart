@@ -157,14 +157,17 @@ class DatabaseHelper {
     }
   }
 
-  /// Imports the database from a file in the Download folder. Overwrites the current database.
-  void importDB() async {
-    final externalDirectory =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final externalFile = File('${externalDirectory?.first.path}/budgetiser.db');
-    final fileContent = await externalFile.readAsBytes();
+  Future<Uint8List> getDatabaseContent() async {
+    final File db = File('${await getDatabasesPath()}/$databaseName');
+    final fileContent = await db.readAsBytes();
 
-    final db = File('${await getDatabasesPath()}/$databaseName');
-    await db.writeAsBytes(fileContent);
+    return fileContent;
+  }
+
+  /// Imports the database from a file in the Download folder. Overwrites the current database.
+  void importDatabaseFromPath(String path) async {
+    Uint8List fileContent = await File(path).readAsBytes();
+    final dbPath = File('${await getDatabasesPath()}/$databaseName');
+    await dbPath.writeAsBytes(fileContent);
   }
 }
