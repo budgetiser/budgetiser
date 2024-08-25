@@ -56,7 +56,7 @@ class DangerZone extends StatelessWidget {
                     .getDatabaseContentAsPrettyJson();
 
                 String? outputFile = await FilePicker.platform.saveFile(
-                  fileName: 'budgetiser_data_$dtSuffix.json',
+                  fileName: 'budgetiser_pretty_$dtSuffix.json',
                   bytes: databaseContent,
                 );
 
@@ -77,7 +77,7 @@ class DangerZone extends StatelessWidget {
                     await DatabaseHelper.instance.getDatabaseContent();
 
                 String? outputFile = await FilePicker.platform.saveFile(
-                  fileName: 'budgetiser_$dtSuffix.db',
+                  fileName: 'budgetiser_data_$dtSuffix.db',
                   bytes: databaseContent,
                 );
 
@@ -152,7 +152,7 @@ class DangerZone extends StatelessWidget {
                       title: 'Attention',
                       description:
                           'Importing a database file will overwrite all existing data in the app '
-                          '(excluding some preferencial settings). This action cannot be undone!',
+                          '(excluding some preferential settings). This action cannot be undone!',
                       onSubmitCallback: () async {
                         FilePickerResult? filesPickerResult =
                             await FilePicker.platform.pickFiles(
@@ -165,7 +165,8 @@ class DangerZone extends StatelessWidget {
                           return; // Invalid selection
                         }
                         String? filePath = filesPickerResult.files.first.path;
-                        if (filePath == null) {
+                        if (filePath == null || !filePath.endsWith('.db')) {
+                          Navigator.of(context).pop();
                           return; // Invalid file
                         }
                         DatabaseHelper.instance
