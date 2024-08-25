@@ -129,6 +129,25 @@ class DatabaseHelper {
     }
   }
 
+  Future<Map> getRobustJSON() async {
+    final db = await DatabaseHelper.instance.database;
+    final List<String> relations = [
+      'account',
+      'budget',
+      'category',
+      'categoryBridge',
+      'categoryToBudget',
+      'singleTransaction'
+    ];
+    var fullJSON = {};
+
+    for (String relation in relations) {
+      List data = await db.query(relation);
+      fullJSON[relation] = data;
+    }
+    return fullJSON;
+  }
+
   /// Exports the database to a file in the Download folder.
   void exportDB() async {
     final File db = File('${await getDatabasesPath()}/$databaseName');
@@ -171,9 +190,7 @@ class DatabaseHelper {
 
   void exportAsJson() async {
     debugPrint('start json export');
-
     var fullJSON = await generateJson();
-
     saveJsonToJsonFile(jsonEncode(fullJSON));
   }
 
@@ -213,43 +230,23 @@ class DatabaseHelper {
 
   /// Clears db and fills with json content
   Future<void> setDatabaseContentWithJson(Map jsonObject) async {
-    assert(jsonObject['Accounts'] is List);
-    assert(jsonObject['Budgets'] is List);
-    assert(jsonObject['Categories'] is List);
-    assert(jsonObject['Transactions'] is List);
-
     await resetDB();
 
     // import data
+    final db = await DatabaseHelper.instance.database;
+    final List<String> relations = [
+      'account',
+      'budget',
+      'category',
+      'categoryBridge',
+      'categoryToBudget',
+      'singleTransaction'
+    ];
     debugPrint('importing data from json...');
-    for (var object in jsonObject['Accounts']) {
-      Account account = Account.fromDBmap(object);
-      await AccountModel().createAccount(account, keepId: true);
-    }
-    for (var object in jsonObject['Categories']) {
-      TransactionCategory category = TransactionCategory.fromDBmap(object);
-      await CategoryModel().createCategory(category, keepId: true);
-    }
-    for (var object in jsonObject['Budgets']) {
-      Budget budget =
-          Budget.fromDBmap(object, await CategoryModel().getAllCategories());
-      await BudgetModel().createBudget(budget, keepId: true);
-    }
-    for (Map<String, dynamic> object in jsonObject['Transactions']) {
-      SingleTransaction transaction = SingleTransaction.fromDBmap(
-        object,
-        category: await CategoryModel().getCategory(object['category_id']),
-        account: await AccountModel().getOneAccount(object['account1_id']),
-        account2: object['account2_id'] == null
-            ? null
-            : await AccountModel().getOneAccount(object['account2_id']),
-      );
-      await TransactionModel()
-          .createSingleTransaction(transaction, keepId: true);
-    }
-    // after creating transactions, account balances needed to be set to correct value
-    for (Map object in jsonObject['Accounts']) {
-      await AccountModel().setAccountBalance(object['id'], object['balance']);
+    for (String relation in relations) {
+      for (Map<String, dynamic> row in jsonObject[relation]) {
+        await db.insert(relation, row);
+      }
     }
     debugPrint('done importing data from json!');
   }
