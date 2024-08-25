@@ -165,7 +165,8 @@ class DangerZone extends StatelessWidget {
                           return; // Invalid selection
                         }
                         String? filePath = filesPickerResult.files.first.path;
-                        if (filePath == null) {
+                        if (filePath == null || !filePath.endsWith('.db')) {
+                          Navigator.of(context).pop();
                           return; // Invalid file
                         }
                         DatabaseHelper.instance
