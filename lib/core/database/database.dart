@@ -18,6 +18,7 @@ import 'package:budgetiser/shared/utils/sql_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -258,7 +259,10 @@ class DatabaseHelper {
 
     final directory =
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final file = File('${directory?.first.path}/budgetiser.json');
+    DateTime now = DateTime.now();
+    String formattedNow = DateFormat('yyyyMMdd_HHmmss').format(now);
+    final file =
+        File('${directory?.first.path}/budgetiser_${formattedNow}.json');
     await file.writeAsString(jsonString, mode: FileMode.write);
 
     if (!await FlutterFileDialog.isPickDirectorySupported()) {
@@ -284,6 +288,7 @@ class DatabaseHelper {
     const params = OpenFileDialogParams(
       dialogType: OpenFileDialogType.document,
       sourceType: SourceType.photoLibrary,
+      fileExtensionsFilter: ['json'],
     );
     final filePath = await FlutterFileDialog.pickFile(params: params);
 

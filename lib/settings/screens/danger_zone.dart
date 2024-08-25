@@ -43,6 +43,13 @@ class DangerZone extends StatelessWidget {
               },
             ),
             ListTile(
+              title: const Text('Backup Data'),
+              subtitle: const Text(
+                'Generates a \'.json\' file with all app content.',
+              ),
+              onTap: () {},
+            ),
+            ListTile(
               title: const Text('Export Database (JSON)'),
               subtitle: const Text(
                 'Into android/data',
