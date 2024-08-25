@@ -174,7 +174,9 @@ class DangerZone extends StatelessWidget {
                         DatabaseHelper.instance
                             .importDatabaseFromPath(filePath);
                         // ignore: use_build_context_synchronously
-                        Navigator.of(context).pop();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       },
                       onCancelCallback: () {
                         Navigator.pop(context);
