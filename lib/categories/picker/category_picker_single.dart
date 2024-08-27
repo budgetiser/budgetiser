@@ -1,9 +1,7 @@
 import 'package:budgetiser/categories/widgets/category_tree.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/selectable.dart';
-import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CategoryPickerSingle extends StatefulWidget {
   const CategoryPickerSingle({
@@ -79,44 +77,22 @@ class _CategoryPickerSingleState<T extends Selectable>
   }
 
   Widget dialogContent(StateSetter setState, BuildContext context) {
-    return Consumer<CategoryModel>(
-      builder: (context, model, child) {
-        return FutureBuilder<List<TransactionCategory>>(
-          future: model.getAllCategories(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+    return SizedBox(
+      width: double.maxFinite,
+      child: CategoryTree(
+        padding: null,
+        categories: widget.possibleValues,
+        onTap: (value) {
+          setState(() {
+            if (widget.isNullable) {
+              widget.onPickedCallbackNullable!(value);
+            } else {
+              widget.onPickedCallback!(value);
             }
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Categories'),
-              );
-            }
-            return SizedBox(
-              width: double.maxFinite,
-              child: CategoryTree(
-                padding: null,
-                categories: snapshot.data ?? [],
-                onTap: (value) {
-                  setState(() {
-                    if (widget.isNullable) {
-                      widget.onPickedCallbackNullable!(value);
-                    } else {
-                      widget.onPickedCallback!(value);
-                    }
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            );
-          },
-        );
-      },
+          });
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 }

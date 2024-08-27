@@ -48,6 +48,10 @@ class CategoryPicker extends StatefulWidget {
 }
 
 class _CategoryPickerState extends State<CategoryPicker> {
+  // TODO:
+  // return Consumer<CategoryModel>(
+  // builder: (context, model, child) {
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<TransactionCategory>>(
@@ -63,27 +67,35 @@ class _CategoryPickerState extends State<CategoryPicker> {
           return const Text('Oops!');
         }
 
+        var availableCategories = snapshot.data!;
+        // apply blacklist if needed
         if (widget.blacklistedValues != null) {
-          for (var element in widget.blacklistedValues!) {
-            snapshot.data!.remove(element);
-          }
+          List<int> blacklistedIDs =
+              widget.blacklistedValues!.map((e) => e.id).toList();
+
+          availableCategories = snapshot.data!.where(
+            (element) {
+              return !blacklistedIDs.contains(element.id);
+            },
+          ).toList();
         }
 
         if (widget.onCategoryPickedCallbackMulti != null) {
           return GeneralMultiPicker<TransactionCategory>(
             heading: 'Select Categories',
             onPickedCallback: widget.onCategoryPickedCallbackMulti!,
-            possibleValues: snapshot.data!,
+            possibleValues: availableCategories,
             initialValues: widget.initialValues,
-            noDataButton:
-                snapshot.data!.isEmpty ? createCategoryButton(context) : null,
+            noDataButton: availableCategories.isEmpty
+                ? createCategoryButton(context)
+                : null,
           );
         }
 
         if (widget.onCategoryPickedCallbackNullable != null) {
           return CategoryPickerSingle.nullable(
             onPickedCallbackNullable: widget.onCategoryPickedCallbackNullable!,
-            possibleValues: snapshot.data!,
+            possibleValues: availableCategories,
             noDataButton: createCategoryButton(context),
           );
         }
@@ -91,7 +103,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
         if (widget.onCategoryPickedCallback != null) {
           return CategoryPickerSingle(
             onPickedCallback: widget.onCategoryPickedCallback!,
-            possibleValues: snapshot.data!,
+            possibleValues: availableCategories,
             noDataButton: createCategoryButton(context),
           );
         }
