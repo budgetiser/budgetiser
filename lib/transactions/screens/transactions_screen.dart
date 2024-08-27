@@ -165,7 +165,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           accountsFilter: _currentFilterAccounts,
           categoriesFilter: _currentFilterCategories,
           initiallyExpanded: monthYearSnapshotData
-              .keys // TODO: broken whenn only one transaction
+              .keys // TODO: broken when only one transaction
               .toList()
               .sublist(
                   0,

@@ -3,13 +3,10 @@ import 'package:budgetiser/categories/screens/category_form.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/widgets/picker/selectable/multi_picker.dart';
-import 'package:budgetiser/shared/widgets/picker/selectable/single_picker_nullable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPicker extends StatefulWidget {
-  // const NewCategoryPicker({super.key});
-
   const CategoryPicker.single({
     super.key,
     required this.onCategoryPickedCallback,
@@ -66,36 +63,28 @@ class _CategoryPickerState extends State<CategoryPicker> {
           return const Text('Oops!');
         }
 
+        if (widget.blacklistedValues != null) {
+          for (var element in widget.blacklistedValues!) {
+            snapshot.data!.remove(element);
+          }
+        }
+
         if (widget.onCategoryPickedCallbackMulti != null) {
           return GeneralMultiPicker<TransactionCategory>(
             heading: 'Select Categories',
             onPickedCallback: widget.onCategoryPickedCallbackMulti!,
             possibleValues: snapshot.data!,
             initialValues: widget.initialValues,
-            noDataButton: snapshot.data!.isEmpty
-                ? TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pop(); // pop dialog, so that after creation the not reloaded dialog is not visible (todo: reload dialog directly)
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const CategoryForm(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Create a Category',
-                    ),
-                  )
-                : null,
+            noDataButton:
+                snapshot.data!.isEmpty ? createCategoryButton(context) : null,
           );
         }
 
         if (widget.onCategoryPickedCallbackNullable != null) {
-          return GeneralSinglePickerNullable<TransactionCategory>(
-            onPickedCallback: widget.onCategoryPickedCallbackNullable!,
+          return CategoryPickerSingle.nullable(
+            onPickedCallbackNullable: widget.onCategoryPickedCallbackNullable!,
             possibleValues: snapshot.data!,
-            blacklistedValues: widget.blacklistedValues,
+            noDataButton: createCategoryButton(context),
           );
         }
 
@@ -103,30 +92,32 @@ class _CategoryPickerState extends State<CategoryPicker> {
           return CategoryPickerSingle(
             onPickedCallback: widget.onCategoryPickedCallback!,
             possibleValues: snapshot.data!,
-            blacklistedValues: widget.blacklistedValues,
-            noDataButton: snapshot.data!.isEmpty
-                ? TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pop(); // pop dialog, so that after creation the not reloaded dialog is not visible (todo: reload dialog directly)
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const CategoryForm(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Create a Category',
-                    ),
-                  )
-                : null,
+            noDataButton: createCategoryButton(context),
           );
         }
 
         throw Exception(
-          'Error in named constructor of CategoryPicker: impossible state reached',
+          'Error in named constructor of CategoryPicker: impossible state reached!',
         );
       },
+    );
+  }
+
+  /// Button showed in dialog when no category is available
+  TextButton createCategoryButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context)
+            .pop(); // pop dialog, so that after creation the not reloaded dialog is not visible (todo: reload dialog directly)
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CategoryForm(),
+          ),
+        );
+      },
+      child: const Text(
+        'Create a Category',
+      ),
     );
   }
 }

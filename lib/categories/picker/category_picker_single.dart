@@ -10,16 +10,28 @@ class CategoryPickerSingle extends StatefulWidget {
     super.key,
     required this.onPickedCallback,
     required this.possibleValues,
-    this.blacklistedValues,
-    this.noDataButton,
-  });
+    required this.noDataButton,
+  })  : assert(onPickedCallback != null),
+        onPickedCallbackNullable = null,
+        isNullable = false;
 
-  final Function(TransactionCategory selected) onPickedCallback;
+  const CategoryPickerSingle.nullable({
+    super.key,
+    required this.onPickedCallbackNullable,
+    required this.possibleValues,
+    required this.noDataButton,
+  })  : assert(onPickedCallbackNullable != null),
+        onPickedCallback = null,
+        isNullable = true;
+
+  final Function(TransactionCategory selected)? onPickedCallback;
+  final Function(TransactionCategory? selected)? onPickedCallbackNullable;
+  final bool isNullable;
+
   final List<TransactionCategory> possibleValues;
-  final List<TransactionCategory>? blacklistedValues;
 
   /// Optional button for dialog. Displayed if no data is available.
-  final TextButton? noDataButton;
+  final TextButton noDataButton;
 
   @override
   State<CategoryPickerSingle> createState() => _CategoryPickerSingleState();
@@ -30,22 +42,25 @@ class _CategoryPickerSingleState<T extends Selectable>
   final List<TransactionCategory> selectedValues = [];
 
   @override
-  void initState() {
-    if (widget.blacklistedValues != null) {
-      for (var element in widget.blacklistedValues!) {
-        widget.possibleValues.remove(element);
-      }
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: const Text('Select a category'),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      actions: widget.noDataButton != null
+      actions: widget.possibleValues.isEmpty
           ? [Container(child: widget.noDataButton)]
-          : null,
+          : widget.isNullable
+              ? [
+                  TextButton(
+                    child: const Text('Select None'),
+                    onPressed: () {
+                      setState(() {
+                        widget.onPickedCallbackNullable!(null);
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ]
+              : null,
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {
@@ -85,10 +100,15 @@ class _CategoryPickerSingleState<T extends Selectable>
             return SizedBox(
               width: double.maxFinite,
               child: CategoryTree(
+                padding: null,
                 categories: snapshot.data ?? [],
                 onTap: (value) {
                   setState(() {
-                    widget.onPickedCallback(value);
+                    if (widget.isNullable) {
+                      widget.onPickedCallbackNullable!(value);
+                    } else {
+                      widget.onPickedCallback!(value);
+                    }
                   });
                   Navigator.of(context).pop();
                 },
