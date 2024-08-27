@@ -80,7 +80,9 @@ class _CategoryFormState extends State<CategoryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a Category'),
+        title: Text(widget.categoryData == null
+            ? 'Create a Category'
+            : 'Edit Category'),
       ),
       body: _screenContent(context),
       floatingActionButton: Row(
