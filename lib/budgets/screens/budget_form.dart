@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
@@ -231,8 +231,8 @@ class _BudgetFormState extends State<BudgetForm> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return CategoryMultiPicker(
-                        onCategoriesPickedCallback: setCategories,
+                      return CategoryPicker.multi(
+                        onCategoryPickedCallbackMulti: setCategories,
                         initialValues: budgetCategories,
                       );
                     },

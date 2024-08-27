@@ -1,6 +1,6 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
-import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/shared/widgets/picker/segmented_duration_picker.dart';
@@ -52,8 +52,8 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return CategoryMultiPicker(
-                    onCategoriesPickedCallback: setCategory,
+                  return CategoryPicker.multi(
+                    onCategoryPickedCallbackMulti: setCategory,
                     initialValues: _selectedCategories,
                   );
                 },
