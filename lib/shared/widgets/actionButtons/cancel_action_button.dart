@@ -49,8 +49,14 @@ class CancelActionButton extends StatelessWidget {
         }
       },
       child: isDeletion
-          ? const Icon(Icons.delete_outline)
-          : const Icon(Icons.close),
+          ? const Icon(
+              Icons.delete_outline,
+              semanticLabel: 'delete',
+            )
+          : const Icon(
+              Icons.close,
+              semanticLabel: 'cancel form',
+            ),
     );
   }
 }

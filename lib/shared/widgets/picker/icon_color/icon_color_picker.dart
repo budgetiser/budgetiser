@@ -46,6 +46,7 @@ class _IconColorPickerState extends State<IconColorPicker> {
           iconData,
           color: color,
           size: 30,
+          semanticLabel: 'icon and color selector',
         ),
       ),
     );

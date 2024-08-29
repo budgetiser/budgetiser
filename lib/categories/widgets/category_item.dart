@@ -15,13 +15,16 @@ class CategoryItem extends StatelessWidget {
     if (categoryData.archived) {
       return Container(); // TODO: archived not yet implemented #143
     }
-    return ListTile(
-      leading: Icon(categoryData.icon),
-      title: Text(categoryData.name),
-      iconColor: categoryData.color,
-      textColor: categoryData.color,
-      contentPadding: const EdgeInsets.fromLTRB(8, 0, -8, 0),
-      onTap: () => onTap?.call(categoryData),
+    return Semantics(
+      label: 'category named: ${categoryData.name}',
+      child: ListTile(
+        leading: Icon(categoryData.icon),
+        title: Text(categoryData.name),
+        iconColor: categoryData.color,
+        textColor: categoryData.color,
+        contentPadding: const EdgeInsets.fromLTRB(8, 0, -8, 0),
+        onTap: () => onTap?.call(categoryData),
+      ),
     );
   }
 }

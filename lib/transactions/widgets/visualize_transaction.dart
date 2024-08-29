@@ -43,13 +43,13 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
                   const ArrowIcon(),
                   SelectableIcon(
                     widget.category!,
-                    size: 40,
+                    size: 48,
                   ),
                   const ArrowIcon(),
                   clickableAccountIcon(widget.account2!),
                 ]
               : [
-                  SelectableIcon(widget.category!, size: 40),
+                  SelectableIcon(widget.category!, size: 48),
                   ArrowIcon(flipped: widget.wasNegative),
                   clickableAccountIcon(widget.account1!),
                 ],
@@ -80,7 +80,7 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
       },
       child: SelectableIcon(
         account,
-        size: 40,
+        size: 48,
       ),
     );
   }
