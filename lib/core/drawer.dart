@@ -67,9 +67,10 @@ class _CreateDrawerState extends State<CreateDrawer> {
                     size: 40,
                   ),
                   SizedBox(width: 8),
-                  // TODO: Bug: Text clips with big system font size
                   Text(
                     'Budgetiser',
+                    textScaler:
+                        TextScaler.linear(1), // ignore device text scale
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 40,
