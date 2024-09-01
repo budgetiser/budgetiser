@@ -119,7 +119,10 @@ class _SortByIconWidgetState extends State<SortByIconWidget> {
                 onNewSortSelected();
               },
             ),
-            const DividerWithText('Order', leftWidth: 55),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: DividerWithText('Order'),
+            ),
             RadioItemClickable(
               value: true,
               title: 'Ascending',

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
@@ -7,10 +5,9 @@ import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
-import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
+import 'package:budgetiser/shared/widgets/divider_with_text.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
-import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -185,6 +182,9 @@ class _BudgetFormState extends State<BudgetForm> {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    width: 8,
+                  ),
                   Flexible(
                     child: DropdownMenu<IntervalUnit>(
                       initialSelection: selectedInterval,
@@ -220,53 +220,81 @@ class _BudgetFormState extends State<BudgetForm> {
                 ),
               ),
               const SizedBox(
-                height: 8,
+                height: 16,
               ),
-              CustomInputFieldBorder(
-                height: max(
-                  (budgetCategories.length / 10).ceil() * 38 + 15,
-                  55,
-                ), // estimated height for every row,
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CategoryPicker.multi(
-                        onCategoryPickedCallbackMulti: setCategories,
-                        initialValues: budgetCategories,
-                      );
-                    },
-                  );
-                },
-                title: 'Select Categories',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      primary: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 10, // number of items in each row
-                        mainAxisSpacing: 8.0, // spacing between rows
-                        crossAxisSpacing: 8.0, // spacing between columns
-                      ),
-                      itemCount: budgetCategories.length,
-                      itemBuilder: (context, index) {
-                        return SelectableIcon(
-                          budgetCategories[index],
-                        );
-                      },
-                    ),
-                  ],
-                ),
+              const DividerWithText('Categories'),
+              const SizedBox(
+                height: 4,
               ),
+              CategoriesOverview(
+                  initialCategories: budgetCategories,
+                  onCategoryRemoved: (removedCategory) {
+                    setState(() {
+                      budgetCategories.remove(removedCategory);
+                    });
+                  },
+                  onCategoriesChanged: (newSelection) {
+                    setState(() {
+                      budgetCategories = newSelection;
+                    });
+                  })
             ],
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class CategoriesOverview extends StatelessWidget {
+  const CategoriesOverview({
+    super.key,
+    this.initialCategories,
+    this.onCategoryRemoved,
+    this.onCategoriesChanged,
+  });
+
+  final List<TransactionCategory>? initialCategories;
+  final ValueChanged<TransactionCategory>? onCategoryRemoved;
+  final ValueChanged<List<TransactionCategory>>? onCategoriesChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<TransactionCategory> selectedCategories =
+        initialCategories ?? [];
+    return Wrap(
+      spacing: 8,
+      children: [
+        for (TransactionCategory category in selectedCategories)
+          Chip(
+            avatar: Icon(
+              category.icon,
+              color: category.color,
+            ),
+            label: Text(
+              category.name,
+              style: TextStyle(color: category.color),
+            ),
+            deleteIcon: const Icon(Icons.close),
+            onDeleted: () => onCategoryRemoved?.call(category),
+          ),
+        InkWell(
+          child: const Chip(
+            avatar: Icon(Icons.difference),
+            label: Text('Change categories'),
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CategoryPicker.multi(
+                  onCategoryPickedCallbackMulti: (selection) =>
+                      onCategoriesChanged?.call(selection),
+                  initialValues: selectedCategories,
+                );
+              },
+            );
+          },
         ),
       ],
     );
