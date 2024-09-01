@@ -1,6 +1,6 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
-import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
@@ -75,8 +75,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return CategoryMultiPicker(
-                      onCategoriesPickedCallback: (selected) {
+                    return CategoryPicker.multi(
+                      onCategoryPickedCallbackMulti: (selected) {
                         setState(() {
                           _currentFilterCategories = selected;
                         });
@@ -180,7 +180,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           accountsFilter: _currentFilterAccounts,
           categoriesFilter: _currentFilterCategories,
           initiallyExpanded: monthYearSnapshotData
-              .keys // TODO: broken whenn only one transaction
+              .keys // TODO: broken when only one transaction
               .toList()
               .sublist(
                   0,

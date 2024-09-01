@@ -3,6 +3,7 @@ import 'package:budgetiser/accounts/widgets/account_item.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/shared/widgets/divider_with_text.dart';
 import 'package:budgetiser/shared/widgets/sort_by.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -151,7 +152,7 @@ class _AccountScreenState extends State<AccountScreen> {
     return [
       const Padding(
         padding: EdgeInsets.all(8.0),
-        child: Text('Archived'),
+        child: DividerWithText('Archived'),
       ),
       ListView.builder(
         physics: const NeverScrollableScrollPhysics(),

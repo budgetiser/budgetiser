@@ -1,6 +1,6 @@
 import 'package:budgetiser/accounts/widgets/account_single_picker.dart';
 import 'package:budgetiser/accounts/widgets/account_single_picker_nullable.dart';
-import 'package:budgetiser/categories/widgets/category_single_picker.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
@@ -316,7 +316,7 @@ class _TransactionFormState extends State<TransactionForm> {
             onTap: () => showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CategorySinglePicker(
+                return CategoryPicker.single(
                   onCategoryPickedCallback: setCategory,
                 );
               },

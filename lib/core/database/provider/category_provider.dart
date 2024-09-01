@@ -214,7 +214,6 @@ class CategoryModel extends ChangeNotifier {
       where: 'id = ?',
       whereArgs: [categoryID],
     );
-    await removeFromCategoryBridgeByID(categoryID);
 
     _notifyCategoryUpdate();
   }
