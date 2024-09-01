@@ -5,7 +5,7 @@ class SelectableIcon extends StatelessWidget {
   /// Colored icon of a [selectable]
   const SelectableIcon(
     this.selectable, {
-    this.size = 24.0,
+    this.size = 26.0,
     super.key,
   });
   final Selectable selectable;
@@ -17,6 +17,7 @@ class SelectableIcon extends StatelessWidget {
       selectable.icon,
       color: selectable.color,
       size: size,
+      semanticLabel: '${selectable.runtimeType} ${selectable.name}',
     );
   }
 }

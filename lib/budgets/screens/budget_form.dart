@@ -1,4 +1,4 @@
-import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
@@ -227,18 +227,17 @@ class _BudgetFormState extends State<BudgetForm> {
                 height: 4,
               ),
               CategoriesOverview(
-                initialCategories: budgetCategories,
-                onCategoryRemoved: (removedCategory) {
-                  setState(() {
-                    budgetCategories.remove(removedCategory);
-                  });
-                },
-                onCategoriesChanged: (newSelection) {
-                  setState(() {
-                    budgetCategories = newSelection;
-                  });
-                },
-              ),
+                  initialCategories: budgetCategories,
+                  onCategoryRemoved: (removedCategory) {
+                    setState(() {
+                      budgetCategories.remove(removedCategory);
+                    });
+                  },
+                  onCategoriesChanged: (newSelection) {
+                    setState(() {
+                      budgetCategories = newSelection;
+                    });
+                  })
             ],
           ),
         ),
@@ -288,15 +287,15 @@ class CategoriesOverview extends StatelessWidget {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CategoryMultiPicker(
-                  onCategoriesPickedCallback: (selection) =>
+                return CategoryPicker.multi(
+                  onCategoryPickedCallbackMulti: (selection) =>
                       onCategoriesChanged?.call(selection),
                   initialValues: selectedCategories,
                 );
               },
             );
           },
-        )
+        ),
       ],
     );
   }

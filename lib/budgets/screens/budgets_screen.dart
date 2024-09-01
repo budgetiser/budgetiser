@@ -51,7 +51,10 @@ class BudgetScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          semanticLabel: 'create budget',
+        ),
       ),
     );
   }
@@ -64,17 +67,5 @@ class BudgetScreen extends StatelessWidget {
       groupSeparatorBuilder: (unit) => DividerWithText(unit.label),
       groupComparator: (value1, value2) => Enum.compareByIndex(value1, value2),
     );
-  }
-
-  Map<int, IntervalUnit> intervalStartIndices(List<Budget> sortedBudgets) {
-    Map<int, IntervalUnit> result = {};
-    for (var interval in IntervalUnit.values) {
-      int index =
-          sortedBudgets.indexWhere((budget) => budget.intervalUnit == interval);
-      if (index >= 0) {
-        result[index] = interval;
-      }
-    }
-    return result;
   }
 }

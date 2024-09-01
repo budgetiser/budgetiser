@@ -1,3 +1,4 @@
+import 'package:accessibility_tools/accessibility_tools.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
@@ -76,6 +77,12 @@ class _MyAppState extends State<MyApp> {
           darkTheme: ThemeData(
             colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
             listTileTheme: customListTileTheme(),
+          ),
+          builder: (context, child) => AccessibilityTools(
+            checkSemanticLabels: true,
+            checkFontOverflows: true,
+            buttonsAlignment: ButtonsAlignment.bottomLeft,
+            child: child,
           ),
           home: const HomeScreen(),
           routes: routes,

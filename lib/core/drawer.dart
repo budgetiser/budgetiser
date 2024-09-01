@@ -47,55 +47,62 @@ class _CreateDrawerState extends State<CreateDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationDrawer(
-      onDestinationSelected: handleScreenChanged,
-      selectedIndex: screenIndex,
-      children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                LogoIcon.budgetiserIcon,
-                color: Colors.white,
-                size: 40,
+    return Semantics(
+      label: 'navigation drawer',
+      child: NavigationDrawer(
+        onDestinationSelected: handleScreenChanged,
+        selectedIndex: screenIndex,
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Semantics(
+              label: 'app logo with name',
+              child: const Row(
+                children: [
+                  Icon(
+                    LogoIcon.budgetiserIcon,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Budgetiser',
+                    textScaler:
+                        TextScaler.linear(1), // ignore device text scale
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: 8),
-              // TODO: Bug: Text clips with big system font size
-              Text(
-                'Budgetiser',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-        singleDrawerItem(Icons.home, 'Home'),
-        singleDrawerItem(Icons.attach_money, 'Budgets'),
-        singleDrawerItem(Icons.account_balance, 'Account'),
-        singleDrawerItem(Icons.category, 'Categories'),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
-          child: Text(
-            'Transactions', // TODO better name that describes all screens that in/output data
+          singleDrawerItem(Icons.home, 'Home'),
+          singleDrawerItem(Icons.attach_money, 'Budgets'),
+          singleDrawerItem(Icons.account_balance, 'Account'),
+          singleDrawerItem(Icons.category, 'Categories'),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              'Transactions', // TODO better name that describes all screens that in/output data
+            ),
           ),
-        ),
-        singleDrawerItem(Icons.payment, 'Transactions'),
-        singleDrawerItem(Icons.show_chart, 'Stats'),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
-          child: Text(
-            'Other',
+          singleDrawerItem(Icons.payment, 'Transactions'),
+          singleDrawerItem(Icons.show_chart, 'Stats'),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              'Other',
+            ),
           ),
-        ),
-        singleDrawerItem(Icons.question_mark, 'Help'),
-        singleDrawerItem(Icons.settings, 'Settings'),
-        singleDrawerItem(Icons.list_alt, 'Notes'),
-      ],
+          singleDrawerItem(Icons.question_mark, 'Help'),
+          singleDrawerItem(Icons.settings, 'Settings'),
+          singleDrawerItem(Icons.list_alt, 'Notes'),
+        ],
+      ),
     );
   }
 

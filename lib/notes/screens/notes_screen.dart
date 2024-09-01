@@ -18,42 +18,49 @@ class NotesScreen extends StatelessWidget {
           'Notes',
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.info),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Notes'),
-                    content: const Text(
-                        'This is a place to store notes. The notes are stored on the device and CANNOT be im- or exported.'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Close'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
+          Semantics(
+            label: 'show info',
+            button: true,
+            child: IconButton(
+              icon: const Icon(Icons.info),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Notes'),
+                      content: const Text(
+                          'This is a place to store notes. The notes are stored on the device and CANNOT be im- or exported.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
       drawer: const CreateDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: TextFormField(
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+        child: Semantics(
+          label: 'notes text box',
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+            controller: valueController,
+            maxLines: double.maxFinite.toInt(),
+            autofocus: true,
+            onChanged: onChanged,
           ),
-          controller: valueController,
-          maxLines: double.maxFinite.toInt(),
-          autofocus: true,
-          onChanged: onChanged,
         ),
       ),
     );
