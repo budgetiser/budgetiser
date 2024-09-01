@@ -224,7 +224,10 @@ class _TransactionFormState extends State<TransactionForm> {
             children: [
               if (_prefixButtonVisible)
                 IconButton(
-                  icon: Icon(wasValueNegative ? Icons.remove : Icons.add),
+                  icon: Icon(
+                    wasValueNegative ? Icons.remove : Icons.add,
+                    semanticLabel: 'toggle prefix',
+                  ),
                   onPressed: () {
                     togglePrefix();
                   },
@@ -237,40 +240,43 @@ class _TransactionFormState extends State<TransactionForm> {
               Flexible(
                 child: Form(
                   key: _valueKey,
-                  child: TextFormField(
-                    controller: valueController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: true,
-                    ),
-                    decoration: const InputDecoration(
-                      labelText: 'Value',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      if (tryValueParse(valueController.text) != null) {
-                        _valueKey.currentState!.validate();
-                      }
-                      updateWasValueNegative(value);
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value';
-                      }
-                      try {
-                        if (selectedAccount2 != null &&
-                            valueParser.evaluate(value) < 0) {
-                          return 'Only positive values with two accounts';
+                  child: Semantics(
+                    label: 'value of transaction',
+                    child: TextFormField(
+                      controller: valueController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Value',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        if (tryValueParse(valueController.text) != null) {
+                          _valueKey.currentState!.validate();
                         }
-                        if (valueParser.evaluate(value) == double.infinity ||
-                            valueParser.evaluate(value) == -double.infinity) {
+                        updateWasValueNegative(value);
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a value';
+                        }
+                        try {
+                          if (selectedAccount2 != null &&
+                              valueParser.evaluate(value) < 0) {
+                            return 'Only positive values with two accounts';
+                          }
+                          if (valueParser.evaluate(value) == double.infinity ||
+                              valueParser.evaluate(value) == -double.infinity) {
+                            return 'Please enter a valid number';
+                          }
+                        } catch (e) {
                           return 'Please enter a valid number';
                         }
-                      } catch (e) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
+                        return null;
+                      },
+                    ),
                   ),
                 ),
               ),

@@ -49,7 +49,10 @@ class BudgetScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          semanticLabel: 'create budget',
+        ),
       ),
     );
   }

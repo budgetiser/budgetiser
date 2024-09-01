@@ -57,55 +57,67 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: const Text('Transactions'),
         actions: [
-          IconButton(
-            icon: badges.Badge(
-              badgeContent: Text(
-                _currentFilterCategories.length.toString(),
-                style: const TextStyle(fontSize: 12),
+          Semantics(
+            label: 'filter by category',
+            child: IconButton(
+              icon: badges.Badge(
+                badgeContent: Text(
+                  _currentFilterCategories.length.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                showBadge: _currentFilterCategories.isNotEmpty,
+                child: const Icon(
+                  Icons.filter_alt_sharp,
+                  semanticLabel: 'filter by category',
+                ),
               ),
-              showBadge: _currentFilterCategories.isNotEmpty,
-              child: const Icon(Icons.filter_alt_sharp),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CategoryPicker.multi(
+                      onCategoryPickedCallbackMulti: (selected) {
+                        setState(() {
+                          _currentFilterCategories = selected;
+                        });
+                      },
+                      initialValues: _currentFilterCategories,
+                    );
+                  },
+                );
+              },
             ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CategoryPicker.multi(
-                    onCategoryPickedCallbackMulti: (selected) {
-                      setState(() {
-                        _currentFilterCategories = selected;
-                      });
-                    },
-                    initialValues: _currentFilterCategories,
-                  );
-                },
-              );
-            },
           ),
-          IconButton(
-            icon: badges.Badge(
-              badgeContent: Text(
-                _currentFilterAccounts.length.toString(),
-                style: const TextStyle(fontSize: 12),
+          Semantics(
+            label: 'filter by account',
+            child: IconButton(
+              icon: badges.Badge(
+                badgeContent: Text(
+                  _currentFilterAccounts.length.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                showBadge: _currentFilterAccounts.isNotEmpty,
+                child: const Icon(
+                  Icons.account_balance,
+                  semanticLabel: 'filter by account',
+                ),
               ),
-              showBadge: _currentFilterAccounts.isNotEmpty,
-              child: const Icon(Icons.account_balance),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AccountMultiPicker(
+                      onAccountsPickedCallback: (selected) {
+                        setState(() {
+                          _currentFilterAccounts = selected;
+                        });
+                      },
+                      initialValues: _currentFilterAccounts,
+                    );
+                  },
+                );
+              },
             ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AccountMultiPicker(
-                    onAccountsPickedCallback: (selected) {
-                      setState(() {
-                        _currentFilterAccounts = selected;
-                      });
-                    },
-                    initialValues: _currentFilterAccounts,
-                  );
-                },
-              );
-            },
           ),
         ],
       ),
@@ -135,7 +147,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          semanticLabel: 'add transaction',
+        ),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
