@@ -11,6 +11,7 @@ class CategoryTree extends StatefulWidget {
     required this.categories,
     this.onTap,
     this.separated = false,
+    this.padding = const EdgeInsets.only(bottom: 80),
   });
 
   @override
@@ -19,6 +20,8 @@ class CategoryTree extends StatefulWidget {
   final bool separated;
   final List<TransactionCategory> categories;
   final ValueChanged<TransactionCategory>? onTap;
+
+  final EdgeInsetsGeometry? padding;
 }
 
 class _CategoryTreeState extends State<CategoryTree> {
@@ -61,7 +64,9 @@ class _CategoryTreeState extends State<CategoryTree> {
   }
 
   ListView getSeparated(
-      BuildContext context, List<RecursiveCategoryModel> categoryTree) {
+    BuildContext context,
+    List<RecursiveCategoryModel> categoryTree,
+  ) {
     return ListView.separated(
       shrinkWrap: true,
       itemCount: (categoryTree.length),
@@ -80,10 +85,12 @@ class _CategoryTreeState extends State<CategoryTree> {
   }
 
   ListView getTogether(
-      BuildContext context, List<RecursiveCategoryModel> categoryTree) {
+    BuildContext context,
+    List<RecursiveCategoryModel> categoryTree,
+  ) {
     return ListView.builder(
       shrinkWrap: true,
-      padding: const EdgeInsets.only(bottom: 80),
+      padding: widget.padding,
       itemCount: (categoryTree.length),
       itemBuilder: (BuildContext context, int index) {
         return RecursiveWidget(
