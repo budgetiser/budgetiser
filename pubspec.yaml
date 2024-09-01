@@ -29,6 +29,7 @@ dependencies:
   equations: ^5.0.1
   material_color_utilities: ^0.11.1
   file_picker: ^8.0.0
+  grouped_list: ^6.0.0
 
   # MIT License
   fl_chart: ^0.68.0

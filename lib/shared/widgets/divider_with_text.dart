@@ -4,38 +4,40 @@ class DividerWithText extends StatelessWidget {
   /// Divider with small gray text in between (shifted slightly to the left, can be adjusted with [leftWidth])
   const DividerWithText(
     this.label, {
-    this.height = 16,
-    this.leftWidth = 32,
+    this.dividerHeight = 8.0,
+    this.flexFactor = .1,
+    this.innerPadding = const EdgeInsets.only(left: 10, right: 15),
     super.key,
   });
+
   final String label;
-  final double height;
-  final double leftWidth;
+  final double flexFactor;
+  final double dividerHeight;
+  final EdgeInsetsGeometry innerPadding;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: leftWidth,
-          margin: const EdgeInsets.only(left: 10.0, right: 15.0),
+        Flexible(
+          flex: (100 * (flexFactor)).floor(),
           child: Divider(
-            height: height,
+            height: dividerHeight,
           ),
         ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            color: Theme.of(context).disabledColor,
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.only(left: 15.0, right: 10.0),
-            child: Divider(
-              height: height,
+        Padding(
+          padding: innerPadding,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Theme.of(context).disabledColor,
             ),
+          ),
+        ),
+        Flexible(
+          flex: (100 * (1 - flexFactor)).floor(),
+          child: Divider(
+            height: dividerHeight,
           ),
         ),
       ],
