@@ -1,6 +1,6 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
-import 'package:budgetiser/categories/widgets/category_multi_picker.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
@@ -57,55 +57,67 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: const Text('Transactions'),
         actions: [
-          IconButton(
-            icon: badges.Badge(
-              badgeContent: Text(
-                _currentFilterCategories.length.toString(),
-                style: const TextStyle(fontSize: 12),
+          Semantics(
+            label: 'filter by category',
+            child: IconButton(
+              icon: badges.Badge(
+                badgeContent: Text(
+                  _currentFilterCategories.length.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                showBadge: _currentFilterCategories.isNotEmpty,
+                child: const Icon(
+                  Icons.filter_alt_sharp,
+                  semanticLabel: 'filter by category',
+                ),
               ),
-              showBadge: _currentFilterCategories.isNotEmpty,
-              child: const Icon(Icons.filter_alt_sharp),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CategoryPicker.multi(
+                      onCategoryPickedCallbackMulti: (selected) {
+                        setState(() {
+                          _currentFilterCategories = selected;
+                        });
+                      },
+                      initialValues: _currentFilterCategories,
+                    );
+                  },
+                );
+              },
             ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CategoryMultiPicker(
-                    onCategoriesPickedCallback: (selected) {
-                      setState(() {
-                        _currentFilterCategories = selected;
-                      });
-                    },
-                    initialValues: _currentFilterCategories,
-                  );
-                },
-              );
-            },
           ),
-          IconButton(
-            icon: badges.Badge(
-              badgeContent: Text(
-                _currentFilterAccounts.length.toString(),
-                style: const TextStyle(fontSize: 12),
+          Semantics(
+            label: 'filter by account',
+            child: IconButton(
+              icon: badges.Badge(
+                badgeContent: Text(
+                  _currentFilterAccounts.length.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                showBadge: _currentFilterAccounts.isNotEmpty,
+                child: const Icon(
+                  Icons.account_balance,
+                  semanticLabel: 'filter by account',
+                ),
               ),
-              showBadge: _currentFilterAccounts.isNotEmpty,
-              child: const Icon(Icons.account_balance),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AccountMultiPicker(
+                      onAccountsPickedCallback: (selected) {
+                        setState(() {
+                          _currentFilterAccounts = selected;
+                        });
+                      },
+                      initialValues: _currentFilterAccounts,
+                    );
+                  },
+                );
+              },
             ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AccountMultiPicker(
-                    onAccountsPickedCallback: (selected) {
-                      setState(() {
-                        _currentFilterAccounts = selected;
-                      });
-                    },
-                    initialValues: _currentFilterAccounts,
-                  );
-                },
-              );
-            },
           ),
         ],
       ),
@@ -135,7 +147,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          semanticLabel: 'add transaction',
+        ),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -165,7 +180,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           accountsFilter: _currentFilterAccounts,
           categoriesFilter: _currentFilterCategories,
           initiallyExpanded: monthYearSnapshotData
-              .keys // TODO: broken whenn only one transaction
+              .keys // TODO: broken when only one transaction
               .toList()
               .sublist(
                   0,

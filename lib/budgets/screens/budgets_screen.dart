@@ -3,7 +3,9 @@ import 'package:budgetiser/budgets/widgets/budget_item.dart';
 import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/shared/widgets/divider_with_text.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
 
 class BudgetScreen extends StatelessWidget {
@@ -49,18 +51,21 @@ class BudgetScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          semanticLabel: 'create budget',
+        ),
       ),
     );
   }
 
   Widget _screenContent(List<Budget> budgets) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 80),
-      itemCount: budgets.length,
-      itemBuilder: (context, i) {
-        return BudgetItem(budget: budgets[i]);
-      },
+    return GroupedListView<Budget, IntervalUnit>(
+      elements: budgets,
+      groupBy: (budget) => budget.intervalUnit,
+      itemBuilder: (context, element) => BudgetItem(budget: element),
+      groupSeparatorBuilder: (unit) => DividerWithText(unit.label),
+      groupComparator: (value1, value2) => Enum.compareByIndex(value1, value2),
     );
   }
 }

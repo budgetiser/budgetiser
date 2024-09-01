@@ -1,4 +1,4 @@
-import 'package:budgetiser/categories/widgets/category_single_picker_nullable.dart';
+import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/shared/utils/color_utils.dart';
@@ -80,7 +80,9 @@ class _CategoryFormState extends State<CategoryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a Category'),
+        title: Text(widget.categoryData == null
+            ? 'Create a Category'
+            : 'Edit Category'),
       ),
       body: _screenContent(context),
       floatingActionButton: Row(
@@ -184,10 +186,10 @@ class _CategoryFormState extends State<CategoryForm> {
           onTap: () => showDialog(
             context: context,
             builder: (BuildContext context) {
-              return CategorySinglePickerNullable(
+              return CategoryPicker.singleNullable(
                 blacklistedValues:
                     widget.categoryData == null ? [] : [widget.categoryData!],
-                onCategoryPickedCallback:
+                onCategoryPickedCallbackNullable:
                     (TransactionCategory? selectedCategory) {
                   setState(() {
                     _parentCategory = selectedCategory;
