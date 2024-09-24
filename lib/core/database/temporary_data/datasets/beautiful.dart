@@ -32,7 +32,21 @@ class BeautifulDataset extends DemoDataset {
         icon: Icons.credit_card_rounded,
         color: Colors.black,
         id: 1,
-        balance: -500,
+        balance: 0,
+      ),
+      Account(
+        name: 'Debit Card',
+        icon: Icons.business_outlined,
+        color: Colors.red,
+        id: 2,
+        balance: 0,
+      ),
+      Account(
+        name: 'Savings',
+        icon: Icons.show_chart,
+        color: Colors.green,
+        id: 3,
+        balance: 0,
       ),
     ];
   }
@@ -80,11 +94,13 @@ class BeautifulDataset extends DemoDataset {
       id++;
     }
 
-    // 0-6
-    addCategory('Salary', Icons.attach_money, Colors.black);
+    addCategory('Salary', Icons.attach_money, Colors.black); // 0
     addCategory('Business Income', Icons.business, Colors.green);
     addCategory('Commissions', Icons.trending_up, Colors.orange);
     addCategory('Investments', Icons.trending_up, Colors.green);
+
+    addCategory('Flights', Icons.airplane_ticket_rounded, Colors.green);
+    addCategory('Rent', Icons.home, Colors.green); // 5
 
     return list;
   }
@@ -143,7 +159,7 @@ class BeautifulDataset extends DemoDataset {
     addTransaction(
       title: 'Monthly Salary',
       description: '',
-      accounts1: [getAccounts()[0]],
+      accounts1: [getAccounts()[1]],
       categories: [categoryList[0]],
       values: [2500],
       daysInBetween: [30],
@@ -152,7 +168,7 @@ class BeautifulDataset extends DemoDataset {
     addTransaction(
       title: 'Overtime Hours',
       description: '',
-      accounts1: [getAccounts()[0]],
+      accounts1: [getAccounts()[1]],
       categories: [categoryList[0]],
       values: [350, 500],
       daysInBetween: [60, 60, 30, 90],
@@ -161,7 +177,7 @@ class BeautifulDataset extends DemoDataset {
     addTransaction(
       title: 'Hobby Shop',
       description: '',
-      accounts1: [getAccounts()[0]],
+      accounts1: [getAccounts()[1]],
       categories: [categoryList[1]],
       values: [15, 20, 15],
       daysInBetween: [10, 20, 3],
@@ -170,11 +186,39 @@ class BeautifulDataset extends DemoDataset {
     addTransaction(
       title: 'Old TV',
       description: 'Sold on Ebay',
-      accounts1: [getAccounts()[0]],
+      accounts1: [getAccounts()[1]],
       categories: [categoryList[0]],
       values: [125],
       daysInBetween: [61],
       amount: 1,
+    );
+    addTransaction(
+      title: 'Flight to NY',
+      description: 'Holiday',
+      accounts1: [getAccounts()[0]],
+      categories: [categoryList[4]],
+      values: [-235],
+      daysInBetween: [19],
+      amount: 1,
+    );
+    addTransaction(
+      title: 'Monthly savings',
+      description: '',
+      accounts1: [getAccounts()[1]],
+      accounts2: [getAccounts()[2]],
+      categories: [categoryList[3]],
+      values: [1000],
+      daysInBetween: [30],
+      amount: 12,
+    );
+    addTransaction(
+      title: 'Rent',
+      description: '',
+      accounts1: [getAccounts()[1]],
+      categories: [categoryList[5]],
+      values: [-800],
+      daysInBetween: [30],
+      amount: 12,
     );
 
     return list;
