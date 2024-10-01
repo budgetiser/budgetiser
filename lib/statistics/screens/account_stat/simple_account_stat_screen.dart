@@ -1,21 +1,19 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:budgetiser/accounts/widgets/account_multi_picker.dart';
-import 'package:budgetiser/categories/picker/category_picker.dart';
 import 'package:budgetiser/core/database/models/account.dart';
-import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/shared/widgets/picker/segmented_duration_picker.dart';
-import 'package:budgetiser/statistics/screens/text_stat/simple_text_stat.dart';
+import 'package:budgetiser/statistics/screens/account_stat/simple_account_stat.dart';
 import 'package:flutter/material.dart';
 
-class SimpleTextStatScreen extends StatefulWidget {
-  const SimpleTextStatScreen({super.key});
+class SimpleAccountStatScreen extends StatefulWidget {
+  const SimpleAccountStatScreen({super.key});
 
   @override
-  State<SimpleTextStatScreen> createState() => _SimpleTextStatScreenState();
+  State<SimpleAccountStatScreen> createState() =>
+      _SimpleAccountStatScreenState();
 }
 
-class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
-  List<TransactionCategory> _selectedCategories = [];
+class _SimpleAccountStatScreenState extends State<SimpleAccountStatScreen> {
   List<Account> _selectedAccounts = [];
   DateTime _selectedStartDate = DateTime(2000);
 
@@ -27,39 +25,12 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
     }
   }
 
-  void setCategory(List<TransactionCategory> c) {
-    setState(() {
-      _selectedCategories = c;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Text stat'),
+        title: const Text('Account stats'),
         actions: [
-          IconButton(
-            icon: badges.Badge(
-              badgeContent: Text(
-                _selectedCategories.length.toString(),
-                style: const TextStyle(fontSize: 12),
-              ),
-              showBadge: _selectedCategories.isNotEmpty,
-              child: const Icon(Icons.filter_alt_sharp),
-            ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CategoryPicker.multi(
-                    onCategoryPickedCallbackMulti: setCategory,
-                    initialValues: _selectedCategories,
-                  );
-                },
-              );
-            },
-          ),
           IconButton(
             icon: badges.Badge(
               badgeContent: Text(
@@ -67,7 +38,7 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
                 style: const TextStyle(fontSize: 12),
               ),
               showBadge: _selectedAccounts.isNotEmpty,
-              child: const Icon(Icons.account_balance),
+              child: const Icon(Icons.filter_alt_sharp),
             ),
             onPressed: () {
               showDialog(
@@ -97,13 +68,8 @@ class _SimpleTextStatScreenState extends State<SimpleTextStatScreen> {
             Text(
               'Showing data since ${_selectedStartDate.year}-${_selectedStartDate.month}-${_selectedStartDate.day}',
             ),
-            const Text(
-              'Transactions with 2 Accounts not listed!',
-              style: TextStyle(color: Colors.red),
-            ),
-            SimpleTextStatTables(
+            SimpleAccountStatTables(
               accounts: _selectedAccounts,
-              categories: _selectedCategories,
               startDate: _selectedStartDate,
             ),
           ],
