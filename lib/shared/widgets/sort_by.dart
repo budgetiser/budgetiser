@@ -75,8 +75,6 @@ class _SortByIconWidgetState extends State<SortByIconWidget> {
         _isAscending = false;
         _isSortedByName = false;
         break;
-      default:
-        throw ArgumentError();
     }
     return IconButton(
       icon: const Icon(Icons.sort),
