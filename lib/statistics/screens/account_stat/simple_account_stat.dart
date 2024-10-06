@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:flutter/material.dart';

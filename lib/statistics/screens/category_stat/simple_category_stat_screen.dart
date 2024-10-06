@@ -66,6 +66,10 @@ class _SimpleCategoryStatScreenState extends State<SimpleCategoryStatScreen> {
             Text(
               'Showing data since ${_selectedStartDate.year}-${_selectedStartDate.month}-${_selectedStartDate.day}',
             ),
+            Text(
+              'Transactions with 2 accounts are hidden!',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
             SimpleCategoryStatTables(
               categories: _selectedCategories,
               startDate: _selectedStartDate,
