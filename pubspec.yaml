@@ -18,7 +18,7 @@ dependencies:
   intl: any
   flutter_colorpicker: ^1.0.3
   dynamic_color: ^1.7.0
-  sqflite: ^2.3.3
+  sqflite: ^2.4.0
   flutter_markdown: ^0.7.1
   provider: ^6.0.5
   shared_preferences: ^2.2.3
