@@ -48,9 +48,6 @@ class _AccountScreenState extends State<AccountScreen> {
         return b.balance.compareTo(a.balance);
       case SortedByEnum.numberAscending:
         return a.balance.compareTo(b.balance);
-      default:
-        // by name
-        return a.name.compareTo(b.name);
     }
   }
 
