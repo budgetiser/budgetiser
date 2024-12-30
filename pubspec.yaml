@@ -28,7 +28,7 @@ dependencies:
   package_info_plus: ^8.0.0
   equations: ^5.0.1
   material_color_utilities: ^0.11.1
-  file_picker: ^8.0.0
+  file_picker: ^8.1.7
 
   # MIT License
   fl_chart: ^0.69.0
