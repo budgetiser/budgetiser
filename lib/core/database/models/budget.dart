@@ -1,5 +1,6 @@
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/selectable.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Use .label for a readable string representation
@@ -52,7 +53,7 @@ class Budget extends Selectable {
   Map<String, dynamic> toMap() => {
         'name': name.trim(),
         'icon': icon.codePoint,
-        'color': color.value,
+        'color': ColorEx(color).toInt32,
         'description': description?.trim(),
         'max_value': maxValue,
         'interval_unit': intervalUnit.toString(),
