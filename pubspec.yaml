@@ -31,7 +31,7 @@ dependencies:
   file_picker: ^8.0.0
 
   # MIT License
-  fl_chart: ^0.69.0
+  fl_chart: ^0.70.0
   flutter_file_dialog: ^3.0.2
   badges: ^3.1.2
   fuzzywuzzy: ^1.1.6
