@@ -12,7 +12,8 @@ class BudgetItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     budget.value ??= 0.0;
-    double percentage = budget.value! / budget.maxValue;
+    double percentage =
+        budget.maxValue == 0 ? 0 : budget.value! / budget.maxValue;
     bool overflowed = percentage > 1;
     percentage -= percentage.floor();
 
