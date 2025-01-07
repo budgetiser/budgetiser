@@ -45,8 +45,7 @@ void main() {
       expect(a.name, (await AccountModel().getOneAccount(a.id)).name);
       expect(a.description,
           (await AccountModel().getOneAccount(a.id)).description);
-      expect(a.color.value,
-          (await AccountModel().getOneAccount(a.id)).color.value);
+      expect(a.color, (await AccountModel().getOneAccount(a.id)).color);
       expect(a.icon.toString(),
           (await AccountModel().getOneAccount(a.id)).icon.toString());
       expect(a.archived, (await AccountModel().getOneAccount(a.id)).archived);

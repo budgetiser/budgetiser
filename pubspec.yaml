@@ -5,7 +5,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
-version: 2.13.1+48
+version: 2.13.2+49
 
 environment:
   sdk: ^3.3.1
@@ -31,7 +31,7 @@ dependencies:
   file_picker: ^8.0.0
 
   # MIT License
-  fl_chart: ^0.69.0
+  fl_chart: ^0.70.0
   flutter_file_dialog: ^3.0.2
   badges: ^3.1.2
   fuzzywuzzy: ^1.1.6
