@@ -84,9 +84,10 @@ class _CategoryFormState extends State<CategoryForm> {
   }
 
   void _validateName() {
-    final value = nameController.text.trim();
+    final value = nameController.text.trim().toLowerCase();
     if (_allCategories != null &&
-        _allCategories!.any((category) => category == value)) {
+        _allCategories!
+            .any((categoryName) => categoryName.toLowerCase() == value)) {
       setState(() {
         _nameError = 'This category name already exists';
       });
