@@ -20,4 +20,7 @@ jobs:
 
       - run: flutter pub get
 
+      # needed for sqflite on linux https://github.com/tekartik/sqflite/tree/master/sqflite_common_ffi
+      - run: sudo apt-get -y install libsqlite3-0 libsqlite3-dev
+
       - run: flutter test

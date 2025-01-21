@@ -8,6 +8,7 @@ import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/database/temporary_data/datasets/old.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -45,7 +46,11 @@ void main() {
       expect(a.name, (await AccountModel().getOneAccount(a.id)).name);
       expect(a.description,
           (await AccountModel().getOneAccount(a.id)).description);
-      expect(a.color, (await AccountModel().getOneAccount(a.id)).color);
+
+      // comparing int32 values, because one object is a MaterialColor and the other is a Color
+      var a123 = (await AccountModel().getOneAccount(a.id)).color;
+      expect(ColorEx(a.color).toInt32, ColorEx(a123).toInt32);
+
       expect(a.icon.toString(),
           (await AccountModel().getOneAccount(a.id)).icon.toString());
       expect(a.archived, (await AccountModel().getOneAccount(a.id)).archived);
