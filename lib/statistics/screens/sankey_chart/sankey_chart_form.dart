@@ -152,7 +152,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
                     style: const TextStyle(fontSize: 12),
                   ),
                   showBadge: _selectedCategories.isNotEmpty,
-                  child: const Icon(Icons.account_balance),
+                  child: const Icon(Icons.category),
                 ),
               ],
             ),
