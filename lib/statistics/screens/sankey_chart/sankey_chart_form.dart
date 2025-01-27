@@ -5,6 +5,7 @@ import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
+import 'package:budgetiser/statistics/screens/sankey_chart/sankey_char_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -175,14 +176,20 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             FloatingActionButton.extended(
               heroTag: 'copy_to_clipboard',
               onPressed: () async {
-                await Clipboard.setData(ClipboardData(text: 'your text'));
-                // copied successfully
-                Clipboard.setData(ClipboardData(text: 'your text')).then((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Text copied to clipboard'),
-                    ),
-                  );
+                Clipboard.setData(ClipboardData(
+                  text: generateSankeyChart(
+                    context,
+                    _selectedAccounts,
+                    _selectedCategories,
+                  ),
+                )).then((_) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Text copied to clipboard'),
+                      ),
+                    );
+                  }
                 });
               },
               label: const Text('Copy to clipboard'),
