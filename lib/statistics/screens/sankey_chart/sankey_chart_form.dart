@@ -21,6 +21,10 @@ class SankeyChartForm extends StatefulWidget {
 class _SankeyChartFormState extends State<SankeyChartForm> {
   List<Account> _selectedAccounts = [];
   List<TransactionCategory> _selectedCategories = [];
+  DateTimeRange _selectedDateRange = DateTimeRange(
+    start: DateTime.now().subtract(const Duration(days: 30)),
+    end: DateTime.now(),
+  );
 
   @override
   void initState() {
@@ -105,97 +109,122 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
 
   Widget screenContent(List<Account> selectedAccounts) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            TextButton(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Select accounts '),
-                  badges.Badge(
-                    badgeContent: Text(
-                      _selectedAccounts.length.toString(),
-                      style: const TextStyle(fontSize: 12),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          OutlinedButton(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Select accounts '),
+                badges.Badge(
+                  badgeContent: Text(
+                    _selectedAccounts.length.toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  showBadge: _selectedAccounts.isNotEmpty,
+                  child: const Icon(Icons.account_balance),
+                ),
+              ],
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AccountMultiPicker(
+                    onAccountsPickedCallback: onAccountsPickedCallback,
+                    initialValues: _selectedAccounts,
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Select categories '),
+                badges.Badge(
+                  badgeContent: Text(
+                    _selectedCategories.length.toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  showBadge: _selectedCategories.isNotEmpty,
+                  child: const Icon(Icons.account_balance),
+                ),
+              ],
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return CategoryPicker.multi(
+                    onCategoryPickedCallbackMulti:
+                        onCategoryPickedCallbackMulti,
+                    initialValues: _selectedCategories,
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Select date range '),
+                const Icon(Icons.date_range),
+                Text(' - ${_selectedDateRange.duration.inDays} days')
+              ],
+            ),
+            onPressed: () {
+              showDateRangePicker(
+                context: context,
+                firstDate: DateTime(2021),
+                lastDate: DateTime.now(),
+                initialDateRange: _selectedDateRange,
+              ).then((value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedDateRange = value;
+                  });
+                }
+              });
+            },
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton.extended(
+            heroTag: 'save_to_file',
+            onPressed: null,
+            backgroundColor: Theme.of(context).disabledColor,
+            label: const Text('Save to file'),
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton.extended(
+            heroTag: 'copy_to_clipboard',
+            onPressed: () async {
+              Clipboard.setData(ClipboardData(
+                text: await generateSankeyChart(
+                  context,
+                  _selectedAccounts,
+                  _selectedCategories,
+                  _selectedDateRange,
+                ),
+              )).then((_) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Text copied to clipboard'),
                     ),
-                    showBadge: _selectedAccounts.isNotEmpty,
-                    child: const Icon(Icons.account_balance),
-                  ),
-                ],
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AccountMultiPicker(
-                      onAccountsPickedCallback: onAccountsPickedCallback,
-                      initialValues: _selectedAccounts,
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Select categories '),
-                  badges.Badge(
-                    badgeContent: Text(
-                      _selectedCategories.length.toString(),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    showBadge: _selectedCategories.isNotEmpty,
-                    child: const Icon(Icons.account_balance),
-                  ),
-                ],
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CategoryPicker.multi(
-                      onCategoryPickedCallbackMulti:
-                          onCategoryPickedCallbackMulti,
-                      initialValues: _selectedCategories,
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            FloatingActionButton.extended(
-              heroTag: 'save_to_file',
-              onPressed: null,
-              backgroundColor: Theme.of(context).disabledColor,
-              label: const Text('Save to file'),
-            ),
-            const SizedBox(height: 16),
-            FloatingActionButton.extended(
-              heroTag: 'copy_to_clipboard',
-              onPressed: () async {
-                Clipboard.setData(ClipboardData(
-                  text: generateSankeyChart(
-                    context,
-                    _selectedAccounts,
-                    _selectedCategories,
-                  ),
-                )).then((_) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Text copied to clipboard'),
-                      ),
-                    );
-                  }
-                });
-              },
-              label: const Text('Copy to clipboard'),
-            ),
-          ],
-        ),
+                  );
+                }
+              });
+            },
+            label: const Text('Copy to clipboard'),
+          ),
+        ],
       ),
     );
   }
