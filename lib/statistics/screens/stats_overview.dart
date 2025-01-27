@@ -3,6 +3,7 @@ import 'package:budgetiser/statistics/screens/account_bar_chart/account_bar_char
 import 'package:budgetiser/statistics/screens/account_stat/simple_account_stat_screen.dart';
 import 'package:budgetiser/statistics/screens/category_stat/simple_category_stat_screen.dart';
 import 'package:budgetiser/statistics/screens/line_chart_stat/line_chart_stat_screen.dart';
+import 'package:budgetiser/statistics/screens/sankey_chart_form/sankey_chart_form.dart';
 import 'package:budgetiser/statistics/screens/stat_preview_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -85,6 +86,20 @@ class _StatsOverviewState extends State<StatsOverview> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const AccountBarChartScreen(),
+                ),
+              )
+            },
+            child: const Icon(
+              Icons.bar_chart,
+              size: 70,
+            ),
+          ),
+          StatPreviewWidget(
+            text: 'Sankey chart',
+            onTap: () => {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SankeyChartForm(),
                 ),
               )
             },
