@@ -206,7 +206,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             heroTag: 'copy_to_clipboard',
             onPressed: () async {
               Clipboard.setData(ClipboardData(
-                text: await generateSankeyChart(
+                text: await SankeyChart().generateSankeyChart(
                   context,
                   _selectedAccounts,
                   _selectedCategories,
