@@ -56,12 +56,14 @@ String generateAccountList(List<Account> accounts) {
 /// 'SourceNodeName [Amount] TargetNodeName'
 ///
 /// If [combineTransactions] is true, transactions with the same source and target will be combined.
+/// If [includeTypeAnnotations] is true, the account and category names are appended with their type.
 Future<String> generateTransactionList(
   BuildContext context,
   List<Account> accounts,
   List<TransactionCategory> categories,
   DateTimeRange dateRange, {
   bool combineTransactions = true,
+  bool includeTypeAnnotations = true,
 }) async {
   List<Account> allAccounts =
       await Provider.of<AccountModel>(context, listen: false).getAllAccounts();
@@ -88,16 +90,20 @@ Future<String> generateTransactionList(
       '// merged transactions len: ${finalTransactions.length}\n'; // Debug
 
   for (SingleTransaction transaction in finalTransactions) {
+    var accountName =
+        (includeTypeAnnotations ? '[A]' : '') + transaction.account.name;
+    var categoryName =
+        (includeTypeAnnotations ? '[C]' : '') + transaction.category.name;
     if (transaction.account2 != null) {
       print('skipping transaction with account2');
       continue;
     }
     if (transaction.value < 0) {
       returnString +=
-          '${transaction.account.name} [${transaction.value.abs()}] ${transaction.category.name}\n';
+          '$accountName [${transaction.value.abs().toStringAsFixed(2)}] $categoryName\n';
     } else {
       returnString +=
-          '${transaction.category.name} [${transaction.value}] ${transaction.account.name}\n';
+          '$categoryName [${transaction.value.toStringAsFixed(2)}] $accountName\n';
     }
   }
 
