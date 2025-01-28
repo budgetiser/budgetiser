@@ -16,16 +16,23 @@ class SankeyChart {
   bool includeFlowColor;
   bool useBracesForFlowColor;
 
+  /// Generates a string that can be used to generate a sankey chart.
+  ///
+  /// Use the [generateSankeyChart] method to generate a string that can be used to generate a sankey chart.
+  ///
+  /// * [combineTransactions] - If true, transactions with the same source and target will be combined.
+  /// * [includeTypeAnnotations] - If true, the account and category names are appended with their type.
+  /// * [includeNodeColor] - If true, the account and category node colors are included in the output.
+  /// * [includeFlowColor] - If true, the flow color is included in the output. Color is based on the source node.
+  /// * [useBracesForFlowColor] - If true, the flow color is enclosed in braces.
   SankeyChart({
     this.combineTransactions = true,
-    this.includeTypeAnnotations = true,
-    this.includeNodeColor = false,
+    this.includeTypeAnnotations = false,
+    this.includeNodeColor = true,
     this.includeFlowColor = true,
     this.useBracesForFlowColor = false,
   });
 
-  /// Sankey Chart Generator
-  ///
   /// Generates a string that can be used to generate a sankey chart.
   Future<String> generateSankeyChart(
     BuildContext context,
@@ -51,18 +58,20 @@ class SankeyChart {
     return returnString;
   }
 
+  /// List of categories with their colors in the format: ':CategoryName #000000'
   String _generateCategoryList(List<TransactionCategory> categories) {
     String returnString = '';
     for (TransactionCategory category in categories) {
-      returnString += ':${category.name} ${_hexString(category.color)}\n';
+      returnString += ':${nodeName(category)} ${_hexString(category.color)}\n';
     }
     return returnString;
   }
 
+  /// List of accounts with their colors in the format: ':AccountName #000000'
   String _generateAccountList(List<Account> accounts) {
     String returnString = '';
     for (Account account in accounts) {
-      returnString += ':${account.name} ${_hexString(account.color)}\n';
+      returnString += ':${nodeName(account)} ${_hexString(account.color)}\n';
     }
     return returnString;
   }
@@ -145,16 +154,8 @@ class SankeyChart {
   ) {
     assert(value >= 0);
 
-    var sourceName = (includeTypeAnnotations
-            ? (source.runtimeType == TransactionCategory ? '[C]' : '[A]')
-            : '') +
-        source.name;
-    var targetName = (includeTypeAnnotations
-            ? (target.runtimeType == TransactionCategory ? '[C]' : '[A]')
-            : '') +
-        target.name;
-
-    var returnString = '$sourceName [${value.toStringAsFixed(2)}] $targetName';
+    var returnString =
+        '${nodeName(source)} [${value.toStringAsFixed(2)}] ${nodeName(target)}';
     if (includeFlowColor) {
       if (useBracesForFlowColor) {
         returnString += ' [${_hexString(color)}]';
@@ -164,6 +165,14 @@ class SankeyChart {
     }
     returnString += '\n';
     return returnString;
+  }
+
+  /// Gets the name of a node with type annotations if [includeTypeAnnotations] is true.
+  String nodeName(Selectable node) {
+    return (includeTypeAnnotations
+            ? (node.runtimeType == TransactionCategory ? '[C]' : '[A]')
+            : '') +
+        node.name;
   }
 
   /// Merges transactions with the same source and target.
