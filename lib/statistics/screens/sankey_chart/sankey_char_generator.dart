@@ -3,14 +3,39 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/selectable.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
+import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
+class Flow {
+  Selectable source;
+  Selectable target;
+  double value;
+  Color color;
+
+  Flow({
+    required this.source,
+    required this.target,
+    required this.value,
+    required this.color,
+  }) : assert(value >= 0);
+
+  Flow copyWith({required Selectable source}) {
+    return Flow(
+      source: source,
+      target: target,
+      value: value,
+      color: color,
+    );
+  }
+}
+
 class SankeyChart {
   bool combineTransactions;
+  bool applyCategoryHierarchy;
   bool includeTypeAnnotations;
   bool includeNodeColor;
   bool includeFlowColor;
@@ -27,11 +52,16 @@ class SankeyChart {
   /// * [useBracesForFlowColor] - If true, the flow color is enclosed in braces.
   SankeyChart({
     this.combineTransactions = true,
-    this.includeTypeAnnotations = false,
+    this.applyCategoryHierarchy = true,
+    this.includeTypeAnnotations = true,
     this.includeNodeColor = true,
     this.includeFlowColor = true,
     this.useBracesForFlowColor = false,
-  });
+  }) : assert(
+          (combineTransactions && applyCategoryHierarchy) ||
+              (!combineTransactions && !applyCategoryHierarchy),
+          'combineTransactions and applyCategoryHierarchy must both be true or both be false',
+        );
 
   /// Generates a string that can be used to generate a sankey chart.
   Future<String> generateSankeyChart(
@@ -55,6 +85,7 @@ class SankeyChart {
       categories,
       dateRange,
     );
+
     return returnString;
   }
 
@@ -112,55 +143,43 @@ class SankeyChart {
     String returnString = '';
     returnString += '// transactions len: ${allTransactions.length}\n'; // Debug
 
-    List<SingleTransaction> finalTransactions;
+    List<SingleTransaction> mergedTransactions;
     if (combineTransactions) {
-      finalTransactions = _mergeTransactions(allTransactions);
+      mergedTransactions = _mergeTransactions(allTransactions);
     } else {
-      finalTransactions = allTransactions;
+      mergedTransactions = allTransactions;
+    }
+
+    List<Flow> finalTransactions;
+    if (applyCategoryHierarchy) {
+      finalTransactions =
+          await _applyCategoryHierarchy(context, mergedTransactions);
+    } else {
+      finalTransactions = _toFlows(mergedTransactions);
     }
 
     returnString +=
         '// merged transactions len: ${finalTransactions.length}\n'; // Debug
 
-    for (SingleTransaction transaction in finalTransactions) {
-      if (transaction.account2 != null) {
-        print('skipping transaction with account2');
-        continue;
-      }
-      if (transaction.value < 0) {
-        returnString += _generateTransactionString(
-          transaction.account,
-          transaction.category,
-          transaction.value.abs(),
-          transaction.account.color,
-        );
-      } else {
-        returnString += _generateTransactionString(
-          transaction.category,
-          transaction.account,
-          transaction.value.abs(),
-          transaction.category.color,
-        );
-      }
+    // build the string
+    for (Flow transaction in finalTransactions) {
+      returnString += _generateTransactionString(
+        transaction,
+      );
     }
     return returnString;
   }
 
   String _generateTransactionString(
-    Selectable source,
-    Selectable target,
-    double value,
-    Color color,
+    Flow flow,
   ) {
-    assert(value >= 0);
-
     var returnString =
-        '${nodeName(source)} [${value.toStringAsFixed(2)}] ${nodeName(target)}';
+        '${nodeName(flow.source)} [${flow.value.toStringAsFixed(2)}] ${nodeName(flow.target)}';
     if (includeFlowColor) {
       if (useBracesForFlowColor) {
-        returnString += ' [${_hexString(color)}]';
+        returnString += ' [${_hexString(flow.color)}]';
       } else {
-        returnString += ' ${_hexString(color)}';
+        returnString += ' ${_hexString(flow.color)}';
       }
     }
     returnString += '\n';
@@ -182,16 +201,14 @@ class SankeyChart {
     Map<String, SingleTransaction> mergedTransactions = {};
 
     for (SingleTransaction transaction in allTransactions) {
-      if (transaction.account2 != null) {
-        print('Skipping transaction with account2');
-        continue;
-      }
-
       // Generate a key based on source and target to identify unique paths
       // also this way negative and positive transactions are kept separate
       String key = transaction.value <= 0
           ? '${transaction.account.name}=${transaction.category.name}'
           : '${transaction.category.name}=${transaction.account.name}';
+      if (transaction.account2 != null) {
+        key += '=${transaction.account2!.name}';
+      }
 
       if (mergedTransactions.containsKey(key)) {
         mergedTransactions[key]!.value += transaction.value;
@@ -201,5 +218,100 @@ class SankeyChart {
     }
 
     return mergedTransactions.values.toList();
+  }
+
+  Future<List<Flow>> _applyCategoryHierarchy(
+    BuildContext context,
+    List<SingleTransaction> mergedTransactions,
+  ) async {
+    List<Flow> finalTransactions = [];
+    var parentList = await Provider.of<CategoryModel>(context, listen: false)
+        .getParentsList();
+    for (SingleTransaction transaction in mergedTransactions) {
+      if (transaction.account2 != null) {
+        finalTransactions.add(
+          Flow(
+            source: transaction.account,
+            target: transaction.account2!,
+            value: transaction.value,
+            color: transaction.category.color,
+          ),
+        );
+        continue;
+      }
+      if (!parentList.containsKey(transaction.category.id)) {
+        finalTransactions.add(
+          Flow(
+            source: transaction.account,
+            target: transaction.category,
+            value: transaction.value.abs(),
+            color: transaction.account.color,
+          ),
+        );
+      } else {
+        List<int> parents = parentList[transaction.category.id]!;
+        Selectable lastSource = transaction.account;
+        for (int parent in parents) {
+          TransactionCategory parentCategory =
+              await Provider.of<CategoryModel>(context, listen: false)
+                  .getCategory(parent);
+          finalTransactions.add(
+            Flow(
+              source: lastSource,
+              target: parentCategory,
+              value: transaction.value.abs(),
+              color: transaction.category.color,
+            ),
+          );
+          lastSource = parentCategory;
+        }
+        finalTransactions.add(
+          Flow(
+            source: lastSource,
+            target: transaction.category,
+            value: transaction.value.abs(),
+            color: transaction.category.color,
+          ),
+        );
+      }
+    }
+    return finalTransactions;
+  }
+
+  List<Flow> _toFlows(List<SingleTransaction> transactions) {
+    List<Flow> flows = [];
+    for (SingleTransaction transaction in transactions) {
+      if (transaction.account2 != null) {
+        flows.add(
+          Flow(
+            source: transaction.account,
+            target: transaction.account2!,
+            value: transaction.value.abs(),
+            color: transaction.category.color,
+          ),
+        );
+        continue;
+      }
+      if (transaction.value < 0) {
+        flows.add(
+          Flow(
+            source: transaction.account,
+            target: transaction.category,
+            value: transaction.value.abs(),
+            color: transaction.category.color,
+          ),
+        );
+      } else {
+        flows.add(
+          Flow(
+            source: transaction.category,
+            target: transaction.account,
+            value: transaction.value,
+            color: transaction.category.color,
+          ),
+        );
+      }
+    }
+    return flows;
   }
 }
