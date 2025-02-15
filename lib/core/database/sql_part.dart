@@ -241,7 +241,7 @@ Future<void> upgradeToV3(Database db) async {
           transaction['category_id'],
           transaction['date'],
           transaction['account1_id'],
-          transaction['account2_id']
+          transaction['account2_id'],
         ]);
       } else {
         await txn.execute('''
@@ -255,7 +255,7 @@ Future<void> upgradeToV3(Database db) async {
           transaction['category_id'],
           transaction['date'],
           transaction['account1_id'],
-          transaction['account2_id']
+          transaction['account2_id'],
         ]);
       }
     }
@@ -309,7 +309,7 @@ Future<void> upgradeToV3(Database db) async {
         item['color'],
         item['limitXX'],
         item['interval_unit'],
-        item['description'] == '' ? null : item['description']
+        item['description'] == '' ? null : item['description'],
       ]);
     }
 
@@ -340,10 +340,13 @@ Future<void> upgradeToV3(Database db) async {
 
     for (Map<String, dynamic> item in mapBridge) {
       item = Map.of(item);
-      await txn.execute('''
+      await txn.execute(
+        '''
         INSERT INTO categoryBridge (parent_id, child_id, distance) 
         VALUES (?, ?, ?);
-      ''', [item['id'], item['id'], 0]);
+      ''',
+        [item['id'], item['id'], 0],
+      );
     }
 
     // final

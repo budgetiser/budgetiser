@@ -34,55 +34,57 @@ class _IconColorDialogState extends State<IconColorDialog> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Builder(builder: (context) {
-        // builder needed because context within a TabController required
-        final TabController tabController = DefaultTabController.of(context);
-        tabController.addListener(() {
-          if (!tabController.indexIsChanging) {
-            // Unfocus keyboard after changing tabs
-            // Only triggers after animation is finished :/
-            FocusManager.instance.primaryFocus?.unfocus();
-          }
-        });
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Choose Appearance'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  widget.onSelection(currentIcon, currentColor);
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Confirm'),
-              ),
-            ],
-            leading: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            bottom: TabBar(
-              controller: tabController,
-              tabs: [
-                Tab(
-                  icon: Icon(
-                    currentIcon,
-                    color: currentColor,
-                  ),
-                  text: 'Icon',
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.color_lens_rounded,
-                    color: currentColor,
-                  ),
-                  text: 'Color',
+      child: Builder(
+        builder: (context) {
+          // builder needed because context within a TabController required
+          final TabController tabController = DefaultTabController.of(context);
+          tabController.addListener(() {
+            if (!tabController.indexIsChanging) {
+              // Unfocus keyboard after changing tabs
+              // Only triggers after animation is finished :/
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          });
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Choose Appearance'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    widget.onSelection(currentIcon, currentColor);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Confirm'),
                 ),
               ],
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              bottom: TabBar(
+                controller: tabController,
+                tabs: [
+                  Tab(
+                    icon: Icon(
+                      currentIcon,
+                      color: currentColor,
+                    ),
+                    text: 'Icon',
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.color_lens_rounded,
+                      color: currentColor,
+                    ),
+                    text: 'Color',
+                  ),
+                ],
+              ),
             ),
-          ),
-          body: _tabContents(),
-        );
-      }),
+            body: _tabContents(),
+          );
+        },
+      ),
     );
   }
 

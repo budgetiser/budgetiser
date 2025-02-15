@@ -43,9 +43,9 @@ class HierarchicDataset extends DemoDataset {
         9: {
           10: {
             11: [12, 13, 14, 15, 16],
-          }
-        }
-      }
+          },
+        },
+      },
     };
     List<TransactionCategory> list = [];
 
@@ -53,13 +53,14 @@ class HierarchicDataset extends DemoDataset {
     void addCategory(String name, IconData icon) {
       list.add(
         TransactionCategory(
-            id: id,
-            name: name,
-            icon: icon,
-            color: Colors.green,
-            description: '',
-            archived: false,
-            parentID: findParentKey(linkTree, id)),
+          id: id,
+          name: name,
+          icon: icon,
+          color: Colors.green,
+          description: '',
+          archived: false,
+          parentID: findParentKey(linkTree, id),
+        ),
       );
       id++;
     }

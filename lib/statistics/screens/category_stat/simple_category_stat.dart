@@ -52,8 +52,10 @@ class SimpleCategoryStatTables extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        IconData(data[index]['icon'],
-                            fontFamily: 'MaterialIcons'),
+                        IconData(
+                          data[index]['icon'],
+                          fontFamily: 'MaterialIcons',
+                        ),
                         color: Color(data[index]['color']),
                       ),
                       const SizedBox(width: 8),
@@ -67,9 +69,10 @@ class SimpleCategoryStatTables extends StatelessWidget {
                       Text(
                         '${data[index]['count']} Transactions',
                         style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
                       ),
                     ],
                   ),
@@ -168,7 +171,7 @@ class SimpleCategoryStatTables extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         );

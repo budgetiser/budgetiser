@@ -218,7 +218,7 @@ class _BudgetFormState extends State<BudgetForm> {
                         );
                       }).toList(),
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -238,17 +238,18 @@ class _BudgetFormState extends State<BudgetForm> {
                 height: 4,
               ),
               CategoriesOverview(
-                  initialCategories: budgetCategories,
-                  onCategoryRemoved: (removedCategory) {
-                    setState(() {
-                      budgetCategories.remove(removedCategory);
-                    });
-                  },
-                  onCategoriesChanged: (newSelection) {
-                    setState(() {
-                      budgetCategories = newSelection;
-                    });
-                  })
+                initialCategories: budgetCategories,
+                onCategoryRemoved: (removedCategory) {
+                  setState(() {
+                    budgetCategories.remove(removedCategory);
+                  });
+                },
+                onCategoriesChanged: (newSelection) {
+                  setState(() {
+                    budgetCategories = newSelection;
+                  });
+                },
+              ),
             ],
           ),
         ),

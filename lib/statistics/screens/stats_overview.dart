@@ -44,7 +44,7 @@ class _StatsOverviewState extends State<StatsOverview> {
                 MaterialPageRoute(
                   builder: (context) => const SimpleCategoryStatScreen(),
                 ),
-              )
+              ),
             },
             child: const Icon(
               Icons.category,
@@ -58,7 +58,7 @@ class _StatsOverviewState extends State<StatsOverview> {
                 MaterialPageRoute(
                   builder: (context) => const SimpleAccountStatScreen(),
                 ),
-              )
+              ),
             },
             child: const Icon(
               Icons.account_balance,
@@ -72,7 +72,7 @@ class _StatsOverviewState extends State<StatsOverview> {
                 MaterialPageRoute(
                   builder: (context) => const LineChartStatScreen(),
                 ),
-              )
+              ),
             },
             child: const Icon(
               Icons.line_axis_rounded,
@@ -86,7 +86,7 @@ class _StatsOverviewState extends State<StatsOverview> {
                 MaterialPageRoute(
                   builder: (context) => const AccountBarChartScreen(),
                 ),
-              )
+              ),
             },
             child: const Icon(
               Icons.bar_chart,

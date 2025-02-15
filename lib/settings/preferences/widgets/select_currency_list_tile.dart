@@ -90,7 +90,8 @@ class _SelectCurrencyListTileState extends State<SelectCurrencyListTile> {
                                     inputControllerCurrency.text.toString();
                               });
                               SettingsCurrencyHandler().setCurrency(
-                                  inputControllerCurrency.text.toString());
+                                inputControllerCurrency.text.toString(),
+                              );
                               Navigator.pop(context);
                             },
                             backgroundColor: Colors.green,
@@ -101,7 +102,7 @@ class _SelectCurrencyListTileState extends State<SelectCurrencyListTile> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             );
           },

@@ -35,7 +35,7 @@ class _LineChartStatScreenState extends State<LineChartStatScreen> {
               onDateChangedCallback: (DateTime time) => {
                 setState(() {
                   startDate = time;
-                })
+                }),
               },
             ),
             InkWell(

@@ -24,7 +24,7 @@ class AccountItem extends StatelessWidget {
               initialAccount: accountData,
             ),
           ),
-        )
+        ),
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
