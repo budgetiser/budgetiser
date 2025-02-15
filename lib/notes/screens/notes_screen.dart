@@ -30,7 +30,8 @@ class NotesScreen extends StatelessWidget {
                     return AlertDialog(
                       title: const Text('Notes'),
                       content: const Text(
-                          'This is a place to store notes. The notes are stored on the device and CANNOT be im- or exported.'),
+                        'This is a place to store notes. The notes are stored on the device and CANNOT be im- or exported.',
+                      ),
                       actions: <Widget>[
                         TextButton(
                           child: const Text('Close'),

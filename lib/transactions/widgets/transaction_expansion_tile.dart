@@ -40,42 +40,44 @@ class TransactionExpansionTile extends StatelessWidget {
       initiallyExpanded: initiallyExpanded,
       controller: ExpansionTileController(),
       children: [
-        Consumer<TransactionModel>(builder: (context, model, child) {
-          return FutureBuilder<List<SingleTransaction>>(
-            future: _future(model),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.data!.isEmpty) {
-                return Container();
-              }
-              DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-              return GroupedListView<SingleTransaction, String>(
-                shrinkWrap: true,
-                elements: snapshot.data!,
-                groupBy: (element) => dateFormat.format(element.date),
-                groupComparator: (value1, value2) => value2.compareTo(value1),
-                itemComparator: (item1, item2) =>
-                    item1.date.compareTo(item2.date),
-                groupSeparatorBuilder: (String value) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    value,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
-                itemBuilder: (c, element) {
-                  return TransactionItem(
-                    transactionData: element,
+        Consumer<TransactionModel>(
+          builder: (context, model, child) {
+            return FutureBuilder<List<SingleTransaction>>(
+              future: _future(model),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-              );
-            },
-          );
-        })
+                }
+                if (snapshot.data!.isEmpty) {
+                  return Container();
+                }
+                DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+                return GroupedListView<SingleTransaction, String>(
+                  shrinkWrap: true,
+                  elements: snapshot.data!,
+                  groupBy: (element) => dateFormat.format(element.date),
+                  groupComparator: (value1, value2) => value2.compareTo(value1),
+                  itemComparator: (item1, item2) =>
+                      item1.date.compareTo(item2.date),
+                  groupSeparatorBuilder: (String value) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      value,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                  itemBuilder: (c, element) {
+                    return TransactionItem(
+                      transactionData: element,
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }

@@ -67,7 +67,9 @@ class CategoryModel extends ChangeNotifier {
   }
 
   Future<void> moveCategory(
-      TransactionCategory category, TransactionCategory? newParent) async {
+    TransactionCategory category,
+    TransactionCategory? newParent,
+  ) async {
     await moveCategoryByID(category.id, newParent?.id);
   }
 
@@ -220,12 +222,15 @@ class CategoryModel extends ChangeNotifier {
       //   e['distance'] += 1;
       // });
       // await db.update('categoryBridge', values)
-      await db.execute('''
+      await db.execute(
+        '''
         INSERT INTO categoryBridge (parent_id, child_id, distance)
         SELECT parent_id, ?, distance + 1
         FROM categoryBridge
         WHERE child_id = ?;
-        ''', [id, category.parentID]);
+        ''',
+        [id, category.parentID],
+      );
     }
 
     await db.insert(

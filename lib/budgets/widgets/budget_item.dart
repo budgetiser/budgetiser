@@ -36,7 +36,7 @@ class BudgetItem extends StatelessWidget {
               budgetData: budget,
             ),
           ),
-        )
+        ),
       },
     );
   }
@@ -52,7 +52,10 @@ class BudgetItem extends StatelessWidget {
   }
 
   Expanded budgetDetails(
-      bool overflowed, double percentage, BuildContext context) {
+    bool overflowed,
+    double percentage,
+    BuildContext context,
+  ) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +89,8 @@ class BudgetItem extends StatelessWidget {
         Text(
           budget.value!.toStringAsFixed(1),
           style: TextStyle(
-              color: overflowed ? Theme.of(context).colorScheme.error : null),
+            color: overflowed ? Theme.of(context).colorScheme.error : null,
+          ),
         ),
         Text(budget.maxValue.toStringAsFixed(1)),
       ],

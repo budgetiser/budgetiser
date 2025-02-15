@@ -37,8 +37,9 @@ class Budget extends Selectable {
   });
 
   Budget.fromDBmap(
-      Map<String, dynamic> map, List<TransactionCategory> categoryList)
-      : id = map['id'],
+    Map<String, dynamic> map,
+    List<TransactionCategory> categoryList,
+  )   : id = map['id'],
         description = map['description'],
         maxValue = map['max_value'],
         intervalUnit = IntervalUnit.values

@@ -56,7 +56,9 @@ class _CategoryTreeState extends State<CategoryTree> {
   }
 
   ListView getListView(
-      BuildContext context, List<RecursiveCategoryModel> categoryTree) {
+    BuildContext context,
+    List<RecursiveCategoryModel> categoryTree,
+  ) {
     if (widget.separated) {
       return getSeparated(context, categoryTree);
     }
@@ -178,7 +180,9 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
 }
 
 List<RecursiveCategoryModel> getCategoryTree(
-    List<TransactionCategory> categories, int? parentID) {
+  List<TransactionCategory> categories,
+  int? parentID,
+) {
   List<RecursiveCategoryModel> categoryModel = [];
 
   List<TransactionCategory> topLevelCategories = categories
@@ -188,9 +192,12 @@ List<RecursiveCategoryModel> getCategoryTree(
       .toList();
 
   for (var topLevelCategory in topLevelCategories) {
-    categoryModel.add(RecursiveCategoryModel(
+    categoryModel.add(
+      RecursiveCategoryModel(
         current: topLevelCategory,
-        children: getCategoryTree(categories, topLevelCategory.id)));
+        children: getCategoryTree(categories, topLevelCategory.id),
+      ),
+    );
   }
 
   return categoryModel;

@@ -71,7 +71,7 @@ class BudgetModel extends ChangeNotifier {
           map['color'],
           map['max_value'],
           map['interval_unit'],
-          map['description'] == '' ? null : map['description']
+          map['description'] == '' ? null : map['description'],
         ]);
       }
 
@@ -200,8 +200,9 @@ class BudgetModel extends ChangeNotifier {
       case IntervalUnit.month:
         lowerBound = DateTime(nowClean.year, nowClean.month);
         upperBound = DateTime(
-            nowClean.month == 12 ? nowClean.year + 1 : nowClean.year,
-            nowClean.month == 12 ? 1 : nowClean.month + 1);
+          nowClean.month == 12 ? nowClean.year + 1 : nowClean.year,
+          nowClean.month == 12 ? 1 : nowClean.month + 1,
+        );
       case IntervalUnit.quarter:
         final int currentQuarter = ((nowClean.month - 1) / 3).floor(); //max 3
         final int lowerMonth = (currentQuarter * 3) + 1; //max 10

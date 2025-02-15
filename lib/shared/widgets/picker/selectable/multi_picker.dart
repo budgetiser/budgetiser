@@ -87,7 +87,7 @@ class _GeneralMultiPickerState<T extends Selectable>
       setState(() {
         if (selectedValues.isEmpty) {
           selectedValues = [
-            ...widget.possibleValues
+            ...widget.possibleValues,
           ]; // clone data. otherwise deselecting single item would .remove() from both lists
         } else {
           selectedValues = [];
