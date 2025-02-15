@@ -19,6 +19,8 @@ class SankeyChartForm extends StatefulWidget {
 }
 
 class _SankeyChartFormState extends State<SankeyChartForm> {
+  final SankeyChartSettings _chartSettings = SankeyChartSettings();
+
   List<Account> _selectedAccounts = [];
   List<TransactionCategory> _selectedCategories = [];
   DateTimeRange _selectedDateRange = DateTimeRange(
@@ -111,7 +113,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
 
   Widget screenContent(List<Account> selectedAccounts) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -197,6 +199,60 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             },
           ),
           const SizedBox(height: 16),
+          ExpansionTile(
+            title: const Text('Advanced options'),
+            children: [
+              ListTile(
+                title: SwitchListTile(
+                  title: const Text('Transaction color'),
+                  subtitle: const Text(
+                    'Include color information for each transaction',
+                  ),
+                  value: _chartSettings.includeFlowColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null) {
+                        _chartSettings.includeFlowColor = value;
+                      }
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: SwitchListTile(
+                  title: const Text('Node color'),
+                  subtitle: const Text(
+                    'Include color information for each node (account/category)',
+                  ),
+                  value: _chartSettings.includeNodeColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null) {
+                        _chartSettings.includeNodeColor = value;
+                      }
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: SwitchListTile(
+                  title: const Text('Color with braces'),
+                  subtitle: const Text(
+                    'Use braces e.g. [#ff0000] for color information of transactions',
+                  ),
+                  value: _chartSettings.useBracesForFlowColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null) {
+                        _chartSettings.useBracesForFlowColor = value;
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
           FloatingActionButton.extended(
             heroTag: 'save_to_file',
             onPressed: null,
@@ -209,12 +265,14 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             onPressed: () async {
               Clipboard.setData(
                 ClipboardData(
-                text: await SankeyChart().generateSankeyChart(
-                  context,
-                  _selectedAccounts,
-                  _selectedCategories,
-                  _selectedDateRange,
-                ),
+                  text: await SankeyChart(
+                    settings: _chartSettings,
+                  ).generateSankeyChart(
+                    context,
+                    _selectedAccounts,
+                    _selectedCategories,
+                    _selectedDateRange,
+                  ),
                 ),
               ).then((_) {
                 if (mounted) {

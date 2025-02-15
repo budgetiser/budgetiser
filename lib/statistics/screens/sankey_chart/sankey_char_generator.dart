@@ -33,7 +33,7 @@ class Flow {
   }
 }
 
-class SankeyChart {
+class SankeyChartSettings {
   bool combineTransactions;
   bool applyCategoryHierarchy;
   bool includeTypeAnnotations;
@@ -41,27 +41,35 @@ class SankeyChart {
   bool includeFlowColor;
   bool useBracesForFlowColor;
 
-  /// Generates a string that can be used to generate a sankey chart.
-  ///
-  /// Use the [generateSankeyChart] method to generate a string that can be used to generate a sankey chart.
-  ///
+  /// * [applyCategoryHierarchy] - If true, transactions apply to the category hierarchy. If false, transactions are direct from account to category.
   /// * [combineTransactions] - If true, transactions with the same source and target will be combined.
-  /// * [includeTypeAnnotations] - If true, the account and category names are appended with their type.
-  /// * [includeNodeColor] - If true, the account and category node colors are included in the output.
   /// * [includeFlowColor] - If true, the flow color is included in the output. Color is based on the source node.
+  /// * [includeNodeColor] - If true, the account and category node colors are included in the output.
+  /// * [includeTypeAnnotations] - If true, the account and category names are appended with their type.
   /// * [useBracesForFlowColor] - If true, the flow color is enclosed in braces.
-  SankeyChart({
-    this.combineTransactions = true,
+  SankeyChartSettings({
     this.applyCategoryHierarchy = true,
-    this.includeTypeAnnotations = true,
-    this.includeNodeColor = true,
+    this.combineTransactions = true,
     this.includeFlowColor = true,
+    this.includeNodeColor = true,
+    this.includeTypeAnnotations = true,
     this.useBracesForFlowColor = false,
   }) : assert(
           (combineTransactions && applyCategoryHierarchy) ||
               (!combineTransactions && !applyCategoryHierarchy),
           'combineTransactions and applyCategoryHierarchy must both be true or both be false',
         );
+}
+
+class SankeyChart {
+  SankeyChartSettings settings;
+
+  /// Generates a string that can be used to generate a sankey chart.
+  ///
+  /// Use the [generateSankeyChart] method to generate a string that can be used to generate a sankey chart.
+  SankeyChart({
+    required this.settings,
+  });
 
   /// Generates a string that can be used to generate a sankey chart.
   Future<String> generateSankeyChart(
@@ -72,7 +80,7 @@ class SankeyChart {
   ) async {
     String returnString =
         '// Budgetiser export from ${dateAsDDMMYYYY(dateRange.start)} to ${dateAsDDMMYYYY(dateRange.end)}\n';
-    if (includeNodeColor) {
+    if (settings.includeNodeColor) {
       returnString += '\n// Account colors:\n';
       returnString += _generateAccountList(accounts);
       returnString += '\n// Category colors:\n';
@@ -144,14 +152,14 @@ class SankeyChart {
     returnString += '// transactions len: ${allTransactions.length}\n'; // Debug
 
     List<SingleTransaction> mergedTransactions;
-    if (combineTransactions) {
+    if (settings.combineTransactions) {
       mergedTransactions = _mergeTransactions(allTransactions);
     } else {
       mergedTransactions = allTransactions;
     }
 
     List<Flow> finalTransactions;
-    if (applyCategoryHierarchy) {
+    if (settings.applyCategoryHierarchy) {
       finalTransactions =
           await _applyCategoryHierarchy(context, mergedTransactions);
     } else {
@@ -175,8 +183,8 @@ class SankeyChart {
   ) {
     var returnString =
         '${nodeName(flow.source)} [${flow.value.toStringAsFixed(2)}] ${nodeName(flow.target)}';
-    if (includeFlowColor) {
-      if (useBracesForFlowColor) {
+    if (settings.includeFlowColor) {
+      if (settings.useBracesForFlowColor) {
         returnString += ' [${_hexString(flow.color)}]';
       } else {
         returnString += ' ${_hexString(flow.color)}';
@@ -188,7 +196,7 @@ class SankeyChart {
 
   /// Gets the name of a node with type annotations if [includeTypeAnnotations] is true.
   String nodeName(Selectable node) {
-    return (includeTypeAnnotations
+    return (settings.includeTypeAnnotations
             ? (node.runtimeType == TransactionCategory ? '[C]' : '[A]')
             : '') +
         node.name;
