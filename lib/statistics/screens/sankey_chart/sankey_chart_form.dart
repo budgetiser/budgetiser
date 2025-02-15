@@ -73,8 +73,10 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
                           onTap: () async {
                             final Uri urlParsed =
                                 Uri.parse('https://sankeymatic.com/build');
-                            if (!await launchUrl(urlParsed,
-                                mode: LaunchMode.externalApplication)) {
+                            if (!await launchUrl(
+                              urlParsed,
+                              mode: LaunchMode.externalApplication,
+                            )) {
                               throw Exception('Could not launch $urlParsed');
                             }
                           },
@@ -117,7 +119,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Select accounts '),
+                const Text('Select accounts '),
                 badges.Badge(
                   badgeContent: Text(
                     _selectedAccounts.length.toString(),
@@ -145,7 +147,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Select categories '),
+                const Text('Select categories '),
                 badges.Badge(
                   badgeContent: Text(
                     _selectedCategories.length.toString(),
@@ -174,9 +176,9 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Select date range '),
+                const Text('Select date range '),
                 const Icon(Icons.date_range),
-                Text(' - ${_selectedDateRange.duration.inDays} days')
+                Text(' - ${_selectedDateRange.duration.inDays} days'),
               ],
             ),
             onPressed: () {
@@ -205,17 +207,19 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
           FloatingActionButton.extended(
             heroTag: 'copy_to_clipboard',
             onPressed: () async {
-              Clipboard.setData(ClipboardData(
+              Clipboard.setData(
+                ClipboardData(
                 text: await SankeyChart().generateSankeyChart(
                   context,
                   _selectedAccounts,
                   _selectedCategories,
                   _selectedDateRange,
                 ),
-              )).then((_) {
+                ),
+              ).then((_) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Text copied to clipboard'),
                     ),
                   );

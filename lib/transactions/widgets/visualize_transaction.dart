@@ -63,7 +63,7 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
                 widget.value!,
                 hasPrefix: false,
               ),
-              SizedBox(width: 60), // same width as ArrowIcon
+              const SizedBox(width: 60), // same width as ArrowIcon
               BalanceText(
                 widget.account1!.balance + widget.value!,
               ),
@@ -80,12 +80,12 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
               BalanceText(
                 widget.account1!.balance - widget.value!,
               ),
-              SizedBox(width: 60), // same width as ArrowIcon
+              const SizedBox(width: 60), // same width as ArrowIcon
               BalanceText(
                 widget.value!,
                 hasPrefix: false,
               ),
-              SizedBox(width: 60), // same width as ArrowIcon
+              const SizedBox(width: 60), // same width as ArrowIcon
               BalanceText(
                 widget.account2!.balance + widget.value!,
               ),

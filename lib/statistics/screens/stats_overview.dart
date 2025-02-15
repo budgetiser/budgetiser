@@ -101,7 +101,7 @@ class _StatsOverviewState extends State<StatsOverview> {
                 MaterialPageRoute(
                   builder: (context) => const SankeyChartForm(),
                 ),
-              )
+              ),
             },
             child: const Icon(
               Icons.bar_chart,
