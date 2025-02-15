@@ -148,7 +148,9 @@ class ColorItem extends StatelessWidget {
           foregroundDecoration: selected
               ? BoxDecoration(
                   border: Border.all(
-                      color: Theme.of(context).indicatorColor, width: 5),
+                    color: Theme.of(context).indicatorColor,
+                    width: 5,
+                  ),
                   shape: BoxShape.circle,
                   // TODO: checkbox on selected icon
                 )

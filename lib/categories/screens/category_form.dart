@@ -111,9 +111,9 @@ class _CategoryFormState extends State<CategoryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.categoryData == null
-            ? 'Create a Category'
-            : 'Edit Category'),
+        title: Text(
+          widget.categoryData == null ? 'Create a Category' : 'Edit Category',
+        ),
       ),
       body: _screenContent(context),
       floatingActionButton: Row(
@@ -134,15 +134,16 @@ class _CategoryFormState extends State<CategoryForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
-                    name: nameController.text.trim(),
-                    icon: _icon,
-                    color: _color,
-                    description: parseNullableString(
-                      descriptionController.text,
-                    ),
-                    archived: false,
-                    parentID: _parentCategory?.id,
-                    id: 0);
+                  name: nameController.text.trim(),
+                  icon: _icon,
+                  color: _color,
+                  description: parseNullableString(
+                    descriptionController.text,
+                  ),
+                  archived: false,
+                  parentID: _parentCategory?.id,
+                  id: 0,
+                );
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
                   Provider.of<CategoryModel>(context, listen: false)
@@ -211,7 +212,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     },
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

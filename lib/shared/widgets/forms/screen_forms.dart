@@ -39,7 +39,7 @@ class _ScrollViewWithDeadSpaceState extends State<ScrollViewWithDeadSpace> {
               child: widget.deadSpaceContent,
             ),
             // content of the screen
-            ...widget.children
+            ...widget.children,
           ],
         ),
       ),

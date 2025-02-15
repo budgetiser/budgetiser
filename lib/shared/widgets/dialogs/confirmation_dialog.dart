@@ -37,7 +37,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             // ignore: avoid_dynamic_calls
             widget.onSubmitCallback();
           },
-        )
+        ),
       ],
     );
   }

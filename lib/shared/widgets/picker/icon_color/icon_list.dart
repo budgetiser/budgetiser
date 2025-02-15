@@ -179,27 +179,27 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'airline_seat_flat_angled', 'icon': Icons.airline_seat_flat_angled},
   {
     'name': 'airline_seat_individual_suite',
-    'icon': Icons.airline_seat_individual_suite
+    'icon': Icons.airline_seat_individual_suite,
   },
   {
     'name': 'airline_seat_legroom_extra',
-    'icon': Icons.airline_seat_legroom_extra
+    'icon': Icons.airline_seat_legroom_extra,
   },
   {
     'name': 'airline_seat_legroom_normal',
-    'icon': Icons.airline_seat_legroom_normal
+    'icon': Icons.airline_seat_legroom_normal,
   },
   {
     'name': 'airline_seat_legroom_reduced',
-    'icon': Icons.airline_seat_legroom_reduced
+    'icon': Icons.airline_seat_legroom_reduced,
   },
   {
     'name': 'airline_seat_recline_extra',
-    'icon': Icons.airline_seat_recline_extra
+    'icon': Icons.airline_seat_recline_extra,
   },
   {
     'name': 'airline_seat_recline_normal',
-    'icon': Icons.airline_seat_recline_normal
+    'icon': Icons.airline_seat_recline_normal,
   },
   {'name': 'airline_stops', 'icon': Icons.airline_stops},
   {'name': 'airlines', 'icon': Icons.airlines},
@@ -660,7 +660,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'directions_railway', 'icon': Icons.directions_railway},
   {
     'name': 'directions_railway_filled',
-    'icon': Icons.directions_railway_filled
+    'icon': Icons.directions_railway_filled,
   },
   {'name': 'directions_run', 'icon': Icons.directions_run},
   {'name': 'directions_subway', 'icon': Icons.directions_subway},
@@ -669,7 +669,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'directions_transit', 'icon': Icons.directions_transit},
   {
     'name': 'directions_transit_filled',
-    'icon': Icons.directions_transit_filled
+    'icon': Icons.directions_transit_filled,
   },
   {'name': 'directions_walk', 'icon': Icons.directions_walk},
   {'name': 'dirty_lens', 'icon': Icons.dirty_lens},
@@ -694,7 +694,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'do_not_disturb_on', 'icon': Icons.do_not_disturb_on},
   {
     'name': 'do_not_disturb_on_total_silence',
-    'icon': Icons.do_not_disturb_on_total_silence
+    'icon': Icons.do_not_disturb_on_total_silence,
   },
   {'name': 'do_not_step', 'icon': Icons.do_not_step},
   {'name': 'do_not_touch', 'icon': Icons.do_not_touch},
@@ -729,7 +729,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'drive_file_move_rtl', 'icon': Icons.drive_file_move_rtl},
   {
     'name': 'drive_file_rename_outline',
-    'icon': Icons.drive_file_rename_outline
+    'icon': Icons.drive_file_rename_outline,
   },
   {'name': 'drive_folder_upload', 'icon': Icons.drive_folder_upload},
   {'name': 'dry', 'icon': Icons.dry},
@@ -972,11 +972,11 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'format_strikethrough', 'icon': Icons.format_strikethrough},
   {
     'name': 'format_textdirection_l_to_r',
-    'icon': Icons.format_textdirection_l_to_r
+    'icon': Icons.format_textdirection_l_to_r,
   },
   {
     'name': 'format_textdirection_r_to_l',
-    'icon': Icons.format_textdirection_r_to_l
+    'icon': Icons.format_textdirection_r_to_l,
   },
   {'name': 'format_underline', 'icon': Icons.format_underline},
   {'name': 'format_underlined', 'icon': Icons.format_underlined},
@@ -1178,15 +1178,15 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'keyboard_control_key', 'icon': Icons.keyboard_control_key},
   {
     'name': 'keyboard_double_arrow_down',
-    'icon': Icons.keyboard_double_arrow_down
+    'icon': Icons.keyboard_double_arrow_down,
   },
   {
     'name': 'keyboard_double_arrow_left',
-    'icon': Icons.keyboard_double_arrow_left
+    'icon': Icons.keyboard_double_arrow_left,
   },
   {
     'name': 'keyboard_double_arrow_right',
-    'icon': Icons.keyboard_double_arrow_right
+    'icon': Icons.keyboard_double_arrow_right,
   },
   {'name': 'keyboard_double_arrow_up', 'icon': Icons.keyboard_double_arrow_up},
   {'name': 'keyboard_hide', 'icon': Icons.keyboard_hide},
@@ -1463,7 +1463,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'no_encryption', 'icon': Icons.no_encryption},
   {
     'name': 'no_encryption_gmailerrorred',
-    'icon': Icons.no_encryption_gmailerrorred
+    'icon': Icons.no_encryption_gmailerrorred,
   },
   {'name': 'no_flash', 'icon': Icons.no_flash},
   {'name': 'no_food', 'icon': Icons.no_food},
@@ -1539,19 +1539,19 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'panorama_horizontal', 'icon': Icons.panorama_horizontal},
   {
     'name': 'panorama_horizontal_select',
-    'icon': Icons.panorama_horizontal_select
+    'icon': Icons.panorama_horizontal_select,
   },
   {'name': 'panorama_photosphere', 'icon': Icons.panorama_photosphere},
   {
     'name': 'panorama_photosphere_select',
-    'icon': Icons.panorama_photosphere_select
+    'icon': Icons.panorama_photosphere_select,
   },
   {'name': 'panorama_vertical', 'icon': Icons.panorama_vertical},
   {'name': 'panorama_vertical_select', 'icon': Icons.panorama_vertical_select},
   {'name': 'panorama_wide_angle', 'icon': Icons.panorama_wide_angle},
   {
     'name': 'panorama_wide_angle_select',
-    'icon': Icons.panorama_wide_angle_select
+    'icon': Icons.panorama_wide_angle_select,
   },
   {'name': 'paragliding', 'icon': Icons.paragliding},
   {'name': 'park', 'icon': Icons.park},
@@ -1663,7 +1663,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'playlist_add_check', 'icon': Icons.playlist_add_check},
   {
     'name': 'playlist_add_check_circle',
-    'icon': Icons.playlist_add_check_circle
+    'icon': Icons.playlist_add_check_circle,
   },
   {'name': 'playlist_add_circle', 'icon': Icons.playlist_add_circle},
   {'name': 'playlist_play', 'icon': Icons.playlist_play},
@@ -1697,7 +1697,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'private_connectivity', 'icon': Icons.private_connectivity},
   {
     'name': 'production_quantity_limits',
-    'icon': Icons.production_quantity_limits
+    'icon': Icons.production_quantity_limits,
   },
   {'name': 'propane', 'icon': Icons.propane},
   {'name': 'propane_tank', 'icon': Icons.propane_tank},
@@ -1878,7 +1878,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'sentiment_satisfied_alt', 'icon': Icons.sentiment_satisfied_alt},
   {
     'name': 'sentiment_very_dissatisfied',
-    'icon': Icons.sentiment_very_dissatisfied
+    'icon': Icons.sentiment_very_dissatisfied,
   },
   {'name': 'sentiment_very_satisfied', 'icon': Icons.sentiment_very_satisfied},
   {'name': 'set_meal', 'icon': Icons.set_meal},
@@ -1937,19 +1937,19 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'signal_cellular_alt', 'icon': Icons.signal_cellular_alt},
   {
     'name': 'signal_cellular_alt_1_bar',
-    'icon': Icons.signal_cellular_alt_1_bar
+    'icon': Icons.signal_cellular_alt_1_bar,
   },
   {
     'name': 'signal_cellular_alt_2_bar',
-    'icon': Icons.signal_cellular_alt_2_bar
+    'icon': Icons.signal_cellular_alt_2_bar,
   },
   {
     'name': 'signal_cellular_connected_no_internet_0_bar',
-    'icon': Icons.signal_cellular_connected_no_internet_0_bar
+    'icon': Icons.signal_cellular_connected_no_internet_0_bar,
   },
   {
     'name': 'signal_cellular_connected_no_internet_4_bar',
-    'icon': Icons.signal_cellular_connected_no_internet_4_bar
+    'icon': Icons.signal_cellular_connected_no_internet_4_bar,
   },
   {'name': 'signal_cellular_no_sim', 'icon': Icons.signal_cellular_no_sim},
   {'name': 'signal_cellular_nodata', 'icon': Icons.signal_cellular_nodata},
@@ -1961,20 +1961,20 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'signal_wifi_bad', 'icon': Icons.signal_wifi_bad},
   {
     'name': 'signal_wifi_connected_no_internet_4',
-    'icon': Icons.signal_wifi_connected_no_internet_4
+    'icon': Icons.signal_wifi_connected_no_internet_4,
   },
   {'name': 'signal_wifi_off', 'icon': Icons.signal_wifi_off},
   {
     'name': 'signal_wifi_statusbar_4_bar',
-    'icon': Icons.signal_wifi_statusbar_4_bar
+    'icon': Icons.signal_wifi_statusbar_4_bar,
   },
   {
     'name': 'signal_wifi_statusbar_connected_no_internet_4',
-    'icon': Icons.signal_wifi_statusbar_connected_no_internet_4
+    'icon': Icons.signal_wifi_statusbar_connected_no_internet_4,
   },
   {
     'name': 'signal_wifi_statusbar_null',
-    'icon': Icons.signal_wifi_statusbar_null
+    'icon': Icons.signal_wifi_statusbar_null,
   },
   {'name': 'signpost', 'icon': Icons.signpost},
   {'name': 'sim_card', 'icon': Icons.sim_card},
@@ -2131,7 +2131,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'switch_access_shortcut', 'icon': Icons.switch_access_shortcut},
   {
     'name': 'switch_access_shortcut_add',
-    'icon': Icons.switch_access_shortcut_add
+    'icon': Icons.switch_access_shortcut_add,
   },
   {'name': 'switch_account', 'icon': Icons.switch_account},
   {'name': 'switch_camera', 'icon': Icons.switch_camera},
@@ -2147,11 +2147,11 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'system_security_update', 'icon': Icons.system_security_update},
   {
     'name': 'system_security_update_good',
-    'icon': Icons.system_security_update_good
+    'icon': Icons.system_security_update_good,
   },
   {
     'name': 'system_security_update_warning',
-    'icon': Icons.system_security_update_warning
+    'icon': Icons.system_security_update_warning,
   },
   {'name': 'system_update', 'icon': Icons.system_update},
   {'name': 'system_update_alt', 'icon': Icons.system_update_alt},
@@ -2248,7 +2248,7 @@ final List<Map<String, dynamic>> _fullIconList = [
   {'name': 'transcribe', 'icon': Icons.transcribe},
   {
     'name': 'transfer_within_a_station',
-    'icon': Icons.transfer_within_a_station
+    'icon': Icons.transfer_within_a_station,
   },
   {'name': 'transform', 'icon': Icons.transform},
   {'name': 'transgender', 'icon': Icons.transgender},

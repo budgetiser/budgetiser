@@ -56,7 +56,7 @@ class _CategoryPickerSingleState<T extends Selectable>
                       });
                       Navigator.of(context).pop();
                     },
-                  )
+                  ),
                 ]
               : null,
       content: StatefulBuilder(

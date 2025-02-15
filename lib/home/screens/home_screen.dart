@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder: (context) => const SimpleCategoryStatScreen(),
                       ),
-                    )
+                    ),
                   },
                   child: const Icon(
                     Icons.category,
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder: (context) => const SimpleAccountStatScreen(),
                       ),
-                    )
+                    ),
                   },
                   child: const Icon(
                     Icons.account_balance,
