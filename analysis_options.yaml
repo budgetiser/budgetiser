@@ -25,9 +25,7 @@ linter:
     require_trailing_commas: true
     always_declare_return_types: true
     prefer_single_quotes: true
-    # always_specify_types: true
     cascade_invocations: true
-    package_api_docs: true
     directives_ordering: true
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
