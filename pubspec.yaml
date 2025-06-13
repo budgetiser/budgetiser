@@ -28,10 +28,10 @@ dependencies:
   package_info_plus: ^8.0.0
   equations: ^5.0.1
   material_color_utilities: ^0.11.1
-  file_picker: ^8.0.0
+  file_picker: ^10.2.0
 
   # MIT License
-  fl_chart: ^0.70.0
+  fl_chart: ^1.0.0
   flutter_file_dialog: ^3.0.2
   badges: ^3.1.2
   fuzzywuzzy: ^1.1.6
