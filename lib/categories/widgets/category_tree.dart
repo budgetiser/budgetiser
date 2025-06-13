@@ -76,7 +76,6 @@ class _CategoryTreeState extends State<CategoryTree> {
         return RecursiveWidget(
           model: categoryTree[index],
           level: 0,
-          parentWasCollapsed: true,
           onTap: widget.onTap,
         );
       },
@@ -98,7 +97,6 @@ class _CategoryTreeState extends State<CategoryTree> {
         return RecursiveWidget(
           model: categoryTree[index],
           level: 0,
-          parentWasCollapsed: true,
           onTap: widget.onTap,
         );
       },
@@ -118,13 +116,11 @@ class RecursiveWidget extends StatefulWidget {
     super.key,
     required this.model,
     required this.level,
-    required this.parentWasCollapsed,
     this.onTap,
   });
 
   final RecursiveCategoryModel model;
   final int level;
-  final bool parentWasCollapsed; // state of the parent
   final ValueChanged<TransactionCategory>? onTap;
 
   @override
@@ -132,13 +128,7 @@ class RecursiveWidget extends StatefulWidget {
 }
 
 class _RecursiveWidgetState extends State<RecursiveWidget> {
-  late bool isExpanded;
-
-  @override
-  void initState() {
-    super.initState();
-    isExpanded = !widget.parentWasCollapsed;
-  }
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +156,6 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
                   return RecursiveWidget(
                     model: child,
                     level: widget.level + 1,
-                    parentWasCollapsed: isExpanded,
                     onTap: widget.onTap,
                   );
                 }).toList(),
