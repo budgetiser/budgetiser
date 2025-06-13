@@ -37,6 +37,7 @@ class AccountItemsWidget extends StatelessWidget {
             }
             return ListView.builder(
               shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(vertical: 0),
               itemCount: snapshot.data!.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
