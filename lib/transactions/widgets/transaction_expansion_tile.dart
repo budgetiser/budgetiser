@@ -37,7 +37,7 @@ class TransactionExpansionTile extends StatelessWidget {
         ],
       ),
       initiallyExpanded: initiallyExpanded,
-      controller: ExpansionTileController(),
+      controller: ExpansibleController(),
       children: [
         Consumer<TransactionModel>(
           builder: (context, model, child) {
