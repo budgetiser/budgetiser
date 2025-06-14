@@ -1,6 +1,7 @@
 ---
 name: Feature Request
 about: Create a feature request to improve Budgetiser
+type: Feature
 title: ""
 labels: "triage"
 assignees: ''
