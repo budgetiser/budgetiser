@@ -30,7 +30,7 @@ class TransactionItem extends StatelessWidget {
           ),
         },
         child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          margin: const EdgeInsets.all(8),
           child: Row(
             children: [
               SelectableIcon(
