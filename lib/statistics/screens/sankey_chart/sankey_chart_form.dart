@@ -20,6 +20,8 @@ class SankeyChartForm extends StatefulWidget {
 
 class _SankeyChartFormState extends State<SankeyChartForm> {
   final SankeyChartSettings _chartSettings = SankeyChartSettings();
+  int totalAccountCount = 0;
+  int totalCategoryCount = 0;
 
   List<Account> _selectedAccounts = [];
   List<TransactionCategory> _selectedCategories = [];
@@ -41,12 +43,14 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
     setState(() {
       _selectedAccounts = allAccounts;
     });
+    totalAccountCount = allAccounts.length;
     List<TransactionCategory> allCategories =
         await Provider.of<CategoryModel>(context, listen: false)
             .getAllCategories();
     setState(() {
       _selectedCategories = allCategories;
     });
+    totalCategoryCount = allCategories.length;
   }
 
   @override
@@ -127,7 +131,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
                     _selectedAccounts.length.toString(),
                     style: const TextStyle(fontSize: 12),
                   ),
-                  showBadge: _selectedAccounts.isNotEmpty,
+                  showBadge: _selectedAccounts.length != totalAccountCount,
                   child: const Icon(Icons.account_balance),
                 ),
               ],
@@ -155,7 +159,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
                     _selectedCategories.length.toString(),
                     style: const TextStyle(fontSize: 12),
                   ),
-                  showBadge: _selectedCategories.isNotEmpty,
+                  showBadge: _selectedCategories.length != totalCategoryCount,
                   child: const Icon(Icons.category),
                 ),
               ],

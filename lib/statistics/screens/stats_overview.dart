@@ -76,7 +76,7 @@ class _StatsOverviewState extends State<StatsOverview> {
               ),
             },
             child: const Icon(
-              Icons.line_axis_rounded,
+              Icons.show_chart,
               size: 70,
             ),
           ),
@@ -104,7 +104,7 @@ class _StatsOverviewState extends State<StatsOverview> {
               ),
             },
             child: const Icon(
-              Icons.bar_chart,
+              Icons.line_axis_rounded,
               size: 70,
             ),
           ),
