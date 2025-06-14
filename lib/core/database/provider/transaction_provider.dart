@@ -74,11 +74,13 @@ class TransactionModel extends ChangeNotifier {
     Profiler.instance.start('map to single transaction');
     Profiler.instance.start('get accounts from list');
     Account account1 = fullAccountList.firstWhere(
-        (element) => element.id == mapItem['account1_id']); // TODO if not found
+      (element) => element.id == mapItem['account1_id'],
+    ); // TODO if not found
     Account? account2 = mapItem['account2_id'] == null
         ? null
-        : fullAccountList.firstWhere((element) =>
-            element.id == mapItem['account2_id']); // TODO if not found
+        : fullAccountList.firstWhere(
+            (element) => element.id == mapItem['account2_id'],
+          ); // TODO if not found
     Profiler.instance.end();
     SingleTransaction returnTransaction = SingleTransaction.fromDBmap(
       mapItem,
@@ -122,21 +124,24 @@ class TransactionModel extends ChangeNotifier {
           map['category_id'],
           map['date'],
           map['account1_id'],
-          map['account2_id']
+          map['account2_id'],
         ]);
       }
 
       if (transaction.account2 != null) {
         await txn.rawUpdate(
-            'UPDATE account SET balance = round(balance - ?, 2) WHERE id = ?',
-            [transaction.value, transaction.account.id]);
+          'UPDATE account SET balance = round(balance - ?, 2) WHERE id = ?',
+          [transaction.value, transaction.account.id],
+        );
         await txn.rawUpdate(
-            'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
-            [transaction.value, transaction.account2!.id]);
+          'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
+          [transaction.value, transaction.account2!.id],
+        );
       } else {
         await txn.rawUpdate(
-            'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
-            [transaction.value, transaction.account.id]);
+          'UPDATE account SET balance = round(balance + ?, 2) WHERE id = ?',
+          [transaction.value, transaction.account.id],
+        );
       }
     });
 
@@ -223,8 +228,10 @@ class TransactionModel extends ChangeNotifier {
     return sorted;
   }
 
-  Future<Map<String, int>> getMonthlyCount(
-      {List<Account>? accounts, List<TransactionCategory>? categories}) async {
+  Future<Map<String, int>> getMonthlyCount({
+    List<Account>? accounts,
+    List<TransactionCategory>? categories,
+  }) async {
     final db = await DatabaseHelper.instance.database;
     String? accountFilter;
     if (accounts != null) {
@@ -260,7 +267,9 @@ class TransactionModel extends ChangeNotifier {
     Map<String, int> months = {};
     for (int i = 0; i < dateList.length; i++) {
       months.putIfAbsent(
-          dateList[i]['month'], () => dateList[i]['amount'] as int);
+        dateList[i]['month'],
+        () => dateList[i]['amount'] as int,
+      );
     }
 
     return months;
@@ -279,17 +288,17 @@ class TransactionModel extends ChangeNotifier {
     String? categoryFilter;
     if (categories != null) {
       categoryFilter = categories.fold(
-          null,
-          (previousValue, element) =>
-              '$previousValue, ${element.id.toString()}');
+        null,
+        (previousValue, element) => '$previousValue, ${element.id.toString()}',
+      );
     }
 
     String? accountFilter;
     if (accounts != null) {
       accountFilter = accounts.fold(
-          null,
-          (previousValue, element) =>
-              '$previousValue, ${element.id.toString()}');
+        null,
+        (previousValue, element) => '$previousValue, ${element.id.toString()}',
+      );
     }
 
     timelineTask.start('sql');
@@ -309,7 +318,7 @@ class TransactionModel extends ChangeNotifier {
       ''',
       [
         firstOfMonth(inMonth).millisecondsSinceEpoch,
-        lastSecondOfMonth(inMonth)
+        lastSecondOfMonth(inMonth),
       ],
     );
 
@@ -334,40 +343,76 @@ class TransactionModel extends ChangeNotifier {
     return transactions;
   }
 
-  /// Get List of transactions in a category and account inside the dateRange.
-  Future<List<SingleTransaction>> getFilteredTransactions(
+  Future<List<Map<String, dynamic>>> getAccountStats(
     List<Account> accounts,
+    DateTimeRange dateRange,
+  ) async {
+    final db = await DatabaseHelper.instance.database;
+    List<Map<String, dynamic>> maps = await db.rawQuery('''
+        WITH adjusted_transactions AS (
+            SELECT 
+                account1_id AS account_id,
+                CASE 
+                    WHEN account2_id IS NOT NULL THEN -ST.value
+                    ELSE ST.value
+                END AS adjusted_value,
+                CASE 
+                    WHEN account2_id IS NOT NULL THEN 1
+                    ELSE 0
+                END AS is_transfer,
+                date
+            FROM singleTransaction AS ST
+            UNION ALL
+            SELECT 
+                account2_id AS account_id,
+                ST.value AS adjusted_value,
+                1 AS is_transfer,
+                date
+            FROM singleTransaction AS ST
+            WHERE account2_id IS NOT NULL
+        )
+
+        SELECT A.name, A.color, A.icon, SUM(case when ST.is_transfer = 1 then 0 else 1 end) AS 'count', SUM(ST.is_transfer) AS 'transfers', SUM(ST.adjusted_value) AS 'sum', AVG(ST.adjusted_value) AS 'mean', SUM(case when ST.adjusted_value > 0 then ST.adjusted_value else 0 end) AS 'psum',  SUM(case when ST.adjusted_value < 0 then ST.adjusted_value else 0 end) AS 'nsum'
+        FROM adjusted_transactions AS ST, account as A
+        WHERE ST.account_id = A.id
+        AND ${sqlWhereCombined(
+      [
+        'ST.account_id',
+        'ST.date',
+      ],
+      [
+        accounts.map((e) => e.id).toList(),
+      ],
+      dateRange,
+    )}
+        GROUP BY ST.account_id;
+        ''');
+    return maps;
+  }
+
+  Future<List<Map<String, dynamic>>> getCategoryStats(
     List<TransactionCategory> categories,
     DateTimeRange dateRange,
   ) async {
     final db = await DatabaseHelper.instance.database;
     List<Map<String, dynamic>> maps = await db.rawQuery('''
-        SELECT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
-        singleTransaction.description AS description, singleTransaction.id AS id
-        FROM singleTransaction, category
-        WHERE category.id = singleTransaction.category_id
+        SELECT C.name, C.color, C.icon, COUNT(ST.value) AS 'count', SUM(ST.value) AS 'sum', AVG(ST.value) AS 'mean', SUM(case when ST.value > 0 then ST.value else 0 end) AS 'psum',  SUM(case when ST.value < 0 then ST.value else 0 end) AS 'nsum'
+        FROM singleTransaction AS ST, category as C
+        WHERE ST.category_id = C.id
         AND account2_id IS NULL
-        AND ${sqlWhereCombined([
-          'account1_id',
-          'category_id',
-          'date',
-        ], [
-          accounts.map((e) => e.id).toList(),
-          categories.map((e) => e.id).toList()
-        ], dateRange)}
-        ;
+        AND ${sqlWhereCombined(
+      [
+        'ST.category_id',
+        'ST.date',
+      ],
+      [
+        categories.map((e) => e.id).toList(),
+      ],
+      dateRange,
+    )}
+        GROUP BY ST.category_id;
         ''');
 
-    List<SingleTransaction> transactions = [];
-    for (int i = 0; i < maps.length; i++) {
-      transactions.add(await _mapToSingleTransaction(
-        maps[i],
-        await AccountModel().getAllAccounts(),
-      ));
-    }
-    transactions.sort((a, b) {
-      return b.date.compareTo(a.date);
-    });
-    return transactions;
+    return maps;
   }
 }

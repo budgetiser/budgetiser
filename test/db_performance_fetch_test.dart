@@ -40,7 +40,9 @@ void main() {
     }
 
     expect(
-        allTransactions.length, equals(OldDataset().getTransactions().length));
+      allTransactions.length,
+      equals(OldDataset().getTransactions().length),
+    );
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
   });
   test('Performance: Fetch all TMP categories', () async {

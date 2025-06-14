@@ -183,10 +183,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               .keys // TODO: broken when only one transaction
               .toList()
               .sublist(
-                  0,
-                  monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
-                      ? 1
-                      : 1)
+                0,
+                monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
+                    ? 1
+                    : 1,
+              )
               .contains(keys[i]),
         );
       },

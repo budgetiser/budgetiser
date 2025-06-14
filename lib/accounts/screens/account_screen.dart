@@ -33,7 +33,8 @@ class _AccountScreenState extends State<AccountScreen> {
     setState(() {
       if (preferences.getString('key-account-screen-sorted-by') != null) {
         currentSort = stringToEnumSortedByEnum(
-            preferences.getString('key-account-screen-sorted-by')!);
+          preferences.getString('key-account-screen-sorted-by')!,
+        );
       }
     });
   }
@@ -48,9 +49,6 @@ class _AccountScreenState extends State<AccountScreen> {
         return b.balance.compareTo(a.balance);
       case SortedByEnum.numberAscending:
         return a.balance.compareTo(b.balance);
-      default:
-        // by name
-        return a.name.compareTo(b.name);
     }
   }
 
@@ -85,9 +83,11 @@ class _AccountScreenState extends State<AccountScreen> {
             });
             final preferences = await SharedPreferences.getInstance();
             preferences.setString(
-                'key-account-screen-sorted-by', currentSort.toString());
+              'key-account-screen-sorted-by',
+              currentSort.toString(),
+            );
           },
-        )
+        ),
       ],
       title: const Text(
         'Accounts',
@@ -164,7 +164,7 @@ class _AccountScreenState extends State<AccountScreen> {
             accountData: archivedAccountList[index],
           );
         },
-      )
+      ),
     ];
   }
 }

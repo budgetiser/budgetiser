@@ -239,11 +239,14 @@ class DangerZone extends StatelessWidget {
                       title: const Text('Select dataset'),
                       actions: [
                         TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('cancel')),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('cancel'),
+                        ),
                       ],
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 16),
+                        horizontal: 8,
+                        vertical: 16,
+                      ),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -271,7 +274,8 @@ class DangerZone extends StatelessWidget {
                                     onTap: () async {
                                       await DatabaseHelper.instance.resetDB();
                                       DatabaseHelper.instance.fillDBwithTMPdata(
-                                          allDataSets[index]);
+                                        allDataSets[index],
+                                      );
                                       if (context.mounted) {
                                         Navigator.of(context).pop();
                                       }

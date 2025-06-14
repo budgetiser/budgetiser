@@ -63,7 +63,7 @@ class OldDataset extends DemoDataset {
       Icons.show_chart,
       Icons.paypal,
       Icons.perm_identity,
-      Icons.align_horizontal_left_outlined
+      Icons.align_horizontal_left_outlined,
     ];
     List<String> names = [
       'Wallet',
@@ -72,7 +72,7 @@ class OldDataset extends DemoDataset {
       'Investment',
       'PayPal',
       'Students ID',
-      'The Incredibly Elongated and Remarkably Extended Account Name of Unparalleled Length and Magnitude'
+      'The Incredibly Elongated and Remarkably Extended Account Name of Unparalleled Length and Magnitude',
     ];
 
     for (int i = 0; i < icons.length; i++) {
@@ -218,8 +218,9 @@ class OldDataset extends DemoDataset {
     // 33-34
     addCategory('Daycare', Icons.child_care);
     addCategory(
-        'Really long Extracurricular Activities That Enrich and Shape Personal Growth',
-        Icons.sports_soccer);
+      'Really long Extracurricular Activities That Enrich and Shape Personal Growth',
+      Icons.sports_soccer,
+    );
     // 35-38
     addCategory('Life Insurances', Icons.local_hospital);
     addCategory('Home Insurances', Icons.home);
@@ -299,7 +300,8 @@ class OldDataset extends DemoDataset {
         );
         nextOccurrence = nextOccurrence.subtract(
           Duration(
-              days: daysInBetween.elementAt((i + 1) % daysInBetween.length)),
+            days: daysInBetween.elementAt((i + 1) % daysInBetween.length),
+          ),
         );
       }
     }
@@ -394,7 +396,7 @@ class OldDataset extends DemoDataset {
         Accs.wallet,
         Accs.wallet,
         Accs.creditCard,
-        Accs.wallet
+        Accs.wallet,
       ],
       categories: [cats.Transportation.parking],
       values: [-4.75, -3.5, -1.5],

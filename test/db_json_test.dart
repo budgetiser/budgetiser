@@ -8,6 +8,7 @@ import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/database/temporary_data/datasets/old.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -43,25 +44,36 @@ void main() {
     for (Account a in OldDataset().getAccounts()) {
       // cant check balance, because it is changed in the db after inserting transactions
       expect(a.name, (await AccountModel().getOneAccount(a.id)).name);
-      expect(a.description,
-          (await AccountModel().getOneAccount(a.id)).description);
-      expect(a.color.value,
-          (await AccountModel().getOneAccount(a.id)).color.value);
-      expect(a.icon.toString(),
-          (await AccountModel().getOneAccount(a.id)).icon.toString());
+      expect(
+        a.description,
+        (await AccountModel().getOneAccount(a.id)).description,
+      );
+
+      // comparing int32 values, because one object is a MaterialColor and the other is a Color
+      var a123 = (await AccountModel().getOneAccount(a.id)).color;
+      expect(ColorEx(a.color).toInt32, ColorEx(a123).toInt32);
+
+      expect(
+        a.icon.toString(),
+        (await AccountModel().getOneAccount(a.id)).icon.toString(),
+      );
       expect(a.archived, (await AccountModel().getOneAccount(a.id)).archived);
     }
 
     for (SingleTransaction t in OldDataset().getTransactions()) {
-      expect(t.toString(),
-          (await TransactionModel().getOneTransaction(t.id)).toString());
+      expect(
+        t.toString(),
+        (await TransactionModel().getOneTransaction(t.id)).toString(),
+      );
     }
     for (Budget b in OldDataset().getBudgets()) {
       expect(b.toString(), (await BudgetModel().getBudget(b.id)).toString());
     }
     for (TransactionCategory t in OldDataset().getCategories()) {
       expect(
-          t.toString(), (await CategoryModel().getCategory(t.id)).toString());
+        t.toString(),
+        (await CategoryModel().getCategory(t.id)).toString(),
+      );
     }
 
     var fullJSON2 = await dbh.generateRobustJSON();
@@ -78,7 +90,7 @@ void main() {
           'color': 4283215696,
           'balance': -336.41,
           'description': '',
-          'archived': 0
+          'archived': 0,
         },
         {
           'id': 2,
@@ -87,7 +99,7 @@ void main() {
           'color': 4283215696,
           'balance': 0.0,
           'description': '',
-          'archived': 1
+          'archived': 1,
         }
       ],
       'budget': [
@@ -98,7 +110,7 @@ void main() {
           'color': 4294198070,
           'max_value': 100.0,
           'interval_unit': 'IntervalUnit.month',
-          'description': ''
+          'description': '',
         },
       ],
       'category': [
@@ -108,7 +120,7 @@ void main() {
           'icon': 57522,
           'color': 4280391411,
           'description': '',
-          'archived': 0
+          'archived': 0,
         },
         {
           'id': 2,
@@ -116,7 +128,7 @@ void main() {
           'icon': 57627,
           'color': 4294198070,
           'description': '',
-          'archived': 0
+          'archived': 0,
         },
         {
           'id': 3,
@@ -124,7 +136,7 @@ void main() {
           'icon': 57627,
           'color': 4294198070,
           'description': '',
-          'archived': 1
+          'archived': 1,
         },
       ],
       'categoryBridge': [
@@ -164,7 +176,7 @@ void main() {
           'category_id': 1,
           'date': 1721983891492,
           'account1_id': 1,
-          'account2_id': null
+          'account2_id': null,
         },
         {
           'id': 2,
@@ -174,7 +186,7 @@ void main() {
           'category_id': 1,
           'date': 1719391891492,
           'account1_id': 2,
-          'account2_id': 1
+          'account2_id': 1,
         },
         {
           'id': 3,
@@ -184,7 +196,7 @@ void main() {
           'category_id': 1,
           'date': 1716799891492,
           'account1_id': 2,
-          'account2_id': null
+          'account2_id': null,
         },
       ],
     };

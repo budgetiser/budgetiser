@@ -22,27 +22,29 @@ class BudgetScreen extends StatelessWidget {
         actions: const [],
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<BudgetModel>(builder: (context, model, child) {
-        return FutureBuilder<List<Budget>>(
-          future: model.getAllBudgets(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Budgets'),
-              );
-            }
-            if (snapshot.hasError) {
-              return const Text('Oops!');
-            }
-            return _screenContent(snapshot.data!);
-          },
-        );
-      }),
+      body: Consumer<BudgetModel>(
+        builder: (context, model, child) {
+          return FutureBuilder<List<Budget>>(
+            future: model.getAllBudgets(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Budgets'),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Text('Oops!');
+              }
+              return _screenContent(snapshot.data!);
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(

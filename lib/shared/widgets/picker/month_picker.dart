@@ -36,15 +36,16 @@ class _MonthPickerState extends State<MonthPicker> {
         ),
         Expanded(
           child: Center(
-              child: InkWell(
-            onTap: () {
-              setState(() {
-                selectedDate = firstOfMonth(DateTime.now());
-                widget.onDateChangedCallback(selectedDate);
-              });
-            },
-            child: Text(dateAsYYYYMM(selectedDate)),
-          )),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  selectedDate = firstOfMonth(DateTime.now());
+                  widget.onDateChangedCallback(selectedDate);
+                });
+              },
+              child: Text(dateAsYYYYMM(selectedDate)),
+            ),
+          ),
         ),
         Center(
           child: IconButton(
@@ -60,7 +61,7 @@ class _MonthPickerState extends State<MonthPicker> {
               });
             },
           ),
-        )
+        ),
       ],
     );
   }
