@@ -46,7 +46,7 @@ class DatabaseHelper {
 
   /// Clear db and reset (TODO some) shared preferences
   // ignore: always_declare_return_types
-  _resetDB(Database db, int newVersion) async {
+  dynamic _resetDB(Database db, int newVersion) async {
     await _dropTables(db);
     await recentlyUsedAccount.removeAllItems();
     await recentlyUsedCategory.removeAllItems();
@@ -55,7 +55,7 @@ class DatabaseHelper {
 
   /// Public method for resetting db
   // ignore: always_declare_return_types
-  resetDB({int newVersion = currentDatabaseVersion}) async {
+  dynamic resetDB({int newVersion = currentDatabaseVersion}) async {
     final Database db = await database;
     await _resetDB(db, newVersion);
   }
