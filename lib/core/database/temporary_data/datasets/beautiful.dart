@@ -48,7 +48,12 @@ class BeautifulDataset extends DemoDataset {
   List<Account> generateAccounts() {
     List<Account> list = [];
     int id = 1;
-    void addAccount(String name, IconData icon, Color color) {
+    void addAccount(
+      String name,
+      IconData icon,
+      Color color, {
+      bool isArchived = false,
+    }) {
       list.add(
         Account(
           id: id,
@@ -56,6 +61,7 @@ class BeautifulDataset extends DemoDataset {
           icon: icon,
           color: color,
           balance: 0,
+          archived: isArchived,
         ),
       );
       id++;
@@ -65,6 +71,12 @@ class BeautifulDataset extends DemoDataset {
     addAccount('Debit Card', Icons.business_outlined, Colors.red);
     addAccount('Savings', Icons.account_balance, Colors.green);
     addAccount('Cash', Icons.attach_money, Colors.orange);
+    addAccount(
+      'Old bank account',
+      Icons.account_balance_wallet,
+      Colors.blue,
+      isArchived: true,
+    );
 
     return list;
   }
@@ -282,6 +294,7 @@ class BeautifulDataset extends DemoDataset {
       values: [350, 500],
       daysInBetween: [60, 60, 30, 90],
       amount: 4,
+      initialOffset: Duration(days: 5),
     );
     addTransaction(
       title: 'Freelance',
