@@ -37,7 +37,7 @@ class SettingsStreamClass {
     _settingsStreamSink.add(currentThemeMode);
   }
 
-  ThemeMode _stringToThemeMode(themeModeString) {
+  ThemeMode _stringToThemeMode(String? themeModeString) {
     ThemeMode themeMode;
     switch (themeModeString) {
       case 'system':
