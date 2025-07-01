@@ -3,7 +3,7 @@
 part of 'database.dart';
 
 extension DatabaseExtensionSQL on DatabaseHelper {
-  _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  dynamic _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (newVersion >= 2 && oldVersion < 2) {
       if (kDebugMode) {
         print('deleting savings table if existent');
@@ -20,7 +20,7 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     }
   }
 
-  _onCreate(Database db, int version) async {
+  dynamic _onCreate(Database db, int version) async {
     if (kDebugMode) {
       print('creating database version $version');
     }
@@ -103,7 +103,7 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     }
   }
 
-  _dropTables(Database db) async {
+  dynamic _dropTables(Database db) async {
     await db.execute('''
           DROP TABLE IF EXISTS categoryBridge;
           ''');

@@ -236,7 +236,7 @@ class _AccountFormState extends State<AccountForm> {
     );
   }
 
-  void archiveToggle(value) {
+  void archiveToggle(dynamic value) {
     if (value == true) {
       showDialog(
         context: context,

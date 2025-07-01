@@ -19,7 +19,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   dynamic_color: ^1.7.0
   sqflite: ^2.3.3
-  flutter_markdown: ^0.7.1
+  markdown_widget: ^2.3.2+8
   provider: ^6.0.5
   shared_preferences: ^2.2.3
   path: ^1.8.1
@@ -39,7 +39,7 @@ dependencies:
   grouped_list: ^6.0.0
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   sqflite_common_ffi: ^2.3.3
   test: ^1.25.7
 
@@ -51,9 +51,6 @@ flutter:
 
   assets:
     - assets/how-to.md
-    - assets/images/how_to/account.png
-    - assets/images/how_to/category.png
-    - assets/images/how_to/transaction.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
