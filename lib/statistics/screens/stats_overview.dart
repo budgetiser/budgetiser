@@ -33,9 +33,7 @@ class _StatsOverviewState extends State<StatsOverview> {
       drawer: const CreateDrawer(),
       body: GridView.count(
         primary: false,
-        padding: const EdgeInsets.all(20),
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         crossAxisCount: 2,
         children: [
           StatPreviewWidget(

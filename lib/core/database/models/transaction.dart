@@ -33,6 +33,7 @@ class SingleTransaction {
         date = importDate(map['date']);
 
   /// In Version <1.6 date was exported as readable String
+  // ignore: strict_top_level_inference
   static DateTime importDate(date) {
     if (date.runtimeType == int) {
       return DateTime.fromMillisecondsSinceEpoch(date);

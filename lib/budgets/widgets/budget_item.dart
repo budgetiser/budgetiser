@@ -20,7 +20,7 @@ class BudgetItem extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        padding: const EdgeInsets.all(8),
         child: Row(
           children: [
             budgetIcon(),

@@ -62,12 +62,16 @@ class BudgetScreen extends StatelessWidget {
   }
 
   Widget _screenContent(List<Budget> budgets) {
-    return GroupedListView<Budget, IntervalUnit>(
-      elements: budgets,
-      groupBy: (budget) => budget.intervalUnit,
-      itemBuilder: (context, element) => BudgetItem(budget: element),
-      groupSeparatorBuilder: (unit) => DividerWithText(unit.label),
-      groupComparator: (value1, value2) => Enum.compareByIndex(value1, value2),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: GroupedListView<Budget, IntervalUnit>(
+        elements: budgets,
+        groupBy: (budget) => budget.intervalUnit,
+        itemBuilder: (context, element) => BudgetItem(budget: element),
+        groupSeparatorBuilder: (unit) => DividerWithText(unit.label),
+        groupComparator: (value1, value2) =>
+            Enum.compareByIndex(value1, value2),
+      ),
     );
   }
 }

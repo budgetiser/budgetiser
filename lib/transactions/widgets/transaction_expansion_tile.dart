@@ -57,6 +57,8 @@ class TransactionExpansionTile extends StatelessWidget {
                 return GroupedListView<SingleTransaction, String>(
                   shrinkWrap: true,
                   elements: snapshot.data!,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                   groupBy: (element) => dateFormat.format(element.date),
                   groupComparator: (value1, value2) => value2.compareTo(value1),
                   itemComparator: (item1, item2) =>
