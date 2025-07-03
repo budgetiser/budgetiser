@@ -1,0 +1,41 @@
+version: 2
+updates:
+  # Maintain dependencies for Flutter/Dart (pub)
+  - package-ecosystem: "pub"
+    directory: "/" # Location of your pubspec.yaml
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "flutter"
+      - "pub"
+    # Group minor and patch updates for `pub` dependencies to reduce PR noise
+    groups:
+      pub-minor-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+      pub-patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/" # Location of your .github/workflows/
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    # Group all GitHub Actions updates to reduce PR noise
+    groups:
+      github-actions-dependencies:
+        patterns:
+          - "*" # Match all GitHub Actions
+        update-types:
+          - "patch"
+          - "minor"
