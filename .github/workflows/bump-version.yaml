@@ -24,18 +24,13 @@ jobs:
         uses: gittools/actions/gitversion/command@v4.0.0
         with:
           arguments: "/showConfig"
+          configFilePath: gitversion.yml
 
       - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v4
         with:
-          useConfigFile: true
-          configFilePath: GitVersion.yml
-          updateAssemblyInfo: false
-          updateGitAttributes: false
-          updateBuildNumber: false
-          commitMode: "MergeMessage"
-          noFetch: true
+          configFilePath: gitversion.yml
 
       - name: Print version
         run: |
