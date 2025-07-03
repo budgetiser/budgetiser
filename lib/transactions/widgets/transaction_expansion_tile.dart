@@ -2,6 +2,7 @@ import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
+import 'package:budgetiser/shared/utils/date_utils.dart';
 import 'package:budgetiser/transactions/widgets/transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -85,9 +86,15 @@ class TransactionExpansionTile extends StatelessWidget {
 
   Future<List<SingleTransaction>> _future(TransactionModel model) async {
     List<String> yearMonth = date.split('-');
-
-    return model.getFilteredTransactionsByMonth(
-      inMonth: DateTime(int.parse(yearMonth[0]), int.parse(yearMonth[1])),
+    DateTime inMonth = DateTime(
+      int.parse(yearMonth[0]),
+      int.parse(yearMonth[1]),
+    );
+    return model.getFilteredTransactions(
+      dateTimeRange: DateTimeRange(
+        start: firstOfMonth(inMonth),
+        end: lastSecondOfMonth(inMonth),
+      ),
       fullAccountList: allAccounts,
       accounts: accountsFilter,
       categories: categoriesFilter,
