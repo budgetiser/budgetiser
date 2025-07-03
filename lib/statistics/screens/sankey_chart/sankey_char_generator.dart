@@ -136,12 +136,14 @@ class SankeyChart {
     List<TransactionCategory> categories,
     DateTimeRange dateRange,
   ) async {
-    List<Account> allAccounts =
-        await Provider.of<AccountModel>(context, listen: false)
-            .getAllAccounts();
+    // Fetch all needed data up front
+    final accountModel = Provider.of<AccountModel>(context, listen: false);
+    final transactionModel = Provider.of<TransactionModel>(context, listen: false);
+    final categoryModel = Provider.of<CategoryModel>(context, listen: false);
+
+    List<Account> allAccounts = await accountModel.getAllAccounts();
     List<SingleTransaction> allTransactions =
-        await Provider.of<TransactionModel>(context, listen: false)
-            .getFilteredTransactions(
+        await transactionModel.getFilteredTransactions(
       dateTimeRange: dateRange,
       accounts: accounts,
       categories: categories,
@@ -160,8 +162,9 @@ class SankeyChart {
 
     List<Flow> finalTransactions;
     if (settings.applyCategoryHierarchy) {
+      // Pass categoryModel to avoid BuildContext in async
       finalTransactions =
-          await _applyCategoryHierarchy(context, mergedTransactions);
+          await _applyCategoryHierarchy(categoryModel, mergedTransactions);
     } else {
       finalTransactions = _toFlows(mergedTransactions);
     }
@@ -228,13 +231,13 @@ class SankeyChart {
     return mergedTransactions.values.toList();
   }
 
+  // Change signature to accept CategoryModel instead of BuildContext
   Future<List<Flow>> _applyCategoryHierarchy(
-    BuildContext context,
+    CategoryModel categoryModel,
     List<SingleTransaction> mergedTransactions,
   ) async {
     List<Flow> finalTransactions = [];
-    var parentList = await Provider.of<CategoryModel>(context, listen: false)
-        .getParentsList();
+    var parentList = await categoryModel.getParentsList();
     for (SingleTransaction transaction in mergedTransactions) {
       if (transaction.account2 != null) {
         finalTransactions.add(
@@ -272,8 +275,7 @@ class SankeyChart {
         Selectable lastSource = transaction.account;
         for (int parent in parents) {
           TransactionCategory parentCategory =
-              await Provider.of<CategoryModel>(context, listen: false)
-                  .getCategory(parent);
+              await categoryModel.getCategory(parent);
           finalTransactions.add(
             Flow(
               source: lastSource,

@@ -37,6 +37,8 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
   }
 
   void initAsync() async {
+    final categoryModel = Provider.of<CategoryModel>(context, listen: false);
+
     List<Account> allAccounts =
         await Provider.of<AccountModel>(context, listen: false)
             .getAllAccounts();
@@ -45,8 +47,7 @@ class _SankeyChartFormState extends State<SankeyChartForm> {
     });
     totalAccountCount = allAccounts.length;
     List<TransactionCategory> allCategories =
-        await Provider.of<CategoryModel>(context, listen: false)
-            .getAllCategories();
+        await categoryModel.getAllCategories();
     setState(() {
       _selectedCategories = allCategories;
     });
