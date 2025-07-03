@@ -6,10 +6,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    labels:
-      - "dependencies"
-      - "flutter"
-      - "pub"
     # Group minor and patch updates for `pub` dependencies to reduce PR noise
     groups:
       pub-minor-updates:
@@ -28,9 +24,6 @@ updates:
     directory: "/" # Location of your .github/workflows/
     schedule:
       interval: "monthly"
-    labels:
-      - "dependencies"
-      - "github-actions"
     # Group all GitHub Actions updates to reduce PR noise
     groups:
       github-actions-dependencies:
