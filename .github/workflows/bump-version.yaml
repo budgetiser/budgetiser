@@ -42,8 +42,7 @@ jobs:
         if: steps.check_version.outputs.cancelled == 'true'
         run: exit 0
 
-      # Only run the rest if a new version is detected
-      - name: get previous build number and incrment in by 1
+      - name: get previous build number and increment in by 1
         if: steps.check_version.outputs.cancelled == 'false'
         run: |
           export BUILD_NUMBER=$(sed -E -n 's/version. [0-9]+\.[0-9]+\.[0-9]+\+([0-9]+)/\1/p' pubspec.yaml)
