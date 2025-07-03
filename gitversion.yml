@@ -1,4 +1,4 @@
-mode: Mainline
+mode: ContinuousDelivery
 major-version-bump-message: "^(major)"
 minor-version-bump-message: "^(feat)"
 patch-version-bump-message: "^(build|fix|perf|refactor|revert|design|test)"
