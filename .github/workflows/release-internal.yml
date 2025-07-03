@@ -81,6 +81,7 @@ jobs:
         uses: gittools/actions/gitversion/setup@v3
         with:
           versionSpec: "5.x"
+          configFilePath: gitversion.yml
 
       - name: Determine Version
         id: gitversion
