@@ -138,7 +138,8 @@ class SankeyChart {
   ) async {
     // Fetch all needed data up front
     final accountModel = Provider.of<AccountModel>(context, listen: false);
-    final transactionModel = Provider.of<TransactionModel>(context, listen: false);
+    final transactionModel =
+        Provider.of<TransactionModel>(context, listen: false);
     final categoryModel = Provider.of<CategoryModel>(context, listen: false);
 
     List<Account> allAccounts = await accountModel.getAllAccounts();
