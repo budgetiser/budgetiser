@@ -171,7 +171,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return ListView.builder(
       itemCount: keys.length,
-      padding: const EdgeInsets.only(bottom: 80),
+      padding: const EdgeInsets.only(bottom: 100),
       itemBuilder: (context, i) {
         return TransactionExpansionTile(
           date: keys[i],
@@ -179,14 +179,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           allAccounts: fullAccountList,
           accountsFilter: _currentFilterAccounts,
           categoriesFilter: _currentFilterCategories,
-          initiallyExpanded: monthYearSnapshotData
-              .keys // TODO: broken when only one transaction
+          initiallyExpanded: monthYearSnapshotData.keys
               .toList()
               .sublist(
-                  0,
-                  monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
-                      ? 1
-                      : 1)
+                0,
+                monthYearSnapshotData[monthYearSnapshotData.keys.first]! > 10
+                    ? 1
+                    : 1,
+              )
               .contains(keys[i]),
         );
       },

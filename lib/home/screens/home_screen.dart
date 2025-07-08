@@ -24,55 +24,53 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
       ),
       drawer: const CreateDrawer(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Card.outlined(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            Card.outlined(
               color: Theme.of(context).hoverColor,
               child: AccountItemsWidget(),
             ),
-          ),
-          Expanded(
-            child: GridView.count(
-              primary: false,
-              padding: const EdgeInsets.all(8),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-              children: [
-                StatPreviewWidget(
-                  text: 'Category stats',
-                  onTap: () => {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const SimpleCategoryStatScreen(),
+            Expanded(
+              child: GridView.count(
+                primary: false,
+                crossAxisCount: 2,
+                children: [
+                  StatPreviewWidget(
+                    text: 'Category stats',
+                    onTap: () => {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const SimpleCategoryStatScreen(),
+                        ),
                       ),
-                    )
-                  },
-                  child: const Icon(
-                    Icons.category,
-                    size: 70,
+                    },
+                    child: const Icon(
+                      Icons.category,
+                      size: 70,
+                    ),
                   ),
-                ),
-                StatPreviewWidget(
-                  text: 'Account stats',
-                  onTap: () => {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const SimpleAccountStatScreen(),
+                  StatPreviewWidget(
+                    text: 'Account stats',
+                    onTap: () => {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SimpleAccountStatScreen(),
+                        ),
                       ),
-                    )
-                  },
-                  child: const Icon(
-                    Icons.account_balance,
-                    size: 70,
+                    },
+                    child: const Icon(
+                      Icons.account_balance,
+                      size: 70,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

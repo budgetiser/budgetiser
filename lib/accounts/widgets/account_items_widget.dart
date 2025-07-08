@@ -14,38 +14,41 @@ class AccountItemsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AccountModel>(builder: (context, model, child) {
-      return FutureBuilder(
-        future: recentlyUsedAccount.getList(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Text('Oops!');
-          }
-          if (snapshot.data!.isEmpty) {
-            return const SizedBox(
-              height: 40,
-              child: Center(
-                child: Text('no accounts used yet'),
-              ),
-            );
-          }
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data!.length,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return AccountItem(
-                accountData: snapshot.data![index],
+    return Consumer<AccountModel>(
+      builder: (context, model, child) {
+        return FutureBuilder(
+          future: recentlyUsedAccount.getList(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          );
-        },
-      );
-    });
+            }
+            if (snapshot.hasError) {
+              return const Text('Oops!');
+            }
+            if (snapshot.data!.isEmpty) {
+              return const SizedBox(
+                height: 40,
+                child: Center(
+                  child: Text('no accounts used yet'),
+                ),
+              );
+            }
+            return ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(vertical: 0),
+              itemCount: snapshot.data!.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return AccountItem(
+                  accountData: snapshot.data![index],
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 }

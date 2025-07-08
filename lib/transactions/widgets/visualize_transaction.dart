@@ -54,11 +54,42 @@ class _VisualizeTransactionState extends State<VisualizeTransaction> {
                   clickableAccountIcon(widget.account1!),
                 ],
         ),
+        if (widget.value != null && (widget.account2 == null))
+          // text for single account transactions
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              BalanceText(
+                widget.value!,
+                hasPrefix: false,
+              ),
+              SizedBox(width: 60), // same width as ArrowIcon
+              BalanceText(
+                widget.account1!.balance + widget.value!,
+              ),
+            ],
+          ),
         if (widget.value != null &&
-            (widget.account2 == null || !widget.wasNegative))
-          BalanceText(
-            widget.value!,
-            hasPrefix: false,
+            widget.account2 != null &&
+            !widget.wasNegative)
+          // text for double account transactions
+          // text is not aligned with icons perfectly, because the text width is not known (columns needed)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              BalanceText(
+                widget.account1!.balance - widget.value!,
+              ),
+              SizedBox(width: 60), // same width as ArrowIcon
+              BalanceText(
+                widget.value!,
+                hasPrefix: false,
+              ),
+              SizedBox(width: 60), // same width as ArrowIcon
+              BalanceText(
+                widget.account2!.balance + widget.value!,
+              ),
+            ],
           ),
       ],
     );

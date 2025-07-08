@@ -15,7 +15,7 @@ extension DatabaseExtensionJSON on DatabaseHelper {
       'category',
       'categoryBridge',
       'categoryToBudget',
-      'singleTransaction'
+      'singleTransaction',
     ];
     var fullJSON = {};
 
@@ -81,7 +81,7 @@ extension DatabaseExtensionJSON on DatabaseHelper {
       'category',
       'categoryBridge',
       'categoryToBudget',
-      'singleTransaction'
+      'singleTransaction',
     ];
     debugPrint('importing data from json...');
     for (String relation in relations) {

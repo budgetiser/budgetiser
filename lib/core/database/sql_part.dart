@@ -3,7 +3,7 @@
 part of 'database.dart';
 
 extension DatabaseExtensionSQL on DatabaseHelper {
-  _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  dynamic _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (newVersion >= 2 && oldVersion < 2) {
       if (kDebugMode) {
         print('deleting savings table if existent');
@@ -20,7 +20,7 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     }
   }
 
-  _onCreate(Database db, int version) async {
+  dynamic _onCreate(Database db, int version) async {
     if (kDebugMode) {
       print('creating database version $version');
     }
@@ -103,7 +103,7 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     }
   }
 
-  _dropTables(Database db) async {
+  dynamic _dropTables(Database db) async {
     await db.execute('''
           DROP TABLE IF EXISTS categoryBridge;
           ''');
@@ -241,7 +241,7 @@ Future<void> upgradeToV3(Database db) async {
           transaction['category_id'],
           transaction['date'],
           transaction['account1_id'],
-          transaction['account2_id']
+          transaction['account2_id'],
         ]);
       } else {
         await txn.execute('''
@@ -255,7 +255,7 @@ Future<void> upgradeToV3(Database db) async {
           transaction['category_id'],
           transaction['date'],
           transaction['account1_id'],
-          transaction['account2_id']
+          transaction['account2_id'],
         ]);
       }
     }
@@ -309,7 +309,7 @@ Future<void> upgradeToV3(Database db) async {
         item['color'],
         item['limitXX'],
         item['interval_unit'],
-        item['description'] == '' ? null : item['description']
+        item['description'] == '' ? null : item['description'],
       ]);
     }
 
@@ -340,10 +340,13 @@ Future<void> upgradeToV3(Database db) async {
 
     for (Map<String, dynamic> item in mapBridge) {
       item = Map.of(item);
-      await txn.execute('''
+      await txn.execute(
+        '''
         INSERT INTO categoryBridge (parent_id, child_id, distance) 
         VALUES (?, ?, ?);
-      ''', [item['id'], item['id'], 0]);
+      ''',
+        [item['id'], item['id'], 0],
+      );
     }
 
     // final

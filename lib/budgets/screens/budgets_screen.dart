@@ -22,27 +22,29 @@ class BudgetScreen extends StatelessWidget {
         actions: const [],
       ),
       drawer: const CreateDrawer(),
-      body: Consumer<BudgetModel>(builder: (context, model, child) {
-        return FutureBuilder<List<Budget>>(
-          future: model.getAllBudgets(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Budgets'),
-              );
-            }
-            if (snapshot.hasError) {
-              return const Text('Oops!');
-            }
-            return _screenContent(snapshot.data!);
-          },
-        );
-      }),
+      body: Consumer<BudgetModel>(
+        builder: (context, model, child) {
+          return FutureBuilder<List<Budget>>(
+            future: model.getAllBudgets(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Budgets'),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Text('Oops!');
+              }
+              return _screenContent(snapshot.data!);
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -60,12 +62,16 @@ class BudgetScreen extends StatelessWidget {
   }
 
   Widget _screenContent(List<Budget> budgets) {
-    return GroupedListView<Budget, IntervalUnit>(
-      elements: budgets,
-      groupBy: (budget) => budget.intervalUnit,
-      itemBuilder: (context, element) => BudgetItem(budget: element),
-      groupSeparatorBuilder: (unit) => DividerWithText(unit.label),
-      groupComparator: (value1, value2) => Enum.compareByIndex(value1, value2),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: GroupedListView<Budget, IntervalUnit>(
+        elements: budgets,
+        groupBy: (budget) => budget.intervalUnit,
+        itemBuilder: (context, element) => BudgetItem(budget: element),
+        groupSeparatorBuilder: (unit) => DividerWithText(unit.label),
+        groupComparator: (value1, value2) =>
+            Enum.compareByIndex(value1, value2),
+      ),
     );
   }
 }

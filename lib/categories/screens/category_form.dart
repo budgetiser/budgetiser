@@ -36,9 +36,11 @@ class _CategoryFormState extends State<CategoryForm> {
   IconData _icon = Icons.abc;
   TransactionCategory? _parentCategory;
   List<int>? _childrenList;
+  List<String>? _allCategories; // Variable to store all categories
 
   double maxHeaderHeight = 200;
   final ValueNotifier<double> opacity = ValueNotifier(0);
+  String? _nameError;
 
   @override
   void initState() {
@@ -56,6 +58,10 @@ class _CategoryFormState extends State<CategoryForm> {
     if (widget.initialParentID != null) {
       fetchParentCategory(widget.initialParentID!);
     }
+    fetchAllCategories(); // Load all categories
+
+    nameController.addListener(_validateName);
+
     super.initState();
   }
 
@@ -69,9 +75,34 @@ class _CategoryFormState extends State<CategoryForm> {
     );
   }
 
+  void fetchAllCategories() async {
+    List<TransactionCategory> categories =
+        await CategoryModel().getAllCategories();
+    setState(() {
+      _allCategories = categories.map((e) => e.name).toList();
+    });
+  }
+
+  void _validateName() {
+    final value = nameController.text.trim().toLowerCase();
+    if (_allCategories != null &&
+        _allCategories!
+            .any((categoryName) => categoryName.toLowerCase() == value)) {
+      setState(() {
+        _nameError = 'This category name already exists';
+      });
+    } else {
+      setState(() {
+        _nameError = null;
+      });
+    }
+  }
+
   @override
   void dispose() {
-    nameController.dispose();
+    nameController
+      ..removeListener(_validateName)
+      ..dispose();
     descriptionController.dispose();
     super.dispose();
   }
@@ -80,9 +111,9 @@ class _CategoryFormState extends State<CategoryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.categoryData == null
-            ? 'Create a Category'
-            : 'Edit Category'),
+        title: Text(
+          widget.categoryData == null ? 'Create a Category' : 'Edit Category',
+        ),
       ),
       body: _screenContent(context),
       floatingActionButton: Row(
@@ -103,15 +134,16 @@ class _CategoryFormState extends State<CategoryForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 TransactionCategory a = TransactionCategory(
-                    name: nameController.text.trim(),
-                    icon: _icon,
-                    color: _color,
-                    description: parseNullableString(
-                      descriptionController.text,
-                    ),
-                    archived: false,
-                    parentID: _parentCategory?.id,
-                    id: 0);
+                  name: nameController.text.trim(),
+                  icon: _icon,
+                  color: _color,
+                  description: parseNullableString(
+                    descriptionController.text,
+                  ),
+                  archived: false,
+                  parentID: _parentCategory?.id,
+                  id: 0,
+                );
                 if (widget.categoryData != null) {
                   a.id = widget.categoryData!.id;
                   Provider.of<CategoryModel>(context, listen: false)
@@ -160,14 +192,17 @@ class _CategoryFormState extends State<CategoryForm> {
               ),
               Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Expanded(
                   child: TextFormField(
                     controller: nameController,
                     cursorColor: _color,
                     autofocus: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Name',
+                      errorText:
+                          _nameError, // error message for duplicate name (does not block form submission)
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -177,7 +212,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     },
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

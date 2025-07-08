@@ -11,6 +11,7 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
+    # https://dart.dev/tools/linter-rules
     # Error
     always_use_package_imports: true
     avoid_dynamic_calls: true
@@ -21,11 +22,10 @@ linter:
     close_sinks: true
 
     # Style
+    require_trailing_commas: true
     always_declare_return_types: true
     prefer_single_quotes: true
-    # always_specify_types: true
     cascade_invocations: true
-    package_api_docs: true
     directives_ordering: true
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

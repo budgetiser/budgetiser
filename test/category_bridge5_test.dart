@@ -40,8 +40,11 @@ void main() {
 
     var missingRelations =
         getMissingRelations(expectedResult, categoryBridgeResults);
-    expect(missingRelations, [],
-        reason: 'Missing Relations: $missingRelations');
+    expect(
+      missingRelations,
+      [],
+      reason: 'Missing Relations: $missingRelations',
+    );
     expect(categoryBridgeResults.length, expectedResult.length);
   });
 }

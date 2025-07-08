@@ -56,7 +56,9 @@ class _CategoryTreeState extends State<CategoryTree> {
   }
 
   ListView getListView(
-      BuildContext context, List<RecursiveCategoryModel> categoryTree) {
+    BuildContext context,
+    List<RecursiveCategoryModel> categoryTree,
+  ) {
     if (widget.separated) {
       return getSeparated(context, categoryTree);
     }
@@ -74,7 +76,7 @@ class _CategoryTreeState extends State<CategoryTree> {
         return RecursiveWidget(
           model: categoryTree[index],
           level: 0,
-          parentWasCollapsed: true,
+          initiallyExpanded: true,
           onTap: widget.onTap,
         );
       },
@@ -96,7 +98,7 @@ class _CategoryTreeState extends State<CategoryTree> {
         return RecursiveWidget(
           model: categoryTree[index],
           level: 0,
-          parentWasCollapsed: true,
+          initiallyExpanded: false,
           onTap: widget.onTap,
         );
       },
@@ -116,13 +118,13 @@ class RecursiveWidget extends StatefulWidget {
     super.key,
     required this.model,
     required this.level,
-    required this.parentWasCollapsed,
+    required this.initiallyExpanded,
     this.onTap,
   });
 
   final RecursiveCategoryModel model;
+  final bool initiallyExpanded;
   final int level;
-  final bool parentWasCollapsed; // state of the parent
   final ValueChanged<TransactionCategory>? onTap;
 
   @override
@@ -130,12 +132,12 @@ class RecursiveWidget extends StatefulWidget {
 }
 
 class _RecursiveWidgetState extends State<RecursiveWidget> {
-  late bool isExpanded;
+  bool isExpanded = false;
 
   @override
   void initState() {
     super.initState();
-    isExpanded = !widget.parentWasCollapsed;
+    isExpanded = widget.initiallyExpanded;
   }
 
   @override
@@ -163,8 +165,8 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
                 children: widget.model.children!.map((child) {
                   return RecursiveWidget(
                     model: child,
+                    initiallyExpanded: widget.initiallyExpanded,
                     level: widget.level + 1,
-                    parentWasCollapsed: isExpanded,
                     onTap: widget.onTap,
                   );
                 }).toList(),
@@ -178,7 +180,9 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
 }
 
 List<RecursiveCategoryModel> getCategoryTree(
-    List<TransactionCategory> categories, int? parentID) {
+  List<TransactionCategory> categories,
+  int? parentID,
+) {
   List<RecursiveCategoryModel> categoryModel = [];
 
   List<TransactionCategory> topLevelCategories = categories
@@ -188,9 +192,12 @@ List<RecursiveCategoryModel> getCategoryTree(
       .toList();
 
   for (var topLevelCategory in topLevelCategories) {
-    categoryModel.add(RecursiveCategoryModel(
+    categoryModel.add(
+      RecursiveCategoryModel(
         current: topLevelCategory,
-        children: getCategoryTree(categories, topLevelCategory.id)));
+        children: getCategoryTree(categories, topLevelCategory.id),
+      ),
+    );
   }
 
   return categoryModel;

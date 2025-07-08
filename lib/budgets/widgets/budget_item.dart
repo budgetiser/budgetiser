@@ -12,14 +12,15 @@ class BudgetItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     budget.value ??= 0.0;
-    double percentage = budget.value! / budget.maxValue;
+    double percentage =
+        budget.maxValue == 0 ? 0 : budget.value! / budget.maxValue;
     bool overflowed = percentage > 1;
     percentage -= percentage.floor();
 
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        padding: const EdgeInsets.all(8),
         child: Row(
           children: [
             budgetIcon(),
@@ -35,7 +36,7 @@ class BudgetItem extends StatelessWidget {
               budgetData: budget,
             ),
           ),
-        )
+        ),
       },
     );
   }
@@ -51,7 +52,10 @@ class BudgetItem extends StatelessWidget {
   }
 
   Expanded budgetDetails(
-      bool overflowed, double percentage, BuildContext context) {
+    bool overflowed,
+    double percentage,
+    BuildContext context,
+  ) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +89,8 @@ class BudgetItem extends StatelessWidget {
         Text(
           budget.value!.toStringAsFixed(1),
           style: TextStyle(
-              color: overflowed ? Theme.of(context).colorScheme.error : null),
+            color: overflowed ? Theme.of(context).colorScheme.error : null,
+          ),
         ),
         Text(budget.maxValue.toStringAsFixed(1)),
       ],

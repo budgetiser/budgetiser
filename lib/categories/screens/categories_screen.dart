@@ -110,19 +110,37 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         return 0;
       });
 
-    List<TransactionCategory> filteredCategoryList = fullCategoryList.where(
-      (element) {
-        if (_searchString.isEmpty) return true;
-        return (partialRatio(
-              element.name.toLowerCase(),
-              _searchString.toLowerCase(),
-            ) >
-            80);
-      },
-    ).toList();
+    // Filter categories by search string, including all parents of matches
+    Set<int> matchedIds = {};
+    Set<int> parentIds = {};
+
+    for (final category in fullCategoryList) {
+      if (_searchString.isEmpty ||
+          partialRatio(
+                category.name.toLowerCase(),
+                _searchString.toLowerCase(),
+              ) >
+              80) {
+        matchedIds.add(category.id);
+
+        // Collect all parent ids up the tree
+        TransactionCategory current = category;
+        while (current.parentID != null) {
+          parentIds.add(current.parentID!);
+          current = fullCategoryList.firstWhere(
+            (c) => c.id == current.parentID,
+          );
+        }
+      }
+    }
+
+    List<TransactionCategory> filteredCategoryList = fullCategoryList
+        .where((c) => matchedIds.contains(c.id) || parentIds.contains(c.id))
+        .toList();
 
     return CategoryTree(
       categories: filteredCategoryList,
+      separated: _searchString.isNotEmpty, // expand tree when searching
       onTap: (value) {
         Navigator.of(context).push(
           MaterialPageRoute(

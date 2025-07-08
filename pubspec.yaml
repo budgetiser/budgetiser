@@ -5,7 +5,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
-version: 2.13.1+48
+version: 2.17.2+58
 
 environment:
   sdk: ^3.3.1
@@ -19,7 +19,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   dynamic_color: ^1.7.0
   sqflite: ^2.3.3
-  flutter_markdown: ^0.7.1
+  markdown_widget: ^2.3.2+8
   provider: ^6.0.5
   shared_preferences: ^2.2.3
   path: ^1.8.1
@@ -28,10 +28,10 @@ dependencies:
   package_info_plus: ^8.0.0
   equations: ^5.0.1
   material_color_utilities: ^0.11.1
-  file_picker: ^8.0.0
+  file_picker: ^10.2.0
 
   # MIT License
-  fl_chart: ^0.69.0
+  fl_chart: ^1.0.0
   flutter_file_dialog: ^3.0.2
   badges: ^3.1.2
   fuzzywuzzy: ^1.1.6
@@ -39,7 +39,7 @@ dependencies:
   grouped_list: ^6.0.0
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   sqflite_common_ffi: ^2.3.3
   test: ^1.25.7
 
@@ -51,9 +51,6 @@ flutter:
 
   assets:
     - assets/how-to.md
-    - assets/images/how_to/account.png
-    - assets/images/how_to/category.png
-    - assets/images/how_to/transaction.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

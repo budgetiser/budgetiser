@@ -1,6 +1,7 @@
 name: test-build
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -15,27 +16,63 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: set up JDK
-        uses: actions/setup-java@v2
+
+      - name: Cache pub deps
+        uses: actions/cache@v4
         with:
-          distribution: "zulu"
-          java-version: "17.x"
-      - name: set up Flutter
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            android/.gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: "stable"
+          channel: stable
           cache: true
+
+      - run: flutter pub get
+
       - name: Create the keystore
         env:
           KEYSTORE_BASE64: ${{secrets.KEYSTORE_BASE64}}
         run: |
           # import keystore from secrets
           echo $KEYSTORE_BASE64 | base64 -di > $RUNNER_TEMP/my_production.keystore
-      - name: Restore packages
-        run: |
-          flutter pub get
-      - name: Build Android App Bundle
+
+      - name: Build Android
         run: |
           flutter build appbundle --release --no-tree-shake-icons
+          flutter build apk --release --no-tree-shake-icons
+
       - name: Sign Android App Bundle
         run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar build/app/outputs/bundle/release/app-release-signed.aab build/app/outputs/bundle/release/app-release.aab upload
+
+      - name: Export AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 14
+
+      - name: Export APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14

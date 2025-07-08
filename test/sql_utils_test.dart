@@ -9,7 +9,7 @@ void main() {
     List<String> attributes = ['id', 'name'];
     List<List<int>> values = [
       [1, 3, 4],
-      [5, 6, 7]
+      [5, 6, 7],
     ];
 
     String result = sqlWhereIn(attributes, values);
@@ -20,7 +20,7 @@ void main() {
   test('Test sqlWhereIn short', () {
     List<String> attributes = ['id'];
     List<List<int>> values = [
-      [1, 3, 4]
+      [1, 3, 4],
     ];
 
     String result = sqlWhereIn(attributes, values);
@@ -32,7 +32,7 @@ void main() {
     List<String> attributes = ['id', 'name'];
     List<List<int>> values = [
       [1, 3, 4],
-      []
+      [],
     ];
 
     String result = sqlWhereIn(attributes, values);
@@ -52,12 +52,17 @@ void main() {
   test('Test sqlWhereIn assert error', () {
     List<String> attributes = ['id', 'name'];
     List<List<int>> values = [
-      [1, 3, 4]
+      [1, 3, 4],
     ];
 
-    expect(() {
-      sqlWhereIn(attributes, values);
-    }, throwsA(isA<AssertionError>()));
+    expect(
+      () {
+        sqlWhereIn(attributes, values);
+      },
+      throwsA(
+        isA<AssertionError>(),
+      ),
+    );
   });
 
   // sqlWhereDateRange
@@ -72,15 +77,17 @@ void main() {
       ),
     );
 
-    expect(result,
-        'date BETWEEN ${start.millisecondsSinceEpoch} AND ${end.millisecondsSinceEpoch}');
+    expect(
+      result,
+      'date BETWEEN ${start.millisecondsSinceEpoch} AND ${end.millisecondsSinceEpoch}',
+    );
   });
 
   test('Test sqlWhereCombined', () {
     List<String> attributes = ['id', 'name', 'date'];
     List<List<int>> values = [
       [1, 3, 4],
-      [5, 6, 7]
+      [5, 6, 7],
     ];
     DateTime start = today();
     DateTime end = today().add(const Duration(days: 1));
@@ -91,7 +98,9 @@ void main() {
       DateTimeRange(start: start, end: end),
     );
 
-    expect(result,
-        'id IN (1,3,4) AND name IN (5,6,7) AND date BETWEEN ${start.millisecondsSinceEpoch} AND ${end.millisecondsSinceEpoch}');
+    expect(
+      result,
+      'id IN (1,3,4) AND name IN (5,6,7) AND date BETWEEN ${start.millisecondsSinceEpoch} AND ${end.millisecondsSinceEpoch}',
+    );
   });
 }

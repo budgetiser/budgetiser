@@ -144,21 +144,33 @@ class ColorItem extends StatelessWidget {
       // https://github.com/flutter/flutter/issues/73315#issuecomment-1712743656 -> Fix for 'Ink()' displaying outside of GridView
       child: InkWell(
         customBorder: const CircleBorder(),
-        child: Container(
-          foregroundDecoration: selected
-              ? BoxDecoration(
-                  border: Border.all(
-                      color: Theme.of(context).indicatorColor, width: 5),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              foregroundDecoration: selected
+                  ? BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.secondary,
+                        width: 5,
+                      ),
+                      shape: BoxShape.circle,
+                    )
+                  : null,
+              child: Ink(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  // TODO: checkbox on selected icon
-                )
-              : null,
-          child: Ink(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
+                  color: color,
+                ),
+              ),
             ),
-          ),
+            if (selected)
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 50,
+              ),
+          ],
         ),
         onTap: () {
           onSelection(color);

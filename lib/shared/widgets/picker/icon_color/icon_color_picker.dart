@@ -29,7 +29,7 @@ class _IconColorPickerState extends State<IconColorPicker> {
           context,
           iconData,
           color,
-        )
+        ),
       },
       borderRadius: BorderRadius.circular(20),
       child: Container(

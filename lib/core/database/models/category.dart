@@ -1,4 +1,5 @@
 import 'package:budgetiser/core/database/models/selectable.dart';
+import 'package:budgetiser/shared/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
 class TransactionCategory extends Selectable {
@@ -62,7 +63,7 @@ class TransactionCategory extends Selectable {
   Map<String, dynamic> toMap() => {
         'name': name.trim(),
         'icon': icon.codePoint,
-        'color': color.value,
+        'color': ColorEx(color).toInt32,
         'description': description?.trim(),
         'archived': (archived ? 1 : 0),
       };

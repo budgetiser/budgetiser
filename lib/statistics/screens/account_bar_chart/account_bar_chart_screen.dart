@@ -102,7 +102,8 @@ class _AccountBarChartScreenState extends State<AccountBarChartScreen> {
                     enabled: true,
                     touchCallback: (p0, p1) {
                       debugPrint(
-                          'Touched on: ${p0.localPosition}, index: ${p1?.touchedSection?.touchedSectionIndex}');
+                        'Touched on: ${p0.localPosition}, index: ${p1?.touchedSection?.touchedSectionIndex}',
+                      );
                       if (p1?.touchedSection?.touchedSectionIndex != null &&
                           p1!.touchedSection!.touchedSectionIndex >= 0) {
                         Navigator.of(context).push(
@@ -146,7 +147,7 @@ class _AccountBarChartScreenState extends State<AccountBarChartScreen> {
                       barRods: [
                         BarChartRodData(
                           toY: totalBalance,
-                        )
+                        ),
                       ],
                     ),
                   ],
