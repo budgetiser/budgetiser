@@ -11,8 +11,10 @@ on:
 
 jobs:
   build:
-    name: Publish
+    name: Build and Publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: "Checkout (release)"
@@ -71,6 +73,14 @@ jobs:
           track: internal
           status: completed
 
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+
+    steps:
       - name: "Checkout (main)"
         uses: actions/checkout@v4
         with:
@@ -88,17 +98,9 @@ jobs:
         with:
           configFilePath: gitversion.yml
 
-      - name: Create tag
-        uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v2
         with:
-          tag: "v${{ steps.gitversion.outputs.majorMinorPatch }}"
-          tag_exists_error: true
-
-      - name: Create Github pre-release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/outputs/bundle/release/app-release-signed.aab" # todo add .apk file
-          generateReleaseNotes: true
+          tag_name: "v${{ steps.gitversion.outputs.majorMinorPatch }}"
           prerelease: true
-          tag: "v${{ steps.gitversion.outputs.majorMinorPatch }}"
+          generate_release_notes: true
