@@ -88,6 +88,7 @@ class BeautifulDataset extends DemoDataset {
       String name,
       IconData icon,
       Color color, {
+      String? description,
       int? parentId,
     }) {
       list.add(
@@ -96,7 +97,7 @@ class BeautifulDataset extends DemoDataset {
           name: name,
           icon: icon,
           color: color,
-          description: '',
+          description: description,
           archived: false,
           parentID: parentId,
         ),
@@ -111,7 +112,12 @@ class BeautifulDataset extends DemoDataset {
     addCategory('Housing', Icons.home, Colors.brown);
     addCategory('Food', Icons.fastfood, Colors.orange); // id=5
     addCategory('Entertainment', Icons.movie, Colors.purple);
-    addCategory('Transfers', Icons.swap_horiz, Colors.grey);
+    addCategory(
+      'Transfers',
+      Icons.swap_horiz,
+      Colors.grey,
+      description: 'Money transfers between accounts',
+    ); // id=7
     addCategory('Other', Icons.category, Colors.grey); // id=8
 
     // subcategories
@@ -134,9 +140,21 @@ class BeautifulDataset extends DemoDataset {
     addCategory('Groceries', Icons.shopping_cart, Colors.orange, parentId: 5);
     addCategory('Dining Out', Icons.restaurant, Colors.orange, parentId: 5);
     addCategory('Snacks', Icons.fastfood, Colors.orange, parentId: 5);
-    addCategory('Drinks', Icons.local_bar, Colors.orange, parentId: 5); // id=24
+    addCategory(
+      'Drinks',
+      Icons.local_bar,
+      Colors.orange,
+      parentId: 5,
+      description: 'Bar drinks etc.',
+    ); // id=24
 
-    addCategory('Movies', Icons.movie, Colors.purple, parentId: 6);
+    addCategory(
+      'Movies',
+      Icons.movie,
+      Colors.purple,
+      parentId: 6,
+      description: 'Cinema, Netflix, etc.',
+    );
     addCategory('Concerts', Icons.music_note, Colors.purple, parentId: 6);
     addCategory('Games', Icons.videogame_asset, Colors.purple, parentId: 6);
 

@@ -148,6 +148,7 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
         child: CategoryItem(
           categoryData: widget.model.current,
           onTap: widget.onTap,
+          showDescription: true,
         ),
       );
     } else {

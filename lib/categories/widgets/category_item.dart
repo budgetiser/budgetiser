@@ -6,15 +6,14 @@ class CategoryItem extends StatelessWidget {
     required this.categoryData,
     super.key,
     this.onTap,
+    this.showDescription = false,
   });
   final TransactionCategory categoryData;
   final ValueChanged<TransactionCategory>? onTap;
+  final bool showDescription;
 
   @override
   Widget build(BuildContext context) {
-    if (categoryData.archived) {
-      return Container(); // TODO: archived not yet implemented #143
-    }
     return Semantics(
       label: 'category named: ${categoryData.name}',
       child: ListTile(
@@ -22,6 +21,11 @@ class CategoryItem extends StatelessWidget {
         title: Text(categoryData.name),
         iconColor: categoryData.color,
         textColor: categoryData.color,
+        subtitle: (showDescription &&
+                (categoryData.description?.trim().isNotEmpty ?? false))
+            ? Text(categoryData.description!.trim())
+            : null,
+        enabled: categoryData.archived == false,
         contentPadding: const EdgeInsets.fromLTRB(8, 0, -8, 0),
         onTap: () => onTap?.call(categoryData),
       ),
