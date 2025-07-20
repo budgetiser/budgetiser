@@ -5,9 +5,6 @@ name: release internal playstore
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - release
 
 jobs:
   build:
@@ -17,10 +14,8 @@ jobs:
       contents: read
 
     steps:
-      - name: "Checkout (release)"
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: "release"
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -88,11 +83,8 @@ jobs:
       contents: write
 
     steps:
-      - name: "Checkout (main)"
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: "main"
-          fetch-depth: 0
 
       - name: Retrieve Version
         id: retrieve_version
