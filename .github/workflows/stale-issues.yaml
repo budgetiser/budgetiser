@@ -1,0 +1,17 @@
+name: Mark inactive issues as stale
+on:
+  schedule:
+    - cron: "10 15 * * 2"
+
+jobs:
+  close-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 356
+          days-before-close: -1
+          stale-issue-label: "stale"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
