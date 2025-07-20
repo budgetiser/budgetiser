@@ -28,12 +28,7 @@ A clear and concise description of what you expected to happen.
 
 If applicable, add screenshots to help explain your problem.
 
-## Versions
-
-- Device: [e.g. iPhone6]
-- OS: [e.g. iOS8.1]
-- App-Version [e.g. 22]
-
 ## Additional context
 
 Add any other context about the problem here.
+- e.g. device, version, OS, etc.
