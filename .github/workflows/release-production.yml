@@ -9,9 +9,10 @@ on:
 # todo fix: reference version from internal release published from dev-branch
 
 jobs:
-  build:
-    name: Publish
+  publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4

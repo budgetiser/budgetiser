@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and Publish
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout

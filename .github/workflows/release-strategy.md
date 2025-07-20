@@ -1,22 +1,18 @@
-| ||
-| |/ merge on main -> autoincrement version
-| |
-|/ merge on release -> release to playstore dev branch & create tag on main & create gh-pre-release
-|
-| manual gh release creation (change from prerelease) -> publish on playstore main branch
-|
+# Release Strategy
 
-## Autoincrement
+## How version changes work
 
-Autoincrement changes minor and patch version
+On every commit to main, the version is auto incremented by the bump version github action.
+The version is determined (with gitversion) by the last tag on main and the previous commits.
 
-- uses commit messages
+## Release Strategy
 
-For a major version bump
+Features are developed on feature branches and merged into main.
 
-- commit a 'major-commit' to main
+Once one or multiple features are ready on main, the `release internal` workflow is triggered manually.
+- This workflow builds the app and publishes it to the playstore dev branch.
+- It also creates a tag on main and a pre-release on github.
 
-## Release
-
-- Create release on gh
-- create a tag with syntax 'v0.0.0'
+(TODO: ci publish to playstore main branch)\
+To publish the app to the playstore main branch, a manual change in the play store console is required.
+- The pre-release on github is changed to a release.
