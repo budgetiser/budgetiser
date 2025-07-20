@@ -53,6 +53,7 @@ class BeautifulDataset extends DemoDataset {
       IconData icon,
       Color color, {
       bool isArchived = false,
+      String? description,
     }) {
       list.add(
         Account(
@@ -62,6 +63,7 @@ class BeautifulDataset extends DemoDataset {
           color: color,
           balance: 0,
           archived: isArchived,
+          description: description,
         ),
       );
       id++;
@@ -69,13 +71,19 @@ class BeautifulDataset extends DemoDataset {
 
     addAccount('Credit Card', Icons.credit_card_rounded, Colors.pinkAccent);
     addAccount('Debit Card', Icons.business_outlined, Colors.red);
-    addAccount('Savings', Icons.account_balance, Colors.green);
+    addAccount(
+      'Savings',
+      Icons.account_balance,
+      Colors.green,
+      description: 'Combination of all savings accounts',
+    );
     addAccount('Cash', Icons.attach_money, Colors.orange);
     addAccount(
       'Old bank account',
       Icons.account_balance_wallet,
       Colors.blue,
       isArchived: true,
+      description: 'This account is no longer used',
     );
 
     return list;

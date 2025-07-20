@@ -52,7 +52,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               filled: true,
-              hintText: 'Search',
+              label: const Text('Search'),
               prefixIcon: const Icon(
                 Icons.search,
               ),
@@ -140,7 +140,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     return CategoryTree(
       categories: filteredCategoryList,
-      separated: _searchString.isNotEmpty, // expand tree when searching
+      expanded: _searchString.isNotEmpty, // expand tree when searching
       onTap: (value) {
         Navigator.of(context).push(
           MaterialPageRoute(
