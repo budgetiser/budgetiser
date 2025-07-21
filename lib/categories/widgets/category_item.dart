@@ -23,7 +23,11 @@ class CategoryItem extends StatelessWidget {
         textColor: categoryData.color,
         subtitle: (showDescription &&
                 (categoryData.description?.trim().isNotEmpty ?? false))
-            ? Text(categoryData.description!.trim())
+            ? Text(
+                categoryData.description!.trim(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )
             : null,
         enabled: categoryData.archived == false,
         contentPadding: const EdgeInsets.fromLTRB(8, 0, -8, 0),

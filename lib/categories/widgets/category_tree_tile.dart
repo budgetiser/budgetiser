@@ -171,7 +171,11 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
               textColor: widget.categoryData.color,
               subtitle:
                   (widget.categoryData.description?.trim().isNotEmpty ?? false)
-                      ? Text(widget.categoryData.description!)
+                      ? Text(
+                          widget.categoryData.description!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
                       : null,
               trailing: SizedBox(
                 height: 50,

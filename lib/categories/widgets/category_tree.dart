@@ -113,7 +113,7 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
   Widget build(BuildContext context) {
     if (widget.model.children == null || widget.model.children!.isEmpty) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 0, 0),
+        padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 24, 0),
         child: CategoryItem(
           categoryData: widget.model.current,
           onTap: widget.onTap,
