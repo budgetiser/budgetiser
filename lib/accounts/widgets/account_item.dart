@@ -56,9 +56,10 @@ class AccountItem extends StatelessWidget {
                           ),
                         );
                       },
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_upward,
-                        size: 35,
+                        semanticLabel: 'Deposit to ${accountData.name}',
+                        size: 48,
                         color: Colors.green,
                       ),
                     ),
@@ -73,9 +74,10 @@ class AccountItem extends StatelessWidget {
                           ),
                         );
                       },
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_downward,
-                        size: 35,
+                        semanticLabel: 'Withdraw from ${accountData.name}',
+                        size: 48,
                         color: Colors.red,
                       ),
                     ),

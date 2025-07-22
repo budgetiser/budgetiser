@@ -303,7 +303,7 @@ class _CategoryFormState extends State<CategoryForm> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Children'),
+            const Text('Children categories:'),
             SizedBox(
               width: double.maxFinite,
               child: Wrap(
@@ -328,19 +328,22 @@ class _CategoryFormState extends State<CategoryForm> {
     /// Chip that acts like a button for a creation of a new category with a parent preselected.
     // TODO: inkwell to other categories with alert: unsaved changes
     // TODO: just pop new form and update current child list
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => CategoryForm.prefilledParent(
-              initialParentID: widget.categoryData!.id,
+    return Semantics(
+      label: 'Create child category',
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CategoryForm.prefilledParent(
+                initialParentID: widget.categoryData!.id,
+              ),
             ),
-          ),
-        );
-      },
-      child: const Chip(
-        avatar: Icon(Icons.add),
-        label: Text('Add child'),
+          );
+        },
+        child: const Chip(
+          avatar: Icon(Icons.add),
+          label: Text('Create child'),
+        ),
       ),
     );
   }

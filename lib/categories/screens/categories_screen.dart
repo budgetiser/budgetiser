@@ -3,6 +3,7 @@ import 'package:budgetiser/categories/widgets/category_tree.dart';
 import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/shared/widgets/empty_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +27,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
       drawer: const CreateDrawer(),
       body: _screenContent(),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Add category'),
+      floatingActionButton: FloatingActionButton(
         tooltip: 'Create a new category',
         onPressed: () {
           Navigator.of(context).push(
@@ -37,6 +36,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ),
           );
         },
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }
@@ -52,7 +52,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               filled: true,
-              hintText: 'Search',
+              label: const Text('Search'),
               prefixIcon: const Icon(
                 Icons.search,
               ),
@@ -81,8 +81,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       return Text('Error: ${snapshot.error}');
                     }
                     if (snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text('No Categories'),
+                      return EmptyScreen(
+                        type: 'category',
+                        onPressed: const CategoryForm(),
                       );
                     }
                     return categoryListView(snapshot);
@@ -140,7 +141,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     return CategoryTree(
       categories: filteredCategoryList,
-      separated: _searchString.isNotEmpty, // expand tree when searching
+      expanded: _searchString.isNotEmpty, // expand tree when searching
       onTap: (value) {
         Navigator.of(context).push(
           MaterialPageRoute(
