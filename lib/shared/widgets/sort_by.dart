@@ -77,7 +77,10 @@ class _SortByIconWidgetState extends State<SortByIconWidget> {
         break;
     }
     return IconButton(
-      icon: const Icon(Icons.sort),
+      icon: const Icon(
+        Icons.sort,
+        semanticLabel: 'Sort by',
+      ),
       onPressed: () {
         showSortByDialog(context);
       },

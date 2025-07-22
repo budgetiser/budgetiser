@@ -129,7 +129,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     shrinkWrap: true,
                     padding: archivedAccountList.isEmpty
                         ? const EdgeInsets.only(bottom: 80)
-                        : null,
+                        : const EdgeInsets.only(bottom: 0),
                     itemCount: accountList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return AccountItem(

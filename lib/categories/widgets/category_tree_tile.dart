@@ -57,7 +57,6 @@ class CategoryTreeTile extends StatefulWidget {
     this.children = const <Widget>[],
     this.contentPadding = const EdgeInsets.fromLTRB(8, 0, 8, 0),
     this.initiallyExpanded = false,
-    this.enabled = true,
   });
 
   final TransactionCategory categoryData;
@@ -65,7 +64,6 @@ class CategoryTreeTile extends StatefulWidget {
   final List<Widget> children;
   final EdgeInsets contentPadding;
   final bool initiallyExpanded;
-  final bool enabled;
 
   @override
   State<CategoryTreeTile> createState() => _CategoryTreeTileState();
@@ -81,18 +79,12 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
       Tween<double>(begin: 0.0, end: 0.5);
 
   final ShapeBorderTween _borderTween = ShapeBorderTween();
-  final ColorTween _headerColorTween = ColorTween();
-  final ColorTween _iconColorTween = ColorTween();
-  final ColorTween _backgroundColorTween = ColorTween();
   final CurveTween _heightFactorTween = CurveTween(curve: Curves.easeIn);
 
   late AnimationController _animationController;
   late Animation<double> _iconTurns;
   late Animation<double> _heightFactor;
   late Animation<ShapeBorder?> _border;
-  late Animation<Color?> _headerColor;
-  late Animation<Color?> _iconColor;
-  late Animation<Color?> _backgroundColor;
 
   bool _isExpanded = false;
   late ExpansionTileController _tileController;
@@ -104,12 +96,6 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
     _heightFactor = _animationController.drive(_heightFactorTween);
     _iconTurns = _animationController.drive(_halfTween.chain(_easeInTween));
     _border = _animationController.drive(_borderTween.chain(_easeOutTween));
-    _headerColor =
-        _animationController.drive(_headerColorTween.chain(_easeInTween));
-    _iconColor =
-        _animationController.drive(_iconColorTween.chain(_easeInTween));
-    _backgroundColor =
-        _animationController.drive(_backgroundColorTween.chain(_easeOutTween));
 
     _isExpanded = PageStorage.maybeOf(context)?.readState(context) as bool? ??
         widget.initiallyExpanded;
@@ -163,45 +149,34 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
-    final ExpansionTileThemeData expansionTileTheme =
-        ExpansionTileTheme.of(context);
-    final ShapeBorder expansionTileBorder = _border.value ??
-        const Border(
-          top: BorderSide(color: Colors.transparent),
-          bottom: BorderSide(color: Colors.transparent),
-        );
-    final Clip clipBehavior = expansionTileTheme.clipBehavior ?? Clip.none;
+    final ShapeBorder expansionTileBorder = _border.value ?? const Border();
 
     return Container(
-      clipBehavior: clipBehavior,
+      clipBehavior: ExpansionTileTheme.of(context).clipBehavior ?? Clip.none,
       decoration: ShapeDecoration(
-        color: _backgroundColor.value ??
-            expansionTileTheme.backgroundColor ??
-            Colors.transparent,
+        color: ExpansionTileTheme.of(context).backgroundColor,
         shape: expansionTileBorder,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          ListTileTheme.merge(
-            iconColor: _iconColor.value ?? expansionTileTheme.iconColor,
-            textColor: _headerColor.value,
+          Semantics(
+            label: widget.categoryData.name,
             child: ListTile(
-              enabled: widget.enabled,
               onTap: () => widget.onTap?.call(widget.categoryData),
               contentPadding: widget.contentPadding,
               leading: Icon(widget.categoryData.icon),
               title: Text(widget.categoryData.name),
               iconColor: widget.categoryData.color,
               textColor: widget.categoryData.color,
-              subtitle: (widget.categoryData.description != null &&
-                      widget.categoryData.description != '')
-                  ? Text(
-                      widget.categoryData.description!,
-                      style: const TextStyle(color: Colors.grey),
-                    )
-                  : null,
-              subtitleTextStyle: const TextStyle(color: Colors.white),
+              subtitle:
+                  (widget.categoryData.description?.trim().isNotEmpty ?? false)
+                      ? Text(
+                          widget.categoryData.description!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : null,
               trailing: SizedBox(
                 height: 50,
                 width: 50,
@@ -215,8 +190,7 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
           ),
           ClipRect(
             child: Align(
-              alignment:
-                  expansionTileTheme.expandedAlignment ?? Alignment.center,
+              alignment: Alignment.center,
               heightFactor: _heightFactor.value,
               child: child,
             ),
