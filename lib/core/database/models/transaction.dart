@@ -5,7 +5,7 @@ class SingleTransaction {
   int id;
   String title;
   double value;
-  TransactionCategory category;
+  List<TransactionCategory> categories;
   Account account;
   Account? account2;
   String? description;
@@ -15,7 +15,7 @@ class SingleTransaction {
     required this.id,
     required this.title,
     required this.value,
-    required this.category,
+    required this.categories,
     required this.account,
     this.account2,
     required this.description,
@@ -23,7 +23,7 @@ class SingleTransaction {
   });
   SingleTransaction.fromDBmap(
     Map<String, dynamic> map, {
-    required this.category,
+    required this.categories,
     required this.account,
     required this.account2,
   })  : id = map['id'],
@@ -49,7 +49,7 @@ class SingleTransaction {
       'value': value,
       'description':
           description == 'null' ? null : description?.trim(), // for json export
-      'category_id': category.id,
+      'category_ids': categories.map((e) => e.id).toList(),
       'date': date.millisecondsSinceEpoch,
       'account1_id': account.id,
       'account2_id': account2?.id,

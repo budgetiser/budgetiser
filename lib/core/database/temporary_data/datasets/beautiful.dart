@@ -255,7 +255,7 @@ class BeautifulDataset extends DemoDataset {
             id: currentId++,
             title: title,
             value: values.elementAt(i % values.length),
-            category: categories.elementAt(i % categories.length),
+            categories: categories,
             account: accounts1.elementAt(i % accounts1.length),
             account2: accounts2?.elementAt(i % accounts2.length),
             description: description,

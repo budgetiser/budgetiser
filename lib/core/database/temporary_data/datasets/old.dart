@@ -286,8 +286,7 @@ class OldDataset extends DemoDataset {
             id: currentId++,
             title: title,
             value: values.elementAt(i % values.length),
-            category: categoryList[
-                categories.elementAt(i % categories.length).toInt()],
+            categories: categoryList,
             account:
                 accountList[accounts1.elementAt(i % accounts1.length).toInt()],
             account2: accounts2 == null

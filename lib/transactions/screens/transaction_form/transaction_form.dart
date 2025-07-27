@@ -8,6 +8,7 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
+import 'package:budgetiser/shared/widgets/category_chips.dart';
 
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
@@ -48,7 +49,7 @@ enum EnumPrefix { plus, minus, other }
 class _TransactionFormState extends State<TransactionForm> {
   Account? selectedAccount;
   Account? selectedAccount2;
-  TransactionCategory? selectedCategory;
+  List<TransactionCategory>? selectedCategories;
   DateTime transactionDate = DateTime.now();
   bool hasInitialData = false;
 
@@ -78,7 +79,7 @@ class _TransactionFormState extends State<TransactionForm> {
       valueController.text =
           widget.initialSingleTransactionData!.value.toStringAsFixed(2);
       selectedAccount = widget.initialSingleTransactionData!.account;
-      selectedCategory = widget.initialSingleTransactionData!.category;
+      selectedCategories = widget.initialSingleTransactionData!.categories;
       selectedAccount2 = widget.initialSingleTransactionData!.account2;
       descriptionController.text =
           widget.initialSingleTransactionData!.description ?? '';
@@ -109,10 +110,6 @@ class _TransactionFormState extends State<TransactionForm> {
       final recentlyUsedAccount = RecentlyUsed<Account>();
       selectedAccount = await recentlyUsedAccount.getLastUsed();
     }
-    if (selectedCategory == null) {
-      final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
-      selectedCategory = await recentlyUsedCategory.getLastUsed();
-    }
     final preferences = await SharedPreferences.getInstance();
     setState(() {
       _prefixButtonVisible = preferences.getBool('key-prefix-button-active') ??
@@ -129,10 +126,11 @@ class _TransactionFormState extends State<TransactionForm> {
             : const Text('New Transaction'),
       ),
       body: ScrollViewWithDeadSpace(
+        deadSpaceSize: 50,
         deadSpaceContent: VisualizeTransaction(
           account1: selectedAccount,
           account2: selectedAccount2,
-          category: selectedCategory,
+          category: null,
           wasNegative: wasValueNegative,
           value: tryValueParse(valueController.text),
         ),
@@ -205,10 +203,10 @@ class _TransactionFormState extends State<TransactionForm> {
     }
   }
 
-  void setCategory(TransactionCategory c) {
+  void setCategories(List<TransactionCategory> c) {
     if (mounted) {
       setState(() {
-        selectedCategory = c;
+        selectedCategories = c;
       });
     }
   }
@@ -303,29 +301,15 @@ class _TransactionFormState extends State<TransactionForm> {
             controller: titleController,
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
-              labelText: titleController.text == ''
-                  ? 'Title: ${selectedCategory?.name}'
-                  : 'Title',
+              labelText: titleController.text == '' ? 'Set a Title' : 'Title',
               border: const OutlineInputBorder(),
             ),
           ),
           // category picker
           const SizedBox(height: 8),
-          CustomInputFieldBorder(
-            title: 'Category',
-            onTap: () => showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return CategoryPicker.single(
-                  onCategoryPickedCallback: setCategory,
-                );
-              },
-            ),
-            child: InkWell(
-              child: selectedCategory != null
-                  ? SelectableIconWithText(selectedCategory!)
-                  : const Text('Select Category'),
-            ),
+          CategoriesOverview(
+            onCategoriesChanged: setCategories,
+            initialCategories: selectedCategories,
           ),
           // account picker
           const SizedBox(height: 8),
@@ -405,15 +389,12 @@ class _TransactionFormState extends State<TransactionForm> {
     }
 
     String title = titleController.text.trim();
-    if (title == '') {
-      title = selectedCategory!.name;
-    }
 
     SingleTransaction transaction = SingleTransaction(
       id: 0,
       title: title,
       value: roundDouble(valueParser.evaluate(valueController.text)),
-      category: selectedCategory!,
+      categories: selectedCategories!,
       account: selectedAccount!,
       account2: selectedAccount2,
       description: parseNullableString(description),

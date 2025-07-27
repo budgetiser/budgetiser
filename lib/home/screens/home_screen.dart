@@ -3,7 +3,7 @@ import 'package:budgetiser/core/drawer.dart';
 import 'package:budgetiser/statistics/screens/account_stat/simple_account_stat_screen.dart';
 import 'package:budgetiser/statistics/screens/category_stat/simple_category_stat_screen.dart';
 import 'package:budgetiser/statistics/screens/stat_preview_widget.dart';
-import 'package:budgetiser/transactions/screens/transaction_form.dart';
+import 'package:budgetiser/transactions/screens/transaction_form/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

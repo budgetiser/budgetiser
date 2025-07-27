@@ -18,6 +18,9 @@ extension DatabaseExtensionSQL on DatabaseHelper {
     if (newVersion >= 4 && oldVersion < 4) {
       await upgradeToV4(db);
     }
+    if (newVersion >= 5 && oldVersion < 5) {
+      await upgradeToV5(db);
+    }
   }
 
   dynamic _onCreate(Database db, int version) async {
@@ -56,12 +59,10 @@ extension DatabaseExtensionSQL on DatabaseHelper {
         title TEXT NOT NULL,
         value REAL NOT NULL,
         description TEXT,
-        category_id INTEGER NOT NULL,
         date INTEGER NOT NULL,
         account1_id INTEGER NOT NULL,
         account2_id INTEGER,
         PRIMARY KEY(id),
-        FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
         FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
         FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE
       );
@@ -98,6 +99,15 @@ extension DatabaseExtensionSQL on DatabaseHelper {
         FOREIGN KEY(child_id) REFERENCES category ON DELETE CASCADE
         );
     ''');
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS categoryToTransaction(
+      category_id INTEGER NOT NULL,
+      transaction_id INTEGER NOT NULL,
+      PRIMARY KEY(category_id, transaction_id),
+      FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
+      FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE
+    );
+  ''');
     if (kDebugMode) {
       print('done initializing tables');
     }
@@ -371,5 +381,105 @@ Future<void> upgradeToV4(Database db) async {
   await db.execute('''
     ALTER TABLE categoryBridge RENAME COLUMN descendent_id TO child_id;
   ''');
+  debugPrint('Done.');
+}
+
+Future<void> upgradeToV5(Database db) async {
+  debugPrint('upgrading to db V5!');
+
+  // singleTransaction
+  await db.execute('''
+      CREATE TABLE IF NOT EXISTS NEW_singleTransaction(
+        id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        value REAL NOT NULL,
+        description TEXT,
+        date INTEGER NOT NULL,
+        account1_id INTEGER NOT NULL,
+        account2_id INTEGER,
+        PRIMARY KEY(id),
+        FOREIGN KEY(account1_id) REFERENCES account ON DELETE CASCADE,
+        FOREIGN KEY(account2_id) REFERENCES account ON DELETE CASCADE
+      );
+    ''');
+
+  final List<Map<String, dynamic>> mapSingle = await db.rawQuery(
+    '''SELECT DISTINCT *, account.icon AS account_icon, account.color AS account_color, account.id AS account_id, account.name AS account_name, account.balance AS account_balance,
+      singleTransaction.description AS description, singleTransaction.id AS id
+      FROM singleTransaction, singleTransactionToAccount, category, account
+      WHERE account.id = singleTransactionToAccount.account1_id 
+      AND singleTransactionToAccount.transaction_id = singleTransaction.id;
+      ''',
+  );
+
+  for (Map<String, dynamic> transaction in mapSingle) {
+    transaction = Map.of(transaction);
+    transaction['date'] =
+        DateTime.parse(transaction['date']).millisecondsSinceEpoch;
+    if (transaction['description'] == '') {
+      await db.execute('''
+        INSERT INTO NEW_singleTransaction (id, title, value, date, account1_id, account2_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?);
+      ''', [
+        transaction['id'],
+        transaction['title'],
+        transaction['value'],
+        transaction['date'],
+        transaction['account1_id'],
+        transaction['account2_id'],
+      ]);
+    } else {
+      await db.execute('''
+        INSERT INTO NEW_singleTransaction (id, title, value, description, date, account1_id, account2_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      ''', [
+        transaction['id'],
+        transaction['title'],
+        transaction['value'],
+        transaction['description'],
+        transaction['date'],
+        transaction['account1_id'],
+        transaction['account2_id'],
+      ]);
+    }
+  }
+
+  await db.execute('''
+      DROP TABLE singleTransaction;
+    ''');
+
+  await db.execute('''
+      ALTER TABLE NEW_singleTransaction RENAME TO singleTransaction;
+    ''');
+
+  await db.execute('''
+    CREATE TABLE IF NOT EXISTS categoryToTransaction(
+      category_id INTEGER NOT NULL,
+      transaction_id INTEGER NOT NULL,
+      PRIMARY KEY(category_id, transaction_id),
+      FOREIGN KEY(category_id) REFERENCES category ON DELETE CASCADE,
+      FOREIGN KEY(transaction_id) REFERENCES singleTransaction ON DELETE CASCADE
+    );
+  ''');
+
+  final List<Map<String, dynamic>> transactions = await db.rawQuery(
+    '''
+    SELECT id as transaction_id, category_id
+    FROM singleTransaction;
+    ''',
+  );
+
+  for (Map<String, dynamic> transaction in transactions) {
+    transaction = Map.of(transaction);
+    await db.insert(
+      'categoryToTransaction',
+      {
+        'category_id': transaction['category_id'],
+        'transaction_id': transaction['transaction_id'],
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   debugPrint('Done.');
 }

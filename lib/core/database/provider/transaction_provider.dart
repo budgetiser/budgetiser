@@ -56,7 +56,7 @@ class TransactionModel extends ChangeNotifier {
 
     SingleTransaction s = SingleTransaction.fromDBmap(
       mapItem,
-      category: await CategoryModel().getCategory(mapItem['category_id']),
+      categories: await CategoryModel().getCategories(mapItem['category_ids']),
       account: await AccountModel().getOneAccount(mapItem['account1_id']),
       account2: mapItem['account2_id'] == null
           ? null
@@ -84,17 +84,31 @@ class TransactionModel extends ChangeNotifier {
     Profiler.instance.end();
     SingleTransaction returnTransaction = SingleTransaction.fromDBmap(
       mapItem,
-      category: TransactionCategory(
-        id: mapItem['category_id'],
-        name: mapItem['category_name'],
-        color: Color(mapItem['category_color']),
-        icon: IconData(mapItem['category_icon'], fontFamily: 'MaterialIcons'),
-      ),
+      categories: await getCategoriesFromTransactionId(mapItem['id']),
       account: account1,
       account2: account2,
     );
     Profiler.instance.end();
     return returnTransaction;
+  }
+
+  Future<List<TransactionCategory>> getCategoriesFromTransactionId(
+    int transactionId,
+  ) async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> mapCategories = await db.query(
+      'categoryToTransaction',
+      where: 'transaction_id = ?',
+      whereArgs: [transactionId],
+    );
+
+    List<TransactionCategory> categories = [];
+    for (int i = 0; i < mapCategories.length; i++) {
+      categories.add(
+        await CategoryModel().getCategory(mapCategories[i]['category_id']),
+      );
+    }
+    return categories;
   }
 
   Future<int> createSingleTransaction(
@@ -109,23 +123,40 @@ class TransactionModel extends ChangeNotifier {
       if (!keepId) {
         id = await txn.insert(
           'singleTransaction',
-          map,
+          {
+            'title': map['title'],
+            'value': map['value'],
+            'description': map['description'],
+            'date': map['date'],
+            'account1_id': map['account1_id'],
+            'account2_id': map['account2_id'],
+          },
           conflictAlgorithm: ConflictAlgorithm.fail,
         );
       } else {
         await txn.execute('''
-        INSERT INTO singleTransaction (id, title, value, description, category_id, date, account1_id, account2_id) 
+        INSERT INTO singleTransaction (id, title, value, description, date, account1_id, account2_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       ''', [
           id,
           map['title'],
           map['value'],
           map['description'],
-          map['category_id'],
           map['date'],
           map['account1_id'],
           map['account2_id'],
         ]);
+      }
+
+      for (TransactionCategory category in transaction.categories) {
+        await txn.insert(
+          'categoryToTransaction',
+          {
+            'transaction_id': id,
+            'category_id': category.id,
+          },
+          conflictAlgorithm: ConflictAlgorithm.fail,
+        );
       }
 
       if (transaction.account2 != null) {
@@ -150,7 +181,6 @@ class TransactionModel extends ChangeNotifier {
     }
 
     recentlyUsedAccount.addItem(transaction.account.id.toString());
-    recentlyUsedCategory.addItem(transaction.category.id.toString());
 
     return id;
   }
@@ -256,9 +286,10 @@ class TransactionModel extends ChangeNotifier {
 // ${accountFilter != null ? "WHERE (account1_id IN ($accountFilter) OR account2_id IN ($accountFilter))" : ""}
     final List<Map<String, dynamic>> dateList = await db.rawQuery(
       """ SELECT DISTINCT STRFTIME('%Y-%m', DATETIME(ROUND(date/1000), 'unixepoch'), 'start of month') AS month, COUNT(id) as amount
-          FROM singleTransaction
+          FROM singleTransaction, categoryToTransaction
+          WHERE categoryToTransaction.transaction_id = singleTransaction.id
           ${accountFilter != null ? "WHERE (account1_id IN ($accountFilter) OR account2_id IN ($accountFilter))" : ""}
-          ${categoryFilter != null ? "${accountFilter != null ? "AND" : "WHERE"} category_id IN ($categoryFilter)" : ""}
+          ${categoryFilter != null ? "${accountFilter != null ? "AND" : "WHERE"} categoryToTransaction.category_id IN ($categoryFilter)" : ""}
           GROUP BY month
           ORDER BY month DESC;
       """,
@@ -305,16 +336,13 @@ class TransactionModel extends ChangeNotifier {
     List<Map<String, dynamic>> mapSingle = await db.rawQuery(
       // TODO: archived ?
       // query only for account1, account2 needs to be fetched separately
-      '''SELECT *, category.icon AS category_icon, category.color AS category_color, category.id AS category_id, category.name AS category_name,
-      singleTransaction.description AS description, singleTransaction.id AS id
+      '''SELECT *, singleTransaction.description AS description, singleTransaction.id AS id
 
-      FROM singleTransaction, category
-
-      WHERE category.id = singleTransaction.category_id
-      AND date >= ? AND date <= ?
+      FROM singleTransaction
+      LEFT JOIN categoryToTransaction ON categoryToTransaction.transaction_id = singleTransaction.id
+      WHERE date >= ? AND date <= ?
       ${accountFilter != null ? "AND (account1_id IN ($accountFilter) OR account2_id IN ($accountFilter))" : ""}
-      ${categoryFilter != null ? "AND category_id IN ($categoryFilter)" : ""}
-      
+      ${categoryFilter != null ? "AND categoryToTransaction.category_id IN ($categoryFilter)" : ""}
       ''',
       [
         firstOfMonth(inMonth).millisecondsSinceEpoch,

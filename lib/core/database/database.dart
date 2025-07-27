@@ -34,7 +34,7 @@ class DatabaseHelper {
   final recentlyUsedAccount = RecentlyUsed<Account>();
   final recentlyUsedCategory = RecentlyUsed<TransactionCategory>();
 
-  static const int currentDatabaseVersion = 4;
+  static const int currentDatabaseVersion = 5;
 
   Future<Database> get database async =>
       _database ??= await initializeDatabase();

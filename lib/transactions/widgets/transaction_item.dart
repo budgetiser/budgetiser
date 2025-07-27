@@ -1,7 +1,7 @@
 import 'package:budgetiser/core/database/models/transaction.dart';
 import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon.dart';
-import 'package:budgetiser/transactions/screens/transaction_form.dart';
+import 'package:budgetiser/transactions/screens/transaction_form/transaction_form.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction_small.dart';
 import 'package:flutter/material.dart';
 
@@ -33,13 +33,6 @@ class TransactionItem extends StatelessWidget {
           margin: const EdgeInsets.all(8),
           child: Row(
             children: [
-              SelectableIcon(
-                transactionData.category,
-                size: 40,
-              ),
-              const SizedBox(
-                width: 16,
-              ),
               Expanded(
                 child: Column(
                   children: [

@@ -5,7 +5,7 @@ import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/icon_color/icon_color_picker.dart';
-import 'package:budgetiser/transactions/screens/transaction_form.dart';
+import 'package:budgetiser/transactions/screens/transaction_form/transaction_form.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

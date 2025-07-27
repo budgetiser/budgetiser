@@ -101,7 +101,7 @@ class PerformanceTestDataset extends DemoDataset {
         }
         return SingleTransaction(
           account: accountList[(index % 10)],
-          category: categoryList[(index % 15)],
+          categories: categoryList,
           date: DateTime(2020, 1, 1).add(Duration(hours: index)),
           id: index + 1,
           title: 'Transaction ${index + 1}',
