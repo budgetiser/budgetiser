@@ -19,7 +19,7 @@ jobs:
           fetch-tags: true
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v3
+        uses: gittools/actions/gitversion/setup@v4
         with:
           versionSpec: "5.x"
 
