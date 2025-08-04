@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter
   accessibility_tools: ^2.2.2
   badges: ^3.1.2
-  dynamic_color: ^1.7.0
+  dynamic_color: ^1.8.1
   equations: ^5.0.1
   file_picker: ^10.2.0
   fl_chart: ^1.0.0
