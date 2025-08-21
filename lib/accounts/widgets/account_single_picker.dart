@@ -39,6 +39,7 @@ class _AccountSinglePickerState extends State<AccountSinglePicker> {
         }
 
         return GeneralSinglePicker<Account>(
+          title: 'Select an account',
           onPickedCallback: widget.onAccountPickedCallback,
           possibleValues: snapshot.data!,
           blacklistedValues: widget.blacklistedValues,

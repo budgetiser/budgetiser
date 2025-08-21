@@ -44,21 +44,26 @@ class _CategoryPickerSingleState<T extends Selectable>
     return AlertDialog(
       title: const Text('Select a category'),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      actions: widget.possibleValues.isEmpty
-          ? [Container(child: widget.noDataButton)]
-          : widget.isNullable
-              ? [
-                  TextButton(
-                    child: const Text('Select None'),
-                    onPressed: () {
-                      setState(() {
-                        widget.onPickedCallbackNullable!(null);
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ]
-              : null,
+      actions: [
+        TextButton(
+          child: const Text('Close'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        if (widget.possibleValues.isEmpty)
+          Container(child: widget.noDataButton)
+        else if (widget.isNullable)
+          TextButton(
+            child: const Text('Select None'),
+            onPressed: () {
+              setState(() {
+                widget.onPickedCallbackNullable!(null);
+              });
+              Navigator.of(context).pop();
+            },
+          ),
+      ],
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {

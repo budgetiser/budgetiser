@@ -41,8 +41,9 @@ class _GeneralMultiPickerState<T extends Selectable>
       title: Text(widget.heading),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       actions: [
-        Container(
-          child: widget.noDataButton ?? widget.noDataButton,
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
@@ -51,7 +52,7 @@ class _GeneralMultiPickerState<T extends Selectable>
             });
             Navigator.of(context).pop();
           },
-          child: const Text('Save'),
+          child: const Text('Confirm'),
         ),
       ],
       content: StatefulBuilder(

@@ -40,6 +40,7 @@ class _AccountSinglePickerNullableState
         }
 
         return GeneralSinglePickerNullable<Account>(
+          title: 'Select an account',
           onPickedCallback: widget.onAccountPickedCallback,
           possibleValues: snapshot.data!,
           blacklistedValues: widget.blacklistedValues,

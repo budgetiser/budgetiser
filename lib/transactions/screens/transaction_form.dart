@@ -8,14 +8,12 @@ import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/shared/services/recently_used.dart';
 import 'package:budgetiser/shared/utils/data_types_utils.dart';
 import 'package:budgetiser/shared/widgets/actionButtons/cancel_action_button.dart';
-
 import 'package:budgetiser/shared/widgets/forms/custom_input_field.dart';
 import 'package:budgetiser/shared/widgets/forms/screen_forms.dart';
 import 'package:budgetiser/shared/widgets/picker/date_picker.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transactions_screen.dart';
 import 'package:budgetiser/transactions/widgets/visualize_transaction.dart';
-
 import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
