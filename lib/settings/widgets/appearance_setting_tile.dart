@@ -50,16 +50,26 @@ class _AppearanceSettingTileState extends State<AppearanceSettingTile> {
             return SimpleDialog(
               title: const Text('Appearance'),
               children: [
-                Column(
-                  children: [
-                    for (var item in ['system', 'light', 'dark'])
-                      RadioListTile<String>(
-                        title: Text(item),
-                        value: item,
-                        groupValue: _selectedDarkModeValue,
-                        onChanged: setAppearance,
+                RadioGroup<String>(
+                  groupValue: _selectedDarkModeValue,
+                  onChanged: setAppearance,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      ListTile(
+                        title: const Text('System'),
+                        leading: Radio<String>(value: 'system'),
                       ),
-                  ],
+                      ListTile(
+                        title: const Text('Light'),
+                        leading: Radio<String>(value: 'light'),
+                      ),
+                      ListTile(
+                        title: const Text('Dark'),
+                        leading: Radio<String>(value: 'dark'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );
