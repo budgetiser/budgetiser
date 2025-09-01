@@ -20,7 +20,7 @@ dependencies:
   dynamic_color: ^1.8.1
   equations: ^5.0.1
   file_picker: ^10.3.1
-  fl_chart: ^1.0.0
+  fl_chart: ^1.1.0
   flutter_colorpicker: ^1.0.3
   flutter_file_dialog: ^3.0.2
   fuzzywuzzy: ^1.1.6
