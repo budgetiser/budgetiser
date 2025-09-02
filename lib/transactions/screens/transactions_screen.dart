@@ -6,8 +6,8 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
-import 'package:budgetiser/transactions/multi_step_form/multi_step_main.dart';
-import 'package:budgetiser/transactions/screens/transaction_form/transaction_form.dart';
+import 'package:budgetiser/transactions/multi_step_form/account_selection_step.dart';
+import 'package:budgetiser/transactions/multi_step_form/multi_step_form.dart';
 import 'package:budgetiser/transactions/widgets/transaction_expansion_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +18,7 @@ class TransactionsScreen extends StatefulWidget {
     this.initialAccountsFilter,
     this.initialCategoriesFilter,
   });
+
   static String routeID = 'transactions';
 
   final List<Account>? initialAccountsFilter;
@@ -155,7 +156,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const MultiStepTransactionForm(),
+              builder: (context) => MultiStepTransactionForm(steps: [
+                AccountSelectionStep(),
+                AccountSelectionStep(),
+                AccountSelectionStep()
+              ]),
             ),
           );
         },
