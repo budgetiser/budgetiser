@@ -7,12 +7,14 @@ class GeneralSinglePickerNullable<T extends Selectable> extends StatefulWidget {
     super.key,
     required this.onPickedCallback,
     required this.possibleValues,
+    required this.title,
     this.blacklistedValues,
   });
 
   final Function(T? selected) onPickedCallback;
   final List<T> possibleValues;
   final List<T>? blacklistedValues;
+  final String title;
 
   @override
   State<GeneralSinglePickerNullable<T>> createState() =>
@@ -36,8 +38,13 @@ class _GeneralSinglePickerNullableState<T extends Selectable>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: Text(widget.title),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
         TextButton(
           child: const Text('Select None'),
           onPressed: () {

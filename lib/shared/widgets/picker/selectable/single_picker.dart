@@ -7,6 +7,7 @@ class GeneralSinglePicker<T extends Selectable> extends StatefulWidget {
     super.key,
     required this.onPickedCallback,
     required this.possibleValues,
+    required this.title,
     this.blacklistedValues,
     this.noDataButton,
   });
@@ -14,6 +15,7 @@ class GeneralSinglePicker<T extends Selectable> extends StatefulWidget {
   final Function(T selected) onPickedCallback;
   final List<T> possibleValues;
   final List<T>? blacklistedValues;
+  final String title;
 
   /// Optional button for dialog. Displayed if no data is available.
   final TextButton? noDataButton;
@@ -39,10 +41,15 @@ class _GeneralSinglePickerState<T extends Selectable>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: Text(widget.title),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      actions: widget.noDataButton != null
-          ? [Container(child: widget.noDataButton)]
-          : null,
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        if (widget.noDataButton != null) Container(child: widget.noDataButton),
+      ],
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           if (widget.possibleValues.isEmpty) {
