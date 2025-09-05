@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -84,7 +84,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Retrieve Version
         id: retrieve_version
@@ -93,19 +93,19 @@ jobs:
           echo "version=${YAML_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Download signed AAB
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: release-aab-signed
           path: build/app/outputs/bundle/release/
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: release-aab
           path: build/app/outputs/bundle/release/
 
       - name: Download APK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/
