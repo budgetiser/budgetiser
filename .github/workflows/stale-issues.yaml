@@ -10,7 +10,7 @@ jobs:
       issues: write
 
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v10
         with:
           days-before-stale: 356
           days-before-close: -1
