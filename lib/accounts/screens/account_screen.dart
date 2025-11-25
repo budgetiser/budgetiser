@@ -4,6 +4,7 @@ import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
 import 'package:budgetiser/shared/widgets/divider_with_text.dart';
+import 'package:budgetiser/shared/widgets/empty_screen.dart';
 import 'package:budgetiser/shared/widgets/sort_by.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +67,7 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           );
         },
-        tooltip: 'Increment',
+        heroTag: 'create-account',
         child: const Icon(Icons.add),
       ),
     );
@@ -107,8 +108,9 @@ class _AccountScreenState extends State<AccountScreen> {
               );
             }
             if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No Accounts'),
+              return EmptyScreen(
+                onPressed: const AccountForm(),
+                type: 'account',
               );
             }
             if (snapshot.hasError) {
@@ -129,7 +131,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     shrinkWrap: true,
                     padding: archivedAccountList.isEmpty
                         ? const EdgeInsets.only(bottom: 80)
-                        : null,
+                        : const EdgeInsets.only(bottom: 0),
                     itemCount: accountList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return AccountItem(

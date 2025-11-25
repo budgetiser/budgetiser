@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build
@@ -17,7 +21,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Cache pub deps
         uses: actions/cache@v4
@@ -37,7 +41,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -63,17 +67,18 @@ jobs:
           flutter build apk --release --no-tree-shake-icons
 
       - name: Sign Android App Bundle
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar build/app/outputs/bundle/release/app-release-signed.aab build/app/outputs/bundle/release/app-release.aab upload
 
       - name: Export AAB artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: android-appbundle
           path: build/app/outputs/bundle/release/app-release.aab
           retention-days: 14
 
       - name: Export APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk

@@ -54,16 +54,16 @@ class _CreateDrawerState extends State<CreateDrawer> {
         selectedIndex: screenIndex,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.blue,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
             ),
             child: Semantics(
               label: 'app logo with name',
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(
                     LogoIcon.budgetiserIcon,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     size: 40,
                   ),
                   SizedBox(width: 8),
@@ -72,7 +72,7 @@ class _CreateDrawerState extends State<CreateDrawer> {
                     textScaler:
                         TextScaler.linear(1), // ignore device text scale
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontSize: 40,
                     ),
                   ),

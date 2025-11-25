@@ -1,5 +1,4 @@
 import 'package:budgetiser/shared/widgets/divider_with_text.dart';
-import 'package:budgetiser/shared/widgets/forms/radio_item_clickable.dart';
 import 'package:flutter/material.dart';
 
 enum SortedByEnum {
@@ -77,7 +76,10 @@ class _SortByIconWidgetState extends State<SortByIconWidget> {
         break;
     }
     return IconButton(
-      icon: const Icon(Icons.sort),
+      icon: const Icon(
+        Icons.sort,
+        semanticLabel: 'Sort by',
+      ),
       onPressed: () {
         showSortByDialog(context);
       },
@@ -93,57 +95,55 @@ class _SortByIconWidgetState extends State<SortByIconWidget> {
           alignment: Alignment.topRight,
           key: dialogKey,
           children: [
-            RadioItemClickable(
-              value: true,
-              title: 'Name',
+            RadioGroup<bool>(
               groupValue: _isSortedByName,
-              onChangedCallback: (value) {
+              onChanged: (value) {
                 Navigator.of(context).pop();
                 setState(() {
-                  _isSortedByName = value;
+                  _isSortedByName = value!;
                 });
                 onNewSortSelected();
               },
-            ),
-            RadioItemClickable(
-              value: false,
-              title: 'Balance',
-              groupValue: _isSortedByName,
-              onChangedCallback: (value) {
-                Navigator.of(context).pop();
-                setState(() {
-                  _isSortedByName = value;
-                });
-                onNewSortSelected();
-              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: const Text('Name'),
+                    leading: Radio<bool>(value: true),
+                  ),
+                  ListTile(
+                    title: const Text('Balance'),
+                    leading: Radio<bool>(value: false),
+                  ),
+                ],
+              ),
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: DividerWithText('Order'),
             ),
-            RadioItemClickable(
-              value: true,
-              title: 'Ascending',
+            RadioGroup<bool>(
               groupValue: _isAscending,
-              onChangedCallback: (value) {
+              onChanged: (value) {
                 Navigator.of(context).pop();
                 setState(() {
-                  _isAscending = value;
+                  _isAscending = value!;
                 });
                 onNewSortSelected();
               },
-            ),
-            RadioItemClickable(
-              value: false,
-              title: 'Descending',
-              groupValue: _isAscending,
-              onChangedCallback: (value) {
-                Navigator.of(context).pop();
-                setState(() {
-                  _isAscending = value;
-                });
-                onNewSortSelected();
-              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: const Text('Ascending'),
+                    leading: Radio<bool>(value: true),
+                  ),
+                  ListTile(
+                    title: const Text('Descending'),
+                    leading: Radio<bool>(value: false),
+                  ),
+                ],
+              ),
             ),
           ],
         );
