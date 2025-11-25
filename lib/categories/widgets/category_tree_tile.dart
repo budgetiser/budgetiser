@@ -134,7 +134,11 @@ class _CategoryTreeTileState extends State<CategoryTreeTile>
       }
       PageStorage.maybeOf(context)?.writeState(context, _isExpanded);
     });
-    SemanticsService.announce(stateHint, textDirection);
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      stateHint,
+      textDirection,
+    );
   }
 
   Widget? _buildIcon(BuildContext context) {
