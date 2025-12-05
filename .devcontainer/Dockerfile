@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         # mentioned in official flutter install docs (https://docs.flutter.dev/install/manual)
         curl git unzip xz-utils zip libglu1-mesa \
         # required android sdk dependencies
@@ -37,7 +37,7 @@ ARG ANDROID_SDK_ROOT=/usr/lib/android-sdk
 # URL found at: https://developer.android.com/studio?hl=de
 ARG CMDLINE_TOOLS_DOWNLOAD_URL="https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip"
 
-ARG FLUTTER_SDK_VERSION=3.38.3-stable
+ARG FLUTTER_SDK_VERSION=3.38.4-stable
 # URL found at: https://docs.flutter.dev/install/manual
 ARG FLUTTER_SDK_DOWNLOAD_URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_SDK_VERSION}.tar.xz"
 ARG FLUTTER_SDK_ROOT=/usr/lib/flutter
@@ -68,6 +68,24 @@ RUN mkdir -p ${FLUTTER_SDK_ROOT} && \
     rm flutter_linux_${FLUTTER_SDK_VERSION}.tar.xz
 
 # Flutter requires its SDK directory to be a "safe" git directory
+RUN git config --global --add safe.directory /usr/lib/flutter
+
+#################################
+# Stage 3 — Final Runtime Image #
+#################################
+
+FROM ubuntu:noble AS runtime
+ENV DEBIAN_FRONTEND=noninteractive
+
+COPY --from=android-flutter /usr/lib/flutter /usr/lib/flutter
+COPY --from=android-flutter /usr/lib/android-sdk /usr/lib/android-sdk
+ENV PATH="${PATH}:/usr/lib/flutter/bin:/usr/lib/android-sdk/cmdline-tools/latest/bin:/usr/lib/android-sdk/platform-tools"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      curl unzip xz-utils libglu1-mesa openjdk-17-jre-headless git-all \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN git config --global --add safe.directory /usr/lib/flutter
 RUN flutter --disable-analytics
 
