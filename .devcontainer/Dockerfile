@@ -83,7 +83,7 @@ ENV PATH="${PATH}:/usr/lib/flutter/bin:/usr/lib/android-sdk/cmdline-tools/latest
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      curl unzip xz-utils libglu1-mesa openjdk-17-jre-headless git-all \
+      curl unzip xz-utils libglu1-mesa openjdk-17-jdk git-all \
     && rm -rf /var/lib/apt/lists/*
 
 RUN git config --global --add safe.directory /usr/lib/flutter
