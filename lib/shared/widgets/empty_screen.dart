@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
+
+@Preview(name: 'empty screen', group: 'shared')
+Widget previewEmptyScreen() {
+  return const EmptyScreen(onPressed: SizedBox(), type: 'Account');
+}
 
 class EmptyScreen extends StatelessWidget {
   /// Widget to display when there is no data available.

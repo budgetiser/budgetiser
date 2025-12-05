@@ -4,6 +4,21 @@ import 'package:budgetiser/shared/widgets/balance_text.dart';
 import 'package:budgetiser/shared/widgets/selectable/selectable_icon_with_text.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
+
+@Preview(name: 'AccountItem', group: 'account')
+Widget previewAccountItem() {
+  return AccountItem(
+    accountData: Account(
+      id: 1,
+      name: 'Sample Account',
+      balance: 100.0,
+      icon: Icons.ac_unit,
+      color: Colors.blue,
+      description: 'Description of sample account',
+    ),
+  );
+}
 
 class AccountItem extends StatelessWidget {
   const AccountItem({

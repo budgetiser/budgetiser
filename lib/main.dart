@@ -3,8 +3,8 @@ import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/database/provider/category_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
+import 'package:budgetiser/core/navigationBar.dart';
 import 'package:budgetiser/core/routes.dart';
-import 'package:budgetiser/home/screens/home_screen.dart';
 import 'package:budgetiser/settings/services/settings_stream.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
             buttonsAlignment: ButtonsAlignment.bottomLeft,
             child: child,
           ),
-          home: const HomeScreen(),
+          home: const NavBar(),
           routes: routes,
         );
       },

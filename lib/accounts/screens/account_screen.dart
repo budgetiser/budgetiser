@@ -2,7 +2,6 @@ import 'package:budgetiser/accounts/screens/account_form.dart';
 import 'package:budgetiser/accounts/widgets/account_item.dart';
 import 'package:budgetiser/core/database/models/account.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
-import 'package:budgetiser/core/drawer.dart';
 import 'package:budgetiser/shared/widgets/divider_with_text.dart';
 import 'package:budgetiser/shared/widgets/empty_screen.dart';
 import 'package:budgetiser/shared/widgets/sort_by.dart';
@@ -55,21 +54,9 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(context),
-      drawer: const CreateDrawer(),
-      body: screenContent(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AccountForm(),
-            ),
-          );
-        },
-        heroTag: 'create-account',
-        child: const Icon(Icons.add),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: screenContent(),
     );
   }
 
