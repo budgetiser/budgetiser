@@ -93,19 +93,19 @@ jobs:
           echo "version=${YAML_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Download signed AAB
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: release-aab-signed
           path: build/app/outputs/bundle/release/
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: release-aab
           path: build/app/outputs/bundle/release/
 
       - name: Download APK
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/
