@@ -49,19 +49,19 @@ jobs:
         run: jarsigner -keystore $RUNNER_TEMP/my_production.keystore -storepass ${{secrets.KEYSTORE_PASSWORD}} -keypass ${{secrets.KEYSTORE_PASSWORD_ALIAS}} -sigalg SHA256withRSA -digestalg SHA-256 -signedjar build/app/outputs/bundle/release/app-release-signed.aab build/app/outputs/bundle/release/app-release.aab upload
 
       - name: Export AAB (local)
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: release-aab
           path: build/app/outputs/bundle/release/app-release.aab
 
       - name: Export signed AAB (local)
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: release-aab-signed
           path: build/app/outputs/bundle/release/app-release-signed.aab
 
       - name: Export APK artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk
