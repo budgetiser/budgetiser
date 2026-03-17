@@ -5,30 +5,21 @@ updates:
     directory: "/" # Location of your pubspec.yaml
     schedule:
       interval: "monthly"
-      day: "tuesday"
-    # Group minor and patch updates for `pub` dependencies to reduce PR noise
+    # Group updates for `pub` dependencies to reduce PR noise
     groups:
-      pub-minor-updates:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-      pub-patch-updates:
+      pub-dependencies:
         patterns:
           - "*"
         update-types:
           - "patch"
+          - "minor"
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/" # Location of your .github/workflows/
     schedule:
       interval: "monthly"
-    # Group all GitHub Actions updates to reduce PR noise
     groups:
       github-actions-dependencies:
         patterns:
-          - "*" # Match all GitHub Actions
-        update-types:
-          - "patch"
-          - "minor"
+          - "*"
