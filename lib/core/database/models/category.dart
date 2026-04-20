@@ -32,8 +32,8 @@ class TransactionCategory extends Selectable {
       other.color == color &&
       other.description == description &&
       other.archived == archived &&
-      other.parentID == parentID &&
-      other.children == children;
+      other.parentID == parentID;
+  // ignoring children, as [] comparison returns false
 
   @override
   int get hashCode => Object.hash(

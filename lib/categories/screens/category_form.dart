@@ -199,7 +199,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     cursorColor: _color,
                     autofocus: true,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Name',
                       errorText:
                           _nameError, // error message for duplicate name (does not block form submission)

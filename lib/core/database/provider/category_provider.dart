@@ -9,6 +9,37 @@ class CategoryModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fetches category tree.
+  /// Result Map can be used to query all categories for a list of their parents.
+  ///
+  /// Example:\
+  /// 1: [2, 3]\
+  /// 2: [3]\
+  /// 3: [] (not included)\
+  /// 4: [2, 3]\
+  Future<Map<int, List<int>>> getParentsList() async {
+    Profiler.instance.start('getParentsList');
+    var db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'categoryBridge',
+      where: 'distance != 0',
+      orderBy: 'distance ASC',
+    );
+
+    Map<int, List<int>> parentMap = {};
+
+    for (var i = 0; i < maps.length; i++) {
+      if (parentMap.containsKey(maps[i]['child_id'])) {
+        parentMap[maps[i]['child_id']]!.add(maps[i]['parent_id']);
+      } else {
+        parentMap[maps[i]['child_id']] = [maps[i]['parent_id']];
+      }
+    }
+
+    Profiler.instance.end();
+    return parentMap;
+  }
+
   Future<TransactionCategory> getCategory(int id) async {
     // TODO: hierarchical
     Profiler.instance.start('getCategory $id');
