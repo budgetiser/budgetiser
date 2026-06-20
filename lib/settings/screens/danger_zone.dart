@@ -34,7 +34,7 @@ class DangerZone extends StatelessWidget {
                 Uint8List databaseContent =
                     await DatabaseHelper.instance.getDatabaseContentAsJson();
 
-                String? outputFile = await FilePicker.platform.saveFile(
+                String? outputFile = await FilePicker.saveFile(
                   fileName: 'budgetiser_$dtSuffix.json',
                   bytes: databaseContent,
                 );
@@ -55,7 +55,7 @@ class DangerZone extends StatelessWidget {
                 Uint8List databaseContent = await DatabaseHelper.instance
                     .getDatabaseContentAsPrettyJson();
 
-                String? outputFile = await FilePicker.platform.saveFile(
+                String? outputFile = await FilePicker.saveFile(
                   fileName: 'budgetiser_pretty_$dtSuffix.json',
                   bytes: databaseContent,
                 );
@@ -76,7 +76,7 @@ class DangerZone extends StatelessWidget {
                 Uint8List databaseContent =
                     await DatabaseHelper.instance.getDatabaseContent();
 
-                String? outputFile = await FilePicker.platform.saveFile(
+                String? outputFile = await FilePicker.saveFile(
                   fileName: 'budgetiser_data_$dtSuffix.db',
                   bytes: databaseContent,
                 );
@@ -107,7 +107,7 @@ class DangerZone extends StatelessWidget {
                           'Importing a json file will overwrite all existing data in the app. This action cannot be undone!',
                       onSubmitCallback: () async {
                         FilePickerResult? filesPickerResult =
-                            await FilePicker.platform.pickFiles(
+                            await FilePicker.pickFiles(
                           allowMultiple: false,
                           allowedExtensions: ['json'],
                           type: FileType.custom,
@@ -157,7 +157,7 @@ class DangerZone extends StatelessWidget {
                           '(excluding some preferential settings). This action cannot be undone!',
                       onSubmitCallback: () async {
                         FilePickerResult? filesPickerResult =
-                            await FilePicker.platform.pickFiles(
+                            await FilePicker.pickFiles(
                           allowMultiple: false,
                           type: FileType.any,
                         );

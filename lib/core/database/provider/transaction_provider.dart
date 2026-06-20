@@ -88,6 +88,7 @@ class TransactionModel extends ChangeNotifier {
         id: mapItem['category_id'],
         name: mapItem['category_name'],
         color: Color(mapItem['category_color']),
+        // ignore: non_const_argument_for_const_parameter
         icon: IconData(mapItem['category_icon'], fontFamily: 'MaterialIcons'),
       ),
       account: account1,

@@ -53,6 +53,7 @@ class SimpleAccountStatTables extends StatelessWidget {
                     children: [
                       Icon(
                         IconData(
+                          // ignore: non_const_argument_for_const_parameter
                           data[index]['icon'],
                           fontFamily: 'MaterialIcons',
                         ),

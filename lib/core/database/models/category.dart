@@ -57,6 +57,7 @@ class TransactionCategory extends Selectable {
         super(
           name: map['name'].toString(),
           color: Color(map['color']),
+          // ignore: non_const_argument_for_const_parameter
           icon: IconData(map['icon'], fontFamily: 'MaterialIcons'),
         );
 
