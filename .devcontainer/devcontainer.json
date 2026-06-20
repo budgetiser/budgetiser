@@ -4,7 +4,10 @@
     "context": "..",
     "dockerfile": "Dockerfile"
   },
-  "runArgs": [],
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway",
+    "--network=host"
+  ],
   // Ports are required for ADB connections to Android emulators on the host system
   "forwardPorts": [
     5554,
