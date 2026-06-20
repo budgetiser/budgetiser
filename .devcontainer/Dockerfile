@@ -13,14 +13,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
-        # mentioned in official flutter install docs (https://docs.flutter.dev/install/manual)
-        curl git unzip xz-utils zip libglu1-mesa \
-        # required android sdk dependencies
-        android-sdk wget openjdk-17-jdk \
-        # mentioned as required on first run of flutter doctor
-        clang cmake ninja-build pkg-config libgtk-3-dev \
-        # general stuff
-        git-all && \
+    # mentioned in official flutter install docs (https://docs.flutter.dev/install/manual)
+    curl git unzip xz-utils zip libglu1-mesa \
+    # required android sdk dependencies
+    android-sdk openjdk-17-jdk \
+    # mentioned as required on first run of flutter doctor
+    clang cmake ninja-build pkg-config libgtk-3-dev \
+    # general stuff
+    git-all && \
     rm -rf /var/lib/apt/lists/*
 
 
@@ -55,10 +55,10 @@ RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools && \
 # Accept licenses + install Android components
 RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --licenses && \
     ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
-        ${ANDROID_PLATFORM_PACKAGE} \
-        ${ANDROID_BUILD_TOOLS_PACKAGE} \
-        # always install platform-tools
-        "platform-tools"
+    ${ANDROID_PLATFORM_PACKAGE} \
+    ${ANDROID_BUILD_TOOLS_PACKAGE} \
+    # always install platform-tools
+    "platform-tools"
 
 # Install Flutter SDK
 RUN mkdir -p ${FLUTTER_SDK_ROOT} && \
@@ -83,7 +83,7 @@ ENV PATH="${PATH}:/usr/lib/flutter/bin:/usr/lib/android-sdk/cmdline-tools/latest
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      curl unzip xz-utils libglu1-mesa openjdk-17-jdk git-all \
+    curl unzip xz-utils libglu1-mesa openjdk-17-jdk git-all \
     && rm -rf /var/lib/apt/lists/*
 
 RUN git config --global --add safe.directory /usr/lib/flutter
