@@ -47,7 +47,7 @@ ENV PATH="${PATH}:${FLUTTER_SDK_ROOT}/bin:${ANDROID_SDK_ROOT}/cmdline-tools/late
 
 # Install Android command line tools, required to install other Android SDK components
 RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools && \
-    wget -O /tmp/cmdtools.zip ${CMDLINE_TOOLS_DOWNLOAD_URL} && \
+    curl -o /tmp/cmdtools.zip ${CMDLINE_TOOLS_DOWNLOAD_URL} && \
     unzip /tmp/cmdtools.zip -d ${ANDROID_SDK_ROOT}/cmdline-tools && \
     mv ${ANDROID_SDK_ROOT}/cmdline-tools/cmdline-tools ${ANDROID_SDK_ROOT}/cmdline-tools/latest && \
     rm /tmp/cmdtools.zip
