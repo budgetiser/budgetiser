@@ -218,10 +218,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_file_dialog
-      sha256: "306692081faa3fdd11e52f4c4efe501e4471355ca4d64f8da1418802998143e0"
+      sha256: a8adb4411bf53835e6176481b12c3dc79abc9b61d9c90198a2eddddcb8cf71c7
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.3.1"
   flutter_highlight:
     dependency: transitive
     description:
