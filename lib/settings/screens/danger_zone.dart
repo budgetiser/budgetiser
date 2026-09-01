@@ -106,17 +106,15 @@ class DangerZone extends StatelessWidget {
                       description:
                           'Importing a json file will overwrite all existing data in the app. This action cannot be undone!',
                       onSubmitCallback: () async {
-                        List<PlatformFile> filesPickerResult =
-                            await FilePicker.pickFiles(
-                          allowMultiple: false,
+                        PlatformFile? pickedFile = await FilePicker.pickFile(
                           allowedExtensions: ['json'],
                           type: FileType.custom,
                         );
 
-                        if (filesPickerResult.isEmpty) {
-                          return; // Invalid selection
+                        if (pickedFile == null) {
+                          return; // User canceled the picker
                         }
-                        String? filePath = filesPickerResult.first.path;
+                        String? filePath = pickedFile.path;
                         if (filePath == null) {
                           return; // Invalid file
                         }
@@ -155,16 +153,14 @@ class DangerZone extends StatelessWidget {
                           'Importing a database file will overwrite all existing data in the app '
                           '(excluding some preferential settings). This action cannot be undone!',
                       onSubmitCallback: () async {
-                        List<PlatformFile> filesPickerResult =
-                            await FilePicker.pickFiles(
-                          allowMultiple: false,
+                        PlatformFile? pickedFile = await FilePicker.pickFile(
                           type: FileType.any,
                         );
 
-                        if (filesPickerResult.isEmpty) {
-                          return; // Invalid selection
+                        if (pickedFile == null) {
+                          return; // User canceled the picker
                         }
-                        String? filePath = filesPickerResult.first.path;
+                        String? filePath = pickedFile.path;
                         if (filePath == null || !filePath.endsWith('.db')) {
                           if (context.mounted) {
                             Navigator.of(context).pop();
