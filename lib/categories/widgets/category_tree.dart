@@ -10,14 +10,14 @@ class CategoryTree extends StatefulWidget {
     super.key,
     required this.categories,
     this.onTap,
-    this.separated = false,
+    this.expanded = false,
     this.padding = const EdgeInsets.only(bottom: 80),
   });
 
   @override
   State<CategoryTree> createState() => _CategoryTreeState();
 
-  final bool separated;
+  final bool expanded;
   final List<TransactionCategory> categories;
   final ValueChanged<TransactionCategory>? onTap;
 
@@ -59,37 +59,6 @@ class _CategoryTreeState extends State<CategoryTree> {
     BuildContext context,
     List<RecursiveCategoryModel> categoryTree,
   ) {
-    if (widget.separated) {
-      return getSeparated(context, categoryTree);
-    }
-    return getTogether(context, categoryTree);
-  }
-
-  ListView getSeparated(
-    BuildContext context,
-    List<RecursiveCategoryModel> categoryTree,
-  ) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemCount: (categoryTree.length),
-      itemBuilder: (BuildContext context, int index) {
-        return RecursiveWidget(
-          model: categoryTree[index],
-          level: 0,
-          initiallyExpanded: true,
-          onTap: widget.onTap,
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider();
-      },
-    );
-  }
-
-  ListView getTogether(
-    BuildContext context,
-    List<RecursiveCategoryModel> categoryTree,
-  ) {
     return ListView.builder(
       shrinkWrap: true,
       padding: widget.padding,
@@ -98,7 +67,7 @@ class _CategoryTreeState extends State<CategoryTree> {
         return RecursiveWidget(
           model: categoryTree[index],
           level: 0,
-          initiallyExpanded: false,
+          initiallyExpanded: widget.expanded,
           onTap: widget.onTap,
         );
       },
@@ -144,10 +113,11 @@ class _RecursiveWidgetState extends State<RecursiveWidget> {
   Widget build(BuildContext context) {
     if (widget.model.children == null || widget.model.children!.isEmpty) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 0, 0),
+        padding: EdgeInsets.fromLTRB(widget.level * 12, 0, 24, 0),
         child: CategoryItem(
           categoryData: widget.model.current,
           onTap: widget.onTap,
+          showDescription: true,
         ),
       );
     } else {

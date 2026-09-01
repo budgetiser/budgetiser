@@ -4,6 +4,7 @@ import 'package:budgetiser/core/database/models/budget.dart';
 import 'package:budgetiser/core/database/provider/budget_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
 import 'package:budgetiser/shared/widgets/divider_with_text.dart';
+import 'package:budgetiser/shared/widgets/empty_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
@@ -33,8 +34,9 @@ class BudgetScreen extends StatelessWidget {
                 );
               }
               if (snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No Budgets'),
+                return EmptyScreen(
+                  onPressed: const BudgetForm(),
+                  type: 'budget',
                 );
               }
               if (snapshot.hasError) {
@@ -53,6 +55,7 @@ class BudgetScreen extends StatelessWidget {
             ),
           );
         },
+        heroTag: 'create-budget',
         child: const Icon(
           Icons.add,
           semanticLabel: 'create budget',

@@ -6,6 +6,7 @@ import 'package:budgetiser/core/database/models/category.dart';
 import 'package:budgetiser/core/database/provider/account_provider.dart';
 import 'package:budgetiser/core/database/provider/transaction_provider.dart';
 import 'package:budgetiser/core/drawer.dart';
+import 'package:budgetiser/shared/widgets/empty_screen.dart';
 import 'package:budgetiser/transactions/screens/transaction_form.dart';
 import 'package:budgetiser/transactions/widgets/transaction_expansion_tile.dart';
 import 'package:flutter/material.dart';
@@ -137,8 +138,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 );
               }
               if (snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No Transactions'),
+                return EmptyScreen(
+                  onPressed: const TransactionForm(),
+                  type: 'transaction',
                 );
               }
               return _screenContent(snapshot.data!, _accountList);
