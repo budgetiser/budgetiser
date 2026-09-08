@@ -276,14 +276,14 @@ class TransactionModel extends ChangeNotifier {
     return months;
   }
 
-  Future<List<SingleTransaction>> getFilteredTransactionsByMonth({
-    required DateTime inMonth,
+  Future<List<SingleTransaction>> getFilteredTransactions({
+    required DateTimeRange dateTimeRange,
     List<Account>? accounts,
     List<TransactionCategory>? categories,
     required List<Account> fullAccountList,
   }) async {
     var timelineTask = TimelineTask(filterKey: 'getFilterByMonth')
-      ..start('get filter by month ${dateAsYYYYMM(inMonth)}');
+      ..start('get filter by month ${dateAsYYYYMM(dateTimeRange.start)}');
     final db = await DatabaseHelper.instance.database;
 
     String? categoryFilter;
@@ -318,8 +318,8 @@ class TransactionModel extends ChangeNotifier {
       
       ''',
       [
-        firstOfMonth(inMonth).millisecondsSinceEpoch,
-        lastSecondOfMonth(inMonth),
+        dateTimeRange.start.millisecondsSinceEpoch,
+        dateTimeRange.end.millisecondsSinceEpoch,
       ],
     );
 

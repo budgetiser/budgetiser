@@ -38,11 +38,10 @@ int lastSecondOfDay(DateTime date) {
       .millisecondsSinceEpoch;
 }
 
-/// Return millisecondsSinceEpoch of the last second of the month of [date]
-int lastSecondOfMonth(DateTime date) {
+/// Return the last second of the month of [date]
+DateTime lastSecondOfMonth(DateTime date) {
   return DateTime(date.year, date.month + 1)
-      .subtract(const Duration(seconds: 1))
-      .millisecondsSinceEpoch;
+      .subtract(const Duration(seconds: 1));
 }
 
 /// Used for debugging messages
