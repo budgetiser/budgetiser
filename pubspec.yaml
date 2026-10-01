@@ -22,7 +22,7 @@ dependencies:
   file_picker: ^13.1.0
   fl_chart: ^1.1.1
   flutter_colorpicker: ^1.0.3
-  flutter_file_dialog: ^3.3.2
+  flutter_file_dialog: ^3.3.3
   fuzzywuzzy: ^1.1.6
   grouped_list: ^6.0.0
   intl: ^0.20.2
@@ -33,12 +33,12 @@ dependencies:
   path: ^1.8.1
   provider: ^6.0.5
   shared_preferences: ^2.5.5
-  sqflite: ^2.3.3
+  sqflite: ^2.4.4
   url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_lints: ^6.0.0
-  sqflite_common_ffi: ^2.4.0
+  sqflite_common_ffi: ^2.4.3
   test: ^1.25.7
 
 flutter:
